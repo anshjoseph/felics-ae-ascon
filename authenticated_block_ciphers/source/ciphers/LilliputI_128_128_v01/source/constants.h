@@ -54,8 +54,7 @@
  * Cipher constants
  *
  */
-/* Replace with the cipher constants declaration */
-extern SBOX_BYTE S0[16];
-extern SBOX_BYTE S1[16];
+extern const ROM_DATA_BYTE PERMUTATIONS[2][BLOCK_SIZE];
+extern const SBOX_BYTE S[256];
 
 #endif /* CONSTANTS_H */
