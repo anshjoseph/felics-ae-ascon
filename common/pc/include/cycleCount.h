@@ -42,10 +42,9 @@ uint64_t __cycleCountStop;
 
 static inline uint64_t __cpucycles()
 {
-	uint64_t result;
-	asm volatile(".byte 15;.byte 49" : "=A" (result));
-
-	return result;
+    uint64_t low, high;
+	asm volatile("rdtsc" : "=a" (low), "=d" (high));
+	return (high << 32) | low;
 }
 
 #define CYCLE_COUNT_START \
