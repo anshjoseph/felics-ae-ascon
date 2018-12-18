@@ -44,7 +44,7 @@
 #define BLOCK_SIZE 16
 
 #define KEY_SIZE 16
-#define ROUND_KEYS_SIZE 8
+#define ROUND_KEYS_SIZE (8*NUMBER_OF_ROUNDS)
 
 #define NUMBER_OF_ROUNDS 32
 
