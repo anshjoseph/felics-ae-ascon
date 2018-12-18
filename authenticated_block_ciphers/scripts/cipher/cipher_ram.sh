@@ -218,6 +218,9 @@ function simulate()
             echo "SIMULATED MSP"
 			;;
 		$SCRIPT_ARCHITECTURE_ARM)
+            echo "FIXME no jlink probe"
+            return
+
 			# Upload the program to the board
 			make -f ./../../../common/cipher.mk ARCHITECTURE=$SCRIPT_ARCHITECTURE $target_file &> $make_log_file
 
