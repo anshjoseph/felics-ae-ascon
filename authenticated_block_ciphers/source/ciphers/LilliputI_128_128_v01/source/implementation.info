@@ -7,9 +7,9 @@ DecryptionKeyScheduleConstants:
 DecryptConstants: constants
 
 EncryptionKeyScheduleCode:
-EncryptCode: lilliput-encrypt, tbc, tweakey
+EncryptCode: encrypt, tbc, tweakey
 DecryptionKeyScheduleCode:
-DecryptCode: lilliput-decrypt, tbc, tweakey
+DecryptCode: decrypt, tbc, tweakey
 
 UseEncryptionKeySchedule: no
 UseDecryptionKeySchedule: no
