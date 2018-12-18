@@ -36,6 +36,7 @@ INCLUDE_DIR=/opt/avr_tools/simavr/simavr-1.2/simavr/sim/avr
 CC := avr-gcc
 
 CFLAGS := \
+	-std=c99 \
 	-mmcu=atmega128 \
 	-g \
 	-fdata-sections \
