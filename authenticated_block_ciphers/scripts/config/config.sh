@@ -42,9 +42,9 @@ AVR_GDB=avr-gdb
 MSP_GDB=msp430-gdb
 ARM_GDB=arm-none-eabi-gdb
 
-SIMAVR_SIMULATOR=/opt/avr_tools/simavr/simavr-1.2/simavr/run_avr
-MSPDEBUG_SIMULATOR=/opt/msp_tools/mspdebug/mspdebug-0.23/mspdebug
+SIMAVR_SIMULATOR=/opt/paclido/simavr/bin/simavr
+MSPDEBUG_SIMULATOR=/opt/paclido/mspdebug/usr/local/bin/mspdebug
+
 JLINK_GDB_SERVER=JLinkGDBServer
 
-
-AVRORA_SIMULATOR='java -jar /opt/avr_tools/avrora/avrora-beta-1.7.117-patched.jar'
+AVRORA_SIMULATOR='java -jar /opt/paclido/avrora-beta-1.7.117-patched.jar'
