@@ -1,0 +1,20 @@
+ImplementationDescription: AEAD COLM0
+ImplementationAuthors: Jean-Baptiste Serrou Soares (adapted from supercop)
+
+EncryptionKeyScheduleConstants: sbox, rc_tab
+EncryptConstants: sbox
+DecryptionKeyScheduleConstants: 
+DecryptConstants: inv_sbox
+
+EncryptionKeyScheduleCode: 
+EncryptCode: gmul_o
+DecryptionKeyScheduleCode:
+DecryptCode: gmul_o
+
+UseEncryptionKeySchedule: yes
+UseDecryptionKeySchedule: no
+
+ImplementationAVR: C
+ImplementationMSP: C
+ImplementationARM: C
+ImplementationPC: C

@@ -1,0 +1,20 @@
+ImplementationDescription: Lilliput AE 64-bit key, 64-bit tweak, 64-bit message: Lilliput + Skinny
+ImplementationAuthors: Julien Francq, Jean-Baptiste Serrou-Soares and Antoine Martinache
+
+EncryptionKeyScheduleConstants: SBOX_constants
+EncryptConstants: SBOX_constants
+DecryptionKeyScheduleConstants: 
+DecryptConstants: SBOX_constants
+
+EncryptionKeyScheduleCode: 
+EncryptCode: 
+DecryptionKeyScheduleCode:
+DecryptCode:
+
+UseEncryptionKeySchedule: yes
+UseDecryptionKeySchedule: no
+
+ImplementationAVR: C
+ImplementationMSP: C
+ImplementationARM: C
+ImplementationPC: C

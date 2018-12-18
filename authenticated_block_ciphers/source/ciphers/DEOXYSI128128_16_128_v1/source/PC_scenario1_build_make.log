@@ -1,0 +1,35 @@
+Building for PC ...
+Building with DEBUG flag NOT set ...
+Building with SCENARIO flag set to 1 ...
+Building with MEASURE_CYCLE_COUNT flag NOT set ...
+Building with COMPILER_OPTIONS flag set to -O3 ...
+---------- Start building AEGIS128_v2 ----------
+gcc -c -g -fdata-sections -ffunction-sections -Wcast-align -Wsign-compare -Waggregate-return -Wunused -Wfatal-errors -Wl,--gc-sections -Wl,--relax -I../../../../../common/pc/include -D PC -D SCENARIO=1 -O3 decrypt.c -I./../source -I./../../../common -o ./../build/decrypt.o
+gcc -c -g -fdata-sections -ffunction-sections -Wcast-align -Wsign-compare -Waggregate-return -Wunused -Wfatal-errors -Wl,--gc-sections -Wl,--relax -I../../../../../common/pc/include -D PC -D SCENARIO=1 -O3 decryption_key_schedule.c -I./../source -I./../../../common -o ./../build/decryption_key_schedule.o
+gcc -c -g -fdata-sections -ffunction-sections -Wcast-align -Wsign-compare -Waggregate-return -Wunused -Wfatal-errors -Wl,--gc-sections -Wl,--relax -I../../../../../common/pc/include -D PC -D SCENARIO=1 -O3 encrypt.c -I./../source -I./../../../common -o ./../build/encrypt.o
+gcc -c -g -fdata-sections -ffunction-sections -Wcast-align -Wsign-compare -Waggregate-return -Wunused -Wfatal-errors -Wl,--gc-sections -Wl,--relax -I../../../../../common/pc/include -D PC -D SCENARIO=1 -O3 encryption_key_schedule.c -I./../source -I./../../../common -o ./../build/encryption_key_schedule.o
+gcc -c -g -fdata-sections -ffunction-sections -Wcast-align -Wsign-compare -Waggregate-return -Wunused -Wfatal-errors -Wl,--gc-sections -Wl,--relax -I../../../../../common/pc/include -D PC -D SCENARIO=1 -O3 TE_constants.c -I./../source -I./../../../common -o ./../build/TE_constants.o
+gcc -c -g -fdata-sections -ffunction-sections -Wcast-align -Wsign-compare -Waggregate-return -Wunused -Wfatal-errors -Wl,--gc-sections -Wl,--relax -I../../../../../common/pc/include -D PC -D SCENARIO=1 -O3 test_vectors.c -I./../source -I./../../../common -o ./../build/test_vectors.o
+gcc -c -g -fdata-sections -ffunction-sections -Wcast-align -Wsign-compare -Waggregate-return -Wunused -Wfatal-errors -Wl,--gc-sections -Wl,--relax -I../../../../../common/pc/include -D PC -D SCENARIO=1 -O3 ../../../common/scenario1/scenario1.c -I./../source -I./../../../common -o ./../build/scenario1.o
+../../../common/scenario1/scenario1.c: In function ‘main’:
+../../../common/scenario1/scenario1.c:119:10: warning: unused variable ‘tag_check’ [-Wunused-variable]
+  uint8_t tag_check = Decrypt(data, DATA_SIZE, key, npub, ad, ASSOCIATED_DATA_SIZE, c);
+          ^
+gcc -c -g -fdata-sections -ffunction-sections -Wcast-align -Wsign-compare -Waggregate-return -Wunused -Wfatal-errors -Wl,--gc-sections -Wl,--relax -I../../../../../common/pc/include -D PC -D SCENARIO=1 -O3 ../../../common/scenario1/encrypt_scenario1.c -I./../source -I./../../../common -o ./../build/encrypt_scenario1.o
+gcc -c -g -fdata-sections -ffunction-sections -Wcast-align -Wsign-compare -Waggregate-return -Wunused -Wfatal-errors -Wl,--gc-sections -Wl,--relax -I../../../../../common/pc/include -D PC -D SCENARIO=1 -O3 ../../../common/scenario1/decrypt_scenario1.c -I./../source -I./../../../common -o ./../build/decrypt_scenario1.o
+gcc -c -g -fdata-sections -ffunction-sections -Wcast-align -Wsign-compare -Waggregate-return -Wunused -Wfatal-errors -Wl,--gc-sections -Wl,--relax -I../../../../../common/pc/include -D PC -D SCENARIO=1 -O3 ../../../common/common.c -I./../source -I./../../../common -o ./../build/common.o
+gcc -g -fdata-sections -ffunction-sections -Wcast-align -Wsign-compare -Waggregate-return -Wunused -Wfatal-errors -Wl,--gc-sections -Wl,--relax -I../../../../../common/pc/include ./../build/decrypt.o ./../build/decryption_key_schedule.o ./../build/encrypt.o ./../build/encryption_key_schedule.o ./../build/TE_constants.o ./../build/test_vectors.o \
+		./../build/scenario1.o \
+		./../build/encrypt_scenario1.o \
+		./../build/decrypt_scenario1.o \
+		./../build/common.o  -o ./../build/scenario1.elf
+objdump -dSt ./../build/scenario1.elf > ./../build/scenario1.lst
+objdump -dSt ./../build/decrypt.o > ./../build/decrypt.lst
+objdump -dSt ./../build/decryption_key_schedule.o > ./../build/decryption_key_schedule.lst
+objdump -dSt ./../build/encrypt.o > ./../build/encrypt.lst
+objdump -dSt ./../build/encryption_key_schedule.o > ./../build/encryption_key_schedule.lst
+objdump -dSt ./../build/TE_constants.o > ./../build/TE_constants.lst
+objdump -dSt ./../build/test_vectors.o > ./../build/test_vectors.lst
+objdump -dSt ./../build/decrypt_scenario1.o > ./../build/decrypt_scenario1.lst
+objdump -dSt ./../build/encrypt_scenario1.o > ./../build/encrypt_scenario1.lst
+---------- End building AEGIS128_v2 ----------

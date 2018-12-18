@@ -1,0 +1,20 @@
+ImplementationDescription: AEAD ACORN128
+ImplementationAuthors: Jean-Baptiste Serrou Soares (adapted from supercop)
+
+EncryptionKeyScheduleConstants: 
+EncryptConstants: 
+DecryptionKeyScheduleConstants: 
+DecryptConstants: 
+
+EncryptionKeyScheduleCode: 
+EncryptCode: 
+DecryptionKeyScheduleCode:
+DecryptCode:
+
+UseEncryptionKeySchedule: no
+UseDecryptionKeySchedule: no
+
+ImplementationAVR: C
+ImplementationMSP: C
+ImplementationARM: C
+ImplementationPC: C
