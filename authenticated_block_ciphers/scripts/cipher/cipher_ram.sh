@@ -208,11 +208,8 @@ function simulate()
 			$SIMAVR_SIMULATOR -g -m atmega128 $target_file &> $simulator_output_file &
 			$AVR_GDB -x $command_file &> $gdb_output_file
 			
-			simavr_pid=$(ps aux | grep "$SIMAVR_SIMULATOR -g -m atmega128 $target_file" | grep -v "grep" | tr -s ' ' | cut -d ' ' -f 2)	
-			for pid in $simavr_pid
-			do
-				kill -PIPE $pid
-			done
+            jobs -l %'$SIMAVR_SIMULATOR'
+            kill -PIPE %'$SIMAVR_SIMULATOR'
 			;;
 		$SCRIPT_ARCHITECTURE_MSP)
             echo "SIMULATING MSP"
