@@ -36,6 +36,7 @@ PRINTF_DIR := ../../../../../common/msp
 CC := msp430-gcc
 
 CFLAGS := \
+	-std=c99 \
 	-mmcu=msp430f1611 \
 	-g \
 	-fdata-sections \
