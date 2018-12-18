@@ -1,12 +1,12 @@
-ImplementationDescription: Reference implementation for Lillput-I
-ImplementationAuthors: 
+ImplementationDescription: Reference implementation for Lilliput-I
+ImplementationAuthors: Kévin Le Gouguec
 
-EncryptionKeyScheduleConstants: constants
+EncryptionKeyScheduleConstants:
 EncryptConstants: constants
 DecryptionKeyScheduleConstants:
 DecryptConstants: constants
 
-EncryptionKeyScheduleCode: 
+EncryptionKeyScheduleCode:
 EncryptCode: 
 DecryptionKeyScheduleCode:
 DecryptCode:
