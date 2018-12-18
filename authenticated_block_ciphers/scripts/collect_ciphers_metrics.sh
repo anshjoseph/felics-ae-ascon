@@ -417,12 +417,14 @@ do
 				# RAM
 				timeout $CIPHER_RAM_TIMEOUT ./../../../../scripts/cipher/cipher_ram.sh "-s=$scenario" "-a=$architecture" "-m=$CIPHER_SCRIPT_MODE" "-co=$compiler_option" -o=$cipher_ram_output_file 2> $cipher_ram_error_file
 				if [ ! -f $cipher_ram_output_file ] ; then
+                    echo "NO OUTPUT $cipher_ram_output_file"
 					continue
 				fi
 				if [ -f $cipher_ram_error_file ] ; then
 					cipher_ram_errors=$(cat $cipher_ram_error_file)
 				fi
 				if [ "" != "$cipher_ram_errors" ] ; then
+                    echo "CIPHER RAM ERRORS: $cipher_ram_error_file ; $cipher_ram_errors"
 					continue
 				fi
 

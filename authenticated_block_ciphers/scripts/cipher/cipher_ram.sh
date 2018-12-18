@@ -191,6 +191,8 @@ fi
 # 	$5 - the make log file
 function simulate()
 {
+    echo "SIMULATING"
+
 	local command_file=$1
 	local target_file=$2
 	local gdb_output_file=$3
@@ -213,8 +215,10 @@ function simulate()
 			done
 			;;
 		$SCRIPT_ARCHITECTURE_MSP)
+            echo "SIMULATING MSP"
 			$MSPDEBUG_SIMULATOR -n sim "prog $target_file" gdb &> $simulator_output_file &
 			$MSP_GDB -x $command_file &> $gdb_output_file
+            echo "SIMULATED MSP"
 			;;
 		$SCRIPT_ARCHITECTURE_ARM)
 			# Upload the program to the board
@@ -618,6 +622,7 @@ case $SCRIPT_ARCHITECTURE in
 			$SCRIPT_SCENARIO_1)
 				simulate $MSP_SCENARIO1_GDB_STACK_COMMANDS_FILE $file $gdb_stack_log_file $mspdebug_stack_log_file
 				simulate $MSP_SCENARIO1_GDB_STACK_SECTIONS_COMMANDS_FILE $file $gdb_stack_sections_log_file $mspdebug_stack_sections_log_file
+                echo "MSP: SIMULATED SCENARIO 1"
 				;;
 			$SCRIPT_SCENARIO_2)
 				simulate $MSP_SCENARIO2_GDB_STACK_COMMANDS_FILE $file $gdb_stack_log_file $mspdebug_stack_log_file
