@@ -44,6 +44,7 @@ PORT := ttyACM0
 DEVICE := /dev/$(PORT)
 
 CFLAGS := \
+	-std=c99 \
 	-mcpu=cortex-m3 \
 	-D__SAM3X8E__ \
 	-march=armv7-m \
