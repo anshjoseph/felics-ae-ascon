@@ -41,12 +41,12 @@
  * 	NUMBER_OF_ROUNDS - the cipher number of rounds
  *
  */
-#define BLOCK_SIZE 8 /* Replace with the cipher block size in bytes */
+#define BLOCK_SIZE 16
 
-#define KEY_SIZE 10 /* Replace with the cipher key size in bytes */
-#define ROUND_KEYS_SIZE 128 /* Replace with the cipher round keys size in bytes */
+#define KEY_SIZE 16
+#define ROUND_KEYS_SIZE 8
 
-#define NUMBER_OF_ROUNDS 32 /* Replace with the cipher number of rounds */
+#define NUMBER_OF_ROUNDS 32
 
 
 /*
