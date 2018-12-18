@@ -79,6 +79,6 @@ static bool _lilliput_ae_decrypt(
 uint8_t Decrypt(uint8_t *block, int32_t mlen, uint8_t *key, uint8_t *npub,
                 uint8_t *ad, int32_t adlen, uint8_t *c, uint8_t *roundKeys)
 {
-    return _lilliput_ae_decrypt(c, mlen, adlen, ad, key, npub, c+mlen, block)
+    return _lilliput_ae_decrypt(mlen, c, adlen, ad, key, npub, c+mlen, block)
         ? 0 : -1;
 }

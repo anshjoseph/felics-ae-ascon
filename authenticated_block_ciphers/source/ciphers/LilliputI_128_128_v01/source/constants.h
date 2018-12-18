@@ -30,6 +30,7 @@
 #define CONSTANTS_H
 
 #include "data_types.h"
+#include "parameters.h"
 
 
 /*
@@ -41,12 +42,16 @@
  * 	NUMBER_OF_ROUNDS - the cipher number of rounds
  *
  */
-#define BLOCK_SIZE 16
+#define BLOCK_SIZE BLOCK_BYTES
 
-#define KEY_SIZE 16
-#define ROUND_KEYS_SIZE (8*NUMBER_OF_ROUNDS)
+#define KEY_SIZE KEY_BYTES
+#define ROUND_KEYS_SIZE (ROUND_TWEAKEY_BYTES*NUMBER_OF_ROUNDS)
 
-#define NUMBER_OF_ROUNDS 32
+#define NUMBER_OF_ROUNDS ROUNDS
+
+#define CRYPTO_NSECBYTES 0
+#define CRYPTO_NPUBBYTES NONCE_BYTES
+#define CRYPTO_ABYTES TAG_BYTES
 
 
 /*
@@ -54,7 +59,18 @@
  * Cipher constants
  *
  */
-extern const ROM_DATA_BYTE PERMUTATIONS[2][BLOCK_SIZE];
+extern const ROM_DATA_BYTE PERMUTATIONS[2][BLOCK_BYTES];
 extern const SBOX_BYTE S[256];
+
+
+enum permutation
+{
+    PERMUTATION_ENCRYPTION = 0, /* PI(i) */
+    PERMUTATION_DECRYPTION = 1, /* PI^-1(i) */
+    PERMUTATION_NONE
+};
+
+typedef enum permutation permutation;
+
 
 #endif /* CONSTANTS_H */
