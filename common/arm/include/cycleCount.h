@@ -44,7 +44,7 @@ extern uint32_t __cycleCountStop;
 
 #define CYCLE_COUNT_START \
 	SysTick->VAL = 0x00000000; \
-	asm("nop"); \
+	__asm__("nop"); \
 	__cycleCountStart = SysTick->VAL
 
 #define CYCLE_COUNT_STOP \
