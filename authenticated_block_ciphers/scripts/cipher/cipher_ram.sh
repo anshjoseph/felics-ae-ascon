@@ -282,10 +282,31 @@ echo "Changed working directory: $(pwd)"
 
 
 # Get the state, key, round keys size
-block_size=$(cat $CONSTANTS_SOURCE_FILE | grep "$BLOCK_SIZE_DEFINE" | tr -d '\r' | cut -d ' ' -f 3)
-key_size=$(cat $CONSTANTS_SOURCE_FILE | grep "$KEY_SIZE_DEFINE" | tr -d '\r' | cut -d ' ' -f 3)
-round_keys_size=$(cat $CONSTANTS_SOURCE_FILE | grep "$ROUND_KEYS_SIZE_DEFINE" | tr -d '\r' | cut -d ' ' -f 3)
+solve-define ()
+(
+    prog=/tmp/felics-$1
+    gcc -I../../../common/ -I../source -x c -o $prog - <<EOF
+#include <stdio.h>
+#include <stdint.h>
 
+#define PC 1
+#define SCENARIO 1
+#define SCENARIO_1 1
+
+#include "constants.h"
+
+int main()
+{
+    printf("%d\n", $1);
+}
+EOF
+    $prog
+    rm $prog
+)
+
+block_size=$(solve-define BLOCK_SIZE)
+key_size=$(solve-define KEY_SIZE)
+round_keys_size=$(solve-define ROUND_KEYS_SIZE)
 
 # Set the searched files pattern
 pattern=$ALL_FILES$OBJECT_FILE_EXTENSION 
