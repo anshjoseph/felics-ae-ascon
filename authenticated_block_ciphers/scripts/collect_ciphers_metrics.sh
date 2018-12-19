@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 #
 # University of Luxembourg
 # Laboratory of Algorithmics, Cryptology and Security (LACS)
@@ -373,7 +375,8 @@ do
 					check_cipher_errors=$(cat $check_cipher_error_file)
 				fi
 				if [ "" != "$check_cipher_errors" ] ; then
-					continue
+                    echo "$check_cipher_errors"
+					exit 1
 				fi
 
 				check_cipher_result=$(cat $check_cipher_output_file)
@@ -410,7 +413,8 @@ do
 					cipher_code_size_errors=$(cat $cipher_code_size_error_file)
 				fi
 				if [ "" != "$cipher_code_size_errors" ] ; then
-					continue
+					echo "$cipher_code_size_errors"
+                    exit 1
 				fi
 
 
@@ -425,7 +429,7 @@ do
 				fi
 				if [ "" != "$cipher_ram_errors" ] ; then
                     echo "CIPHER RAM ERRORS: $cipher_ram_error_file ; $cipher_ram_errors"
-					continue
+                    exit 1
 				fi
 
 
@@ -438,7 +442,8 @@ do
 					cipher_execution_time_errors=$(cat $cipher_execution_time_error_file)
 				fi
 				if [ "" != "$cipher_execution_time_errors" ] ; then
-					continue
+                    echo "$cipher_execution_time_errors"
+                    exit 1
 				fi
 
 
