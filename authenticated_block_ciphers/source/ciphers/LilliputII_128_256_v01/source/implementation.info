@@ -1,0 +1,20 @@
+ImplementationDescription: Reference implementation for Lilliput-II
+ImplementationAuthors: Kévin Le Gouguec
+
+EncryptionKeyScheduleConstants:
+EncryptConstants: constants
+DecryptionKeyScheduleConstants:
+DecryptConstants: constants
+
+EncryptionKeyScheduleCode:
+EncryptCode: encrypt, tbc, tweakey
+DecryptionKeyScheduleCode:
+DecryptCode: decrypt, tbc, tweakey
+
+UseEncryptionKeySchedule: no
+UseDecryptionKeySchedule: no
+
+ImplementationAVR: C
+ImplementationMSP: C
+ImplementationARM: C
+ImplementationPC: C
