@@ -1,0 +1,70 @@
+#!/usr/bin/env python3
+
+import json
+import sys
+
+
+if len(sys.argv) != 3:
+    print('usage: {} FILE1 FILE2'.format(sys.argv[0]))
+    sys.exit(1)
+
+
+def _make_key(data):
+    keys = ('scenario', 'cipher_name', 'architecture', 'block_size',
+            'key_size', 'version', 'language', 'compiler_options')
+
+    return tuple(data[k] for k in keys)
+
+
+def _make_value(data):
+    keys = ('code_size', 'code_ram', 'code_time')
+
+    return { k: data[k] for k in keys }
+
+
+def _open_file(name):
+    with open(name) as f:
+        data = json.load(f)
+
+    return {
+        _make_key(item): _make_value(item) for item in data
+    }
+
+
+def _colorize_diff(relative_diff):
+    red = '\N{ESCAPE}[01;31m'
+    green ='\N{ESCAPE}[01;32m'
+
+    return '{color}{diff:+.2%}{reset}'.format(
+        color=red if relative_diff>0 else green,
+        diff=relative_diff,
+        reset='\N{ESCAPE}[0m'
+    )
+
+
+def _compute_diff(value1, value2):
+    return '{diff} (old: {v1}, new: {v2})'.format(
+        diff=_colorize_diff((value2-value1)/value1), v1=value1, v2=value2
+    )
+
+
+def _show_diff(setup, metric, value1, value2):
+    if value1 == value2:
+        return
+
+    print('{setup}: {metric}: {diff}'.format(
+        setup=setup, metric=metric, diff=_compute_diff(value1, value2)
+    ))
+
+
+file1 = _open_file(sys.argv[1])
+file2 = _open_file(sys.argv[2])
+
+
+for setup, data1 in file1.items():
+    data2 = file2[setup]
+
+    for metric, value1 in data1.items():
+        value2 = data2[metric]
+
+        _show_diff(setup, metric, value1, value2)
