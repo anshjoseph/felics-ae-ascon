@@ -40,20 +40,47 @@
 uint64_t __cycleCountStart;
 uint64_t __cycleCountStop;
 
-static inline uint64_t __cpucycles()
+
+/* Inspired by https://www.intel.com/content/dam/www/public/us/en/documents/white-papers/ia-32-ia-64-benchmark-code-execution-paper.pdf */
+
+
+static inline uint64_t __cpucycles_start()
 {
-    uint64_t low, high;
-    asm volatile(
-        "rdtscp" : "=a" (low), "=d" (high)
+    uint32_t low, high;
+    asm volatile (
+        "cpuid"         "\n\t"
+        "rdtsc"         "\n\t"
+        "mov %%edx, %0" "\n\t"
+        "mov %%eax, %1" "\n\t"
+        : "=r" (high), "=r" (low)
+        :
+        : "%rax", "%rbx", "%rcx", "%rdx"
     );
-	return (high << 32) | low;
+
+    return (uint64_t)high<<32 | low;
+}
+
+static inline uint64_t __cpucycles_end()
+{
+    uint32_t low, high;
+    asm volatile (
+        "rdtscp"        "\n\t"
+        "mov %%edx, %0" "\n\t"
+        "mov %%eax, %1" "\n\t"
+        "cpuid"         "\n\t"
+        : "=r" (high), "=r" (low)
+        :
+        : "%rax", "%rbx", "%rcx", "%rdx"
+    );
+
+    return (uint64_t)high<<32 | low;
 }
 
 #define CYCLE_COUNT_START \
-	__cycleCountStart = __cpucycles();
+	__cycleCountStart = __cpucycles_start();
 
 #define CYCLE_COUNT_STOP \
-	__cycleCountStop = __cpucycles();
+	__cycleCountStop = __cpucycles_end();
 
 #define CYCLE_COUNT_ELAPSED (__cycleCountStop - __cycleCountStart)
 
