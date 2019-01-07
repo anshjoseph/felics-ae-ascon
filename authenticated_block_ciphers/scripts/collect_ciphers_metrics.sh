@@ -272,7 +272,8 @@ do
 done
 
 
-json_dir=${current_directory}/${SCRIPT_OUTPUT_PATH}$(git describe --tags)-$(date +%F-%T)
+version_dir=${current_directory}/${SCRIPT_OUTPUT_PATH}$(git describe --tags)
+json_dir=${version_dir}/$(date +'%Y.%m.%d-%H.%M.%S')
 mkdir -p "${json_dir}"
 script_json_output="${json_dir}"/results.json
 

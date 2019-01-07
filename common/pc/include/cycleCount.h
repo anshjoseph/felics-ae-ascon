@@ -43,7 +43,9 @@ uint64_t __cycleCountStop;
 static inline uint64_t __cpucycles()
 {
     uint64_t low, high;
-	asm volatile("rdtsc" : "=a" (low), "=d" (high));
+    asm volatile(
+        "rdtscp" : "=a" (low), "=d" (high)
+    );
 	return (high << 32) | low;
 }
 
