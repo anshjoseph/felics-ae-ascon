@@ -171,6 +171,7 @@ case $SCRIPT_FORMAT in
 		exit
 		;;
 esac
+source ${script_path}/formats/results/json.sh
 
 
 # Change current directory to script source path directory
@@ -269,6 +270,13 @@ for scenario in $scenarios
 do
 	validate_scenario $scenario
 done
+
+
+json_dir=${current_directory}/${SCRIPT_OUTPUT_PATH}$(git describe --tags)-$(date +%F-%T)
+mkdir -p "${json_dir}"
+script_json_output="${json_dir}"/results.json
+
+add_json_table_header "${script_json_output}"
 
 
 for architecture in ${architectures[@]}
@@ -475,6 +483,8 @@ do
 						;;
 				esac
 
+				add_json_table_row "${script_json_output}" ${scenario} ${architecture} ${cipher_name} ${cipher_block_size} ${cipher_key_size} ${cipher_implementation_version} ${cipher_implementation_language} "${compiler_option}" \
+                                   "${cipher_code_size_output_file}" "${cipher_ram_output_file}" "${cipher_execution_time_output_file}"
 
 				if [ $FALSE -eq $KEEP_GENERATED_FILES ] ; then
 					# Remove generated files
@@ -522,6 +532,9 @@ do
 
 	done
 done
+
+
+add_json_table_footer "${script_json_output}"
 
 
 # Change current working directory
