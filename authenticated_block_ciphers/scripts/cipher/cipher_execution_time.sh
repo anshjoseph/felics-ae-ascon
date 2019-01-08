@@ -203,7 +203,13 @@ function simulate()
 			make -f $CIPHER_MAKEFILE ARCHITECTURE=$SCRIPT_ARCHITECTURE SCENARIO=$SCRIPT_SCENARIO MEASURE_CYCLE_COUNT=1 COMPILER_OPTIONS="$SCRIPT_COMPILER_OPTIONS" &> $make_log_file
 			
 			# Run the program
-			$target_file > $output_file
+            local samples=$output_file.samples
+            > $samples
+            for i in {1..1000}
+            do
+                taskset -c 0 $target_file >> $samples
+            done
+            $script_path/execution_time/pc_median.py $samples $output_file
 			;;
 		$SCRIPT_ARCHITECTURE_AVR)
 			$AVRORA_SIMULATOR -arch=avr -mcmu=atmega128 -input=elf -monitors=calls -seconds=5 -colors=false $target_file > $output_file
