@@ -207,7 +207,7 @@ function simulate()
             > $samples
             for i in {1..1000}
             do
-                taskset -c 0 $target_file >> $samples
+                taskset -c $PC_EXECUTION_TIME_CPU $target_file >> $samples
             done
             $script_path/execution_time/pc_median.py $samples $output_file
 			;;
