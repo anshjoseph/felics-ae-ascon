@@ -273,9 +273,8 @@ done
 
 
 version_dir=${current_directory}/${SCRIPT_OUTPUT_PATH}$(git describe --tags)
-json_dir=${version_dir}/$(date +'%Y.%m.%d-%H.%M.%S')
-mkdir -p "${json_dir}"
-script_json_output="${json_dir}"/results.json
+mkdir -p "${version_dir}"
+script_json_output="${version_dir}"/$(date +'%Y.%m.%d-%H.%M.%S').json
 
 add_json_table_header "${script_json_output}"
 
