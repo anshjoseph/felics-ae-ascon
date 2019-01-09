@@ -28,8 +28,7 @@
  */
 
 #include <stdint.h>
-
-
+#include <stdlib.h>
 #include <string.h>
 
 
@@ -157,6 +156,7 @@ void VerifyData(uint8_t *data, const char *name)
 	else
 	{
 		printf("WRONG!\n");
+        exit(EXIT_FAILURE);
 	}
 }
 
