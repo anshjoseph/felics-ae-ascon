@@ -1,0 +1,76 @@
+#!/usr/bin/env python3
+
+from argparse import ArgumentParser
+from collections import defaultdict, OrderedDict
+import json
+from os import path
+
+import pyexcel_ods
+
+
+def _parse_arguments():
+    parser = ArgumentParser()
+    parser.add_argument('-o', '--out', dest='output', required=True)
+    parser.add_argument('results')
+    return parser.parse_args()
+
+
+def _sort_by_arch_and_scenario(data):
+    sorted_data = defaultdict(list)
+
+    for setup in data:
+        key = (setup['architecture'], setup['scenario'])
+        sorted_data[key].append(setup)
+
+    return sorted_data
+
+
+def _convert_to_ods(results, output_filename):
+    ods_data = OrderedDict()
+
+    for (arch, scenario), data in results.items():
+        sheet_name = '{arch} - scenario {scenario}'.format(arch=arch, scenario=scenario)
+
+        ods_data[sheet_name] = [
+            [
+                'Designation', 'Language', 'Compiler options', 'Size (bytes)',
+                'RAM (bytes)', 'Execution time (cycles)'
+            ]
+        ]
+
+        ods_data[sheet_name].extend(
+            [
+                '{cipher_name}-{block_size}-{key_size} v{version}'.format_map(setup),
+                setup['language'], setup['compiler_options'],
+                setup['code_size'], setup['code_ram'], setup['code_time']
+            ]
+            for setup in data
+        )
+
+    pyexcel_ods.save_data(output_filename, ods_data)
+
+
+def _convert_to_tex(results, output_filename):
+    pass
+
+
+def _convert(results, output_filename):
+    _, ext = path.splitext(output_filename)
+
+    if ext == '.ods':
+        _convert_to_ods(results, output_filename)
+    elif ext == '.tex':
+        _convert_to_tex(results, output_filename)
+    else:
+        raise ValueError('Unsupported extension ' + ext)
+
+
+if __name__ == '__main__':
+    arguments = _parse_arguments()
+
+    with open(arguments.results) as results_file:
+        raw_results = json.load(results_file)
+
+    sorted_results = _sort_by_arch_and_scenario(raw_results)
+
+    _convert(sorted_results, arguments.output)
