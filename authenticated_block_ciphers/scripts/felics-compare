@@ -61,10 +61,12 @@ file1 = _open_file(sys.argv[1])
 file2 = _open_file(sys.argv[2])
 
 
-for setup, data1 in file1.items():
+for setup in sorted(file1):
+    data1 = file1[setup]
     data2 = file2[setup]
 
-    for metric, value1 in data1.items():
+    for metric in sorted(data1):
+        value1 = data1[metric]
         value2 = data2[metric]
 
         _show_diff(setup, metric, value1, value2)
