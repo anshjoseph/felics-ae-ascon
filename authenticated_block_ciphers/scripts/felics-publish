@@ -3,7 +3,7 @@
 from argparse import ArgumentParser
 from collections import defaultdict, OrderedDict
 import json
-from os import path
+import re
 
 import pyexcel_ods
 
@@ -50,19 +50,92 @@ def _convert_to_ods(results, output_filename):
     pyexcel_ods.save_data(output_filename, ods_data)
 
 
+def _make_tex_name(setup):
+    name = setup['cipher_name']
+
+    if re.fullmatch('(Lilliput|Deoxys)I+', name):
+        name = re.sub('(.*[^I])(I+)', r'\1-\2', name)
+
+    return r'\textsc{{{name}-{blocklen}-{keylen}}}'.format(
+        name=name, blocklen=setup['block_size'], keylen=setup['key_size']
+    )
+
+
+def _pad_field(value, index, padding):
+    if index == 0:
+        return '{field:<{width}}'.format(field=value, width=padding)
+
+    return '{field:>{width}}'.format(field=value, width=padding)
+
+
+def _make_padded_tex_lines(data):
+    header = ['', 'Code size (B)', 'RAM (B)', 'Execution time (cycles)']
+
+    lines = [header] + [
+        [
+            _make_tex_name(setup), str(setup['code_size']),
+            str(setup['code_ram']), str(setup['code_time'])
+        ]
+        for setup in data
+    ]
+
+    fields_nb = len(lines[0])
+    max_lengths = [
+        max(len(line[i]) for line in lines)
+        for i in range(fields_nb)
+    ]
+
+    padded_lines = [
+        [
+            _pad_field(field, i, max_lengths[i])
+            for i, field in enumerate(line)
+        ]
+        for line in lines
+    ]
+
+    return padded_lines
+
+
+def _format_tex_line(line):
+    return '      ' + ' & '.join(line) + r' \\ \hline' + '\n'
+
+
 def _convert_to_tex(results, output_filename):
-    pass
+    with open(output_filename, 'w') as output:
+
+        for (arch, scenario), data in results.items():
+            caption = 'Performance results for scenario {scenario} on {arch}'.format(
+                arch=arch, scenario=scenario
+            )
+
+            header = '''\
+\\begin{table}[H]
+  \\begin{center}
+    \\begin{tabular}{l|r|r|r}
+'''
+            footer = '''\
+    \\end{{tabular}}
+    \\caption{{{caption}}}
+    \\label{{benchmark_software_{arch}}}
+  \\end{{center}}
+\\end{{table}}
+
+'''.format(arch=arch.lower(), caption=caption)
+
+            output.write(header)
+            output.writelines(
+                _format_tex_line(line) for line in _make_padded_tex_lines(data)
+            )
+            output.write(footer)
 
 
 def _convert(results, output_filename):
-    _, ext = path.splitext(output_filename)
-
-    if ext == '.ods':
+    if output_filename.endswith('.ods'):
         _convert_to_ods(results, output_filename)
-    elif ext == '.tex':
+    elif output_filename.endswith('.tex'):
         _convert_to_tex(results, output_filename)
     else:
-        raise ValueError('Unsupported extension ' + ext)
+        raise ValueError('{f}: unsupported extension'.format(f=output_filename))
 
 
 if __name__ == '__main__':
