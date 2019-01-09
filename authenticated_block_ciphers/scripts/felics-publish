@@ -97,36 +97,48 @@ def _make_padded_tex_lines(data):
 
 
 def _format_tex_line(line):
-    return '      ' + ' & '.join(line) + r' \\ \hline' + '\n'
+    return '      ' + ' & '.join(line) + r' \\ \hline'
+
+
+def _generate_tex_rows(data):
+    return '\n'.join(
+        _format_tex_line(line) for line in _make_padded_tex_lines(data)
+    )
+
+
+_TEX_TABLE_TEMPLATE = r'''
+\begin{{table}}[H]
+  \begin{{center}}
+    \begin{{tabular}}{{l|r|r|r}}
+{rows}
+    \end{{tabular}}
+    \caption{{{caption}}}
+    \label{{benchmark_software_{arch}}}
+  \end{{center}}
+\end{{table}}
+'''[1:]                         # Remove first newline.
+
+
+def _make_tex_table(architecture, scenario, data):
+    caption = 'Performance results for scenario {scenario} on {arch}'.format(
+        arch=architecture, scenario=scenario
+    )
+
+    return _TEX_TABLE_TEMPLATE.format(
+        rows=_generate_tex_rows(data),
+        arch=architecture.lower(),
+        caption=caption
+    )
 
 
 def _convert_to_tex(results, output_filename):
+    tables = (
+        _make_tex_table(arch, scenario, data)
+        for (arch, scenario), data in results.items()
+    )
+
     with open(output_filename, 'w') as output:
-
-        for (arch, scenario), data in results.items():
-            caption = 'Performance results for scenario {scenario} on {arch}'.format(
-                arch=arch, scenario=scenario
-            )
-
-            header = '''\
-\\begin{table}[H]
-  \\begin{center}
-    \\begin{tabular}{l|r|r|r}
-'''
-            footer = '''\
-    \\end{{tabular}}
-    \\caption{{{caption}}}
-    \\label{{benchmark_software_{arch}}}
-  \\end{{center}}
-\\end{{table}}
-
-'''.format(arch=arch.lower(), caption=caption)
-
-            output.write(header)
-            output.writelines(
-                _format_tex_line(line) for line in _make_padded_tex_lines(data)
-            )
-            output.write(footer)
+        output.write('\n'.join(tables))
 
 
 def _convert(results, output_filename):
