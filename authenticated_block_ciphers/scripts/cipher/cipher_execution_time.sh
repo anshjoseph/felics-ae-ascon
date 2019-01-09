@@ -182,6 +182,63 @@ if [ $SCRIPT_BUILD_ENABLED -eq $SCRIPT_BUILD ] ; then
 fi
 
 
+function mean ()
+{
+    let total=0
+    let n=0
+
+    while read i
+    do
+        let total+=i
+        let n++
+    done
+
+    echo $((total/n))
+}
+
+function median ()
+{
+    local n=$1
+
+    if ((n%2 == 1))
+    then
+        head -$((n/2+1)) | tail -1
+    else
+        head -$((n/2+1)) | tail -2 | mean
+    fi
+}
+
+compute-file-median ()
+{
+    local samples_file=$1
+    local medians_file=$2
+
+    local keys=(
+        EncryptionKeySheduleCycleCount
+        EncryptCycleCount
+        DecryptionKeyScheduleCycleCount
+        DecryptCycleCount
+    )
+
+    local samples_nb=$(grep -c ${keys[0]} ${samples_file})
+    local key
+
+    > ${medians_file}
+
+    for key in ${keys[@]}
+    do
+        median=$(
+            grep ${key} ${samples_file} |
+            cut -d' ' -f2               |
+            sort -n                     |
+            median ${samples_nb}
+        )
+
+        echo "${key}: ${median}" >> ${medians_file}
+    done
+}
+
+
 # Simulate the given binary file execution
 # Parameters:
 # 	$1 - the target binary file or the commands file
@@ -209,7 +266,8 @@ function simulate()
             do
                 taskset -c $PC_EXECUTION_TIME_CPU $target_file >> $samples
             done
-            $script_path/execution_time/pc_median.py $samples $output_file
+
+            compute-file-median $samples $output_file
 			;;
 		$SCRIPT_ARCHITECTURE_AVR)
 			$AVRORA_SIMULATOR -arch=avr -mcmu=atmega128 -input=elf -monitors=calls -seconds=5 -colors=false $target_file > $output_file
