@@ -1,17 +1,25 @@
 #!/usr/bin/env python3
 
+from argparse import ArgumentParser
 from collections import namedtuple
-
 import json
-import sys
 
 
 Results = namedtuple('Results', ('commit', 'data'))
 
 
-if len(sys.argv) != 3:
-    print('usage: {} FILE1 FILE2'.format(sys.argv[0]))
-    sys.exit(1)
+METRICS = ('code_size', 'code_ram', 'code_time')
+
+
+def _parse_arguments():
+    parser = ArgumentParser()
+    parser.add_argument('file1')
+    parser.add_argument('file2')
+    parser.add_argument(
+        '--threshold', default=0.01, type=float,
+        help='hide difference when abs(old-new)/old < THRESHOLD'
+    )
+    return parser.parse_args()
 
 
 def _make_key(data):
@@ -21,35 +29,27 @@ def _make_key(data):
     return tuple(data[k] for k in keys)
 
 
-def _make_value(data):
-    keys = ('code_size', 'code_ram', 'code_time')
-
-    return {k: data[k] for k in keys}
-
-
 def _open_file(name):
     with open(name) as f:
         results = json.load(f)
 
     data = {
-        _make_key(item): _make_value(item) for item in results['data']
+        _make_key(item): item for item in results['data']
     }
 
     return Results(results['commit'], data)
 
 
-def _format_diff(value1, value2):
+def _format_diff(diff, value1, value2):
     red = '\N{ESCAPE}[01;31m'
     green = '\N{ESCAPE}[01;32m'
     reset = '\N{ESCAPE}[0m'
 
-    relative_diff = (value2 - value1) / value1
-
     template = '{color}{diff:+.2%}{reset} ({v1} {arrow} {v2})'
-    arguments = {'diff': relative_diff, 'v1': value1, 'v2': value2,
+    arguments = {'diff': diff, 'v1': value1, 'v2': value2,
                  'reset': reset}
 
-    if relative_diff < 0:
+    if diff < 0:
         arguments['color'] = green
         arguments['arrow'] = '↘'
     else:
@@ -59,28 +59,54 @@ def _format_diff(value1, value2):
     return template.format_map(arguments)
 
 
-def _show_diff(setup, metric, value1, value2):
-    if value1 == value2:
-        return
+def _show_differences(differences, data1, data2):
+    for metric in METRICS:      # Show them in the "canonical" order.
+        if metric not in differences:
+            continue
 
-    print('{setup}: {metric}: {diff}'.format(
-        setup=setup, metric=metric, diff=_format_diff(value1, value2)
-    ))
+        diff = _format_diff(differences[metric], data1[metric], data2[metric])
 
-
-file1 = _open_file(sys.argv[1])
-file2 = _open_file(sys.argv[2])
+        print('\t{metric}: {diff}'.format(metric=metric, diff=diff))
 
 
-print('Comparing {old}..{new}'.format(old=file1.commit, new=file2.commit))
+def _compute_differences(threshold, data1, data2):
+    differences = (
+        (data2[metric] - data1[metric]) / data1[metric]
+        for metric in sorted(METRICS)
+    )
+
+    return {
+        METRICS[i]: relative_diff
+        for i, relative_diff in enumerate(differences)
+        if abs(relative_diff) > threshold
+    }
+
+
+arguments = _parse_arguments()
+file1 = _open_file(arguments.file1)
+file2 = _open_file(arguments.file2)
+
+
+print('Comparing {old}..{new} (tolerance: {t:.2%})'.format(
+    old=file1.commit, new=file2.commit, t=arguments.threshold)
+)
+print()
 
 
 for setup in sorted(file1.data):
     data1 = file1.data[setup]
     data2 = file2.data[setup]
 
-    for metric in sorted(data1):
-        value1 = data1[metric]
-        value2 = data2[metric]
+    differences = _compute_differences(arguments.threshold, data1, data2)
 
-        _show_diff(setup, metric, value1, value2)
+    if not differences:
+        continue
+
+    setup_template = '{cipher_name}-{block_size}-{key_size} on {architecture}'
+    details_template = '(v{version} in {language} with {compiler_options})'
+
+    print(setup_template.format_map(data1), details_template.format_map(data1))
+
+    _show_differences(differences, data1, data2)
+
+    print()
