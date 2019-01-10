@@ -38,21 +38,25 @@ def _open_file(name):
     return Results(results['commit'], data)
 
 
-def _colorize_diff(relative_diff):
+def _format_diff(value1, value2):
     red = '\N{ESCAPE}[01;31m'
     green = '\N{ESCAPE}[01;32m'
+    reset = '\N{ESCAPE}[0m'
 
-    return '{color}{diff:+.2%}{reset}'.format(
-        color=red if relative_diff > 0 else green,
-        diff=relative_diff,
-        reset='\N{ESCAPE}[0m'
-    )
+    relative_diff = (value2 - value1) / value1
 
+    template = '{color}{diff:+.2%}{reset} ({v1} {arrow} {v2})'
+    arguments = {'diff': relative_diff, 'v1': value1, 'v2': value2,
+                 'reset': reset}
 
-def _compute_diff(value1, value2):
-    return '{diff} (old: {v1}, new: {v2})'.format(
-        diff=_colorize_diff((value2 - value1) / value1), v1=value1, v2=value2
-    )
+    if relative_diff < 0:
+        arguments['color'] = green
+        arguments['arrow'] = '↘'
+    else:
+        arguments['color'] = red
+        arguments['arrow'] = '↗'
+
+    return template.format_map(arguments)
 
 
 def _show_diff(setup, metric, value1, value2):
@@ -60,7 +64,7 @@ def _show_diff(setup, metric, value1, value2):
         return
 
     print('{setup}: {metric}: {diff}'.format(
-        setup=setup, metric=metric, diff=_compute_diff(value1, value2)
+        setup=setup, metric=metric, diff=_format_diff(value1, value2)
     ))
 
 
