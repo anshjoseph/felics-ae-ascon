@@ -19,7 +19,7 @@ def _make_key(data):
 def _make_value(data):
     keys = ('code_size', 'code_ram', 'code_time')
 
-    return { k: data[k] for k in keys }
+    return {k: data[k] for k in keys}
 
 
 def _open_file(name):
@@ -33,10 +33,10 @@ def _open_file(name):
 
 def _colorize_diff(relative_diff):
     red = '\N{ESCAPE}[01;31m'
-    green ='\N{ESCAPE}[01;32m'
+    green = '\N{ESCAPE}[01;32m'
 
     return '{color}{diff:+.2%}{reset}'.format(
-        color=red if relative_diff>0 else green,
+        color=red if relative_diff > 0 else green,
         diff=relative_diff,
         reset='\N{ESCAPE}[0m'
     )
@@ -44,7 +44,7 @@ def _colorize_diff(relative_diff):
 
 def _compute_diff(value1, value2):
     return '{diff} (old: {v1}, new: {v2})'.format(
-        diff=_colorize_diff((value2-value1)/value1), v1=value1, v2=value2
+        diff=_colorize_diff((value2 - value1) / value1), v1=value1, v2=value2
     )
 
 
