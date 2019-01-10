@@ -272,9 +272,13 @@ do
 done
 
 
-script_json_output="${current_directory}/${SCRIPT_OUTPUT_PATH}$(date +'%Y.%m.%d-%H.%M.%S').json"
+commit=$(git rev-parse --short HEAD)
+branch=$(git symbolic-ref --short HEAD)
 
-add_json_table_header "${script_json_output}" $(git rev-parse --short HEAD)
+results_dir="${current_directory}/${SCRIPT_OUTPUT_PATH}"
+script_json_output="${results_dir}${branch}-$(date +'%Y.%m.%d-%H.%M.%S').json"
+
+add_json_table_header "${script_json_output}" ${commit}
 
 
 for architecture in ${architectures[@]}
