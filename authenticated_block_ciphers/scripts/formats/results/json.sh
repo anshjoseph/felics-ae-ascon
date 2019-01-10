@@ -34,8 +34,13 @@ get_code_time ()
 add_json_table_header ()
 {
     local output_file=$1
+    local commit=$2
 
-    echo "[" >> ${output_file}
+    cat <<-EOF > ${output_file}
+	{
+	    "commit": "${commit}",
+	    "data": [
+	EOF
 }
 
 add_json_table_row ()
@@ -54,21 +59,21 @@ add_json_table_row ()
     local code_ram_file=${11}
     local code_time_file=${12}
 
-    cat <<EOF >> ${output_file}
-{
-    "scenario": ${scenario},
-    "cipher_name": "${cipher_name}",
-    "architecture": "${architecture}",
-    "block_size": ${cipher_block_size},
-    "key_size": ${cipher_key_size},
-    "version": "${cipher_implementation_version}",
-    "language": "${cipher_implementation_language}",
-    "compiler_options": "${cipher_implementation_compiler_options}",
-    "code_size": $(get_code_size ${code_size_file}),
-    "code_ram": $(get_code_ram ${code_ram_file}),
-    "code_time": $(get_code_time ${code_time_file})
-},
-EOF
+    cat <<-EOF >> ${output_file}
+	{
+	    "scenario": ${scenario},
+	    "cipher_name": "${cipher_name}",
+	    "architecture": "${architecture}",
+	    "block_size": ${cipher_block_size},
+	    "key_size": ${cipher_key_size},
+	    "version": "${cipher_implementation_version}",
+	    "language": "${cipher_implementation_language}",
+	    "compiler_options": "${cipher_implementation_compiler_options}",
+	    "code_size": $(get_code_size ${code_size_file}),
+	    "code_ram": $(get_code_ram ${code_ram_file}),
+	    "code_time": $(get_code_time ${code_time_file})
+	},
+	EOF
 }
 
 add_json_table_footer ()
@@ -76,5 +81,8 @@ add_json_table_footer ()
     local output_file=$1
 
     sed -i '$ s/,$//' ${output_file} # Remove trailing comma.
-    echo "]" >> ${output_file}
+    cat <<-EOF >> ${output_file}
+	    ]
+	}
+	EOF
 }

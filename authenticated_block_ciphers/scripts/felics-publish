@@ -154,7 +154,7 @@ if __name__ == '__main__':
     arguments = _parse_arguments()
 
     with open(arguments.results) as results_file:
-        raw_results = json.load(results_file)
+        raw_results = json.load(results_file)['data']
 
     sorted_results = _sort_by_arch_and_scenario(raw_results)
 

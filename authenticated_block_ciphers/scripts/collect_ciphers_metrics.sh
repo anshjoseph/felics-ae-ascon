@@ -272,11 +272,9 @@ do
 done
 
 
-version_dir=${current_directory}/${SCRIPT_OUTPUT_PATH}$(git describe --tags)
-mkdir -p "${version_dir}"
-script_json_output="${version_dir}"/$(date +'%Y.%m.%d-%H.%M.%S').json
+script_json_output="${current_directory}/${SCRIPT_OUTPUT_PATH}$(date +'%Y.%m.%d-%H.%M.%S').json"
 
-add_json_table_header "${script_json_output}"
+add_json_table_header "${script_json_output}" $(git rev-parse --short HEAD)
 
 
 for architecture in ${architectures[@]}
