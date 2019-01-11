@@ -1,5 +1,5 @@
-#ifndef CIPHER_H
-#define CIPHER_H
+#ifndef TBC_H
+#define TBC_H
 
 #include <stdint.h>
 
@@ -20,4 +20,4 @@ void lilliput_tbc_decrypt(
     uint8_t message[BLOCK_BYTES]
 );
 
-#endif /* CIPHER_H */
+#endif /* TBC_H */
