@@ -93,8 +93,19 @@ print('Comparing {old}..{new} (tolerance: {t:.2%})'.format(
 print()
 
 
-for setup in sorted(file1.data):
-    data1 = file1.data[setup]
+SETUP_TEMPLATE = ('{cipher_name}-{block_size}-{key_size} on {architecture} '
+                  '(v{version} in {language} with {compiler_options})')
+
+skipped = []
+
+for setup, data1 in sorted(file1.data.items()):
+
+    formatted_setup = SETUP_TEMPLATE.format_map(data1)
+
+    if setup not in file2.data:
+        skipped.append(formatted_setup)
+        continue
+
     data2 = file2.data[setup]
 
     differences = _compute_differences(arguments.threshold, data1, data2)
@@ -102,11 +113,12 @@ for setup in sorted(file1.data):
     if not differences:
         continue
 
-    setup_template = '{cipher_name}-{block_size}-{key_size} on {architecture}'
-    details_template = '(v{version} in {language} with {compiler_options})'
-
-    print(setup_template.format_map(data1), details_template.format_map(data1))
+    print(formatted_setup)
 
     _show_differences(differences, data1, data2)
 
     print()
+
+if skipped:
+    print('Setups not found in {f2}:'.format(f2=arguments.file2))
+    print('\n'.join('\t'+setup for setup in skipped))
