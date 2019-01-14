@@ -70,14 +70,11 @@ def _show_differences(differences, data1, data2):
 
 
 def _compute_differences(threshold, data1, data2):
-    differences = (
-        (data2[metric] - data1[metric]) / data1[metric]
-        for metric in sorted(METRICS)
-    )
+    differences = ((m, (data2[m] - data1[m]) / data1[m]) for m in METRICS)
 
     return {
-        METRICS[i]: relative_diff
-        for i, relative_diff in enumerate(differences)
+        m: relative_diff
+        for m, relative_diff in differences
         if abs(relative_diff) > threshold
     }
 
