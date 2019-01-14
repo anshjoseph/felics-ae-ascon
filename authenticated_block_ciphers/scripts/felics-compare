@@ -8,7 +8,20 @@ import json
 Results = namedtuple('Results', ('commit', 'data'))
 
 
+ARCHITECTURES = {'AVR', 'MSP', 'ARM', 'PC'}
+
 METRICS = ('code_size', 'code_ram', 'code_time')
+
+
+def _parse_architectures(argument):
+    archs = set(argument.split(','))
+
+    unknown = archs-ARCHITECTURES
+
+    if unknown:
+        raise ValueError('Unknown platforms: {u}'.format(', '.join(unknown)))
+
+    return archs
 
 
 def _parse_arguments():
@@ -18,6 +31,10 @@ def _parse_arguments():
     parser.add_argument(
         '--threshold', default=0.01, type=float,
         help='hide difference when abs(old-new)/old < THRESHOLD'
+    )
+    parser.add_argument(
+        '--archs', default=ARCHITECTURES, type=_parse_architectures,
+        help='only consider those architectures'
     )
     return parser.parse_args()
 
@@ -29,12 +46,14 @@ def _make_key(data):
     return tuple(data[k] for k in keys)
 
 
-def _open_file(name):
+def _load_file(name, architectures):
     with open(name) as f:
         results = json.load(f)
 
     data = {
-        _make_key(item): item for item in results['data']
+        _make_key(item): item
+        for item in results['data']
+        if item['architecture'] in architectures
     }
 
     return Results(results['commit'], data)
@@ -80,8 +99,8 @@ def _compute_differences(threshold, data1, data2):
 
 
 arguments = _parse_arguments()
-file1 = _open_file(arguments.file1)
-file2 = _open_file(arguments.file2)
+file1 = _load_file(arguments.file1, arguments.archs)
+file2 = _load_file(arguments.file2, arguments.archs)
 
 
 print('Comparing {old}..{new} (tolerance: {t:.2%})'.format(
