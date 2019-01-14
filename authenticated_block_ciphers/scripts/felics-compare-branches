@@ -1,0 +1,24 @@
+#!/bin/bash
+
+set -eux
+
+auth_root=$(git rev-parse --show-toplevel)/authenticated_block_ciphers
+scripts_dir=${auth_root}/scripts
+results_dir=${auth_root}/results
+
+branch1=$1
+branch2=$2
+platforms=$3
+ciphers=$4
+
+now=$(date +%Y.%m.%d-%H.%M.%S)
+
+for b in ${branch1} ${branch2}
+do
+    git checkout ${b}
+    ${scripts_dir}/felics-run "${platforms}" "${ciphers}" "${now}-${b}.json"
+done
+
+
+${scripts_dir}/felics-compare ${results_dir}/${now}-${branch1}.json \
+                              ${results_dir}/${now}-${branch2}.json

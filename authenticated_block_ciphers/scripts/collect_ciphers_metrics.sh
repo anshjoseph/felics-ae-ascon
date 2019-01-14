@@ -126,6 +126,10 @@ do
 			SCRIPT_USER_COMPILER_OPTIONS="${i#*=}"
 			shift
 			;;
+        -j=*|--json-output=*)
+            SCRIPT_JSON_OUTPUT="${i#*=}"
+            shift
+            ;;
 		*)
 			# Unknown option
 			;;
@@ -273,10 +277,8 @@ done
 
 
 commit=$(git rev-parse --short HEAD)
-branch=$(git symbolic-ref --short HEAD)
-
 results_dir="${current_directory}/${SCRIPT_OUTPUT_PATH}"
-script_json_output="${results_dir}${branch}-$(date +'%Y.%m.%d-%H.%M.%S').json"
+script_json_output="${results_dir}${SCRIPT_JSON_OUTPUT}"
 
 add_json_table_header "${script_json_output}" ${commit}
 
