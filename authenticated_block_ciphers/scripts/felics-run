@@ -1,0 +1,41 @@
+#!/bin/bash
+
+set -eux
+
+auth_root=$(git rev-parse --show-toplevel)/authenticated_block_ciphers
+ciphers_root=${auth_root}/source/ciphers
+scripts_dir=${auth_root}/scripts
+
+scenario=1
+
+if [ $# -lt 2 ]
+then
+    ciphers=($(pwd | sed -r 's,.+/([^/]+)/source$,\1,'))
+else
+    ciphers=($(cd ${ciphers_root} ; echo $2))
+fi
+
+for c in ${ciphers[@]}
+do
+    (
+        cd ${ciphers_root}/${c}/source
+        make cleanall
+        make cipher
+        make test-cipher
+    )
+done
+
+
+. ${scripts_dir}/constants/constants.sh
+
+restore-cpu ()
+{
+    sudo cpufreq-set -c ${PC_EXECUTION_TIME_CPU} -g powersave
+}
+
+trap restore-cpu ERR
+
+sudo cpufreq-set -c ${PC_EXECUTION_TIME_CPU} -g performance
+${scripts_dir}/collect_ciphers_metrics.sh "-c=${ciphers[*]}" "-a=$1" -s=$scenario -co=-O3
+
+restore-cpu
