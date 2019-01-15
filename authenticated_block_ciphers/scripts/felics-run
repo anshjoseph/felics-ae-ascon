@@ -17,7 +17,7 @@ fi
 
 if [ $# -lt 3 ]
 then
-    branch=$(git symbolic-ref --short HEAD)
+    branch=$(git symbolic-ref --short HEAD || git show --no-patch --format=format:%h)
     output="$(date +%Y.%m.%d-%H.%M.%S)-${branch}.json"
 else
     output="$3"
