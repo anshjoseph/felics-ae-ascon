@@ -59,8 +59,8 @@
  * Cipher constants
  *
  */
-extern const ROM_DATA_BYTE PERMUTATIONS[2][BLOCK_BYTES];
-extern const SBOX_BYTE S[256];
+extern ROM_DATA_BYTE PERMUTATIONS[2][BLOCK_BYTES];
+extern SBOX_BYTE S[256];
 
 
 enum permutation
