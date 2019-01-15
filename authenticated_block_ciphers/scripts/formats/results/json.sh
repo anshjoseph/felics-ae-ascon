@@ -31,16 +31,28 @@ get_code_time ()
     cut -d' ' -f2 ${results}
 }
 
+describe-revision ()
+{
+    if ! git symbolic-ref --short HEAD 2>/dev/null
+    then
+        git branch --contains HEAD |
+            grep -v '^*' |
+            tr -d ' ' |
+            paste -sd , |
+            sed -r 's/(.*)/DETACHED:\1/'
+    fi
+}
+
 add_json_table_header ()
 {
     local output_file=$1
     local commit=$(git rev-parse --short HEAD)
-    local branch=$(git symbolic-ref --short HEAD)
+    local branch=$(describe-revision)
 
     cat <<-EOF > ${output_file}
 	{
 	    "commit": "${commit}",
-        "branch": "${branch}",
+	    "branch": "${branch}",
 	    "data": [
 	EOF
 }
