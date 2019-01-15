@@ -276,11 +276,10 @@ do
 done
 
 
-commit=$(git rev-parse --short HEAD)
 results_dir="${current_directory}/${SCRIPT_OUTPUT_PATH}"
 script_json_output="${results_dir}${SCRIPT_JSON_OUTPUT}"
 
-add_json_table_header "${script_json_output}" ${commit}
+add_json_table_header "${script_json_output}"
 
 
 for architecture in ${architectures[@]}

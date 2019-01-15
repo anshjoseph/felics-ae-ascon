@@ -34,11 +34,13 @@ get_code_time ()
 add_json_table_header ()
 {
     local output_file=$1
-    local commit=$2
+    local commit=$(git rev-parse --short HEAD)
+    local branch=$(git symbolic-ref --short HEAD)
 
     cat <<-EOF > ${output_file}
 	{
 	    "commit": "${commit}",
+        "branch": "${branch}",
 	    "data": [
 	EOF
 }
