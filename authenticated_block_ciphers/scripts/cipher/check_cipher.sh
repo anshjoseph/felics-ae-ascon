@@ -182,25 +182,30 @@ cd $SCRIPT_TARGET
 echo "Changed working directory: $(pwd)"
 
 
+fail ()
+{
+    local error_log=$1
+    echo "${error_log}:"
+    cat ${error_log}
+
+    echo -n ${FALSE} ${SCRIPT_OUTPUT}
+    exit 1
+}
+
+
 # Assume that the cipher is compliant
 compliant=$TRUE
 
 # Clean
 make -f $CIPHER_MAKEFILE $MAKE_CLEAN_TARGET &> $MAKE_FILE_LOG
 if [ $SUCCESS_EXIT_CODE -ne $? ]; then
-	compliant=$FALSE
-	if [ $SCRIPT_MODE_0 -eq $SCRIPT_MODE ] ; then
-		echo "Error! For error details please read the log file: '$(pwd)/$MAKE_FILE_LOG'"
-	fi
+    fail $MAKE_FILE_LOG
 fi
 
 # Build
 make -f $CIPHER_MAKEFILE ARCHITECTURE=$SCRIPT_ARCHITECTURE SCENARIO=$SCRIPT_SCENARIO COMPILER_OPTIONS="$SCRIPT_COMPILER_OPTIONS" &>> $MAKE_FILE_LOG
 if [ $SUCCESS_EXIT_CODE -ne $? ]; then
-	compliant=$FALSE
-	if [ $SCRIPT_MODE_0 -eq $SCRIPT_MODE ] ; then
-		echo "Error! For error details please read the log file: '$(pwd)/$MAKE_FILE_LOG'"
-	fi
+    fail $MAKE_FILE_LOG
 fi
 
 
@@ -208,19 +213,13 @@ if [ $TRUE == $compliant ] && [ $SCRIPT_SCENARIO_0 == $SCRIPT_SCENARIO ] ; then
 	# Clean
 	make -f $CIPHER_MAKEFILE $MAKE_CLEAN_TARGET &>> $MAKE_FILE_LOG
 	if [ $SUCCESS_EXIT_CODE -ne $? ]; then
-		compliant=$FALSE
-		if [ $SCRIPT_MODE_0 -eq $SCRIPT_MODE ] ; then
-			echo "Error! For error details please read the log file: '$(pwd)/$MAKE_FILE_LOG'"
-		fi
+        fail $MAKE_FILE_LOG
 	fi
 
 	# Build
 	make -f $CIPHER_MAKEFILE ARCHITECTURE=$SCRIPT_ARCHITECTURE SCENARIO=$SCRIPT_SCENARIO COMPILER_OPTIONS="$SCRIPT_COMPILER_OPTIONS" DEBUG=7 &>> $MAKE_FILE_LOG
 	if [ $SUCCESS_EXIT_CODE -ne $? ]; then
-		compliant=$FALSE
-		if [ $SCRIPT_MODE_0 -eq $SCRIPT_MODE ] ; then
-			echo "Error! For error details please read the log file: '$(pwd)/$MAKE_FILE_LOG'"
-		fi
+        fail $MAKE_FILE_LOG
 	fi
 
 	case $SCRIPT_ARCHITECTURE in
@@ -229,13 +228,10 @@ if [ $TRUE == $compliant ] && [ $SCRIPT_SCENARIO_0 == $SCRIPT_SCENARIO ] ; then
 			if [ -f $CIPHER_ELF_FILE ] ; then
 				./$CIPHER_ELF_FILE > $RESULT_FILE
 				if [ $SUCCESS_EXIT_CODE -ne $? ]; then
-					compliant=$FALSE
-					if [ $SCRIPT_MODE_0 -eq $SCRIPT_MODE ] ; then
-						echo "Error! Run the executable to see the error: '$(pwd)/$CIPHER_ELF_FILE'"
-					fi	
+					fail <(echo "Error! Run the executable to see the error: '$(pwd)/$CIPHER_ELF_FILE'")
 				fi
 			else
-				compliant=$FALSE
+				fail <(echo "couldn't find executable file '$(pwd)/$CIPHER_ELF_FILE'")
 			fi
 			;;
 
@@ -244,13 +240,10 @@ if [ $TRUE == $compliant ] && [ $SCRIPT_SCENARIO_0 == $SCRIPT_SCENARIO ] ; then
 			if [ -f $CIPHER_ELF_FILE ] ; then
 				$SIMAVR_SIMULATOR -m atmega128 $CIPHER_ELF_FILE &> $RESULT_FILE
 				if [ $SUCCESS_EXIT_CODE -ne $? ]; then
-					compliant=$FALSE
-					if [ $SCRIPT_MODE_0 -eq $SCRIPT_MODE ] ; then
-						echo "Error! Run the executable to see the error: '$(pwd)/$CIPHER_ELF_FILE'"
-					fi	
+					fail <(echo "Error! Run the executable to see the error: '$(pwd)/$CIPHER_ELF_FILE'")
 				fi
 			else
-				compliant=$FALSE
+				fail <(echo "couldn't find executable file '$(pwd)/$CIPHER_ELF_FILE'")
 			fi
 			;;
 
@@ -259,13 +252,10 @@ if [ $TRUE == $compliant ] && [ $SCRIPT_SCENARIO_0 == $SCRIPT_SCENARIO ] ; then
 			if [ -f $CIPHER_ELF_FILE ] ; then
 				$MSPDEBUG_SIMULATOR -n sim < $MSPDEBUG_CHECK_CIPHER_COMMANDS_FILE &> $RESULT_FILE
 				if [ $SUCCESS_EXIT_CODE -ne $? ]; then
-					compliant=$FALSE
-					if [ $SCRIPT_MODE_0 -eq $SCRIPT_MODE ] ; then
-						echo "Error! Run the executable to see the error: '$(pwd)/$CIPHER_ELF_FILE'"
-					fi	
+					fail <(echo "Error! Run the executable to see the error: '$(pwd)/$CIPHER_ELF_FILE'")
 				fi
 			else
-				compliant=$FALSE
+				fail <(echo "couldn't find executable file '$(pwd)/$CIPHER_ELF_FILE'")
 			fi
 			;;
 
@@ -277,7 +267,7 @@ if [ $TRUE == $compliant ] && [ $SCRIPT_SCENARIO_0 == $SCRIPT_SCENARIO ] ; then
 				# Run the program stored in the flash memory of the board
 				$ARM_SERIAL_TERMINAL > $RESULT_FILE
 			else
-				compliant=$FALSE
+				fail <(echo "couldn't find executable file '$(pwd)/$CIPHER_ELF_FILE'")
 			fi
 			;;
 	esac
@@ -288,11 +278,7 @@ if [ $TRUE == $compliant ] && [ $SCRIPT_SCENARIO_0 == $SCRIPT_SCENARIO ] ; then
 		wrong_count=$(grep -c "$WRONG" $RESULT_FILE)
 
 		if [ $EXPECTED_CORRECT_COUNT -ne $correct_count ] || [ $EXPECTED_WRONG_COUNT -ne $wrong_count ] ; then
-			compliant=$FALSE
-			if [ $SCRIPT_MODE_0 -eq $SCRIPT_MODE ] ; then
-				echo "Error! Test vectors do not check!"
-				echo "correct = $correct_count, wrong = $wrong_count"
-			fi
+			fail <(echo "Error! Test vectors do not check!" ; echo "correct = $correct_count, wrong = $wrong_count")
 		else
 			if [ $FALSE -eq $KEEP_GENERATED_FILES ] ; then
 				rm -f $MAKE_FILE_LOG
@@ -300,7 +286,7 @@ if [ $TRUE == $compliant ] && [ $SCRIPT_SCENARIO_0 == $SCRIPT_SCENARIO ] ; then
 			fi
 		fi
 	else
-		compliant=$FALSE
+		fail <(echo "cannot find results file $RESULT_FILE")
 	fi
 fi
 
