@@ -386,7 +386,8 @@ do
 				# Check cipher
 				timeout $CHECK_CIPHER_TIMEOUT ./../../../../scripts/cipher/check_cipher.sh -s=$scenario -a=$architecture -c=$cipher_directory_name "-co=$compiler_option" -m=$CIPHER_SCRIPT_MODE -o=$check_cipher_output_file 2> $check_cipher_error_file
 				if [ ! -f $check_cipher_output_file ] ; then
-					continue
+					echo "missing output file $check_cipher_output_file"
+                    exit 1
 				fi
 				if [ -f $check_cipher_error_file ] ; then
 					check_cipher_errors=$(cat $check_cipher_error_file)
@@ -398,7 +399,8 @@ do
 
 				check_cipher_result=$(cat $check_cipher_output_file)
 				if [ $FALSE -eq $check_cipher_result ] ; then
-					continue
+                    echo "check_cipher failed"
+					exit 1
 				fi
 
 
