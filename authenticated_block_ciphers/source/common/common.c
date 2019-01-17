@@ -87,7 +87,7 @@ void DisplayData(uint8_t *data, uint16_t length, const char *name)
 	{
 		for (i = 0; i < length; i++) 
 		{
-			printf("0x%02x, ", data[i]);
+			printf("%02x ", data[i]);
 		}
 	}
 	printf("\n");
