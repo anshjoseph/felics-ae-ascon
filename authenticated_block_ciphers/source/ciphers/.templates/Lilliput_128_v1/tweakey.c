@@ -71,6 +71,7 @@ static void _multiply_M3(const uint8_t X[LANE_BYTES], uint8_t Y[LANE_BYTES])
     _multiply_M(M2_X, Y);
 }
 
+#if LANES_NB >= 5
 static void _multiply_MR(const uint8_t X[LANE_BYTES], uint8_t Y[LANE_BYTES])
 {
     Y[0] = X[1];
@@ -83,6 +84,7 @@ static void _multiply_MR(const uint8_t X[LANE_BYTES], uint8_t Y[LANE_BYTES])
     Y[7] = X[0];
 }
 
+#if LANES_NB >= 6
 static void _multiply_MR2(const uint8_t X[LANE_BYTES], uint8_t Y[LANE_BYTES])
 {
     uint8_t MR_X[LANE_BYTES];
@@ -90,6 +92,7 @@ static void _multiply_MR2(const uint8_t X[LANE_BYTES], uint8_t Y[LANE_BYTES])
     _multiply_MR(MR_X, Y);
 }
 
+#if LANES_NB >= 7
 static void _multiply_MR3(const uint8_t X[LANE_BYTES], uint8_t Y[LANE_BYTES])
 {
     uint8_t MR_X[LANE_BYTES];
@@ -98,6 +101,9 @@ static void _multiply_MR3(const uint8_t X[LANE_BYTES], uint8_t Y[LANE_BYTES])
     _multiply_MR(MR_X, MR2_X);
     _multiply_MR(MR2_X, Y);
 }
+#endif
+#endif
+#endif
 
 typedef void (*matrix_multiplication)(const uint8_t X[LANE_BYTES], uint8_t Y[LANE_BYTES]);
 
@@ -105,9 +111,15 @@ static const matrix_multiplication ALPHAS[6] = {
     _multiply_M,
     _multiply_M2,
     _multiply_M3,
+#if LANES_NB >= 5
     _multiply_MR,
+#if LANES_NB >= 6
     _multiply_MR2,
+#if LANES_NB >= 7
     _multiply_MR3
+#endif
+#endif
+#endif
 };
 
 
