@@ -102,20 +102,17 @@ void lilliput_tbc_encrypt(
     uint8_t ciphertext[BLOCK_BYTES]
 )
 {
-    uint8_t X[BLOCK_BYTES];
-    _state_init(X, message);
+    _state_init(ciphertext, message);
 
     uint8_t RTK[ROUNDS][ROUND_TWEAKEY_BYTES];
     _compute_round_tweakeys(key, tweak, RTK);
 
     for (uint8_t i=0; i<ROUNDS-1; i++)
     {
-        _one_round_egfn(X, RTK[i], PERMUTATION_ENCRYPTION);
+        _one_round_egfn(ciphertext, RTK[i], PERMUTATION_ENCRYPTION);
     }
 
-    _one_round_egfn(X, RTK[ROUNDS-1], PERMUTATION_NONE);
-
-    memcpy(ciphertext, X, BLOCK_BYTES);
+    _one_round_egfn(ciphertext, RTK[ROUNDS-1], PERMUTATION_NONE);
 }
 
 void lilliput_tbc_decrypt(
@@ -125,18 +122,15 @@ void lilliput_tbc_decrypt(
     uint8_t message[BLOCK_BYTES]
 )
 {
-    uint8_t X[BLOCK_BYTES];
-    _state_init(X, ciphertext);
+    _state_init(message, ciphertext);
 
     uint8_t RTK[ROUNDS][ROUND_TWEAKEY_BYTES];
     _compute_round_tweakeys(key, tweak, RTK);
 
     for (uint8_t i=0; i<ROUNDS-1; i++)
     {
-        _one_round_egfn(X, RTK[ROUNDS-1-i], PERMUTATION_DECRYPTION);
+        _one_round_egfn(message, RTK[ROUNDS-1-i], PERMUTATION_DECRYPTION);
     }
 
-    _one_round_egfn(X, RTK[0], PERMUTATION_NONE);
-
-    memcpy(message, X, BLOCK_BYTES);
+    _one_round_egfn(message, RTK[0], PERMUTATION_NONE);
 }
