@@ -42,12 +42,10 @@ typedef uint32_t U32;
 
 void AESROUND(uint8_t *out, uint8_t *in, uint8_t *rk)
 {
-      
-      ((U32*)(void*)out)[0] = READ_TE_DOUBLE_WORD(((U32*)(void*)TE0)[*(in+0)])  ^ READ_TE_DOUBLE_WORD(((U32*)(void*)TE1)[*(in+5)])  ^ READ_TE_DOUBLE_WORD(((U32*)(void*)TE2)[*(in+10)]) ^ READ_TE_DOUBLE_WORD(((U32*)(void*)TE3)[*(in+15)]) ^ ((U32*)(void*)rk)[0];      
-      ((U32*)(void*)out)[1] = READ_TE_DOUBLE_WORD(((U32*)(void*)TE0)[*(in+4)])  ^ READ_TE_DOUBLE_WORD(((U32*)(void*)TE1)[*(in+9)])  ^ READ_TE_DOUBLE_WORD(((U32*)(void*)TE2)[*(in+14)]) ^ READ_TE_DOUBLE_WORD(((U32*)(void*)TE3)[*(in+3)])  ^ ((U32*)(void*)rk)[1];
-      ((U32*)(void*)out)[2] = READ_TE_DOUBLE_WORD(((U32*)(void*)TE0)[*(in+8)])  ^ READ_TE_DOUBLE_WORD(((U32*)(void*)TE1)[*(in+13)]) ^ READ_TE_DOUBLE_WORD(((U32*)(void*)TE2)[*(in+2)])  ^ READ_TE_DOUBLE_WORD(((U32*)(void*)TE3)[*(in+7)])  ^ ((U32*)(void*)rk)[2];
-      ((U32*)(void*)out)[3] = READ_TE_DOUBLE_WORD(((U32*)(void*)TE0)[*(in+12)]) ^ READ_TE_DOUBLE_WORD(((U32*)(void*)TE1)[*(in+1)])  ^ READ_TE_DOUBLE_WORD(((U32*)(void*)TE2)[*(in+6)])  ^ READ_TE_DOUBLE_WORD(((U32*)(void*)TE3)[*(in+11)]) ^ ((U32*)(void*)rk)[3];
-
+      ((U32*)out)[0] = READ_TE_DOUBLE_WORD(((U32*)TE0)[*(in+0)])  ^ READ_TE_DOUBLE_WORD(((U32*)TE1)[*(in+5)])  ^ READ_TE_DOUBLE_WORD(((U32*)TE2)[*(in+10)]) ^ READ_TE_DOUBLE_WORD(((U32*)TE3)[*(in+15)]) ^ ((U32*)rk)[0];
+      ((U32*)out)[1] = READ_TE_DOUBLE_WORD(((U32*)TE0)[*(in+4)])  ^ READ_TE_DOUBLE_WORD(((U32*)TE1)[*(in+9)])  ^ READ_TE_DOUBLE_WORD(((U32*)TE2)[*(in+14)]) ^ READ_TE_DOUBLE_WORD(((U32*)TE3)[*(in+3)])  ^ ((U32*)rk)[1];
+      ((U32*)out)[2] = READ_TE_DOUBLE_WORD(((U32*)TE0)[*(in+8)])  ^ READ_TE_DOUBLE_WORD(((U32*)TE1)[*(in+13)]) ^ READ_TE_DOUBLE_WORD(((U32*)TE2)[*(in+2)])  ^ READ_TE_DOUBLE_WORD(((U32*)TE3)[*(in+7)])  ^ ((U32*)rk)[2];
+      ((U32*)out)[3] = READ_TE_DOUBLE_WORD(((U32*)TE0)[*(in+12)]) ^ READ_TE_DOUBLE_WORD(((U32*)TE1)[*(in+1)])  ^ READ_TE_DOUBLE_WORD(((U32*)TE2)[*(in+6)])  ^ READ_TE_DOUBLE_WORD(((U32*)TE3)[*(in+11)]) ^ ((U32*)rk)[3];
 }
 
 
@@ -55,13 +53,13 @@ void AESROUND(uint8_t *out, uint8_t *in, uint8_t *rk)
 /* ------------------------------ */
 
 #define XOR128(x,y,z) {                                                                             \
-    ((uint64_t*)(void*)(x))[0] = ((uint64_t*)(void*)(y))[0] ^ ((uint64_t*)(void*)(z))[0];  \
-    ((uint64_t*)(void*)(x))[1] = ((uint64_t*)(void*)(y))[1] ^ ((uint64_t*)(void*)(z))[1];  \
+    ((uint64_t*)(x))[0] = ((uint64_t*)(y))[0] ^ ((uint64_t*)(z))[0];  \
+    ((uint64_t*)(x))[1] = ((uint64_t*)(y))[1] ^ ((uint64_t*)(z))[1];  \
 }
 
 #define AND128(x,y,z) {                                                                             \
-    ((uint64_t*)(void*)(x))[0] = ((uint64_t*)(void*)(y))[0] & ((uint64_t*)(void*)(z))[0];  \
-    ((uint64_t*)(void*)(x))[1] = ((uint64_t*)(void*)(y))[1] & ((uint64_t*)(void*)(z))[1];  \
+    ((uint64_t*)(x))[0] = ((uint64_t*)(y))[0] & ((uint64_t*)(z))[0];  \
+    ((uint64_t*)(x))[1] = ((uint64_t*)(y))[1] & ((uint64_t*)(z))[1];  \
 }
 
 /*-------------------------------*/
@@ -83,15 +81,11 @@ void aegis128_initialization(const uint8_t *key, const uint8_t *iv, uint8_t *sta
         memcpy(state, ivtmp, 16);
         memcpy(state+16, constant+16, 16);
         memcpy(state+32, constant+0,  16);
-        
-        
 
         XOR128(state+48, keytmp,  constant);
         XOR128(state+64, keytmp,  constant + 16);
         XOR128(state,    state,   keytmp);
         XOR128(keytmp,   keytmp,  ivtmp);
-        
-        
 
         for (i = 0; i < 10; i++)  {
              //state update function
@@ -101,31 +95,24 @@ void aegis128_initialization(const uint8_t *key, const uint8_t *iv, uint8_t *sta
              AESROUND(state+32, state+16, state+32);
              AESROUND(state+16, state+0,  state+16);
              AESROUND(state+0,  tmp,      state+0);
-             
-             
 
              //xor msg with state[0]
              XOR128(keytmp, keytmp, ivtmp);
              XOR128(state,  state,  keytmp);
         }
-        
 }
 
 
 //the finalization state of AEGIS
-void aegis128_tag_generation(int32_t msglen, int32_t  adlen, uint8_t maclen, uint8_t *mac, uint8_t *state)
+void aegis128_tag_generation(uint64_t msglen, uint64_t adlen, uint8_t maclen, uint8_t *mac, uint8_t *state)
 {
        uint8_t i;
 
         uint8_t tmp[16];
         uint8_t msgtmp[16];
 		
-		for(i = 0; i < 16; i++){
-			msgtmp[i] = 0;
-		}
-		
-        msgtmp[0] = adlen << 3;
-        msgtmp[1] = msglen << 3;
+        ((uint64_t*)msgtmp)[0] = adlen << 3;
+        ((uint64_t*)msgtmp)[1] = msglen << 3;
 		
         XOR128(msgtmp, msgtmp, state+48);
 
@@ -136,17 +123,12 @@ void aegis128_tag_generation(int32_t msglen, int32_t  adlen, uint8_t maclen, uin
              AESROUND(state+64, state+48, state+64);
              AESROUND(state+48, state+32, state+48);
              AESROUND(state+32, state+16, state+32);
-             
              AESROUND(state+16, state+0,  state+16);
-             
              AESROUND(state+0,  tmp,      state+0);
 
              //xor "msg" with state[0]
-             
              XOR128(state, state, msgtmp);
         }
-       
-		 
 
         XOR128(state+64, state+64, state+48);
         XOR128(state+64, state+64, state+32);
@@ -162,7 +144,6 @@ void aegis128_tag_generation(int32_t msglen, int32_t  adlen, uint8_t maclen, uin
  void aegis128_enc_aut_step(const uint8_t *plaintextblk,
        uint8_t *ciphertextblk, uint8_t *state)
 {
-
         uint8_t tmp[16];
 		
         AND128(ciphertextblk, state+32, state+48);
@@ -183,33 +164,28 @@ void aegis128_tag_generation(int32_t msglen, int32_t  adlen, uint8_t maclen, uin
         XOR128(state, state, plaintextblk);
 }
 
-uint8_t mem0;
-uint8_t mem1;
 /*------------------------------*/
 
 int crypto_aead_encrypt(
-	uint8_t *c, int32_t *clen,
-	const uint8_t *m, int32_t mlen,
-	 uint8_t *ad, int32_t adlen,
+	uint8_t *c, size_t *clen,
+	const uint8_t *m, size_t mlen,
+	 uint8_t *ad, size_t adlen,
 	const uint8_t *nsec,
 	const uint8_t *npub,
 	uint8_t *k
 	)
 {
-        int32_t i;
+        size_t i;
         uint8_t plaintextblock[16], ciphertextblock[16], mac[16];
         uint8_t aegis128_state[80];
 
         //initialization stage
         aegis128_initialization(k, npub, aegis128_state);
 		
-		
         //process the associated data
         for (i = 0; (i+16) <= adlen; i += 16) {
               aegis128_enc_aut_step(ad+i, ciphertextblock, aegis128_state);
         }
-        
-        
 
         //deal with the partial block of associated data
         //in this program, we assume that the message length is multiple of bytes.
@@ -219,7 +195,7 @@ int crypto_aead_encrypt(
               aegis128_enc_aut_step(plaintextblock, ciphertextblock, aegis128_state);
         }
 
-		
+
         //encrypt the plaintext
         for (i = 0; (i+16) <= mlen; i += 16) {
               aegis128_enc_aut_step(m+i, c+i, aegis128_state);
@@ -233,8 +209,6 @@ int crypto_aead_encrypt(
               aegis128_enc_aut_step(plaintextblock, ciphertextblock, aegis128_state);
               memcpy(c+i,ciphertextblock, mlen & 0xf);
         }
-        
-        
 
         //finalization stage, we assume that the tag length is a multiple of bytes
         aegis128_tag_generation(mlen, adlen, 16, mac, aegis128_state);
@@ -255,7 +229,7 @@ void Encrypt(uint8_t *block, int32_t  mlen, uint8_t *key, uint8_t *npub,
 	nsec = malloc(CRYPTO_NSECBYTES);
 	
 	//length of inputs and param
-	int32_t clen = mlen + CRYPTO_ABYTES;
+	size_t clen = mlen + CRYPTO_ABYTES;
 	
 	uint8_t *AD;
     AD = (uint8_t *) malloc(adlen * sizeof(uint8_t) );
