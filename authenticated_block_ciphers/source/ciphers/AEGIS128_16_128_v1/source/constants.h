@@ -55,10 +55,10 @@
  *
  */
 /* Replace with the cipher constants declaration */
-extern ROM_DATA_BYTE TE3[1024];
-extern ROM_DATA_BYTE TE2[1024];
-extern ROM_DATA_BYTE TE1[1024];
-extern ROM_DATA_BYTE TE0[1024];
+extern uint8_t TE3[1024];
+extern uint8_t TE2[1024];
+extern uint8_t TE1[1024];
+extern uint8_t TE0[1024];
 
 
 #endif /* CONSTANTS_H */
