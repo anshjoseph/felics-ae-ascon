@@ -55,10 +55,10 @@
  *
  */
 /* Replace with the cipher constants declaration */
-extern TE_DOUBLE_WORD TE3[1024];
-extern TE_DOUBLE_WORD TE2[1024];
-extern TE_DOUBLE_WORD TE1[1024];
-extern TE_DOUBLE_WORD TE0[1024];
+extern uint8_t TE3[1024];
+extern uint8_t TE2[1024];
+extern uint8_t TE1[1024];
+extern uint8_t TE0[1024];
 
 
 #endif /* CONSTANTS_H */
