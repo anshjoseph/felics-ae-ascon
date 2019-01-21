@@ -67,11 +67,11 @@ void AESROUND(uint8_t *out, uint8_t *in, uint8_t *rk)
 void aegis128_initialization(const uint8_t *key, const uint8_t *iv, uint8_t *state)
 {
         int i;
-        uint8_t constant[32] = {0x0,0x1,0x01,0x02,0x03,0x05,0x08,0x0d,0x15,0x22,0x37,0x59,0x90,0xe9,0x79,0x62,0xdb,0x3d,0x18,0x55,0x6d,0xc2,0x2f,0xf1,0x20,0x11,0x31,0x42,0x73,0xb5,0x28,0xdd};
+        RAM_DATA_BYTE constant[32] = {0x0,0x1,0x01,0x02,0x03,0x05,0x08,0x0d,0x15,0x22,0x37,0x59,0x90,0xe9,0x79,0x62,0xdb,0x3d,0x18,0x55,0x6d,0xc2,0x2f,0xf1,0x20,0x11,0x31,0x42,0x73,0xb5,0x28,0xdd};
 
-        uint8_t tmp[16];
-        uint8_t keytmp[16];
-        uint8_t ivtmp[16];
+        RAM_DATA_BYTE tmp[16];
+        RAM_DATA_BYTE keytmp[16];
+        RAM_DATA_BYTE ivtmp[16];
 
         memcpy(keytmp, key, 16);
         memcpy(ivtmp, iv, 16);
@@ -106,8 +106,8 @@ void aegis128_tag_generation(uint64_t msglen, uint64_t adlen, uint8_t maclen, ui
 {
        int i;
 
-        uint8_t tmp[16];
-        uint8_t msgtmp[16];
+        RAM_DATA_BYTE tmp[16];
+        RAM_DATA_BYTE msgtmp[16];
 
         ((uint64_t*)msgtmp)[0] = adlen << 3;
         ((uint64_t*)msgtmp)[1] = msglen << 3;
@@ -143,7 +143,7 @@ void aegis128_enc_aut_step(const uint8_t *plaintextblk,
        uint8_t *ciphertextblk, uint8_t *state)
 {
 
-        uint8_t tmp[16];
+        RAM_DATA_BYTE tmp[16];
 
         AND128(ciphertextblk, state+32, state+48);
         XOR128(ciphertextblk, ciphertextblk, state+16);
@@ -175,8 +175,8 @@ int crypto_aead_encrypt(
 	)
 {
         unsigned long i;
-        uint8_t plaintextblock[16], ciphertextblock[16], mac[16];
-        uint8_t aegis128_state[80];
+        RAM_DATA_BYTE plaintextblock[16], ciphertextblock[16], mac[16];
+        RAM_DATA_BYTE aegis128_state[80];
 
         //initialization stage
         aegis128_initialization(k, npub, aegis128_state);
