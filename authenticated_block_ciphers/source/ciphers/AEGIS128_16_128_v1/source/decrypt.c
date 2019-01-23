@@ -27,33 +27,15 @@
  */
 
 #include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "cipher.h"
-#include "constants.h"
-
-#include <string.h>
-#include <stdlib.h>
-
-
-
-void AESROUND(uint8_t *out, uint8_t *in, uint8_t *rk);
-
-#define XOR128(x,y,z) {                                                                             \
-    ((uint64_t*)(void*)(x))[0] = ((uint64_t*)(void*)(y))[0] ^ ((uint64_t*)(void*)(z))[0];  \
-    ((uint64_t*)(void*)(x))[1] = ((uint64_t*)(void*)(y))[1] ^ ((uint64_t*)(void*)(z))[1];  \
-}
-
-#define AND128(x,y,z) {                                                                             \
-    ((uint64_t*)(void*)(x))[0] = ((uint64_t*)(void*)(y))[0] & ((uint64_t*)(void*)(z))[0];  \
-    ((uint64_t*)(void*)(x))[1] = ((uint64_t*)(void*)(y))[1] & ((uint64_t*)(void*)(z))[1];  \
-}
-
-
-
+#include "aegis_common.h"
 
 
 //one step of decryption
- void aegis128_dec_aut_step(uint8_t *plaintextblk,
+ static void aegis128_dec_aut_step(uint8_t *plaintextblk,
        const uint8_t *ciphertextblk, uint8_t *state)
 {
          uint8_t tmp[16];
@@ -79,16 +61,15 @@ void AESROUND(uint8_t *out, uint8_t *in, uint8_t *rk);
 
 /* ------------------------------------ */
 
-int crypto_aead_decrypt(
-	uint8_t *m, int32_t *mlen,
-	uint8_t *nsec,
-	const uint8_t *c, int32_t clen,
-	const uint8_t *ad, int32_t adlen,
+static int crypto_aead_decrypt(
+	uint8_t *m, size_t *mlen,
+	const uint8_t *c, size_t clen,
+	const uint8_t *ad, size_t adlen,
 	const uint8_t *npub,
 	const uint8_t *k
 	)
 {
-        int32_t i;
+        unsigned int i;
         uint8_t plaintextblock[16], ciphertextblock[16];
         uint8_t tag[16];
         uint8_t check = 0;
@@ -111,7 +92,6 @@ int crypto_aead_decrypt(
               aegis128_enc_aut_step(plaintextblock, ciphertextblock, aegis128_state);
         }
 
-
         *mlen = clen - 16;
 
         //decrypt the ciphertext
@@ -130,8 +110,8 @@ int crypto_aead_decrypt(
               //need to modify the state here (because in the last block, keystream is wrongly used to update the state)
               memset(plaintextblock, 0, *mlen & 0xf);
               //aegis128_state[0] = _mm_xor_si128( aegis128_state[0], _mm_load_si128((__m128i*)plaintextblock)  ) ;
-              ((uint64_t*)(void*)aegis128_state)[0] ^= ((uint64_t*)(void*)plaintextblock)[0];
-              ((uint64_t*)(void*)aegis128_state)[1] ^= ((uint64_t*)(void*)plaintextblock)[1];
+              ((uint64_t*)aegis128_state)[0] ^= ((uint64_t*)plaintextblock)[0];
+              ((uint64_t*)aegis128_state)[1] ^= ((uint64_t*)plaintextblock)[1];
         }
 
         //we assume that the tag length is multiple of bytes
@@ -145,41 +125,11 @@ int crypto_aead_decrypt(
 
 
 
-uint8_t Decrypt(uint8_t *block, int32_t  mlen, uint8_t *key, uint8_t *npub,
+uint8_t Decrypt(uint8_t *block, int32_t mlen, uint8_t *key, uint8_t *npub,
  uint8_t *ad, int32_t  adlen, uint8_t *c, uint8_t *roundKeys)
 {
-	/* Add here the cipher decryption implementation */
-
-		static uint8_t *nsec;
-	nsec = malloc(CRYPTO_NSECBYTES);
-	
 	//length of inputs and param
-	int32_t clen = mlen + CRYPTO_ABYTES;
-	
-	uint8_t *AD;
-    AD = (uint8_t *) malloc(adlen * sizeof(uint8_t) );
-    memcpy(AD, ad, adlen);
-	
-	if(adlen !=16){
-	return crypto_aead_decrypt(
-	block, &mlen,
-	nsec,
-	c, clen,
-	AD, adlen,
-	npub,
-	key
-	);}
-	else if(adlen ==16){
-	return crypto_aead_decrypt(
-	block, &mlen,
-	nsec,
-	c, clen,
-	AD, adlen,
-	npub,
-	key
-	);
-	}
-	
+	size_t clen = mlen + CRYPTO_ABYTES;
+    size_t u_mlen;
+    return crypto_aead_decrypt(block, &u_mlen, c, clen, ad, adlen, npub, key);
 }
-
-
