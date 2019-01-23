@@ -38,7 +38,7 @@
  static void aegis128_dec_aut_step(uint8_t *plaintextblk,
        const uint8_t *ciphertextblk, uint8_t *state)
 {
-         uint8_t tmp[16];
+        RAM_DATA_BYTE tmp[16];
 
         AND128(plaintextblk, state+32, state+48);
         XOR128(plaintextblk, plaintextblk, state+16);
@@ -70,10 +70,10 @@ static int crypto_aead_decrypt(
 	)
 {
         unsigned int i;
-        uint8_t plaintextblock[16], ciphertextblock[16];
-        uint8_t tag[16];
-        uint8_t check = 0;
-        uint8_t aegis128_state[80];
+        RAM_DATA_BYTE plaintextblock[16], ciphertextblock[16];
+        RAM_DATA_BYTE tag[16];
+        RAM_DATA_BYTE check = 0;
+        RAM_DATA_BYTE aegis128_state[80];
 
         if (clen < 16) return -1;
 
