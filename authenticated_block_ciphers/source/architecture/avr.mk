@@ -31,7 +31,7 @@
 
 
 # Include directory code path
-INCLUDE_DIR=/opt/avr_tools/simavr/simavr-1.2/simavr/sim/avr
+INCLUDE_DIR=/opt/paclido/simavr/include/simavr/avr
 
 CC := avr-gcc
 
