@@ -56,10 +56,7 @@
  *
  */
 /* Replace with the cipher constants declaration */
-extern uint8_t TE3[1024];
-extern uint8_t TE2[1024];
-extern uint8_t TE1[1024];
-extern uint8_t TE0[1024];
+extern const uint8_t TE[4][1024];
 
 
 #endif /* CONSTANTS_H */
