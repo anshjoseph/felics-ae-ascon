@@ -56,7 +56,7 @@
  *
  */
 /* Replace with the cipher constants declaration */
-extern const uint8_t TE[4][1024];
+extern ROM_DATA_BYTE TE[4][1024];
 
 
 #endif /* CONSTANTS_H */

@@ -138,6 +138,9 @@
 #define READ_ROM_DATA_BYTE(x) pgm_read_byte(&x)
 #define READ_ROM_DATA_WORD(x) pgm_read_word(&x)
 #define READ_ROM_DATA_DOUBLE_WORD(x) pgm_read_dword(&x)
+
+#define ROM_memcpy memcpy_P
+
 #else /* AVR */
 #define ROM_DATA_BYTE const uint8_t ALIGNED
 #define ROM_DATA_WORD const uint16_t ALIGNED
@@ -146,6 +149,9 @@
 #define READ_ROM_DATA_BYTE(x) x
 #define READ_ROM_DATA_WORD(x) x
 #define READ_ROM_DATA_DOUBLE_WORD(x) x
+
+#define ROM_memcpy memcpy
+
 #endif /* AVR */
 
 
