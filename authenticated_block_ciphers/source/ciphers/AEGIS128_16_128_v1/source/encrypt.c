@@ -37,6 +37,17 @@
 
 /* -------------------------- */
 
+/* NB: this function used to make heavy use of uint8_t* => uint32_t*
+ * casts, which broke due to some SSE-related gcc optimization. The
+ * problem could be workd around by
+ *
+ * * adding __attribute__ ((target("no-sse"))) to this function
+ * * compiling with -fsanitize=alignment
+ *
+ * Following advice from [1], I figure memcpy(3) is the way to go.
+ *
+ * [1]: http://pzemtsov.github.io/2016/11/06/bug-story-alignment-on-x86.html
+ */
 void AESROUND(uint8_t *out, uint8_t *in, uint8_t *rk)
 {
     uint32_t out32[4];
