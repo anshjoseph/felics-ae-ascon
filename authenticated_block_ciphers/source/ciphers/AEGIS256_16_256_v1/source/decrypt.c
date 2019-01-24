@@ -35,7 +35,7 @@
 
 
 //one step of decryption
- void aegis256_dec_aut_step(uint8_t *plaintextblk,
+ static void aegis256_dec_aut_step(uint8_t *plaintextblk,
        const uint8_t *ciphertextblk, uint8_t *state)
 {
    uint8_t tmp[16];
@@ -60,10 +60,7 @@
         XOR128(state, state, plaintextblk);
 }
 
-
-/* ------------------------------------ */
-
-int crypto_aead_decrypt(
+static int crypto_aead_decrypt(
 	uint8_t *m, size_t *mlen,
 	const uint8_t *c, size_t clen,
 	const uint8_t *ad, size_t adlen,
@@ -111,8 +108,8 @@ int crypto_aead_decrypt(
 
               //need to modify the state here (because in the last block, keystream is wrongly used to update the state)
               memset(plaintextblock, 0, *mlen & 0xf);
-              ((uint64_t*)(void*)aegis256_state)[0] ^= ((uint64_t*)(void*)plaintextblock)[0];
-              ((uint64_t*)(void*)aegis256_state)[1] ^= ((uint64_t*)(void*)plaintextblock)[1];
+              ((uint64_t*)aegis256_state)[0] ^= ((uint64_t*)plaintextblock)[0];
+              ((uint64_t*)aegis256_state)[1] ^= ((uint64_t*)plaintextblock)[1];
         }
 
         //we assume that the tag length is multiple of bytes
@@ -123,8 +120,6 @@ int crypto_aead_decrypt(
         if (check == 0) return 0;
         else return -1;
 }
-
-
 
 int Decrypt(uint8_t *block, size_t mlen, uint8_t *key, uint8_t *npub,
  uint8_t *ad, size_t adlen, uint8_t *c, uint8_t *roundKeys)
