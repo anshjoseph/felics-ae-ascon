@@ -87,10 +87,9 @@ void AESROUND(uint8_t *out, uint8_t *in, uint8_t *rk);
 /* ------------------------------------ */
 
 int crypto_aead_decrypt(
-	uint8_t *m, int32_t *mlen,
-	uint8_t *nsec,
-	const uint8_t *c, int32_t clen,
-	const uint8_t *ad, int32_t adlen,
+	uint8_t *m, size_t *mlen,
+	const uint8_t *c, size_t clen,
+	const uint8_t *ad, size_t adlen,
 	const uint8_t *npub,
 	const uint8_t *k
 	)
@@ -152,41 +151,12 @@ int crypto_aead_decrypt(
 
 
 
-uint8_t Decrypt(uint8_t *block, int32_t  mlen, uint8_t *key, uint8_t *npub,
- uint8_t *ad, int32_t  adlen, uint8_t *c, uint8_t *roundKeys)
+int Decrypt(uint8_t *block, size_t mlen, uint8_t *key, uint8_t *npub,
+ uint8_t *ad, size_t adlen, uint8_t *c, uint8_t *roundKeys)
 {
-	/* Add here the cipher decryption implementation */
-
-		static uint8_t *nsec;
-	nsec = malloc(CRYPTO_NSECBYTES);
-	
 	//length of inputs and param
-	int32_t clen = mlen + CRYPTO_ABYTES;
-	
-	uint8_t *AD;
-    AD = (uint8_t *) malloc(adlen * sizeof(uint8_t) );
-    memcpy(AD, ad, adlen);
-	
-	if(adlen !=16){
-	return crypto_aead_decrypt(
-	block, &mlen,
-	nsec,
-	c, clen,
-	AD, adlen,
-	npub,
-	key
-	);}
-	else if(adlen ==16){
-	return crypto_aead_decrypt(
-	block, &mlen,
-	nsec,
-	c, clen,
-	AD, adlen,
-	npub,
-	key
-	);
-	}
-	
+	size_t clen = mlen + CRYPTO_ABYTES;
+    return crypto_aead_decrypt(block, &mlen, c, clen, ad, adlen, npub, key);
 }
 
 
