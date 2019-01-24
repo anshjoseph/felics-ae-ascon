@@ -41,6 +41,7 @@
  * 	NUMBER_OF_ROUNDS - the cipher number of rounds
  *
  */
+#define BLOCK_SIZE 32
 #define KEY_SIZE 16
 #define ROUND_KEYS_SIZE 0
 
