@@ -145,8 +145,8 @@ int crypto_aead_decrypt(
 
 
 
-uint8_t Decrypt(uint8_t *block, int32_t  mlen, uint8_t *key, uint8_t *npub,
- uint8_t *ad, int32_t  adlen, uint8_t *c, uint8_t *roundKeys)
+int Decrypt(uint8_t *block, size_t  mlen, uint8_t *key, uint8_t *npub,
+ uint8_t *ad, size_t  adlen, uint8_t *c, uint8_t *roundKeys)
 {
 	/* Add here the cipher decryption implementation */
 
