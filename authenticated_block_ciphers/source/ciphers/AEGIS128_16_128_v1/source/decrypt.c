@@ -69,7 +69,7 @@ static int crypto_aead_decrypt(
 	const uint8_t *k
 	)
 {
-        unsigned int i;
+        size_t i;
         RAM_DATA_BYTE plaintextblock[16], ciphertextblock[16];
         RAM_DATA_BYTE tag[16];
         RAM_DATA_BYTE check = 0;

@@ -151,7 +151,7 @@ int crypto_aead_encrypt(
 	uint8_t *k
 	)
 {
-         uint32_t i;
+        size_t i;
         uint8_t plaintextblock[16], ciphertextblock[16], mac[16];
         uint8_t aegis256_state[96];
 
@@ -159,7 +159,7 @@ int crypto_aead_encrypt(
         aegis256_initialization(k, npub, aegis256_state);
 		
         //process the associated data
-        for (i = 0; (i+16) <= (uint32_t)adlen; i += 16) {
+        for (i = 0; (i+16) <= adlen; i += 16) {
               aegis256_enc_aut_step(ad+i, ciphertextblock, aegis256_state);
         }
 
@@ -172,7 +172,7 @@ int crypto_aead_encrypt(
         }
 
         //encrypt the plaintext
-        for (i = 0; (i+16) <= (uint32_t)mlen; i += 16) {
+        for (i = 0; (i+16) <= mlen; i += 16) {
               aegis256_enc_aut_step(m+i, c+i, aegis256_state);
         }
 

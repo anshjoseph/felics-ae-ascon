@@ -42,7 +42,7 @@ static int crypto_aead_encrypt(
 	const uint8_t *k
 	)
 {
-        unsigned long i;
+        size_t i;
         RAM_DATA_BYTE plaintextblock[16], ciphertextblock[16], mac[16];
         RAM_DATA_BYTE aegis128_state[80];
 
