@@ -35,7 +35,7 @@
 
 
 //one step of decryption
- void aegis128L_dec_aut_step(uint8_t *plaintextblk,
+ static void aegis128L_dec_aut_step(uint8_t *plaintextblk,
        const uint8_t *ciphertextblk, uint8_t *state)
 {
    uint8_t tmp[16];
@@ -65,10 +65,7 @@
     XOR128(state+64, state+64, plaintextblk+16);
 }
 
-
-/* ------------------------------------ */
-
-int crypto_aead_decrypt(
+static int crypto_aead_decrypt(
 	uint8_t *m, size_t *mlen,
 	const uint8_t *c, size_t clen,
 	const uint8_t *ad, size_t adlen,

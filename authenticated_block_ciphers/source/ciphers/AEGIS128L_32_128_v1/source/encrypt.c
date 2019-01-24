@@ -85,9 +85,6 @@ static int crypto_aead_encrypt(
         return 0;
 }
 
-
-/*--------------------------------*/
-
 void Encrypt(uint8_t *block, size_t mlen, uint8_t *key, uint8_t *npub,
  uint8_t *ad, size_t adlen, uint8_t *c, uint8_t *roundKeys)
 {
