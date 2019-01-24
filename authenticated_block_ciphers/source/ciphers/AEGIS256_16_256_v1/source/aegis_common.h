@@ -51,5 +51,43 @@ static inline void AESROUND(uint8_t *out, uint8_t *in, uint8_t *rk)
     ((uint64_t*)(x))[1] = ((uint64_t*)(y))[1] & ((uint64_t*)(z))[1];  \
 }
 
+//the finalization state of AEGIS
+static inline void aegis256_tag_generation(uint64_t msglen, uint64_t adlen, uint8_t maclen, uint8_t *mac, uint8_t *state)
+{
+        int i;
+
+        uint8_t tmp[16];
+        uint8_t msgtmp[16];
+
+        ((uint64_t*)msgtmp)[0] = adlen << 3;
+        ((uint64_t*)msgtmp)[1] = msglen << 3;
+
+        XOR128(msgtmp, msgtmp, state+48);
+
+        for (i = 0; i < 7; i++) {
+             //state update function
+             memcpy(tmp, state+80, 16);
+
+             AESROUND(state+80, state+64, state+80);
+             AESROUND(state+64, state+48, state+64);
+             AESROUND(state+48, state+32, state+48);
+             AESROUND(state+32, state+16, state+32);
+             AESROUND(state+16, state+0,  state+16);
+             AESROUND(state+0,  tmp,      state+0);
+
+             //xor "msg" with state[0]
+             XOR128(state, state, msgtmp);
+        }
+
+        XOR128(state+80, state+80, state+64);
+        XOR128(state+80, state+80, state+48);
+        XOR128(state+80, state+80, state+32);
+        XOR128(state+80, state+80, state+16);
+        XOR128(state+80, state+80, state+0);
+
+        //in this program, the mac length is assumed to be multiple of bytes
+        memcpy(mac, state+80, maclen);
+}
+
 
 #endif /* AEGIS_COMMON_H */
