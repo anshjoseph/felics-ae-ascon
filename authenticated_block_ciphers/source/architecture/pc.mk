@@ -45,7 +45,8 @@ CFLAGS := \
 	-Wfatal-errors \
 	-Wl,--gc-sections \
 	-Wl,--relax \
-	-I$(INCLUDE_DIR)
+	-I$(INCLUDE_DIR) \
+	-Wall -Wextra
 
 OBJDUMP := objdump
 
