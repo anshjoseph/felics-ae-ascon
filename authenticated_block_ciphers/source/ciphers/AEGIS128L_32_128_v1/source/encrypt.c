@@ -31,7 +31,7 @@
 #include <string.h>
 
 #include "cipher.h"
-#include "aegis_common.h""
+#include "aegis_common.h"
 
 
 static int crypto_aead_encrypt(
@@ -42,16 +42,15 @@ static int crypto_aead_encrypt(
 	const uint8_t *k
 	)
 {
-         uint32_t i;
+        unsigned int i;
         uint8_t plaintextblock[32], ciphertextblock[32], mac[16];
         uint8_t aegis128L_state[128];
 
         //initialization stage
         aegis128L_initialization(k, npub, aegis128L_state);
 
-
         //process the associated data
-        for (i = 0; (i+32) <= (uint32_t)adlen; i += 32) {
+        for (i = 0; (i+32) <= adlen; i += 32) {
               aegis128L_enc_aut_step(ad+i, ciphertextblock, aegis128L_state);
         }
 
@@ -64,7 +63,7 @@ static int crypto_aead_encrypt(
         }
 
         //encrypt the plaintext
-        for (i = 0; (i+32) <= (uint32_t)mlen; i += 32) {
+        for (i = 0; (i+32) <= mlen; i += 32) {
               aegis128L_enc_aut_step(m+i, c+i, aegis128L_state);
         }
 

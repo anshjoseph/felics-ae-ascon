@@ -73,7 +73,7 @@ static int crypto_aead_decrypt(
 	const uint8_t *k
 	)
 {
-		uint32_t i;		
+		unsigned int i;
 		
         uint8_t plaintextblock[32], ciphertextblock[32];
         uint8_t tag[16];
@@ -85,7 +85,7 @@ static int crypto_aead_decrypt(
         aegis128L_initialization(k, npub, aegis128L_state);
 
         //process the associated data
-        for (i = 0; (i+32) <= (uint32_t)adlen; i += 32) {
+        for (i = 0; (i+32) <= adlen; i += 32) {
               aegis128L_enc_aut_step(ad+i, ciphertextblock, aegis128L_state);
         }
 
@@ -97,11 +97,10 @@ static int crypto_aead_decrypt(
               aegis128L_enc_aut_step(plaintextblock, ciphertextblock, aegis128L_state);
         }
 
-
         *mlen = clen - 16;
 
         //decrypt the ciphertext
-        for (i = 0; (i+32) <= (uint32_t)*mlen; i += 32) {
+        for (i = 0; (i+32) <= *mlen; i += 32) {
               aegis128L_dec_aut_step(m+i, c+i, aegis128L_state);
         }
 
@@ -127,8 +126,6 @@ static int crypto_aead_decrypt(
         if (check == 0) return 0;
         else return -1;
 }
-
-
 
 int Decrypt(uint8_t *block, size_t mlen, uint8_t *key, uint8_t *npub,
  uint8_t *ad, size_t adlen, uint8_t *c, uint8_t *roundKeys)
