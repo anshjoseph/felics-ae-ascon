@@ -41,6 +41,7 @@
  * 	NUMBER_OF_ROUNDS - the cipher number of rounds
  *
  */
+#define BLOCK_SIZE 16
 #define KEY_SIZE 32
 #define ROUND_KEYS_SIZE 0
 
@@ -56,10 +57,7 @@
  *
  */
 /* Replace with the cipher constants declaration */
-extern TE_DOUBLE_WORD TE3[1024];
-extern TE_DOUBLE_WORD TE2[1024];
-extern TE_DOUBLE_WORD TE1[1024];
-extern TE_DOUBLE_WORD TE0[1024];
+extern ROM_DATA_BYTE TE[4][1024];
 
 
 #endif /* CONSTANTS_H */

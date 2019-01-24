@@ -27,44 +27,12 @@
  */
 
 #include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "cipher.h"
-#include "constants.h"
+#include "aegis_common.h"
 
-#include <string.h>
-#include <stdlib.h>
-
-
-/* -------------------------- */
-
-typedef uint32_t U32;
-
-
-
-
-void AESROUND(uint8_t *out, uint8_t *in, uint8_t *rk)
-{
-      ((U32*)(void*)out)[0] = READ_TE_DOUBLE_WORD(((U32*)(void*)TE0)[*(in+0)])  ^ READ_TE_DOUBLE_WORD(((U32*)(void*)TE1)[*(in+5)])  ^ READ_TE_DOUBLE_WORD(((U32*)(void*)TE2)[*(in+10)]) ^ READ_TE_DOUBLE_WORD(((U32*)(void*)TE3)[*(in+15)]) ^ ((U32*)(void*)rk)[0];
-      ((U32*)(void*)out)[1] = READ_TE_DOUBLE_WORD(((U32*)(void*)TE0)[*(in+4)])  ^ READ_TE_DOUBLE_WORD(((U32*)(void*)TE1)[*(in+9)])  ^ READ_TE_DOUBLE_WORD(((U32*)(void*)TE2)[*(in+14)]) ^ READ_TE_DOUBLE_WORD(((U32*)(void*)TE3)[*(in+3)])  ^ ((U32*)(void*)rk)[1];
-      ((U32*)(void*)out)[2] = READ_TE_DOUBLE_WORD(((U32*)(void*)TE0)[*(in+8)])  ^ READ_TE_DOUBLE_WORD(((U32*)(void*)TE1)[*(in+13)]) ^ READ_TE_DOUBLE_WORD(((U32*)(void*)TE2)[*(in+2)])  ^ READ_TE_DOUBLE_WORD(((U32*)(void*)TE3)[*(in+7)])  ^ ((U32*)(void*)rk)[2];
-      ((U32*)(void*)out)[3] = READ_TE_DOUBLE_WORD(((U32*)(void*)TE0)[*(in+12)]) ^ READ_TE_DOUBLE_WORD(((U32*)(void*)TE1)[*(in+1)])  ^ READ_TE_DOUBLE_WORD(((U32*)(void*)TE2)[*(in+6)])  ^ READ_TE_DOUBLE_WORD(((U32*)(void*)TE3)[*(in+11)]) ^ ((U32*)(void*)rk)[3];
-}
-
-
-
-/* ------------------------------ */
-
-#define XOR128(x,y,z) {                                                                             \
-    ((uint64_t*)(void*)(x))[0] = ((uint64_t*)(void*)(y))[0] ^ ((uint64_t*)(void*)(z))[0];  \
-    ((uint64_t*)(void*)(x))[1] = ((uint64_t*)(void*)(y))[1] ^ ((uint64_t*)(void*)(z))[1];  \
-}
-
-#define AND128(x,y,z) {                                                                             \
-    ((uint64_t*)(void*)(x))[0] = ((uint64_t*)(void*)(y))[0] & ((uint64_t*)(void*)(z))[0];  \
-    ((uint64_t*)(void*)(x))[1] = ((uint64_t*)(void*)(y))[1] & ((uint64_t*)(void*)(z))[1];  \
-}
-
-/*-------------------------------*/
 
 // The initialization state of AEGIS
 
