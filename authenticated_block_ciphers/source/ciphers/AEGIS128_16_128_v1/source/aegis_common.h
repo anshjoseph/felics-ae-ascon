@@ -3,8 +3,6 @@
 
 #include "constants.h"
 
-/* -------------------------- */
-
 /* NB: this function used to make heavy use of uint8_t* => uint32_t*
  * casts, which broke due to some SSE-related gcc optimization. The
  * problem could be workd around by
@@ -38,8 +36,6 @@ static inline void AESROUND(uint8_t *out, uint8_t *in, uint8_t *rk)
 
     memcpy(out, out32, sizeof(out32));
 }
-
-/* ------------------------------ */
 
 #define XOR128(x,y,z) {                                                                             \
     ((uint64_t*)(x))[0] = ((uint64_t*)(y))[0] ^ ((uint64_t*)(z))[0];  \

@@ -27,29 +27,11 @@
  */
 
 #include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "cipher.h"
-#include "constants.h"
-
-#include <string.h>
-#include <stdlib.h>
-
-
-
-void AESROUND(uint8_t *out, uint8_t *in, uint8_t *rk);
-
-#define XOR128(x,y,z) {                                                                             \
-    ((uint64_t*)(void*)(x))[0] = ((uint64_t*)(void*)(y))[0] ^ ((uint64_t*)(void*)(z))[0];  \
-    ((uint64_t*)(void*)(x))[1] = ((uint64_t*)(void*)(y))[1] ^ ((uint64_t*)(void*)(z))[1];  \
-}
-
-#define AND128(x,y,z) {                                                                             \
-    ((uint64_t*)(void*)(x))[0] = ((uint64_t*)(void*)(y))[0] & ((uint64_t*)(void*)(z))[0];  \
-    ((uint64_t*)(void*)(x))[1] = ((uint64_t*)(void*)(y))[1] & ((uint64_t*)(void*)(z))[1];  \
-}
-
-
-
+#include "aegis_common.h"
 
 
 //one step of decryption
