@@ -25,8 +25,8 @@ static void _lilliput_ae_encrypt(
     _encrypt_message(key, message_len, message, nonce, tag, ciphertext);
 }
 
-void Encrypt(uint8_t *block, int32_t mlen, uint8_t *key, uint8_t *npub,
-             uint8_t *ad, int32_t adlen, uint8_t *c, uint8_t *roundKeys)
+void Encrypt(uint8_t *block, size_t mlen, uint8_t *key, uint8_t *npub,
+             uint8_t *ad, size_t adlen, uint8_t *c, uint8_t *roundKeys)
 {
     _lilliput_ae_encrypt(mlen, block, adlen, ad, key, npub, c, c+mlen);
 }

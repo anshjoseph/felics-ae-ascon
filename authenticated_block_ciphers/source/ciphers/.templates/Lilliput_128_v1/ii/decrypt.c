@@ -28,8 +28,8 @@ static bool _lilliput_ae_decrypt(
     return memcmp(tag, effective_tag, TAG_BYTES) == 0;
 }
 
-int Decrypt(uint8_t *block, int32_t mlen, uint8_t *key, uint8_t *npub,
-            uint8_t *ad, int32_t adlen, uint8_t *c, uint8_t *roundKeys)
+int Decrypt(uint8_t *block, size_t mlen, uint8_t *key, uint8_t *npub,
+            uint8_t *ad, size_t adlen, uint8_t *c, uint8_t *roundKeys)
 {
     return _lilliput_ae_decrypt(mlen, c, adlen, ad, key, npub, c+mlen, block)
         ? 0 : -1;

@@ -31,6 +31,10 @@
 #define CIPHER_H
 
 
+#include <stddef.h>
+#include <stdint.h>
+
+
 #ifdef AVR /* AVR */
 #include <avr/pgmspace.h>
 #endif /* AVR */
@@ -196,8 +200,8 @@ void RunDecryptionKeySchedule(uint8_t *key, uint8_t *roundKeys);
  * ... block - the block to encrypt
  *
  */
-void Encrypt(uint8_t *block, int32_t  mlen, uint8_t *key, uint8_t *npub,
- uint8_t *ad, int32_t  adlen, uint8_t *c, uint8_t *roundKeys);
+void Encrypt(uint8_t *block, size_t mlen, uint8_t *key, uint8_t *npub,
+ uint8_t *ad, size_t adlen, uint8_t *c, uint8_t *roundKeys);
 
 /*
  *
@@ -205,7 +209,7 @@ void Encrypt(uint8_t *block, int32_t  mlen, uint8_t *key, uint8_t *npub,
  * ... block - the block to decrypt
  *
  */
-int Decrypt(uint8_t *block, int32_t  mlen, uint8_t *key, uint8_t *npub,
- uint8_t *ad, int32_t  adlen, uint8_t *c, uint8_t *roundKeys);
+int Decrypt(uint8_t *block, size_t mlen, uint8_t *key, uint8_t *npub,
+ uint8_t *ad, size_t adlen, uint8_t *c, uint8_t *roundKeys);
 
 #endif /* CIPHER_H */
