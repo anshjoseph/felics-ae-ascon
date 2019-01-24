@@ -130,6 +130,5 @@ int Decrypt(uint8_t *block, size_t mlen, uint8_t *key, uint8_t *npub,
 {
 	//length of inputs and param
 	size_t clen = mlen + CRYPTO_ABYTES;
-    size_t u_mlen;
-    return crypto_aead_decrypt(block, &u_mlen, c, clen, ad, adlen, npub, key);
+    return crypto_aead_decrypt(block, &mlen, c, clen, ad, adlen, npub, key);
 }

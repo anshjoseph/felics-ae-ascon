@@ -143,10 +143,9 @@ void aegis256_tag_generation(int32_t msglen, int32_t  adlen, uint8_t maclen, uin
 /*------------------------------*/
 
 int crypto_aead_encrypt(
-	uint8_t *c, int32_t *clen,
-	const uint8_t *m, int32_t mlen,
-	 uint8_t *ad, int32_t adlen,
-	const uint8_t *nsec,
+	uint8_t *c, size_t *clen,
+	const uint8_t *m, size_t mlen,
+    uint8_t *ad, size_t adlen,
 	const uint8_t *npub,
 	uint8_t *k
 	)
@@ -199,38 +198,9 @@ int crypto_aead_encrypt(
 void Encrypt(uint8_t *block, size_t  mlen, uint8_t *key, uint8_t *npub,
  uint8_t *ad, size_t  adlen, uint8_t *c, uint8_t *roundKeys)
 {
-
-	static uint8_t *nsec;
-	nsec = malloc(CRYPTO_NSECBYTES);
-	
 	//length of inputs and param
-	int32_t clen = mlen + CRYPTO_ABYTES;
-	
-	uint8_t *AD;
-    AD = (uint8_t *) malloc(adlen * sizeof(uint8_t) );
-    memcpy(AD, ad, adlen);
-	
-	if(adlen !=16){
-	crypto_aead_encrypt(
-	c, &clen,
-	block, mlen,
-	AD, adlen,
-	nsec,
-	npub,
-	key
-	);}
-	else if(adlen ==16){
-	crypto_aead_encrypt(
-	c, &clen,
-	block, mlen,
-	AD, adlen,
-	nsec,
-	npub,
-	key
-	);
-	}
-	
-	
+	size_t clen;
+	crypto_aead_encrypt(c, &clen, block, mlen, ad, adlen, npub, key);
 }
 
 
