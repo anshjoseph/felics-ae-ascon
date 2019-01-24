@@ -129,11 +129,10 @@ int main()
 	
 
 	BEGIN_DECRYPTION();
-	Decrypt(data, DATA_SIZE, key, npub, ad, ASSOCIATED_DATA_SIZE, c);
+	int valid = Decrypt(data, DATA_SIZE, key, npub, ad, ASSOCIATED_DATA_SIZE, c);
 	END_DECRYPTION();
 
 #if defined(DEBUG) && (DEBUG_LOW == (DEBUG_LOW & DEBUG))
-	//VerifyTag(tag_check);
 	DisplayData(data, DATA_SIZE, PLAINTEXT_NAME);
 #endif
 	
@@ -144,5 +143,5 @@ int main()
 	StopDevice();
 	
 	
-	return 0;
+	return valid;
 }

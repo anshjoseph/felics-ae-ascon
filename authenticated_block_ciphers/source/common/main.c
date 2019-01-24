@@ -127,11 +127,10 @@ int main()
 	END_DECRYPTION_KEY_SCHEDULE();
 
 	BEGIN_DECRYPTION();
-	Decrypt(state, MAXTEST_BYTES_M, key, npub, ad, MAXTEST_BYTES_AD, c, roundKeys);
+	int valid = Decrypt(state, MAXTEST_BYTES_M, key, npub, ad, MAXTEST_BYTES_AD, c, roundKeys);
 	END_DECRYPTION();
 
 #if defined(DEBUG) && (DEBUG_LOW == (DEBUG_LOW & DEBUG))
-	//VerifyTag(Decrypt(state, MAXTEST_BYTES_M, key, npub, ad, MAXTEST_BYTES_AD, c));
 	DisplayVerifyData(state, MAXTEST_BYTES_M, PLAINTEXT_NAME);
 #endif
 	
@@ -142,5 +141,5 @@ int main()
 	StopDevice();
 	
 	
-	return 0;
+	return valid;
 }

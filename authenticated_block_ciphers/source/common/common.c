@@ -160,18 +160,6 @@ void VerifyData(uint8_t *data, const char *name)
 	}
 }
 
-void VerifyTag(uint8_t tag_check){
-	if(tag_check == -1)
-	{
-		printf("Tag WRONG!\n");
-	}
-	else
-	{
-		printf("Tag CORRECT!\n");
-	}
-}
-
-
 #endif
 
 
