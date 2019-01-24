@@ -38,14 +38,28 @@ static inline void AESROUND(uint8_t *out, uint8_t *in, uint8_t *rk)
     memcpy(out, out32, sizeof(out32));
 }
 
-#define XOR128(x,y,z) {                                                 \
-    ((uint64_t*)(x))[0] = ((uint64_t*)(y))[0] ^ ((uint64_t*)(z))[0];    \
-    ((uint64_t*)(x))[1] = ((uint64_t*)(y))[1] ^ ((uint64_t*)(z))[1];    \
-}                                                                       \
+static inline void XOR128(uint8_t *x, const uint8_t *y, const uint8_t *z)
+{
+    uint64_t x64[2], y64[2], z64[2];
+    memcpy(y64, y, 16);
+    memcpy(z64, z, 16);
 
-#define AND128(x,y,z) {                                                 \
-    ((uint64_t*)(x))[0] = ((uint64_t*)(y))[0] & ((uint64_t*)(z))[0];    \
-    ((uint64_t*)(x))[1] = ((uint64_t*)(y))[1] & ((uint64_t*)(z))[1];    \
+    x64[0] = y64[0] ^ z64[0];
+    x64[1] = y64[1] ^ z64[1];
+
+    memcpy(x, x64, 16);
+}
+
+static inline void AND128(uint8_t *x, const uint8_t *y, const uint8_t *z)
+{
+    uint64_t x64[2], y64[2], z64[2];
+    memcpy(y64, y, 16);
+    memcpy(z64, z, 16);
+
+    x64[0] = y64[0] & z64[0];
+    x64[1] = y64[1] & z64[1];
+
+    memcpy(x, x64, 16);
 }
 
 #endif /* AEGIS_UTILS_H */
