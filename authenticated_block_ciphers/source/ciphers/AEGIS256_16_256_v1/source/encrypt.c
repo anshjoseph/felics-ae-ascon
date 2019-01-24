@@ -43,8 +43,8 @@ static void crypto_aead_encrypt(
 	)
 {
         size_t i;
-        uint8_t plaintextblock[16], ciphertextblock[16], mac[16];
-        uint8_t aegis256_state[96];
+        RAM_DATA_BYTE plaintextblock[16], ciphertextblock[16], mac[16];
+        RAM_DATA_BYTE aegis256_state[96];
 
         //initialization stage
         aegis256_initialization(k, npub, aegis256_state);
