@@ -49,8 +49,7 @@ static inline void aegis128L_tag_generation(size_t msglen, size_t adlen, uint8_t
         uint8_t tmp[16];
         uint8_t msgtmp[16];
 
-        ((uint64_t*)msgtmp)[0] = adlen << 3;
-        ((uint64_t*)msgtmp)[1] = msglen << 3;
+        msgtmp_init(msgtmp, msglen, adlen);
 
         XOR128(msgtmp, msgtmp, state+32);
 

@@ -62,4 +62,10 @@ static inline void AND128(uint8_t *x, const uint8_t *y, const uint8_t *z)
     memcpy(x, x64, 16);
 }
 
+static inline void msgtmp_init(uint8_t *msgtmp, uint64_t msglen, uint64_t adlen)
+{
+    uint64_t msgtmp64[2] = { adlen << 3, msglen << 3 };
+    memcpy(msgtmp, msgtmp64, 16);
+}
+
 #endif /* AEGIS_UTILS_H */
