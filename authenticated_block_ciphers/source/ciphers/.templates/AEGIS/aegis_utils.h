@@ -1,6 +1,9 @@
 #ifndef AEGIS_UTILS_H
 #define AEGIS_UTILS_H
 
+#include <stdint.h>
+#include <string.h>
+
 #include "constants.h"
 
 
@@ -15,7 +18,7 @@
  *
  * [1]: http://pzemtsov.github.io/2016/11/06/bug-story-alignment-on-x86.html
  */
-static inline void AESROUND(uint8_t *out, uint8_t *in, uint8_t *rk)
+inline void AESROUND(uint8_t *out, uint8_t *in, uint8_t *rk)
 {
     RAM_DATA_DOUBLE_WORD out32[4];
 
@@ -38,7 +41,7 @@ static inline void AESROUND(uint8_t *out, uint8_t *in, uint8_t *rk)
     memcpy(out, out32, sizeof(out32));
 }
 
-static inline void XOR128(uint8_t *x, const uint8_t *y, const uint8_t *z)
+inline void XOR128(uint8_t *x, const uint8_t *y, const uint8_t *z)
 {
     uint64_t x64[2], y64[2], z64[2];
     memcpy(y64, y, 16);
@@ -50,7 +53,7 @@ static inline void XOR128(uint8_t *x, const uint8_t *y, const uint8_t *z)
     memcpy(x, x64, 16);
 }
 
-static inline void AND128(uint8_t *x, const uint8_t *y, const uint8_t *z)
+inline void AND128(uint8_t *x, const uint8_t *y, const uint8_t *z)
 {
     uint64_t x64[2], y64[2], z64[2];
     memcpy(y64, y, 16);
@@ -62,7 +65,7 @@ static inline void AND128(uint8_t *x, const uint8_t *y, const uint8_t *z)
     memcpy(x, x64, 16);
 }
 
-static inline void msgtmp_init(uint8_t *msgtmp, uint64_t msglen, uint64_t adlen)
+inline void msgtmp_init(uint8_t *msgtmp, uint64_t msglen, uint64_t adlen)
 {
     uint64_t msgtmp64[2] = { adlen << 3, msglen << 3 };
     memcpy(msgtmp, msgtmp64, 16);

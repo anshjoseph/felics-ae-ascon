@@ -7,9 +7,9 @@ DecryptionKeyScheduleConstants:
 DecryptConstants: TE_constants
 
 EncryptionKeyScheduleCode: 
-EncryptCode: 
+EncryptCode: encrypt, aegis_utils, aegis_common
 DecryptionKeyScheduleCode:
-DecryptCode:
+DecryptCode: decrypt, aegis_utils, aegis_common
 
 UseEncryptionKeySchedule: no
 UseDecryptionKeySchedule: no
