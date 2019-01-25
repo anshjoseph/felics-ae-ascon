@@ -80,7 +80,7 @@ add_json_table_row ()
 	    "architecture": "${architecture}",
 	    "block_size": ${cipher_block_size},
 	    "key_size": ${cipher_key_size},
-	    "version": "${cipher_implementation_version}",
+	    "version": ${cipher_implementation_version},
 	    "language": "${cipher_implementation_language}",
 	    "compiler_options": "${cipher_implementation_compiler_options}",
 	    "code_size": $(get_code_size ${code_size_file}),
