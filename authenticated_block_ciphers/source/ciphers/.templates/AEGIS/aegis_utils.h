@@ -25,7 +25,7 @@ static inline void AESROUND(uint8_t *out, uint8_t *in, uint8_t *rk)
 
         for (size_t j=0; j<4; j++)
         {
-            size_t in_index = 4*i+5*j & 0xf;
+            size_t in_index = (4*i+5*j) % 16;
             size_t TE_index = 4*in[in_index];
 
             RAM_DATA_DOUBLE_WORD TEj_32;

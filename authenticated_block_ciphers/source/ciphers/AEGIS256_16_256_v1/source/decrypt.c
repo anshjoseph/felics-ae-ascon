@@ -108,8 +108,7 @@ static int crypto_aead_decrypt(
 
               //need to modify the state here (because in the last block, keystream is wrongly used to update the state)
               memset(plaintextblock, 0, *mlen & 0xf);
-              ((uint64_t*)aegis256_state)[0] ^= ((uint64_t*)plaintextblock)[0];
-              ((uint64_t*)aegis256_state)[1] ^= ((uint64_t*)plaintextblock)[1];
+              XOR128(aegis256_state, aegis256_state, plaintextblock);
         }
 
         //we assume that the tag length is multiple of bytes
