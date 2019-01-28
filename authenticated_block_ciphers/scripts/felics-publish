@@ -24,7 +24,7 @@ def _sort_by_arch_and_scenario(data):
         key = (setup['architecture'], setup['scenario'])
         sorted_data[key].append(setup)
 
-    return sorted_data
+    return OrderedDict((key, sorted_data[key]) for key in sorted(sorted_data))
 
 
 def _convert_to_spreadsheet(results, output_filename):
