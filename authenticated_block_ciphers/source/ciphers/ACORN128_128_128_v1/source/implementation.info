@@ -7,9 +7,9 @@ DecryptionKeyScheduleConstants:
 DecryptConstants: 
 
 EncryptionKeyScheduleCode: 
-EncryptCode: 
+EncryptCode: encrypt utils
 DecryptionKeyScheduleCode:
-DecryptCode:
+DecryptCode: encrypt utils
 
 UseEncryptionKeySchedule: no
 UseDecryptionKeySchedule: no
