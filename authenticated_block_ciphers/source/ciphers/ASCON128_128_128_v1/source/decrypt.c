@@ -40,9 +40,9 @@ typedef uint64_t u64;
 void permutation(u8* S, int start, int rounds);
 
 int crypto_aead_decrypt(
-    unsigned char *m, unsigned long long *mlen,
-    const unsigned char *c, unsigned long long clen,
-    const unsigned char *ad, unsigned long long adlen,
+    unsigned char *m, size_t *mlen,
+    const unsigned char *c, size_t clen,
+    const unsigned char *ad, size_t adlen,
     const unsigned char *npub,
     const unsigned char *k) {
 
@@ -51,13 +51,14 @@ int crypto_aead_decrypt(
     return -1;
 
   size_t klen = CRYPTO_KEYBYTES;
+  //int nlen = CRYPTO_NPUBBYTES;
   size_t size = 320 / 8;
-  size_t rate = 128 / 8;
+  size_t rate = 64 / 8;
   int a = 12;
-  int b = 8;
-  const u64 s = adlen / rate + 1;
-  const u64 t = (clen - klen) / rate + 1;
-  const u64 l = (clen - klen) % rate;
+  int b = 6;
+  u64 s = adlen / rate + 1;
+  u64 t = (clen - klen) / rate + 1;
+  u64 l = (clen - klen) % rate;
 
   u8 S[size];
   u8 A[s * rate];
@@ -84,7 +85,7 @@ int crypto_aead_decrypt(
     S[size - klen + i] = npub[i];
   permutation(S, 12 - a, a);
   for (i = 0; i < klen; ++i)
-    S[size - klen + i] ^= k[i];
+    S[rate + klen + i] ^= k[i];
 
   // process associated data
   if (adlen) {
@@ -115,11 +116,11 @@ int crypto_aead_decrypt(
     S[rate + i] ^= k[i];
   permutation(S, 12 - a, a);
   for (i = 0; i < klen; ++i)
-    S[size - klen + i] ^= k[i];
+    S[rate + klen + i] ^= k[i];
 
   // return -1 if verification fails
   for (i = 0; i < klen; ++i)
-    if (c[clen - klen + i] != S[size - klen + i])
+    if (c[clen - klen + i] != S[rate + klen + i])
       return -1;
 
   // return plaintext
