@@ -27,52 +27,42 @@
  */
 
 #include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "cipher.h"
 #include "constants.h"
 
-#include <string.h>
-#include <stdlib.h>
-
-
-
 
 typedef uint8_t u8;
 typedef uint64_t u64;
-typedef int64_t i64;
 
-
-
-
-/* ------------------------------------ */
+void permutation(u8* S, int start, int rounds);
 
 int crypto_aead_decrypt(
-	uint8_t *m, int32_t *mlen,
-	uint8_t *nsec,
-	const uint8_t *c, int32_t clen,
-	const uint8_t *ad, int32_t adlen,
-	const uint8_t *npub,
-	const uint8_t *k
-	)
-{
-        *mlen = 0;
-  if (clen < KEY_SIZE)
+    unsigned char *m, unsigned long long *mlen,
+    const unsigned char *c, unsigned long long clen,
+    const unsigned char *ad, unsigned long long adlen,
+    const unsigned char *npub,
+    const unsigned char *k) {
+
+  *mlen = 0;
+  if (clen < CRYPTO_KEYBYTES)
     return -1;
 
-  int32_t klen = KEY_SIZE;
-  //int nlen = CRYPTO_NPUBBYTES;
-  int32_t size = 320 / 8;
-  int32_t rate = 64 / 8;
-  int32_t a = 12;
-  int32_t b = 6;
-  i64 s = adlen / rate + 1;
-  i64 t = (clen - klen) / rate + 1;
-  i64 l = (clen - klen) % rate;
+  size_t klen = CRYPTO_KEYBYTES;
+  size_t size = 320 / 8;
+  size_t rate = 128 / 8;
+  int a = 12;
+  int b = 8;
+  const u64 s = adlen / rate + 1;
+  const u64 t = (clen - klen) / rate + 1;
+  const u64 l = (clen - klen) % rate;
 
   u8 S[size];
   u8 A[s * rate];
   u8 M[t * rate];
-  i64 i, j;
+  u64 i, j;
 
   // pad associated data
   for (i = 0; i < adlen; ++i)
@@ -94,7 +84,7 @@ int crypto_aead_decrypt(
     S[size - klen + i] = npub[i];
   permutation(S, 12 - a, a);
   for (i = 0; i < klen; ++i)
-    S[rate + klen + i] ^= k[i];
+    S[size - klen + i] ^= k[i];
 
   // process associated data
   if (adlen) {
@@ -125,11 +115,11 @@ int crypto_aead_decrypt(
     S[rate + i] ^= k[i];
   permutation(S, 12 - a, a);
   for (i = 0; i < klen; ++i)
-    S[rate + klen + i] ^= k[i];
+    S[size - klen + i] ^= k[i];
 
   // return -1 if verification fails
   for (i = 0; i < klen; ++i)
-    if (c[clen - klen + i] != S[rate + klen + i])
+    if (c[clen - klen + i] != S[size - klen + i])
       return -1;
 
   // return plaintext
@@ -140,39 +130,8 @@ int crypto_aead_decrypt(
   return 0;
 }
 
-
-
-uint8_t Decrypt(uint8_t *block, int32_t  mlen, uint8_t *key, uint8_t *npub,
- uint8_t *ad, int32_t  adlen, uint8_t *c, uint8_t *roundKeys)
+int Decrypt(uint8_t *block, size_t  mlen, uint8_t *key, uint8_t *npub,
+ uint8_t *ad, size_t  adlen, uint8_t *c, uint8_t *roundKeys)
 {
-	/* Add here the cipher decryption implementation */
-
-		static uint8_t *nsec;
-	nsec = malloc(CRYPTO_NSECBYTES);
-	
-	//length of inputs and param
-	int32_t clen = mlen + CRYPTO_ABYTES;
-	
-	if(adlen !=16){
-	return crypto_aead_decrypt(
-	block, &mlen,
-	nsec,
-	c, clen,
-	ad, adlen,
-	npub,
-	key
-	);}
-	else if(adlen ==16){
-	return crypto_aead_decrypt(
-	block, &mlen,
-	nsec,
-	c, clen,
-	ad, adlen,
-	npub,
-	key
-	);
-	}
-	
+    return crypto_aead_decrypt(block, &mlen, c, mlen+CRYPTO_ABYTES, ad, adlen, npub, key);
 }
-
-
