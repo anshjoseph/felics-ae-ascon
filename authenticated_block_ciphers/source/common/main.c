@@ -64,8 +64,6 @@ int main()
 
 	RAM_DATA_BYTE key[KEY_SIZE];
 	
-	RAM_DATA_BYTE roundKeys[ROUND_KEYS_SIZE];
-	
 /* ----------------------------------------- */	
 	RAM_DATA_BYTE c[MAXTEST_BYTES_M  + CRYPTO_ABYTES]; // contains the cipher text THEN the tag value
 	
@@ -104,12 +102,12 @@ int main()
 #endif
 
 	BEGIN_ENCRYPTION_KEY_SCHEDULE();
-	RunEncryptionKeySchedule(key, roundKeys);
+	RunEncryptionKeySchedule();
 	END_ENCRYPTION_KEY_SCHEDULE();
 	
 
 	BEGIN_ENCRYPTION();
-	Encrypt(state, MAXTEST_BYTES_M, key, npub, ad, MAXTEST_BYTES_AD, c, roundKeys);
+	Encrypt(state, MAXTEST_BYTES_M, key, npub, ad, MAXTEST_BYTES_AD, c);
 	END_ENCRYPTION();
 
 #if defined(DEBUG) && (DEBUG_LOW == (DEBUG_LOW & DEBUG))
@@ -123,11 +121,11 @@ int main()
 #endif
 
 	BEGIN_DECRYPTION_KEY_SCHEDULE();
-	RunDecryptionKeySchedule(key, roundKeys);
+	RunDecryptionKeySchedule();
 	END_DECRYPTION_KEY_SCHEDULE();
 
 	BEGIN_DECRYPTION();
-	int valid = Decrypt(state, MAXTEST_BYTES_M, key, npub, ad, MAXTEST_BYTES_AD, c, roundKeys);
+	int valid = Decrypt(state, MAXTEST_BYTES_M, key, npub, ad, MAXTEST_BYTES_AD, c);
 	END_DECRYPTION();
 
 #if defined(DEBUG) && (DEBUG_LOW == (DEBUG_LOW & DEBUG))

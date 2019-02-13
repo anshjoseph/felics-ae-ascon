@@ -174,7 +174,7 @@ int crypto_aead_encrypt(
 }
 
 void Encrypt(uint8_t *block, size_t  mlen, uint8_t *key, uint8_t *npub,
- uint8_t *ad, size_t  adlen, uint8_t *c, uint8_t *roundKeys)
+ uint8_t *ad, size_t  adlen, uint8_t *c)
 {
     size_t clen;
     crypto_aead_encrypt(c, &clen, block, mlen, ad, adlen, npub, key);

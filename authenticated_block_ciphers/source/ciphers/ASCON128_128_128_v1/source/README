@@ -114,7 +114,7 @@ implementation ("encryption_key_schedule.c", "encrypt.c",
 
 		e. Implement the encryption key schedule in "encryption_key_schedule.c" 
 using the following function signature:
-				void RunEncryptionKeySchedule(uint8_t *key, uint8_t *roundKeys);
+				void RunEncryptionKeySchedule(uint8_t *key);
 			Note: After running the encryption key schedule the key "key" should
  not be modified.
 			Note: To read data types based on "RAM_DATA_*" 
@@ -135,7 +135,7 @@ implementation ("encryption_key_schedule.c", "encrypt.c",
 		f. Implement the decryption key schedule (only if is different from the 
 encryption key schedule) in "decryption_key_schedule.c" using the following 
 function signature:
-				void RunDecryptionKeySchedule(uint8_t *key, uint8_t *roundKeys);
+				void RunDecryptionKeySchedule(uint8_t *key);
 			Note: After running the decryption key schedule the key "key" should
  not be modified.
 			Note: To read data types based on "RAM_DATA_*" 
@@ -155,7 +155,7 @@ implementation ("encryption_key_schedule.c", "encrypt.c",
 
 		g. Implement the encryption in "encrypt.c" using the following function 
 signature:
-				void Encrypt(uint8_t *block, uint8_t *roundKeys);
+				void Encrypt(uint8_t *block);
 			Note: To read the value of the round  key use the "READ_ROUND_KEY_*"
 ("READ_ROUND_KEY_BYTE", "READ_ROUND_KEY_WORD", "READ_ROUND_KEY_DOUBLE_WORD") 
 macro. It allows to read the round keys from RAM or Flash/ROM depending on the
@@ -178,7 +178,7 @@ implementation ("encryption_key_schedule.c", "encrypt.c",
 
 		h. Implement the decryption in "decrypt.c" using the following function 
 signature:
-				void Decrypt(uint8_t *block, uint8_t *roundKeys);
+				void Decrypt(uint8_t *block);
 			Note: To read the value of the round key use the "READ_ROUND_KEY_*"
 ("READ_ROUND_KEY_BYTE", "READ_ROUND_KEY_WORD", "READ_ROUND_KEY_DOUBLE_WORD") 
 macro. It allows to read the round keys from RAM or Flash/ROM depending on the 

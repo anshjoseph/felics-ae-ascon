@@ -1,1 +1,0 @@
-../../.templates/Lilliput_128_v1/i/encryption_key_schedule.c

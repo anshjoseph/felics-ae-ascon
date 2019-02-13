@@ -66,7 +66,6 @@
 #if defined(DEBUG) && (DEBUG_LOW == (DEBUG_LOW & DEBUG))
 
 const char *KEY_NAME = "Key";
-const char *ROUND_KEYS_NAME = "RoundKeys";
 const char *PLAINTEXT_NAME = "Plaintext";
 const char *CIPHERTEXT_NAME = "Ciphertext";
 const char *ASSOCIATED_NAME = "AssociatedData";
@@ -76,20 +75,10 @@ void DisplayData(uint8_t *data, uint16_t length, const char *name)
 	uint16_t i;
 
 	printf("%s:\n", name);
-	if(0 == strcmp(name, ROUND_KEYS_NAME))
-	{
-		for (i = 0; i < length; i++) 
-		{
-			printf("%02x ", READ_ROUND_KEY_BYTE(data[i]));
-		}
-	}
-	else
-	{
-		for (i = 0; i < length; i++) 
-		{
-			printf("%02x ", data[i]);
-		}
-	}
+    for (i = 0; i < length; i++) 
+    {
+        printf("%02x ", data[i]);
+    }
 	printf("\n");
 }
 
@@ -204,6 +193,11 @@ void EndDecryptionKeySchedule()
 	printf("->DecryptionKeySchedule end\n");
 #endif
 }
+
+void RunEncryptionKeySchedule(void)
+{}
+void RunDecryptionKeySchedule(void)
+{}
 
 void BeginDecryption()
 {

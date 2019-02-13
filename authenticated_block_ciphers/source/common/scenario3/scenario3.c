@@ -52,7 +52,6 @@
 #include <stdio.h>
 #endif /* ARM & DEBUG */
 
-#define ROUND_KEYS_SIZE 0
 /*
  *
  * Entry point into program
@@ -63,8 +62,6 @@ int main()
 	RAM_DATA_BYTE data[DATA_SIZE];
 
 	RAM_DATA_BYTE key[KEY_SIZE];
-	
-	RAM_DATA_BYTE roundKeys[ROUND_KEYS_SIZE];
 	
 /* ----------------------------------------- */	
 	RAM_DATA_BYTE c[DATA_SIZE  + CRYPTO_ABYTES]; // contains the cipher text THEN the tag value
@@ -110,12 +107,12 @@ int main()
 
 	
 	BEGIN_ENCRYPTION_KEY_SCHEDULE();
-	RunEncryptionKeySchedule(key, roundKeys);
+	RunEncryptionKeySchedule();
 	END_ENCRYPTION_KEY_SCHEDULE();
 	
 	
 	BEGIN_ENCRYPTION();
-	Encrypt(data, DATA_SIZE, key, npub, ad, ASSOCIATED_DATA_SIZE, c, roundKeys);
+	Encrypt(data, DATA_SIZE, key, npub, ad, ASSOCIATED_DATA_SIZE, c);
 	END_ENCRYPTION();
 
 #if defined(DEBUG) && (DEBUG_LOW == (DEBUG_LOW & DEBUG))
@@ -124,12 +121,12 @@ int main()
 	
 	
 	BEGIN_DECRYPTION_KEY_SCHEDULE();
-	RunDecryptionKeySchedule(key, roundKeys);
+	RunDecryptionKeySchedule();
 	END_DECRYPTION_KEY_SCHEDULE();
 	
 
 	BEGIN_DECRYPTION();
-	int valid = Decrypt(data, DATA_SIZE, key, npub, ad, ASSOCIATED_DATA_SIZE, c, roundKeys);
+	int valid = Decrypt(data, DATA_SIZE, key, npub, ad, ASSOCIATED_DATA_SIZE, c);
 	END_DECRYPTION();
 
 #if defined(DEBUG) && (DEBUG_LOW == (DEBUG_LOW & DEBUG))

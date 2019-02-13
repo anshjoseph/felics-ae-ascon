@@ -182,7 +182,7 @@
  * ... roundKeys - the encryption round keys
  *
  */
-void RunEncryptionKeySchedule(uint8_t *key, uint8_t *roundKeys);
+void RunEncryptionKeySchedule(void);
 
 /*
  *
@@ -191,7 +191,7 @@ void RunEncryptionKeySchedule(uint8_t *key, uint8_t *roundKeys);
  * ... roundKeys - the decryption round keys
  *
  */
-void RunDecryptionKeySchedule(uint8_t *key, uint8_t *roundKeys);
+void RunDecryptionKeySchedule(void);
 
 
 /*
@@ -201,7 +201,7 @@ void RunDecryptionKeySchedule(uint8_t *key, uint8_t *roundKeys);
  *
  */
 void Encrypt(uint8_t *block, size_t mlen, uint8_t *key, uint8_t *npub,
- uint8_t *ad, size_t adlen, uint8_t *c, uint8_t *roundKeys);
+ uint8_t *ad, size_t adlen, uint8_t *c);
 
 /*
  *
@@ -210,6 +210,6 @@ void Encrypt(uint8_t *block, size_t mlen, uint8_t *key, uint8_t *npub,
  *
  */
 int Decrypt(uint8_t *block, size_t mlen, uint8_t *key, uint8_t *npub,
- uint8_t *ad, size_t adlen, uint8_t *c, uint8_t *roundKeys);
+ uint8_t *ad, size_t adlen, uint8_t *c);
 
 #endif /* CIPHER_H */
