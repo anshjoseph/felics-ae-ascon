@@ -8,12 +8,9 @@ Initial file structure
     ├── constants.h					-> Cipher constants declaration
     ├── data_types.h				-> Cipher data types
     ├── decrypt.c					-> Cipher decryption
-    ├── decryption_key_schedule.c	-> Cipher decryption key schedule
     ├── encrypt.c					-> Cipher encryption
-    ├── encryption_key_schedule.c	-> Cipher encryption key schedule
     ├── implementation.info			-> Cipher implementation information
     ├── Makefile					-> Makefile
-    ├── README						-> README file - this file
     └── test_vectors.c				-> Cipher test vectors
 
 
@@ -64,9 +61,8 @@ scenarios for different architectures use "data_types.h" file.
 					RAM_DATA_DOUBLE_WORD SBox[1] = { 0x04030201 };
 
 		c. If you have constants used by one or more of the following operations
- (encryption key schedule, decryption key schedule, encrypt, decrypt), you can 
-define them in separate "*.c" files and declare them in "constants.h" file 
-according with the following rules:
+ (encrypt, decrypt), you can define them in separate "*.c" files and declare
+ them in "constants.h" file according with the following rules:
 
 			* Do not use the following names for the added "*.c" files:
 				"main"
@@ -79,8 +75,6 @@ according with the following rules:
 				"decrypt_scenario2"
 				"common"
 				"test_vectors"
-				"encryption_key_schedule"
-				"decryption_key_schedule"
 				"encrypt" 
 				"decrypt"
 
@@ -88,72 +82,26 @@ according with the following rules:
 Declare the constants in "constants.h" file and define them in "*.c" files.
 
 			* Add the "*.c" name withouth the "." separator and extension in
- "implementation.info" file, in the corresponding section(s) 
-("EncryptionKeyScheduleConstants:", "EncryptConstants:", 
-"DecryptionKeyScheduleConstants:", "DecryptConstants:"). If a section contains 
-more than one file, use ", " as separator.
+ "implementation.info" file, in the corresponding section(s)
+ ("EncryptConstants:", "DecryptConstants:"). If a section contains more than one
+ file, use ", " as separator.
 			
 			Example:
 				- if you add the following "*.c" constant files:
 					+ "f.c" that contains common constants for encryption and 
 decryption
-					+ "g.c" that contains common constants for encryption key 
-schedule and encryption
+					+ "g.c" that contains common constants for encryption
 					+ "h.c" that contains constants for encryption
 
 				- the "implementation.info" file should contain:
-					EncryptionKeyScheduleConstants: g
 					EncryptConstants: f, g, h
-					DecryptionKeyScheduleConstants:
 					DecryptConstants: f
-			Note: Do not add constants definitions in files that contain cipher 
-implementation ("encryption_key_schedule.c", "encrypt.c", 
-"decryption_key_schedule.c", "decrypt.c" and so on).
+			Note: Do not add constants definitions in files that contain cipher
+implementation ("encrypt.c", "decrypt.c" and so on).
 
 		d. Declare & define the cipher test vectors in "test_vectors.c".
 
-		e. Implement the encryption key schedule in "encryption_key_schedule.c" 
-using the following function signature:
-				void RunEncryptionKeySchedule(uint8_t *key, uint8_t *roundKeys);
-			Note: After running the encryption key schedule the key "key" should
- not be modified.
-			Note: To read data types based on "RAM_DATA_*" 
-("RAM_DATA_BYTE", "RAM_DATA_WORD", "RAM_DATA_DOUBLE_WORD") or "ROM_DATA_*" 
-("ROM_DATA_BYTE", "ROM_DATA_WORD", "ROM_DATA_DOUBLE_WORD") macros use the 
-associated macros.
-			Example:
-				uint8_t SBox1Value = READ_SBOX1_DATA_BYTE(SBox1[0]);
-				uint16_t SBox2Value = READ_SBOX2_DATA_WORD(SBox2[0]);
-				uint32_t SBoxValue = READ_RAM_DATA_WORD(SBox[0]);
-			Note: Do not use "READ_ROUND_KEY_*" ("READ_ROUND_KEY_BYTE", 
-"READ_ROUND_KEY_WORD", "READ_ROUND_KEY_DOUBLE_WORD") macro in encryption key 
-schedule implementation.
-			Note: Do not add constants definitions in files that contain cipher 
-implementation ("encryption_key_schedule.c", "encrypt.c", 
-"decryption_key_schedule.c", "decrypt.c" and so on).
-
-		f. Implement the decryption key schedule (only if is different from the 
-encryption key schedule) in "decryption_key_schedule.c" using the following 
-function signature:
-				void RunDecryptionKeySchedule(uint8_t *key, uint8_t *roundKeys);
-			Note: After running the decryption key schedule the key "key" should
- not be modified.
-			Note: To read data types based on "RAM_DATA_*" 
-("RAM_DATA_BYTE", "RAM_DATA_WORD", "RAM_DATA_DOUBLE_WORD") or "ROM_DATA_*" 
-("ROM_DATA_BYTE", "ROM_DATA_WORD", "ROM_DATA_DOUBLE_WORD") macros use the 
-associated macros.
-			Example:
-				uint8_t SBox1Value = READ_SBOX1_DATA_BYTE(SBox1[0]);
-				uint16_t SBox2Value = READ_SBOX2_DATA_WORD(SBox2[0]);
-				uint32_t SBoxValue = READ_RAM_DATA_WORD(SBox[0]);
-			Note: Do not use "READ_ROUND_KEY_*" ("READ_ROUND_KEY_BYTE", 
-"READ_ROUND_KEY_WORD", "READ_ROUND_KEY_DOUBLE_WORD") macro in decryption key 
-schedule implementation.
-			Note: Do not add constants definitions in files that contain cipher 
-implementation ("encryption_key_schedule.c", "encrypt.c", 
-"decryption_key_schedule.c", "decrypt.c" and so on).
-
-		g. Implement the encryption in "encrypt.c" using the following function 
+		e. Implement the encryption in "encrypt.c" using the following function 
 signature:
 				void Encrypt(uint8_t *block, uint8_t *roundKeys);
 			Note: To read the value of the round  key use the "READ_ROUND_KEY_*"
@@ -173,10 +121,9 @@ associated macros.
 				uint16_t SBox2Value = READ_SBOX2_DATA_WORD(SBox2[0]);
 				uint32_t SBoxValue = READ_RAM_DATA_WORD(SBox[0]);
 			Note: Do not add constants definitions in files that contain cipher 
-implementation ("encryption_key_schedule.c", "encrypt.c", 
-"decryption_key_schedule.c", "decrypt.c" and so on).
+implementation ("encrypt.c", "decrypt.c" and so on).
 
-		h. Implement the decryption in "decrypt.c" using the following function 
+		f. Implement the decryption in "decrypt.c" using the following function 
 signature:
 				void Decrypt(uint8_t *block, uint8_t *roundKeys);
 			Note: To read the value of the round key use the "READ_ROUND_KEY_*"
@@ -196,19 +143,17 @@ associated macros.
 				uint16_t SBox2Value = READ_SBOX2_DATA_WORD(SBox2[0]);
 				uint32_t SBoxValue = READ_RAM_DATA_WORD(SBox[0]);
 			Note: Do not add constants definitions in files that contain cipher 
-implementation ("encryption_key_schedule.c", "encrypt.c", 
-"decryption_key_schedule.c", "decrypt.c" and so on).
+implementation ("encrypt.c", "decrypt.c" and so on).
 
-		i. Add a description of your implementation in "implementation.info" 
+		g. Add a description of your implementation in "implementation.info" 
 file, in the "ImplementationDescription:" section.
 			Example:
 				ImplementationDescription: LBlock small code size
 
-		k. If you have common functions used by two or more of the following 
-operations (encryption key schedule, decryption key schedule, encrypt, decrypt), 
-you can add them in separate "*.c" and "*.h" files according with the following 
-rules. The same rules apply when you just want to make the code cleaner by 
-implementing some functions in separate files.
+		h. If you have common functions used by two or more of the following
+operations (encrypt, decrypt), you can add them in separate "*.c" and "*.h"
+files according with the following rules. The same rules apply when you just
+want to make the code cleaner by implementing some functions in separate files.
 
 			* Do not use the following names for the added "*.c" and/or "*.h" 
 files:
@@ -223,8 +168,6 @@ files:
 				"common"
 				"constants"
 				"test_vectors"
-				"encryption_key_schedule"
-				"decryption_key_schedule"
 				"encrypt" 
 				"decrypt"
 
@@ -234,34 +177,22 @@ your own "*.c" and "*.h" files, but declare the constants in "*.h" files and
 define them in "*.c" files.
 
 			* Add the "*.c" name withouth the "." separator and extension in
- "implementation.info" file, in the corresponding section(s) 
-("EncryptionKeyScheduleCode:", "EncryptCode:", "DecryptionKeyScheduleCode:", 
-"DecryptCode:"). If a section contains more than one file, use ", " as 
-separator.
+ "implementation.info" file, in the corresponding section(s) ("EncryptCode:",
+ "DecryptCode:"). If a section contains more than one file, use ", " as
+ separator.
 			
 			Example:
 				- if you add the following files:
 					+ "f.c" that contains common code parts for encryption and 
 decryption
-					+ "g.c" that contains common code parts for encryption key 
-schedule and encryption
+					+ "g.c" that contains common code parts for encryption
 					+ "h.c" that contains a part of the encryption code
 
 				- the "implementation.info" file should contain:
-					EncryptionKeyScheduleCode: g
 					EncryptCode: f, g, h
-					DecryptionKeyScheduleCode:
 					DecryptCode: f
 
-		l. If your cipher does not have an encryption key schedule, in the 
-encryption key schedule just copy your key into the round keys and indicate this
- in the "implementation.info" file:
-			Example:
-				UseEncryptionKeySchedule: no
-			Note: You don't have to set "UseEncryptionKeySchedule: yes" when 
-using an encryption key schedule, since the default value is "yes".
-
-		m. Indicate the implementation language for all supported platforms in 
+		i. Indicate the implementation language for all supported platforms in 
 "implementation.info" file.
 			Example:
 				ImplementationAVR: ASM
