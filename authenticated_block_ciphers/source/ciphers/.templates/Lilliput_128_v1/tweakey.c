@@ -118,11 +118,17 @@ static void _multiply_MR2(const uint8_t X[LANE_BYTES], uint8_t Y[LANE_BYTES])
 #if LANES_NB >= 7
 static void _multiply_MR3(const uint8_t X[LANE_BYTES], uint8_t Y[LANE_BYTES])
 {
-    uint8_t MR_X[LANE_BYTES];
-    uint8_t MR2_X[LANE_BYTES];
-    _multiply_MR(X, MR_X);
-    _multiply_MR(MR_X, MR2_X);
-    _multiply_MR(MR2_X, Y);
+    uint8_t x14 = X[5] ^ X[6]<<3;
+    uint8_t x24 = X[3]<<2 ^ X[6] ^ X[7]<<3;
+
+    Y[0] = X[3] ^ X[4]>>3;
+    Y[1] = X[4] ^ x14>>3;
+    Y[2] = x14 ^ x24>>3;
+    Y[3] = x24;
+    Y[4] = X[4]<<2 ^ X[7] ^ X[0]<<3;
+    Y[5] = x14<<2 ^ X[0];
+    Y[6] = X[1];
+    Y[7] = X[2];
 }
 #endif
 #endif
