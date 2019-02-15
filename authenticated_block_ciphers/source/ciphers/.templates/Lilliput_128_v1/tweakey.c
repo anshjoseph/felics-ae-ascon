@@ -79,10 +79,10 @@ static void _multiply_M3(const uint8_t X[LANE_BYTES], uint8_t Y[LANE_BYTES])
 
     Y[7] = x15;
     Y[6] = x25;
-    Y[5] = x25<<3 ^ x24;
-    Y[4] = x24>>3 ^ X[6]<<2 ^ X[1];
+    Y[5] = x25<<3  ^ x24;
+    Y[4] = x24>>3  ^ X[6]<<2 ^ X[1];
     Y[3] = X[5]<<2 ^ X[0];
-    Y[2] = x15<<2 ^ X[7];
+    Y[2] = x15<<2  ^ X[7];
     Y[1] = X[6];
     Y[0] = X[5];
 }
@@ -106,10 +106,10 @@ static void _multiply_MR2(const uint8_t X[LANE_BYTES], uint8_t Y[LANE_BYTES])
     uint8_t x14 = X[5] ^ X[6]<<3;
 
     Y[0] = X[2];
-    Y[1] = X[3] ^ X[4]>>3;
-    Y[2] = X[4] ^ x14>>3;
+    Y[1] = X[3]    ^ X[4]>>3;
+    Y[2] = X[4]    ^ x14>>3;
     Y[3] = x14;
-    Y[4] = X[3]<<2 ^ X[6] ^ X[7]<<3;
+    Y[4] = X[3]<<2 ^ X[6]    ^ X[7]<<3;
     Y[5] = X[4]<<2 ^ X[7];
     Y[6] = X[0];
     Y[7] = X[1];
@@ -118,15 +118,15 @@ static void _multiply_MR2(const uint8_t X[LANE_BYTES], uint8_t Y[LANE_BYTES])
 #if LANES_NB >= 7
 static void _multiply_MR3(const uint8_t X[LANE_BYTES], uint8_t Y[LANE_BYTES])
 {
-    uint8_t x14 = X[5] ^ X[6]<<3;
-    uint8_t x24 = X[3]<<2 ^ X[6] ^ X[7]<<3;
+    uint8_t x14 = X[5]    ^ X[6]<<3;
+    uint8_t x24 = X[3]<<2 ^ X[6]    ^ X[7]<<3 ;
 
-    Y[0] = X[3] ^ X[4]>>3;
-    Y[1] = X[4] ^ x14>>3;
-    Y[2] = x14 ^ x24>>3;
+    Y[0] = X[3]    ^ X[4]>>3;
+    Y[1] = X[4]    ^ x14>>3;
+    Y[2] = x14     ^ x24>>3;
     Y[3] = x24;
     Y[4] = X[4]<<2 ^ X[7] ^ X[0]<<3;
-    Y[5] = x14<<2 ^ X[0];
+    Y[5] = x14<<2  ^ X[0];
     Y[6] = X[1];
     Y[7] = X[2];
 }
