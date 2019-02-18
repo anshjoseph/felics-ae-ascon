@@ -295,15 +295,15 @@ else if (TWEAKEY_STATE_SIZE==384)
 /*
 ** Deoxys encryption function
 */
-void deoxys_aead_encrypt(const uint8_t *ass_data, int32_t ass_data_len,
-                         const uint8_t *message, int32_t m_len,
+void deoxys_aead_encrypt(const uint8_t *ass_data, size_t ass_data_len,
+                         const uint8_t *message, size_t m_len,
                          const uint8_t *key,
                          const uint8_t *nonce,
-                         uint8_t *ciphertext, int32_t *c_len)
+                         uint8_t *ciphertext, size_t *c_len)
 {
 
-    int64_t i;
-    int32_t j;
+    uint64_t i;
+    uint64_t j;
     uint8_t tweak[16];
     uint8_t tweakey[TWEAKEY_STATE_SIZE/8];
     uint8_t Auth[16];
@@ -448,72 +448,9 @@ void deoxys_aead_encrypt(const uint8_t *ass_data, int32_t ass_data_len,
 
 }
 
-
-/*------------------------------*/
-
-uint8_t crypto_aead_encrypt(
-	uint8_t *c, int32_t *clen,
-	const uint8_t *m, int32_t mlen,
-	const uint8_t *ad, int32_t adlen,
-	const uint8_t *nsec,
-	const uint8_t *npub,
-	uint8_t *k
-	)
+void Encrypt(uint8_t *block, size_t  mlen, uint8_t *key, uint8_t *npub,
+ uint8_t *ad, size_t  adlen, uint8_t *c)
 {
-    int32_t outlen = 0;
-    
-	
-    deoxys_aead_encrypt(ad, adlen, m, mlen, k, npub, c, &outlen);
-    //memcpy(tab0, ad, 16);
-    //memcpy(c, tab0, 16);
-    
-    
-    *clen = outlen;
-    (void)nsec;
-    return 0;
+    size_t clen;
+    deoxys_aead_encrypt(ad, adlen, block, mlen, key, npub, c, &clen);
 }
-
-
-/*--------------------------------*/
-
-void Encrypt(uint8_t *block, int32_t  mlen, uint8_t *key, uint8_t *npub,
- uint8_t *ad, int32_t  adlen, uint8_t *c, uint8_t *roundKeys)
-{
-
-	static uint8_t *nsec;
-	nsec = malloc(CRYPTO_NSECBYTES);
-	
-	//length of inputs and param
-	int32_t clen = mlen + CRYPTO_ABYTES;
-	
-	uint8_t *adb;
-	adb = (uint8_t *) malloc(adlen * sizeof(uint8_t) );
-	memcpy(adb, ad, adlen);
-	
-	if(adlen !=16){
-	crypto_aead_encrypt(
-	c, &clen,
-	block, mlen,
-	adb, adlen,
-	nsec,
-	npub,
-	key
-	);}
-	else if(adlen ==16){
-	crypto_aead_encrypt(
-	c, &clen,
-	block, mlen,
-	adb, adlen,
-	nsec,
-	npub,
-	key
-	);
-	}
-	
-	free(adb);
-	
-	
-}
-
-
-
