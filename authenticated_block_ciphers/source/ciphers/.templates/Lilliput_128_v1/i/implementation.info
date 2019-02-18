@@ -7,9 +7,9 @@ DecryptionKeyScheduleConstants:
 DecryptConstants: constants
 
 EncryptionKeyScheduleCode:
-EncryptCode: encrypt, tbc, tweakey
+EncryptCode: tbc, tweakey
 DecryptionKeyScheduleCode:
-DecryptCode: decrypt, tbc, tweakey
+DecryptCode: tbc, tweakey
 
 UseEncryptionKeySchedule: no
 UseDecryptionKeySchedule: no
