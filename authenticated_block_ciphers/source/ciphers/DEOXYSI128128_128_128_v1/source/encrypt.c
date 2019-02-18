@@ -239,50 +239,6 @@ void aesTweakEncrypt(uint32_t tweakey_size,
 
 
 /*
-** Update the tweak value in the tweakey word.
-** In the case of Deoxys-BC-256, the tweakey word is composed of KEY || TWEAK.
-** In the case of Deoxys-BC-384, the tweakey word is composed of KEY_2 || KEY_1 || TWEAK.
-*/
- void set_tweak_in_tweakey(uint8_t *tweakey, uint8_t *tweak) {
-if(TWEAKEY_STATE_SIZE==256)
-    memcpy(tweakey+16, tweak, 16);
-else if (TWEAKEY_STATE_SIZE==384)
-    memcpy(tweakey+32, tweak, 16);
-}
-
-
-/*
-** Modifiy the block number in the tweak value
-*/
- void set_block_number_in_tweak(uint8_t *tweak, int64_t block_no) {
-    tweak[ 8] = (tweak[8]&0xf0) ^ ((block_no >> 56ULL) & 0xf);
-    tweak[ 9] = ((block_no >> 48ULL) & 0xff);
-    tweak[10] = ((block_no >> 40ULL) & 0xff);
-    tweak[11] = ( ((block_no >> 31ULL) >>1) & 0xff);
-    tweak[12] = ((block_no >> 24ULL) & 0xff);
-    tweak[13] = ((block_no >> 16ULL) & 0xff);
-    tweak[14] = ((block_no >>  8ULL) & 0xff);
-    tweak[15] = ((block_no >>  0ULL) & 0xff);
-    
-    //memcpy(tab0, tweak, 16);
-    //tab0[0] = block_no;
-}
-
-
-/**********************************************************************************
-*** In Deoxys=/=-128-128, the tweak is on 128 bits:
-***     tweak = <stage> || <nonce> || <blockNumber>
-***  where we use:
-***      4 bits for stage
-***     64 bits for nonce
-***     60 bits for blockNumber
-***********************************************************************************/
-
-
-
-
-/* -------------------------- */
-/*
 ** Deoxys encryption function
 */
 void deoxys_aead_encrypt(const uint8_t *ass_data, size_t ass_data_len,

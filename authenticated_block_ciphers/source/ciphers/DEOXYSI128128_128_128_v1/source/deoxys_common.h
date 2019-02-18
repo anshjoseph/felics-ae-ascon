@@ -1,11 +1,16 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+#include <stdint.h>
+
+#include "data_types.h"
+
+
 void G(uint8_t tweakey[], uint8_t alpha);
 void H(uint8_t tweakey[]);
-void set_stage_in_tweak(uint8_t *tweak, const uint8_t value);
 void set_nonce_in_tweak(uint8_t *tweak, const uint8_t *nonce);
 void set_block_number_in_tweak(uint8_t *tweak, int64_t block_no);
+void set_stage_in_tweak(uint8_t *tweak, const uint8_t value);
 void set_tweak_in_tweakey(uint8_t *tweakey, uint8_t *tweak);
 
 void xor_values(uint8_t *v1, const uint8_t *v2);

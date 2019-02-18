@@ -7,9 +7,9 @@ DecryptionKeyScheduleConstants:
 DecryptConstants: TW_constants, perm_constants, lfsr_constants, rcon_constants
 
 EncryptionKeyScheduleCode: 
-EncryptCode: 
+EncryptCode: encrypt deoxys_common
 DecryptionKeyScheduleCode:
-DecryptCode:
+DecryptCode: decrypt deoxys_common
 
 UseEncryptionKeySchedule: no
 UseDecryptionKeySchedule: no

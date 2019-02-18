@@ -36,39 +36,6 @@
 
 
 /*
-** LFSR according to the position alpha (for alpha \in {1,2,3} )
-*/
-uint8_t choose_lfsr(uint8_t x, uint8_t alpha) {
-  if( 1 == alpha ) return x;
-  if( 2 == alpha ) return READ_LFSR_BYTE(lfsr2[x]);
-  if( 3 == alpha ) return READ_LFSR_BYTE(lfsr4[x]);
-
-	return 0;
-}
-
-/*
-** Function G form the specifications
-*/
-void G(uint8_t tweakey[], uint8_t alpha) {
-  int16_t i;
-  for(i=0; i<16; i++) tweakey[i] = choose_lfsr(tweakey[i], alpha);
-}
-
-/*
-** Function H form the specifications
-*/
-void H(uint8_t tweakey[]) {
-  int16_t i;
-  uint8_t tmp[16];
-  for( i = 0; i<16; i++) tmp[READ_PERM_BYTE(perm[i])] = tweakey[i];
-  memcpy(tweakey, tmp, 16);
-
-}
-
-
-
-
-/*
 ** Prepare the round subtweakeys for the decryption process
 */
 uint8_t deoxysKeySetupDec256(uint32_t* rtweakey, 
@@ -284,40 +251,6 @@ void aesTweakDecrypt(uint32_t tweakey_size,
     PUTU32(pt + 12, s3);
 
 }
-
-/**********************************************************************************
-*** In Deoxys=/=-128-128, the tweak is on 128 bits:
-***     tweak = <stage> || <nonce> || <blockNumber>
-***  where we use:
-***      4 bits for stage
-***     64 bits for nonce
-***     60 bits for blockNumber
-***********************************************************************************/
-
-/*
-** Modifiy the nonce part in the tweak value
-*/
- void set_nonce_in_tweak(uint8_t *tweak, const uint8_t *nonce) {
-    tweak[0] = (tweak[0]&0xf0)     ^ (nonce[0] >> 4);
-    tweak[1] = (nonce[0]&0xf) << 4 ^ (nonce[1] >> 4);
-    tweak[2] = (nonce[1]&0xf) << 4 ^ (nonce[2] >> 4);
-    tweak[3] = (nonce[2]&0xf) << 4 ^ (nonce[3] >> 4);
-    tweak[4] = (nonce[3]&0xf) << 4 ^ (nonce[4] >> 4);
-    tweak[5] = (nonce[4]&0xf) << 4 ^ (nonce[5] >> 4);
-    tweak[6] = (nonce[5]&0xf) << 4 ^ (nonce[6] >> 4);
-    tweak[7] = (nonce[6]&0xf) << 4 ^ (nonce[7] >> 4);
-    tweak[8] = (nonce[7]&0xf) << 4;
-}
-
-
-
-/*
-** Modifiy the stage value in the tweak value
-*/
- void set_stage_in_tweak(uint8_t *tweak, const uint8_t value) {
-    tweak[0]=(tweak[0] & 0xf) ^ value ;
-}
-
 
 
 /*
