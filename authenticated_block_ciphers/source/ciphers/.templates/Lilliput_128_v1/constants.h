@@ -33,23 +33,9 @@
 #include "parameters.h"
 
 
-/*
- *
- * Cipher characteristics:
- * 	BLOCK_SIZE - the cipher block size in bytes
- * 	KEY_SIZE - the cipher key size in bytes
- *	ROUND_KEY_SIZE - the cipher round keys size in bytes
- * 	NUMBER_OF_ROUNDS - the cipher number of rounds
- *
- */
 #define BLOCK_SIZE BLOCK_BYTES
-
 #define KEY_SIZE KEY_BYTES
-#define ROUND_KEYS_SIZE (ROUND_TWEAKEY_BYTES*NUMBER_OF_ROUNDS)
 
-#define NUMBER_OF_ROUNDS ROUNDS
-
-#define CRYPTO_NSECBYTES 0
 #define CRYPTO_NPUBBYTES NONCE_BYTES
 #define CRYPTO_ABYTES TAG_BYTES
 
