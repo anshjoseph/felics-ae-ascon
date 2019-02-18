@@ -57,23 +57,18 @@ void deoxys_aead_encrypt(const uint8_t *ass_data, size_t ass_data_len,
     uint8_t Pad[16];
     uint8_t temp[16];
     
-    for(i=0; i<16; i++) temp[i] = 0;
-	
-    
+
     /* Fill the tweak with zeros (no nonce !!!) */
     memset(tweak, 0, sizeof(tweak));
 
     /* Fill the key(s) in the tweakey state */
     memcpy(tweakey, key, 16);
-	for(i=16; i<TWEAKEY_STATE_SIZE/8; i++) tweakey[i] = 0;
 	
     /* Associated data */
     memset(Auth, 0, 16);
 	
-	
     if(ass_data_len) {
         set_stage_in_tweak(tweak, MSB_AD);
-		
 		
         /* For each full input blocks */
         i=0;
@@ -81,18 +76,11 @@ void deoxys_aead_encrypt(const uint8_t *ass_data, size_t ass_data_len,
 	  		
             /* Encrypt the current block */
             set_block_number_in_tweak(tweak, i);
-            
-            
             set_tweak_in_tweakey(tweakey, tweak);
-            
-            
             aesTweakEncrypt(TWEAKEY_STATE_SIZE, ass_data+16*i, tweakey, temp);
-			
-			//memcpy(tab0, tweakey+16, 16);
 			
             /* Update Auth value */
             xor_values(Auth, temp);
-            
 
             /* Go on with the next block */
             i++;
@@ -132,9 +120,6 @@ void deoxys_aead_encrypt(const uint8_t *ass_data, size_t ass_data_len,
         set_block_number_in_tweak(tweak, i );
         set_tweak_in_tweakey(tweakey, tweak);
         aesTweakEncrypt(TWEAKEY_STATE_SIZE, message+16*i , tweakey, ciphertext+16*i );
-        
-        
-        
         i++;
     }
 
@@ -153,7 +138,6 @@ void deoxys_aead_encrypt(const uint8_t *ass_data, size_t ass_data_len,
         set_block_number_in_tweak(tweak, i);
         set_tweak_in_tweakey(tweakey, tweak);
         aesTweakEncrypt(TWEAKEY_STATE_SIZE, zero_block, tweakey, Pad);
-        
 
         for (j=0; j<m_len-16*i; j++) {
             ciphertext[16*i+j]=last_block[j] ^ Pad[j];
@@ -165,26 +149,16 @@ void deoxys_aead_encrypt(const uint8_t *ass_data, size_t ass_data_len,
         aesTweakEncrypt(TWEAKEY_STATE_SIZE, Checksum, tweakey, Final);
     }
     else{
-    	//memcpy(tab0, tweak, 16);
-    	//tab0[0] = i;
         set_block_number_in_tweak(tweak, i);
-        
         set_stage_in_tweak(tweak, MSB_CHKSUM_FULL);
-        
         set_tweak_in_tweakey(tweakey, tweak);
-        
         aesTweakEncrypt(TWEAKEY_STATE_SIZE, Checksum, tweakey, Final);
-        //memcpy(tab0, Final, 16);
-
     }
 
     /* Append the authentication tag to the ciphertext */
     for (i=0; i<16; i++) {
         ciphertext[m_len+i]=Final[i] ^ Auth[i];
     }
-
-	//memcpy(ciphertext, tab0, 16);
-	//ciphertext[0] = tab0[0];
 	
     /* The authentication tag is one block long, i.e. 16 bytes */
     *c_len=m_len+16;
