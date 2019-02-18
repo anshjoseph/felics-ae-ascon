@@ -16,11 +16,10 @@ static uint8_t choose_lfsr(uint8_t x, uint8_t alpha) {
   return 0;
 }
 
-
 /*
 ** Function G form the specifications
 */
-void G(uint8_t tweakey[], uint8_t alpha) {
+static void G(uint8_t tweakey[], uint8_t alpha) {
   int i;
   for(i=0; i<16; i++) tweakey[i] = choose_lfsr(tweakey[i], alpha);
 }
@@ -28,7 +27,7 @@ void G(uint8_t tweakey[], uint8_t alpha) {
 /*
 ** Function H form the specifications
 */
-void H(uint8_t tweakey[]) {
+static void H(uint8_t tweakey[]) {
   int i;
   uint8_t tmp[16];
   for( i = 0; i<16; i++) tmp[READ_PERM_BYTE(perm[i])] = tweakey[i];
