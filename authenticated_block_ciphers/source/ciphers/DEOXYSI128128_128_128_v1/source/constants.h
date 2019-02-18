@@ -29,25 +29,8 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
+#include "parameters.h"
 #include "data_types.h"
-
-
-/*
- *
- * Cipher characteristics:
- * 	BLOCK_SIZE - the cipher block size in bytes
- * 	KEY_SIZE - the cipher key size in bytes
- *	ROUND_KEY_SIZE - the cipher round keys size in bytes
- * 	NUMBER_OF_ROUNDS - the cipher number of rounds
- *
- */
-#define KEY_SIZE 16
-#define ROUND_KEYS_SIZE 0
-
-#define CRYPTO_NSECBYTES 0
-#define CRYPTO_NPUBBYTES 8
-#define CRYPTO_ABYTES 16
-
 
 /*
  *
