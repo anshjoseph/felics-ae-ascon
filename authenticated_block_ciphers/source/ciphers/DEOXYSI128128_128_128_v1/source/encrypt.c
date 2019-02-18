@@ -32,19 +32,15 @@
 
 #include "cipher.h"
 #include "constants.h"
-
-
-#define GETRCON(r) ( ((uint32_t)READ_RCON_BYTE(rcon[r])<<24) ^ ((uint32_t)READ_RCON_BYTE(rcon[r])<<16) ^ ((uint32_t)READ_RCON_BYTE(rcon[r])<<8) ^ ((uint32_t)READ_RCON_BYTE(rcon[r])<<0) )
-#define GETU32(pt) (((uint32_t)(pt)[0] << 24) ^ ((uint32_t)(pt)[1] << 16) ^ ((uint32_t)(pt)[2] <<  8) ^ ((uint32_t)(pt)[3]))
-#define PUTU32(ct, st) { (ct)[0] = (uint8_t)((st) >> 24); (ct)[1] = (uint8_t)((st) >> 16); (ct)[2] = (uint8_t)((st) >>  8); (ct)[3] = (uint8_t)(st); }
+#include "deoxys_common.h"
 
 
 /*
 ** Prepare the round subtweakeys for the encryption process
 */
-int16_t deoxysKeySetupEnc256(int32_t* rtweakey,
+int deoxysKeySetupEnc256(uint32_t* rtweakey,
                          const uint8_t* TweakKey,
-                         int16_t no_tweakeys)
+                         int no_tweakeys)
 {
 
   int16_t r;
@@ -114,10 +110,10 @@ int16_t deoxysKeySetupEnc256(int32_t* rtweakey,
 /*
 ** Tweakable block cipher encryption function
 */
-void aesTweakEncrypt(int16_t tweakey_size,
-                     const uint8_t *pt,
-                     const uint8_t *key,
-                     uint8_t *ct) {
+void aesTweakEncrypt(uint32_t tweakey_size,
+                     uint8_t pt[16],
+                     uint8_t key[],
+                     uint8_t ct[16]) {
 
     uint32_t s0;
     uint32_t s1;
