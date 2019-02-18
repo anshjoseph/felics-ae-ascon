@@ -7,7 +7,7 @@
 
 
 void set_nonce_in_tweak(uint8_t *tweak, const uint8_t *nonce);
-void set_block_number_in_tweak(uint8_t *tweak, int64_t block_no);
+void set_block_number_in_tweak(uint8_t *tweak, const uint64_t block_no);
 void set_stage_in_tweak(uint8_t *tweak, const uint8_t value);
 void set_tweak_in_tweakey(uint8_t *tweakey, uint8_t *tweak);
 

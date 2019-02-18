@@ -2,6 +2,7 @@
 
 #define PARAMETERS_H
 #define KEY_SIZE 32
+#define BLOCK_SIZE 16
 #define ROUND_KEYS_SIZE 0
 #define CRYPTO_NSECBYTES 0
 #define CRYPTO_NPUBBYTES 8

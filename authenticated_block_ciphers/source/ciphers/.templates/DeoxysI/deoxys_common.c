@@ -63,7 +63,7 @@ void set_nonce_in_tweak(uint8_t *tweak, const uint8_t *nonce) {
 /*
 ** Modifiy the block number in the tweak value
 */
-void set_block_number_in_tweak(uint8_t *tweak, int64_t block_no) {
+void set_block_number_in_tweak(uint8_t *tweak, const uint64_t block_no) {
     tweak[ 8] = (tweak[8]&0xf0) ^ ((block_no >> 56ULL) & 0xf);
     tweak[ 9] = ((block_no >> 48ULL) & 0xff);
     tweak[10] = ((block_no >> 40ULL) & 0xff);
