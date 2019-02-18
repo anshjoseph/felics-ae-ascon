@@ -256,9 +256,9 @@ void aesTweakDecrypt(uint32_t tweakey_size,
 /*
 ** Constant-time memcmp function
 */
-uint8_t memcmp_const(const void * a, const void *b, const int32_t size)  {
+int memcmp_const(const void * a, const void *b, const size_t size)  {
 
-    int32_t i;
+    size_t i;
     uint8_t result = 0;
     const uint8_t *_a = (const uint8_t *) a;
     const uint8_t *_b = (const uint8_t *) b;
