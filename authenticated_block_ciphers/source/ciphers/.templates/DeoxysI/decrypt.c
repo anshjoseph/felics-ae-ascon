@@ -306,7 +306,7 @@ uint8_t deoxys_aead_decrypt(const uint8_t *ass_data, size_t ass_data_len,
 
 
     /* Fill the key(s) in the tweakey state */
-    memcpy(tweakey, key, 16);
+    memcpy(tweakey, key, KEY_SIZE);
 
     /* Associated data */
     memset(Auth, 0, 16);

@@ -47,10 +47,6 @@
 #define MSB_CHKSUM_FULL               (0x1<<4)
 #define MSB_CHKSUM_NON_FULL           (0x5<<4)
 
-/* Number of bits in the TWEAKEY state (256 or 384) */
-#define TWEAKEY_STATE_SIZE    256
-
-
 extern TW_DOUBLE_WORD Te0[256];
 extern TW_DOUBLE_WORD Te1[256];
 extern TW_DOUBLE_WORD Te2[256];

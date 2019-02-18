@@ -62,7 +62,7 @@ void deoxys_aead_encrypt(const uint8_t *ass_data, size_t ass_data_len,
     memset(tweak, 0, sizeof(tweak));
 
     /* Fill the key(s) in the tweakey state */
-    memcpy(tweakey, key, 16);
+    memcpy(tweakey, key, KEY_SIZE);
 	
     /* Associated data */
     memset(Auth, 0, 16);
