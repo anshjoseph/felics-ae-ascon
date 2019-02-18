@@ -1,0 +1,13 @@
+#ifndef PARAMETERS_H
+#define PARAMETERS_H
+
+#define KEY_SIZE 16
+#define BLOCK_SIZE 16
+
+#define CRYPTO_NSECBYTES 0
+#define CRYPTO_NPUBBYTES 15
+#define CRYPTO_ABYTES 16
+
+#define TWEAKEY_STATE_SIZE 256
+
+#endif /* PARAMETERS_H */

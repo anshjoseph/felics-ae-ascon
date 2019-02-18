@@ -26,72 +26,21 @@
  *
  */
 
+#include <stdlib.h>
 #include <stdint.h>
+#include <string.h>
 
 #include "cipher.h"
 #include "constants.h"
-
-
-//#include "tweakableBC.h"
-
-#include <string.h>
-#include <stdlib.h>
-
-
-#define GETRCON(r) ( ((uint32_t)READ_RCON_BYTE(rcon[r])<<24) ^ ((uint32_t)READ_RCON_BYTE(rcon[r])<<16) ^ ((uint32_t)READ_RCON_BYTE(rcon[r])<<8) ^ ((uint32_t)READ_RCON_BYTE(rcon[r])<<0) )
-#define GETU32(pt) (((uint32_t)(pt)[0] << 24) ^ ((uint32_t)(pt)[1] << 16) ^ ((uint32_t)(pt)[2] <<  8) ^ ((uint32_t)(pt)[3]))
-#define PUTU32(ct, st) { (ct)[0] = (uint8_t)((st) >> 24); (ct)[1] = (uint8_t)((st) >> 16); (ct)[2] = (uint8_t)((st) >>  8); (ct)[3] = (uint8_t)(st); }
-
-
-/**********************************************************************************
-*** In Deoxys=/=-128-128, the tweak is on 128 bits:
-***     tweak = <stage> || <nonce> || <blockNumber>
-***  where we use:
-***      4 bits for stage
-***     64 bits for nonce
-***     60 bits for blockNumber
-***********************************************************************************/
-
-
-/*
-** LFSR according to the position alpha (for alpha \in {1,2,3} )
-*/
-uint8_t choose_lfsr (uint8_t x, uint8_t alpha) {
-  if( 1 == alpha ) return x;
-  if( 2 == alpha ) return READ_LFSR_BYTE(lfsr2[x]);
-  if( 3 == alpha ) return READ_LFSR_BYTE(lfsr4[x]);
-
-	return 0;
-}
-
-/*
-** Function G form the specifications
-*/
-void G (uint8_t tweakey[], uint8_t alpha) {
-  int16_t i;
-  for(i=0; i<16; i++) tweakey[i] = choose_lfsr (tweakey[i], alpha);
-}
-
-/*
-** Function H form the specifications
-*/
-void H (uint8_t tweakey[]) {
-  int16_t i;
-  uint8_t tmp[16];
-  for( i = 0; i<16; i++) tmp[READ_PERM_BYTE(perm[i])] = tweakey[i];
-  memcpy (tweakey, tmp, 16);
-
-}
-
-
+#include "deoxys_common.h"
 
 
 /*
 ** Constant-time memcmp function
 */
-uint8_t memcmp_const(const void * a, const void *b, const int32_t size)  {
+uint8_t memcmp_const(const void * a, const void *b, const size_t size)  {
 
-    int32_t i;
+    size_t i;
     uint8_t result = 0;
     const uint8_t *_a = (const uint8_t *) a;
     const uint8_t *_b = (const uint8_t *) b;
@@ -105,14 +54,12 @@ uint8_t memcmp_const(const void * a, const void *b, const int32_t size)  {
 }
 
 
-
-
 /*
 ** Prepare the round subtweakeys for the decryption process
 */
 uint8_t deoxysKeySetupDec256(uint32_t* rtweakey, 
-                         const uint8_t* TweakKey,
-                         int16_t no_tweakeys)
+                             const uint8_t* TweakKey,
+                             int16_t no_tweakeys)
 {
 
     int16_t i;
@@ -157,9 +104,6 @@ uint8_t deoxysKeySetupDec256(uint32_t* rtweakey,
     }
     return Nr;
 }
-
-
-
 
 
 /*
@@ -327,19 +271,18 @@ void aesTweakDecrypt(uint32_t tweakey_size,
 }
 
 
-
 /*
 ** Deoxys decryption function
 */
-int deoxys_aead_decrypt(const uint8_t *ass_data, int32_t ass_data_len,
-                       uint8_t *message, int32_t *m_len,
-                       const uint8_t *key,
-                       const uint8_t *nonce,
-                       const uint8_t *ciphertext, int32_t c_len)
+int deoxys_aead_decrypt(const uint8_t *ass_data, size_t ass_data_len,
+                        uint8_t *message, size_t *m_len,
+                        const uint8_t *key,
+                        const uint8_t *nonce,
+                        const uint8_t *ciphertext, size_t c_len)
 {
 
-    int64_t i;
-    int32_t j;        
+    uint64_t i;
+    uint64_t j;        
     uint8_t tweak[16];
     uint8_t tweakey[TWEAKEY_STATE_SIZE/8];
     uint8_t Auth[16];
@@ -488,7 +431,7 @@ int deoxys_aead_decrypt(const uint8_t *ass_data, int32_t ass_data_len,
     /* If the tags does not match, return error -1 */
     if( 0 != memcmp_const(Tag, tag, sizeof(Tag)) ) {
         memset( message, 0, c_len );
-	return -1;
+        return -1;
     }
   
 
@@ -496,57 +439,10 @@ int deoxys_aead_decrypt(const uint8_t *ass_data, int32_t ass_data_len,
     return 0;
 }
 
-/* ------------------------------------ */
-
-int crypto_aead_decrypt(
-	uint8_t *m, int32_t *mlen,
-	uint8_t *nsec,
-	const uint8_t *c, int32_t clen,
-	const uint8_t *ad, int32_t adlen,
-	const uint8_t *npub,
-	const uint8_t *k
-	)
+int Decrypt(uint8_t *block, size_t  mlen, uint8_t *key, uint8_t *npub,
+ uint8_t *ad, size_t  adlen, uint8_t *c)
 {
-     int32_t outlen = *mlen;
-    uint8_t result = deoxys_aead_decrypt(ad, adlen, m, &outlen, k, npub, c, clen);
-    *mlen = outlen;
-    (void)nsec;
-    return result;
-}
-
-
-
-uint8_t Decrypt(uint8_t *block, int32_t  mlen, uint8_t *key, uint8_t *npub,
- uint8_t *ad, int32_t  adlen, uint8_t *c, uint8_t *roundKeys)
-{
-	/* Add here the cipher decryption implementation */
-
-		static uint8_t *nsec;
-	nsec = malloc(CRYPTO_NSECBYTES);
-	
-	//length of inputs and param
-	int32_t clen = mlen + CRYPTO_ABYTES;
-	
-	if(adlen !=16){
-	return crypto_aead_decrypt(
-	block, &mlen,
-	nsec,
-	c, clen,
-	ad, adlen,
-	npub,
-	key
-	);}
-	else if(adlen ==16){
-	return crypto_aead_decrypt(
-	block, &mlen,
-	nsec,
-	c, clen,
-	ad, adlen,
-	npub,
-	key
-	);
-	}
-	
+    return deoxys_aead_decrypt(ad, adlen, block, &mlen, key, npub, c, mlen+CRYPTO_ABYTES);
 }
 
 
