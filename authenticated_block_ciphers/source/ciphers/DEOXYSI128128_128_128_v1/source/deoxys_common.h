@@ -11,8 +11,8 @@ void set_tweak_in_tweakey(uint8_t *tweakey, uint8_t *tweak);
 void xor_values(uint8_t *v1, const uint8_t *v2);
 
 void aesTweakEncrypt(uint32_t tweakey_size,
-                     uint8_t pt[16],
-                     uint8_t key[],
+                     const uint8_t pt[16],
+                     const uint8_t key[],
                      uint8_t ct[16]);
 
 int deoxysKeySetupEnc256(uint32_t* rtweakey,

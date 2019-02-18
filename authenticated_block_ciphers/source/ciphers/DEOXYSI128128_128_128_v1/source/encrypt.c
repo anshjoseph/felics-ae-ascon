@@ -40,7 +40,7 @@
 */
 int deoxysKeySetupEnc256(uint32_t* rtweakey,
                          const uint8_t* TweakKey,
-                         int no_tweakeys)
+                         const int no_tweakeys)
 {
 
   int16_t r;
@@ -111,8 +111,8 @@ int deoxysKeySetupEnc256(uint32_t* rtweakey,
 ** Tweakable block cipher encryption function
 */
 void aesTweakEncrypt(uint32_t tweakey_size,
-                     uint8_t pt[16],
-                     uint8_t key[],
+                     const uint8_t pt[16],
+                     const uint8_t key[],
                      uint8_t ct[16]) {
 
     uint32_t s0;
