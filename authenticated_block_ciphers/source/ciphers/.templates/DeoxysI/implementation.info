@@ -1,0 +1,20 @@
+ImplementationDescription: AEAD DEOXYS-I-128-*
+ImplementationAuthors: Jean-Baptiste Serrou Soares (adapted from supercop)
+
+EncryptionKeyScheduleConstants: 
+EncryptConstants: TW_constants, perm_constants, lfsr_constants, rcon_constants
+DecryptionKeyScheduleConstants: 
+DecryptConstants: TW_constants, perm_constants, lfsr_constants, rcon_constants
+
+EncryptionKeyScheduleCode: 
+EncryptCode: encrypt deoxys_common
+DecryptionKeyScheduleCode:
+DecryptCode: decrypt deoxys_common
+
+UseEncryptionKeySchedule: no
+UseDecryptionKeySchedule: no
+
+ImplementationAVR: C
+ImplementationMSP: C
+ImplementationARM: C
+ImplementationPC: C
