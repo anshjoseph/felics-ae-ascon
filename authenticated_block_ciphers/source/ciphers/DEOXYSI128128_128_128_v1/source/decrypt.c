@@ -271,15 +271,6 @@ uint8_t memcmp_const(const void * a, const void *b, const int32_t size)  {
     return result; 
 }
 
-/*
-** XOR an input block to another input block
-*/
- void xor_values(uint8_t *v1, const uint8_t *v2) {
-    uint8_t i;
-    for (i=0; i<16; i++) v1[i] ^= v2[i];
-}
-
-
 
 /*
 ** Deoxys decryption function
