@@ -14,10 +14,10 @@ get_code_ram ()
     local results=$1
 
     # Layout:
-    # STACK       DATA
-    # EKS E DKS D EKS E DKS D COMMON TOTAL
-    local stack=$(cut -d' ' -f2 ${results})
-    local data=$(cut -d' ' -f10 ${results})
+    # STACK     DATA
+    # E D       E D COMMON TOTAL
+    local stack=$(cut -d' ' -f1 ${results})
+    local data=$(cut -d' ' -f6 ${results})
 
     echo $((stack+data))
 }

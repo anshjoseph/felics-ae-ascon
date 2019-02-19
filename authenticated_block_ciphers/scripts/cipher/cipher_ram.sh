@@ -443,13 +443,6 @@ do
 done
 
 
-# Check if encryption key schedule is used
-use_encryption_key_schedule=$(cat $IMPLEMENTATION_INFO_FILE | grep $USE_ENCRYPTION_KEY_SCHEDULE$SECTION_SEPARATOR | tr -d '\r' | cut -d ':' -f 2 |  tr -d '[[:space:]]')
-
-# Convert to lowercase
-use_encryption_key_schedule=${use_encryption_key_schedule,,}
-
-
 # Compute the data RAM
 case $SCRIPT_SCENARIO in
 	$SCRIPT_SCENARIO_0)
@@ -716,23 +709,6 @@ if [ $FALSE -eq $KEEP_GENERATED_FILES ] ; then
 fi
 
 
-# Check if encryption/decryption key schedule is used
-use_encryption_key_schedule=$(cat $IMPLEMENTATION_INFO_FILE | grep $USE_ENCRYPTION_KEY_SCHEDULE$SECTION_SEPARATOR | tr -d '\r' | cut -d ':' -f 2 |  tr -d '[[:space:]]')
-use_decryption_key_schedule=$(cat $IMPLEMENTATION_INFO_FILE | grep $USE_DECRYPTION_KEY_SCHEDULE$SECTION_SEPARATOR | tr -d '\r' | cut -d ':' -f 2 |  tr -d '[[:space:]]')
-
-# Convert to lowercase
-use_encryption_key_schedule=${use_encryption_key_schedule,,}
-use_decryption_key_schedule=${use_decryption_key_schedule,,}
-
-if [ $USE_KEY_SCHEDULE_NO == "$use_encryption_key_schedule" ] ; then
-	eks_stack=0
-fi
-
-if [ $USE_KEY_SCHEDULE_NO == "$use_decryption_key_schedule" ] ; then
-	dks_stack=0
-fi
-
-
 # Dipslay results
 if [ $SCRIPT_MODE_0 -eq $SCRIPT_MODE ] ; then
 	# Clear output
@@ -741,12 +717,12 @@ if [ $SCRIPT_MODE_0 -eq $SCRIPT_MODE ] ; then
 	# Table header
 	printf "%0.s-" $(seq 1 $TABLE_HORIZONTAL_LINE_LENGTH) >> $SCRIPT_OUTPUT
 	printf "\n" >> $SCRIPT_OUTPUT
-	printf "| %10s | %10s | %10s | %10s | %10s | %10s | %10s | %10s | %10s |\n" "Data Size" "Associated Data Size" "Key Size" "Data RAM" "Scenario" "Enc. K.S." "Enc." "Dec. K.S." "Dec." >> $SCRIPT_OUTPUT
+	printf "| %10s | %10s | %10s | %10s | %10s | %10s | %10s |\n" "Data Size" "Associated Data Size" "Key Size" "Data RAM" "Scenario" "Enc." "Dec." >> $SCRIPT_OUTPUT
 	printf "%0.s-" $(seq 1 $TABLE_HORIZONTAL_LINE_LENGTH) >> $SCRIPT_OUTPUT
 	printf "\n" >> $SCRIPT_OUTPUT
 
 	# Table line
-	printf "| %10s | %10s | %10s | %10s | %10s | %10s | %10s | %10s | %10s |\n" $data_size $associated_data_size $key_size $data_ram_total $total_stack $eks_stack $e_stack $dks_stack $d_stack >> $SCRIPT_OUTPUT
+	printf "| %10s | %10s | %10s | %10s | %10s | %10s | %10s |\n" $data_size $associated_data_size $key_size $data_ram_total $total_stack $e_stack $d_stack >> $SCRIPT_OUTPUT
 
 	# Table footer
 	printf "%0.s-" $(seq 1 $TABLE_HORIZONTAL_LINE_LENGTH) >> $SCRIPT_OUTPUT
@@ -755,19 +731,19 @@ else
 	case $SCRIPT_SCENARIO in
 		$SCRIPT_SCENARIO_0)
 			# Display results
-			printf "%s %s %s %s %s %s %s %s %s %s" $eks_stack $e_stack $dks_stack $d_stack $data_ram_eks $data_ram_e $data_ram_dks $data_ram_d $data_ram_common $data_ram_total > $SCRIPT_OUTPUT
+			printf "%s %s %s %s %s %s" $e_stack $d_stack $data_ram_e $data_ram_d $data_ram_common $data_ram_total > $SCRIPT_OUTPUT
 			;;
 		$SCRIPT_SCENARIO_1)
 			# Display results
-			printf "%s %s %s %s %s %s %s %s %s %s" $eks_stack $e_stack $dks_stack $d_stack $data_ram_eks $data_ram_e $data_ram_dks $data_ram_d $data_ram_common $data_ram_total > $SCRIPT_OUTPUT
+			printf "%s %s %s %s %s %s" $e_stack $d_stack $data_ram_e $data_ram_d $data_ram_common $data_ram_total > $SCRIPT_OUTPUT
 			;;
 		$SCRIPT_SCENARIO_2)
 			# Display results
-			printf "%s %s %s %s %s %s %s %s %s %s" $eks_stack $e_stack $dks_stack $d_stack $data_ram_eks $data_ram_e $data_ram_dks $data_ram_d $data_ram_common $data_ram_total > $SCRIPT_OUTPUT
+			printf "%s %s %s %s %s %s" $e_stack $d_stack $data_ram_e $data_ram_d $data_ram_common $data_ram_total > $SCRIPT_OUTPUT
 			;;
 		$SCRIPT_SCENARIO_3)
 			# Display results
-			printf "%s %s %s %s %s %s %s %s %s %s" $eks_stack $e_stack $dks_stack $d_stack $data_ram_eks $data_ram_e $data_ram_dks $data_ram_d $data_ram_common $data_ram_total > $SCRIPT_OUTPUT
+			printf "%s %s %s %s %s %s" $e_stack $d_stack $data_ram_e $data_ram_d $data_ram_common $data_ram_total > $SCRIPT_OUTPUT
 			;;
 	esac
 fi
