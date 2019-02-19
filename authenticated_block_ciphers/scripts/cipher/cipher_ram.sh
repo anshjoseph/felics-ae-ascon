@@ -306,7 +306,7 @@ EOF
 
 block_size=$(solve-define BLOCK_SIZE)
 key_size=$(solve-define KEY_SIZE)
-round_keys_size=$(solve-define ROUND_KEYS_SIZE)
+round_keys_size=0               # TODO remove round-key stuff
 
 # Set the searched files pattern
 pattern=$ALL_FILES$OBJECT_FILE_EXTENSION 

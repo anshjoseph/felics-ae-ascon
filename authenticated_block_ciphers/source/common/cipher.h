@@ -159,21 +159,10 @@
 #endif /* AVR */
 
 
-/*
- *
- * Scenario 2 round keys are stored in Flash/ROM
- *
- */
-/*#if defined(SCENARIO) && (SCENARIO_2 == SCENARIO)
-#define READ_ROUND_KEY_BYTE(x) READ_ROM_DATA_BYTE(x)
-#define READ_ROUND_KEY_WORD(x) READ_ROM_DATA_WORD(x)
-#define READ_ROUND_KEY_DOUBLE_WORD(x) READ_ROM_DATA_DOUBLE_WORD(x)
-#else
 #define READ_ROUND_KEY_BYTE(x) READ_RAM_DATA_BYTE(x)
 #define READ_ROUND_KEY_WORD(x) READ_RAM_DATA_WORD(x)
 #define READ_ROUND_KEY_DOUBLE_WORD(x) READ_RAM_DATA_DOUBLE_WORD(x)
-#endif
-*/
+
 
 /*
  *
