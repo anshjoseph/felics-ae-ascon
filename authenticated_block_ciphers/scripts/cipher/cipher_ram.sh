@@ -306,7 +306,6 @@ EOF
 
 block_size=$(solve-define BLOCK_SIZE)
 key_size=$(solve-define KEY_SIZE)
-round_keys_size=0               # TODO remove round-key stuff
 
 # Set the searched files pattern
 pattern=$ALL_FILES$OBJECT_FILE_EXTENSION 
@@ -458,15 +457,7 @@ case $SCRIPT_SCENARIO in
 		data_ram_e=$shared_constants_e
 		data_ram_dks=$shared_constants_dks
 		data_ram_d=$shared_constants_d
-
-		if [ $USE_KEY_SCHEDULE_NO == "$use_encryption_key_schedule" ] ; then
-			# Data RAM common = key + block/state
-			data_ram_common=$(($key_size + $block_size))
-		else
-			# Data RAM common = key + round keys + block/state
-			data_ram_common=$(($key_size + $round_keys_size + $block_size))
-		fi
-		
+        data_ram_common=$(($key_size + $block_size))
 		data_ram_total=$(($data_ram_common + $shared_constants_total))
 		;;
 	$SCRIPT_SCENARIO_1)
@@ -477,14 +468,7 @@ case $SCRIPT_SCENARIO in
 
 		data_size=$(cat $SCENARIO1_CONSTANTS_SOURCE_FILE | grep "$RAW_DATA_SIZE_DEFINE" | tr -d '\r' | cut -d ' ' -f 3)
 		associated_data_size=$(cat $SCENARIO1_CONSTANTS_SOURCE_FILE | grep "$RAW_ASSOCIATED_DATA_SIZE_DEFINE" | tr -d '\r' | cut -d ' ' -f 3)
-		if [ $USE_KEY_SCHEDULE_NO == "$use_encryption_key_schedule" ] ; then
-			# Data RAM common = key + data/state + IV
-			data_ram_common=$(($key_size + $data_size + $associated_data_size))
-		else
-			# Data RAM common = key + round keys + data/state + IV
-			data_ram_common=$(($key_size + $round_keys_size + $data_size + $associated_data_size))
-		fi
-
+        data_ram_common=$(($key_size + $data_size + $associated_data_size))
 		data_ram_total=$(($data_ram_common + $shared_constants_total))
 		;;
 	$SCRIPT_SCENARIO_2)
@@ -495,14 +479,7 @@ case $SCRIPT_SCENARIO in
 
 		data_size=$(cat $SCENARIO2_CONSTANTS_SOURCE_FILE | grep "$RAW_DATA_SIZE_DEFINE" | tr -d '\r' | cut -d ' ' -f 3)
 		associated_data_size=$(cat $SCENARIO2_CONSTANTS_SOURCE_FILE | grep "$RAW_ASSOCIATED_DATA_SIZE_DEFINE" | tr -d '\r' | cut -d ' ' -f 3)
-		if [ $USE_KEY_SCHEDULE_NO == "$use_encryption_key_schedule" ] ; then
-			# Data RAM common = key + data/state + IV
-			data_ram_common=$(($key_size + $data_size + $associated_data_size))
-		else
-			# Data RAM common = key + round keys + data/state + IV
-			data_ram_common=$(($key_size + $round_keys_size + $data_size + $associated_data_size))
-		fi
-
+		data_ram_common=$(($key_size + $data_size + $associated_data_size))
 		data_ram_total=$(($data_ram_common + $shared_constants_total))
 		;;
 		
@@ -514,13 +491,7 @@ case $SCRIPT_SCENARIO in
 
 		data_size=$(cat $SCENARIO3_CONSTANTS_SOURCE_FILE | grep "$RAW_DATA_SIZE_DEFINE" | tr -d '\r' | cut -d ' ' -f 3)
 		associated_data_size=$(cat $SCENARIO3_CONSTANTS_SOURCE_FILE | grep "$RAW_ASSOCIATED_DATA_SIZE_DEFINE" | tr -d '\r' | cut -d ' ' -f 3)
-		if [ $USE_KEY_SCHEDULE_NO == "$use_encryption_key_schedule" ] ; then
-			# Data RAM common = key + data/state + IV
-			data_ram_common=$(($key_size + $data_size + $associated_data_size))
-		else
-			# Data RAM common = key + round keys + data/state + IV
-			data_ram_common=$(($key_size + $round_keys_size + $data_size + $associated_data_size))
-		fi
+		data_ram_common=$(($key_size + $data_size + $associated_data_size))
 esac
 
 
@@ -770,12 +741,12 @@ if [ $SCRIPT_MODE_0 -eq $SCRIPT_MODE ] ; then
 	# Table header
 	printf "%0.s-" $(seq 1 $TABLE_HORIZONTAL_LINE_LENGTH) >> $SCRIPT_OUTPUT
 	printf "\n" >> $SCRIPT_OUTPUT
-	printf "| %10s | %10s | %10s | %10s | %10s | %10s | %10s | %10s | %10s | %10s |\n" "Data Size" "Associated Data Size" "Key Size" "R.K.s Size" "Data RAM" "Scenario" "Enc. K.S." "Enc." "Dec. K.S." "Dec." >> $SCRIPT_OUTPUT
+	printf "| %10s | %10s | %10s | %10s | %10s | %10s | %10s | %10s | %10s |\n" "Data Size" "Associated Data Size" "Key Size" "Data RAM" "Scenario" "Enc. K.S." "Enc." "Dec. K.S." "Dec." >> $SCRIPT_OUTPUT
 	printf "%0.s-" $(seq 1 $TABLE_HORIZONTAL_LINE_LENGTH) >> $SCRIPT_OUTPUT
 	printf "\n" >> $SCRIPT_OUTPUT
 
 	# Table line
-	printf "| %10s | %10s | %10s | %10s | %10s | %10s | %10s | %10s | %10s | %10s |\n" $data_size $associated_data_size $key_size $round_keys_size $data_ram_total $total_stack $eks_stack $e_stack $dks_stack $d_stack >> $SCRIPT_OUTPUT
+	printf "| %10s | %10s | %10s | %10s | %10s | %10s | %10s | %10s | %10s |\n" $data_size $associated_data_size $key_size $data_ram_total $total_stack $eks_stack $e_stack $dks_stack $d_stack >> $SCRIPT_OUTPUT
 
 	# Table footer
 	printf "%0.s-" $(seq 1 $TABLE_HORIZONTAL_LINE_LENGTH) >> $SCRIPT_OUTPUT
