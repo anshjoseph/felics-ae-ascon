@@ -385,9 +385,7 @@ do
 done
 
 
-shared_constants_eks=0
 shared_constants_e=0
-shared_constants_dks=0
 shared_constants_d=0
 shared_constants_total=0
 
@@ -426,14 +424,8 @@ do
 	
 	
 		case $constants_section in
-			$CONSTANTS_SECTION_EKS)
-				shared_constants_eks=$(($shared_constants_eks + $shared_value))
-				;;
 			$CONSTANTS_SECTION_E)
 				shared_constants_e=$(($shared_constants_e + $shared_value))
-				;;
-			$CONSTANTS_SECTION_DKS)
-				shared_constants_dks=$(($shared_constants_dks + $shared_value))
 				;;
 			$CONSTANTS_SECTION_D)
 				shared_constants_d=$(($shared_constants_d + $shared_value))
@@ -446,17 +438,13 @@ done
 # Compute the data RAM
 case $SCRIPT_SCENARIO in
 	$SCRIPT_SCENARIO_0)
-		data_ram_eks=$shared_constants_eks
 		data_ram_e=$shared_constants_e
-		data_ram_dks=$shared_constants_dks
 		data_ram_d=$shared_constants_d
         data_ram_common=$(($key_size + $block_size))
 		data_ram_total=$(($data_ram_common + $shared_constants_total))
 		;;
 	$SCRIPT_SCENARIO_1)
-		data_ram_eks=$shared_constants_eks
 		data_ram_e=$shared_constants_e
-		data_ram_dks=$shared_constants_dks
 		data_ram_d=$shared_constants_d
 
 		data_size=$(cat $SCENARIO1_CONSTANTS_SOURCE_FILE | grep "$RAW_DATA_SIZE_DEFINE" | tr -d '\r' | cut -d ' ' -f 3)
@@ -465,9 +453,7 @@ case $SCRIPT_SCENARIO in
 		data_ram_total=$(($data_ram_common + $shared_constants_total))
 		;;
 	$SCRIPT_SCENARIO_2)
-		data_ram_eks=$shared_constants_eks
 		data_ram_e=$shared_constants_e
-		data_ram_dks=$shared_constants_dks
 		data_ram_d=$shared_constants_d
 
 		data_size=$(cat $SCENARIO2_CONSTANTS_SOURCE_FILE | grep "$RAW_DATA_SIZE_DEFINE" | tr -d '\r' | cut -d ' ' -f 3)
@@ -477,9 +463,7 @@ case $SCRIPT_SCENARIO in
 		;;
 		
 		$SCRIPT_SCENARIO_3)
-		data_ram_eks=$shared_constants_eks
 		data_ram_e=$shared_constants_e
-		data_ram_dks=$shared_constants_dks
 		data_ram_d=$shared_constants_d
 
 		data_size=$(cat $SCENARIO3_CONSTANTS_SOURCE_FILE | grep "$RAW_DATA_SIZE_DEFINE" | tr -d '\r' | cut -d ' ' -f 3)
@@ -661,9 +645,7 @@ case $SCRIPT_ARCHITECTURE in
 esac
 
 
-eks_stack=0
 e_stack=0
-dks_stack=0
 d_stack=0
 total_stack=0
 
@@ -674,27 +656,19 @@ fi
 if [ -f $gdb_stack_sections_log_file ] ; then
 	case $SCRIPT_SCENARIO in
 		$SCRIPT_SCENARIO_0)
-			eks_stack=$(compute_stack_usage $gdb_stack_sections_log_file 1)
 			e_stack=$(compute_stack_usage $gdb_stack_sections_log_file 2)
-			dks_stack=$(compute_stack_usage $gdb_stack_sections_log_file 3)
 			d_stack=$(compute_stack_usage $gdb_stack_sections_log_file 4)
 			;;
 		$SCRIPT_SCENARIO_1)
-			eks_stack=$(compute_stack_usage $gdb_stack_sections_log_file 1)
 			e_stack=$(compute_stack_usage $gdb_stack_sections_log_file 2)
-			dks_stack=$(compute_stack_usage $gdb_stack_sections_log_file 3)
 			d_stack=$(compute_stack_usage $gdb_stack_sections_log_file 4)
 			;;
 		$SCRIPT_SCENARIO_2)
-			eks_stack=$(compute_stack_usage $gdb_stack_sections_log_file 1)
 			e_stack=$(compute_stack_usage $gdb_stack_sections_log_file 2)
-			dks_stack=$(compute_stack_usage $gdb_stack_sections_log_file 3)
 			d_stack=$(compute_stack_usage $gdb_stack_sections_log_file 4)
 			;;
 		$SCRIPT_SCENARIO_3)
-			eks_stack=$(compute_stack_usage $gdb_stack_sections_log_file 1)
 			e_stack=$(compute_stack_usage $gdb_stack_sections_log_file 2)
-			dks_stack=$(compute_stack_usage $gdb_stack_sections_log_file 3)
 			d_stack=$(compute_stack_usage $gdb_stack_sections_log_file 4)
 			;;
 	esac
