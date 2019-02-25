@@ -145,7 +145,7 @@ void VerifyData(uint8_t *data, const char *name)
 	else
 	{
 		printf("WRONG!\n");
-        exit(EXIT_FAILURE);
+        exit(1);
 	}
 }
 
