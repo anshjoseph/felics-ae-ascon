@@ -39,12 +39,9 @@
 #define CRYPTO_ABYTES 16
 
 
-/*
- *
- * Cipher constants
- *
- */
-/* Replace with the cipher constants declaration */
+#define maj(x,y,z)   ( ((x) & (y)) ^ ((x) & (z)) ^ ((y) & (z))  )
+#define ch(x,y,z)    ( ((x) & (y)) ^ ((~x) & (z)) )
+
 
 
 #endif /* CONSTANTS_H */
