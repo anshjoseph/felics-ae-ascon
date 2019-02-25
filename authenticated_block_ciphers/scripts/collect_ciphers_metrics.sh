@@ -494,7 +494,7 @@ do
 						;;
 				esac
 
-				add_json_table_row "${script_json_output}" ${scenario} ${architecture} ${cipher_name} ${cipher_block_size} ${cipher_key_size} ${cipher_implementation_version} ${cipher_implementation_language} "${compiler_option}" \
+				add_json_table_row "${script_json_output}" ${architecture} ${cipher_name} ${cipher_block_size} ${cipher_key_size} ${cipher_implementation_version} ${cipher_implementation_language} "${compiler_option}" \
                                    "${cipher_code_size_output_file}" "${cipher_ram_output_file}" "${cipher_execution_time_output_file}"
 
 				if [ $FALSE -eq $KEEP_GENERATED_FILES ] ; then

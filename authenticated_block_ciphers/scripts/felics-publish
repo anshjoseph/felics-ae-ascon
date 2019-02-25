@@ -17,27 +17,24 @@ def _parse_arguments():
     return parser.parse_args()
 
 
-def _sort_by_arch_and_scenario(data):
+def _sort_by_architecture(data):
     sorted_data = defaultdict(list)
 
     for setup in data:
-        key = (setup['architecture'], setup['scenario'])
-        sorted_data[key].append(setup)
+        sorted_data[setup['architecture']].append(setup)
 
-    def order_key(k):
-        widths = {'AVR': 8, 'MSP': 16, 'ARM': 32, 'PC': 64}
-        return (widths[k[0]], k[1])
+    widths = {'AVR': 8, 'MSP': 16, 'ARM': 32, 'PC': 64}
 
     return OrderedDict(
-        (key, sorted_data[key]) for key in sorted(sorted_data, key=order_key)
+        (key, sorted_data[key]) for key in sorted(sorted_data, key=widths.get)
     )
 
 
 def _convert_to_spreadsheet(results, output_filename):
     spreadsheet_data = OrderedDict()
 
-    for (arch, scenario), data in results.items():
-        sheet_name = '{arch} - scenario {scenario}'.format(arch=arch, scenario=scenario)
+    for arch, data in results.items():
+        sheet_name = arch
 
         spreadsheet_data[sheet_name] = [
             [
@@ -134,10 +131,8 @@ _TEX_TABLE_TEMPLATE = r'''
 '''[1:]                         # Remove first newline.
 
 
-def _make_tex_table(architecture, scenario, data):
-    caption = 'Performance results for scenario {scenario} on {arch}'.format(
-        arch=architecture, scenario=scenario
-    )
+def _make_tex_table(architecture, data):
+    caption = 'Performance results on {arch}'.format(arch=architecture)
 
     return _TEX_TABLE_TEMPLATE.format(
         rows=_generate_tex_rows(data),
@@ -147,10 +142,7 @@ def _make_tex_table(architecture, scenario, data):
 
 
 def _convert_to_tex(results, output_filename):
-    tables = (
-        _make_tex_table(arch, scenario, data)
-        for (arch, scenario), data in results.items()
-    )
+    tables = (_make_tex_table(arch, data) for arch, data in results.items())
 
     with open(output_filename, 'w') as output:
         output.write('\n'.join(tables))
@@ -171,6 +163,6 @@ if __name__ == '__main__':
     with open(arguments.results) as results_file:
         raw_results = json.load(results_file)['data']
 
-    sorted_results = _sort_by_arch_and_scenario(raw_results)
+    sorted_results = _sort_by_architecture(raw_results)
 
     _convert(sorted_results, arguments.output)

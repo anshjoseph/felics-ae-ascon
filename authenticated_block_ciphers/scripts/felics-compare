@@ -44,7 +44,6 @@ def _parse_arguments():
 
 def _make_key(data):
     return (
-        data['scenario'],
         data['cipher_name'],
         ARCHITECTURES[data['architecture']],
         data['block_size'],
@@ -76,8 +75,7 @@ def _format_diff(diff, value1, value2):
     reset = '\N{ESCAPE}[0m'
 
     template = '{color}{diff:+.2%}{reset} ({v1} {arrow} {v2})'
-    arguments = {'diff': diff, 'v1': value1, 'v2': value2,
-                 'reset': reset}
+    arguments = {'diff': diff, 'v1': value1, 'v2': value2, 'reset': reset}
 
     if diff < 0:
         arguments['color'] = green
