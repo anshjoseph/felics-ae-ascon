@@ -1,5 +1,5 @@
-ImplementationDescription: AEAD ACORN128
-ImplementationAuthors: Jean-Baptiste Serrou Soares (adapted from supercop)
+ImplementationDescription: AEAD ACORN128 (adapted from supercop's 8bitfast version)
+ImplementationAuthors: Kévin Le Gouguec
 
 EncryptionKeyScheduleConstants: 
 EncryptConstants: 
