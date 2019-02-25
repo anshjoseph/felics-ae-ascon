@@ -11,7 +11,7 @@ from git.exc import InvalidGitRepositoryError
 Results = namedtuple('Results', ('commit', 'branch', 'data'))
 
 
-ARCHITECTURES = {'AVR', 'MSP', 'ARM', 'PC'}
+ARCHITECTURES = {'AVR': 8, 'MSP': 16, 'ARM': 32, 'PC': 64}
 
 METRICS = ('code_size', 'code_ram', 'code_time')
 
@@ -36,15 +36,23 @@ def _parse_arguments():
         help='hide difference when abs(old-new)/old < THRESHOLD'
     )
     parser.add_argument(
-        '--archs', default=ARCHITECTURES, type=_parse_architectures,
+        '--archs', default=set(ARCHITECTURES), type=_parse_architectures,
         help='only consider those architectures'
     )
     return parser.parse_args()
 
 
 def _make_key(data):
-    keys = ('scenario', 'cipher_name', 'architecture', 'block_size',
-            'key_size', 'version', 'language', 'compiler_options')
+    return (
+        data['scenario'],
+        data['cipher_name'],
+        ARCHITECTURES[data['architecture']],
+        data['block_size'],
+        data['key_size'],
+        data['version'],
+        data['language'],
+        data['compiler_options']
+    )
 
     return tuple(data[k] for k in keys)
 
