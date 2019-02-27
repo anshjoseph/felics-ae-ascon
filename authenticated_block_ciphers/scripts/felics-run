@@ -5,6 +5,7 @@ set -eux
 auth_root=$(git rev-parse --show-toplevel)/authenticated_block_ciphers
 ciphers_root=${auth_root}/source/ciphers
 scripts_dir=${auth_root}/scripts
+results_dir=${auth_root}/results
 
 scenario=1
 
@@ -48,3 +49,5 @@ sudo cpufreq-set -c ${PC_EXECUTION_TIME_CPU} -g performance
 ${scripts_dir}/collect_ciphers_metrics.sh "-c=${ciphers[*]}" "-a=$1" -s=$scenario -co=-O3 -j="${output}"
 
 restore-cpu
+
+felics-publish "${results_dir}/${output}"
