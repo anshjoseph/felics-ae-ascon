@@ -33,13 +33,13 @@
 
 PC_SIZE=size
 AVR_SIZE=avr-size
-MSP_SIZE=msp430-size
+MSP_SIZE=/opt/paclido/msp430-gcc/bin/msp430-elf-size
 ARM_SIZE=arm-none-eabi-size
 
 
 PC_GDB=gdb
 AVR_GDB=avr-gdb
-MSP_GDB=msp430-gdb
+MSP_GDB=/opt/paclido/msp430-gcc/bin/msp430-elf-gdb
 ARM_GDB=arm-none-eabi-gdb
 
 SIMAVR_SIMULATOR=/opt/paclido/simavr/bin/simavr

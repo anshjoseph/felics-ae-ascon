@@ -55,7 +55,7 @@ continue
 # main breakpoint
 #
 # Save the initial stack pointer in the convenience variable
-set $base = $r1
+set $base = $sp
 # Set the stack content
 restore MSP_scenario1_memory.mem binary $base-$analysed_stack_size
 

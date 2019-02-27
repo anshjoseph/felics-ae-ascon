@@ -488,7 +488,8 @@ int printf (const char *format, ...)
 							else
 #endif /* __MSP430LIBC_PRINTF_INT20__ */
 							{
-								number.i16 = va_arg (args, int16_t);
+                                /* int16_t promoted to int when passed as variable argument */
+								number.i16 = va_arg (args, int);
 								is_zero = (number.i16 == 0);
 								is_negative = (number.i16 < 0);
 							}

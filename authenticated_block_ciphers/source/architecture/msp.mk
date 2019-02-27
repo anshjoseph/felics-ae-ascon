@@ -32,8 +32,11 @@
 
 # Linker printf library path
 PRINTF_DIR := ../../../../../common/msp
+MSPGCC_DIR = /opt/paclido/msp430-gcc
+MSPGCC_BIN_DIR = $(MSPGCC_DIR)/bin
+MSPGCC_SUPPORT_DIR = $(MSPGCC_DIR)/support-files/include/
 
-CC := msp430-gcc
+CC := $(MSPGCC_BIN_DIR)/msp430-elf-gcc -I$(MSPGCC_SUPPORT_DIR)
 
 CFLAGS := \
 	-std=c99 \
@@ -49,15 +52,15 @@ CFLAGS := \
 	-Wl,--gc-sections \
 	-Wl,--relax
 
-OBJDUMP := msp430-objdump
+OBJDUMP := $(MSPGCC_BIN_DIR)/msp430-elf-objdump
 
 OBJDUMPFLAGS := -dSt
 
-OBJCOPY := msp430-objcopy
+OBJCOPY := $(MSPGCC_BIN_DIR)/msp430-elf-objcopy
 
 # -lprintf is in LDLIBS and not LDFLAGS because we want it to appear on the 
 # ... command line after the object files (i.e. our printf function must be used
 # ... instead of the libc printf function)
-LDLIBS := -L$(PRINTF_DIR) -lprintf
+LDLIBS := -L$(PRINTF_DIR) -lprintf -L$(MSPGCC_SUPPORT_DIR) -Wl,-L$(MSPGCC_SUPPORT_DIR)
 
 LDFLAGS := $(CFLAGS)

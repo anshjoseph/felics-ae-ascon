@@ -30,17 +30,18 @@
 #
 ################################################################################
 
-AR = msp430-ar
+AR = /opt/paclido/msp430-gcc/bin/msp430-elf-ar
+CC = /opt/paclido/msp430-gcc/bin/msp430-elf-gcc -I/opt/paclido/msp430-gcc/support-files/include/
 
 %.o : %.c
-	msp430-gcc -c -mmcu=msp430f1611 -g -O3  -o $@ $<
+	$(CC) -c -mmcu=msp430f1611 -g -O3  -o $@ $<
 
 #printf.o : ./src/printf.c
 #
 #putchar.o : ./src/putchar.c
-#	msp430-gcc -c -mmcu=msp430f1611 -g -O3  -o $@ $<
+#	/opt/paclido/msp430-gcc/bin/msp430-elf-gcc -c -mmcu=msp430f1611 -g -O3  -o $@ $<
 #libprintf.a : printf.o
-#	msp430-ar -rs $@ $<
+#	/opt/paclido/msp430-gcc/bin/msp430-elf-ar -rs $@ $<
 
 vpath %.c ./src
 
@@ -51,4 +52,4 @@ all: libprintf.a
 
 .PHONY: clean
 clean:
-	rm -rf libprintf.a printf.o
+	rm -rf *.a *.o
