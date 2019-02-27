@@ -12,7 +12,7 @@ import pyexcel_xlsx
 
 def _parse_arguments():
     parser = ArgumentParser()
-    parser.add_argument('-o', '--out', dest='output', required=True)
+    parser.add_argument('-o', '--out', dest='output')
     parser.add_argument('results')
     return parser.parse_args()
 
@@ -148,8 +148,48 @@ def _convert_to_tex(results, output_filename):
         output.write('\n'.join(tables))
 
 
+_STDOUT_PREFIX_TEMPLATE = '{cipher_name}-{key_size} ({version}, {compiler_options}):'
+_STDOUT_LINE_TEMPLATE = '{prefix:<{prefix_width}} {code_size:>{code_size_width}} {code_ram:>{code_ram_width}} {code_time:>{code_time_width}}'
+
+
+def _make_line_values(prefix, prefix_width, metrics, metrics_widths):
+    return {'prefix': prefix, 'prefix_width': prefix_width, **metrics, **metrics_widths}
+
+
+def _format_stdout_lines(results):
+    metrics = ('code_size', 'code_ram', 'code_time')
+
+    results = {
+        _STDOUT_PREFIX_TEMPLATE.format_map(setup): {m: setup[m] for m in metrics}
+        for setup in results
+    }
+
+    metrics_widths = {
+        m+'_width': max(len(str(values[m])) for values in results.values())
+        for m in metrics
+    }
+
+    prefix_width = max(len(p) for p in results)
+
+    return (
+        _STDOUT_LINE_TEMPLATE.format_map(
+            _make_line_values(prefix, prefix_width, metrics, metrics_widths)
+        )
+        for prefix, metrics in results.items()
+    )
+
+
+def _dump_to_stdout(results):
+    for arch, data in results.items():
+        print('On {arch}'.format(arch=arch))
+        print('\n'.join(_format_stdout_lines(data)))
+        print()
+
+
 def _convert(results, output_filename):
-    if output_filename.endswith(('.ods', 'xlsx')):
+    if output_filename is None:
+        _dump_to_stdout(results)
+    elif output_filename.endswith(('.ods', 'xlsx')):
         _convert_to_spreadsheet(results, output_filename)
     elif output_filename.endswith('.tex'):
         _convert_to_tex(results, output_filename)
