@@ -30,36 +30,41 @@ def _sort_by_architecture(data):
     )
 
 
-def _convert_to_spreadsheet(results, output_filename):
-    spreadsheet_data = OrderedDict()
+class SpreadsheetWriter:
 
-    for arch, data in results.items():
-        sheet_name = arch
-
-        spreadsheet_data[sheet_name] = [
-            [
-                'Designation', 'Block size (bits)', 'Key size (bits)',
-                'Version', 'Language', 'Compiler options', 'Size (bytes)',
-                'RAM (bytes)', 'Execution time (cycles)'
-            ]
-        ]
-
-        spreadsheet_data[sheet_name].extend(
-            [
-                setup['cipher_name'], setup['block_size'], setup['key_size'],
-                setup['version'], setup['language'], setup['compiler_options'],
-                setup['code_size'], setup['code_ram'], setup['code_time']
-            ]
-            for setup in data
-        )
-
-    modules = {
+    _MODULES = {
         '.xlsx': pyexcel_xlsx,
         '.ods': pyexcel_ods
     }
 
-    _, ext = path.splitext(output_filename)
-    modules[ext].save_data(output_filename, spreadsheet_data)
+    _SHEET_COLUMNS = OrderedDict((
+        ('cipher_name', 'Designation'),
+        ('key_size', 'Key size (bits)'),
+        ('version', 'Version'),
+        ('language', 'Language'),
+        ('compiler_options', 'Compiler options'),
+        ('code_size', 'Size (bytes)'),
+        ('code_ram', 'RAM (bytes)'),
+        ('code_time', 'Execution time (cycles)')
+    ))
+
+    def __init__(self, results, output):
+        self._results = results
+        self._output = output
+
+    def _make_rows(self, data):
+        header = tuple(self._SHEET_COLUMNS.values())
+        rows = (tuple(setup[c] for c in self._SHEET_COLUMNS) for setup in data)
+        return (header,) + tuple(rows)
+
+    def dump(self):
+        spreadsheet_data = OrderedDict(
+            (arch, self._make_rows(data))
+            for arch, data in self._results.items()
+        )
+
+        _, ext = path.splitext(self._output)
+        self._MODULES[ext].save_data(self._output, spreadsheet_data)
 
 
 def _make_tex_name(setup):
@@ -192,7 +197,7 @@ def _convert(results, output_filename):
     if output_filename is None:
         _dump_to_stdout(results)
     elif output_filename.endswith(('.ods', 'xlsx')):
-        _convert_to_spreadsheet(results, output_filename)
+        SpreadsheetWriter(results, output_filename).dump()
     elif output_filename.endswith('.tex'):
         _convert_to_tex(results, output_filename)
     else:
