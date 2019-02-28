@@ -159,10 +159,12 @@ def _make_line_values(prefix, prefix_width, metrics, metrics_widths):
 def _format_stdout_lines(results):
     metrics = ('code_size', 'code_ram', 'code_time')
 
-    results = {
-        _STDOUT_PREFIX_TEMPLATE.format_map(setup): {m: setup[m] for m in metrics}
-        for setup in results
-    }
+    results = OrderedDict((
+        (
+            _STDOUT_PREFIX_TEMPLATE.format_map(setup),
+            {m: setup[m] for m in metrics}
+        )
+    ) for setup in results)
 
     metrics_widths = {
         m+'_width': max(len(str(values[m])) for values in results.values())
