@@ -150,7 +150,7 @@ class TexWriter:
 
 class ConsoleWriter:
 
-    _ROW_HEADER_TEMPLATE = '{cipher_name}-{key_size} ({version}, {compiler_options}):'
+    _ROW_HEADER_TEMPLATE = '{cipher_name} ({version}, {compiler_options}):'
     _ROW_TEMPLATE = '{header:<{header_width}} {code_size:>{code_size_width}} {code_ram:>{code_ram_width}} {code_time:>{code_time_width}}'
 
     def _find_widest_value(self, metric, setups):
