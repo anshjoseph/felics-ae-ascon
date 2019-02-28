@@ -69,15 +69,23 @@ class TexWriter:
 
     _TABLE_TEMPLATE = r'''
 \begin{{table}}[H]
-  \begin{{center}}
-    \begin{{tabular}}{{l|r|r|r}}
+  \centering
+  \begin{{tabular}}{{l|l|l||r|r|r}}
 {rows}
-    \end{{tabular}}
-    \caption{{{caption}}}
-    \label{{table:bench-soft-{arch}}}
-  \end{{center}}
+  \end{{tabular}}
+  \caption{{{caption}}}
+  \label{{table:bench-soft-{arch}}}
 \end{{table}}
 '''[1:]                         # Remove first newline.
+
+    _COLUMNS = OrderedDict((
+        ('cipher_name', ''),
+        ('version', 'Version'),
+        ('compiler_options', r'\texttt{CFLAGS}'),
+        ('code_size', 'Code size (B)'),
+        ('code_ram', 'RAM (B)'),
+        ('code_time', 'Execution time (cycles)')
+    ))
 
     _PLATFORM_NAMES = {
         'AVR': 'AVR ATmega128',
@@ -97,16 +105,18 @@ class TexWriter:
         )
 
     def _extract_row_data(self, setup):
-        # TODO: define list of column formatters.
-        return (
-            r'\textsc{{{cipher_name}}}'.format_map(setup),
-            str(setup['code_size']),
-            str(setup['code_ram']),
-            str(setup['code_time'])
-        )
+        def raw(value):
+            return str(value)
+
+        def smallcap(value):
+            return r'\textsc{{{}}}'.format(value)
+
+        formatters = defaultdict(lambda: raw, cipher_name=smallcap)
+
+        return tuple(formatters[c](setup[c]) for c in self._COLUMNS)
 
     def _make_padded_rows(self, data):
-        header = ('', 'Code size (B)', 'RAM (B)', 'Execution time (cycles)')
+        header = tuple(self._COLUMNS.values())
         rows = (header,) + tuple(self._extract_row_data(setup) for setup in data)
 
         columns_nb = len(header)
