@@ -4,7 +4,6 @@ from argparse import ArgumentParser
 from collections import defaultdict, OrderedDict
 import json
 from os import path
-import re
 
 import pyexcel_ods
 import pyexcel_xlsx
@@ -48,8 +47,7 @@ class SpreadsheetWriter:
         ('code_time', 'Execution time (cycles)')
     ))
 
-    def __init__(self, results, output):
-        self._results = results
+    def __init__(self, output):
         self._output = output
 
     def _make_rows(self, data):
@@ -57,10 +55,10 @@ class SpreadsheetWriter:
         rows = (tuple(setup[c] for c in self._SHEET_COLUMNS) for setup in data)
         return (header,) + tuple(rows)
 
-    def dump(self):
+    def dump(self, results):
         spreadsheet_data = OrderedDict(
             (arch, self._make_rows(data))
-            for arch, data in self._results.items()
+            for arch, data in results.items()
         )
 
         _, ext = path.splitext(self._output)
@@ -88,8 +86,7 @@ class TexWriter:
         'PC': 'PC'
     }
 
-    def __init__(self, results, output):
-        self._results = results
+    def __init__(self, output):
         self._output = output
 
     def _pad_cell(self, value, padding, column_index):
@@ -141,65 +138,67 @@ class TexWriter:
             )
         )
 
-    def dump(self):
+    def dump(self, results):
         tables = (
             self._make_table(arch, data)
-            for arch, data in self._results.items()
+            for arch, data in results.items()
         )
 
         with open(self._output, 'w') as output:
             output.write('\n'.join(tables))
 
 
-_STDOUT_PREFIX_TEMPLATE = '{cipher_name}-{key_size} ({version}, {compiler_options}):'
-_STDOUT_LINE_TEMPLATE = '{prefix:<{prefix_width}} {code_size:>{code_size_width}} {code_ram:>{code_ram_width}} {code_time:>{code_time_width}}'
+class ConsoleWriter:
 
+    _ROW_HEADER_TEMPLATE = '{cipher_name}-{key_size} ({version}, {compiler_options}):'
+    _ROW_TEMPLATE = '{header:<{header_width}} {code_size:>{code_size_width}} {code_ram:>{code_ram_width}} {code_time:>{code_time_width}}'
 
-def _make_line_values(prefix, prefix_width, metrics, metrics_widths):
-    return {'prefix': prefix, 'prefix_width': prefix_width, **metrics, **metrics_widths}
+    def _find_widest_value(self, metric, setups):
+        return max(len(s[metric]) for s in setups)
 
+    def _format_rows(self, data):
+        metrics = ('code_size', 'code_ram', 'code_time')
 
-def _format_stdout_lines(results):
-    metrics = ('code_size', 'code_ram', 'code_time')
+        def header(setup):
+            return self._ROW_HEADER_TEMPLATE.format_map(setup)
 
-    results = OrderedDict((
-        (
-            _STDOUT_PREFIX_TEMPLATE.format_map(setup),
-            {m: setup[m] for m in metrics}
+        def values(setup):
+            return {m: str(setup[m]) for m in metrics}
+
+        results = OrderedDict((header(setup), values(setup))
+                              for setup in data)
+
+        metrics_widths = {
+            m + '_width': self._find_widest_value(m, results.values())
+            for m in metrics
+        }
+
+        return (
+            self._ROW_TEMPLATE.format(
+                header=header,
+                header_width=max(len(header) for header in results),
+                **metrics,
+                **metrics_widths
+            )
+            for header, metrics in results.items()
         )
-    ) for setup in results)
 
-    metrics_widths = {
-        m+'_width': max(len(str(values[m])) for values in results.values())
-        for m in metrics
-    }
-
-    prefix_width = max(len(p) for p in results)
-
-    return (
-        _STDOUT_LINE_TEMPLATE.format_map(
-            _make_line_values(prefix, prefix_width, metrics, metrics_widths)
-        )
-        for prefix, metrics in results.items()
-    )
+    def dump(self, results):
+        for arch, data in results.items():
+            print('On {arch}'.format(arch=arch))
+            print('\n'.join(self._format_rows(data)))
+            print()
 
 
-def _dump_to_stdout(results):
-    for arch, data in results.items():
-        print('On {arch}'.format(arch=arch))
-        print('\n'.join(_format_stdout_lines(data)))
-        print()
-
-
-def _convert(results, output_filename):
+def _make_writer(output_filename):
     if output_filename is None:
-        _dump_to_stdout(results)
-    elif output_filename.endswith(('.ods', 'xlsx')):
-        SpreadsheetWriter(results, output_filename).dump()
-    elif output_filename.endswith('.tex'):
-        TexWriter(results, output_filename).dump()
-    else:
-        raise ValueError('{f}: unsupported extension'.format(f=output_filename))
+        return ConsoleWriter()
+    if output_filename.endswith(('.ods', 'xlsx')):
+        return SpreadsheetWriter(output_filename)
+    if output_filename.endswith('.tex'):
+        return TexWriter(output_filename)
+
+    raise ValueError('{f}: unsupported extension'.format(f=output_filename))
 
 
 if __name__ == '__main__':
@@ -210,4 +209,5 @@ if __name__ == '__main__':
 
     sorted_results = _sort_by_architecture(raw_results)
 
-    _convert(sorted_results, arguments.output)
+    writer = _make_writer(arguments.output)
+    writer.dump(sorted_results)
