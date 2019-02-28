@@ -16,16 +16,24 @@ def _parse_arguments():
     return parser.parse_args()
 
 
-def _sort_by_architecture(data):
-    sorted_data = defaultdict(list)
+def _order_data(data):
+    def make_key(setup):
+        return (setup['compiler_options'], setup['cipher_name'])
+
+    return sorted(data, key=make_key)
+
+
+def _group_by_architecture(data):
+    data_by_arch = defaultdict(list)
 
     for setup in data:
-        sorted_data[setup['architecture']].append(setup)
+        data_by_arch[setup['architecture']].append(setup)
 
     widths = {'AVR': 8, 'MSP': 16, 'ARM': 32, 'PC': 64}
 
     return OrderedDict(
-        (key, sorted_data[key]) for key in sorted(sorted_data, key=widths.get)
+        (key, _order_data(data_by_arch[key]))
+        for key in sorted(data_by_arch, key=widths.get)
     )
 
 
@@ -143,7 +151,7 @@ class TexWriter:
         return self._TABLE_TEMPLATE.format(
             rows=self._generate_rows(data),
             arch=architecture.lower(),
-            caption='Performance results on {arch}'.format(
+            caption='Performance results on {arch}.'.format(
                 arch=self._PLATFORM_NAMES[architecture]
             )
         )
@@ -217,7 +225,7 @@ if __name__ == '__main__':
     with open(arguments.results) as results_file:
         raw_results = json.load(results_file)['data']
 
-    sorted_results = _sort_by_architecture(raw_results)
+    results_by_arch = _group_by_architecture(raw_results)
 
     writer = _make_writer(arguments.output)
-    writer.dump(sorted_results)
+    writer.dump(results_by_arch)
