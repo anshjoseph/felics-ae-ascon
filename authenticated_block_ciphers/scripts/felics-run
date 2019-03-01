@@ -1,53 +1,126 @@
-#!/bin/bash
+#!/usr/bin/env python3
 
-set -eux
+from argparse import ArgumentParser
+from contextlib import contextmanager
+from glob import glob
+from datetime import datetime
+from os import chdir, getcwd, path
+import re
+from subprocess import run
+from sys import argv
 
-auth_root=$(git rev-parse --show-toplevel)/authenticated_block_ciphers
-ciphers_root=${auth_root}/source/ciphers
-scripts_dir=${auth_root}/scripts
-results_dir=${auth_root}/results
-
-scenario=1
-
-if [ $# -lt 2 ]
-then
-    ciphers=($(pwd | sed -r 's,.+/([^/]+)/source$,\1,'))
-else
-    ciphers=($(cd ${ciphers_root} ; echo $2))
-fi
-
-if [ $# -lt 3 ]
-then
-    branch=$(git symbolic-ref --short HEAD || git show --no-patch --format=format:%h)
-    output="$(date +%Y.%m.%d-%H.%M.%S)-${branch}.json"
-else
-    output="$3"
-fi
+import git
 
 
-for c in ${ciphers[@]}
-do
-    (
-        cd ${ciphers_root}/${c}/source
-        make cleanall
-        make cipher
-        make test-cipher
+_SCRIPTS_DIR = path.dirname(path.realpath(argv[0]))
+_AUTH_ROOT = path.join(_SCRIPTS_DIR, path.pardir)
+_CIPHERS_DIR = path.join(_AUTH_ROOT, 'source', 'ciphers')
+_RESULTS_DIR = path.join(_AUTH_ROOT, 'results')
+
+_SCENARIO = 1
+
+_ARCHITECTURES = 'AVR MSP ARM PC'
+
+
+print(_AUTH_ROOT)
+
+
+@contextmanager
+def changedir(dest):
+    source = getcwd()
+
+    try:
+        chdir(dest)
+        yield
+    finally:
+        chdir(source)
+
+
+def _expand_ciphers(argument):
+    with changedir(_CIPHERS_DIR):
+        return tuple(
+            cipher
+            for subarg in argument.split()
+            for cipher in glob(subarg)
+        )
+
+
+def _default_output_filename():
+    repo = git.Repo(search_parent_directories=True)
+    try:
+        ref = repo.git.symbolic_ref('HEAD', short=True)
+    except git.exc.GitCommandError:
+        ref = repo.git.show(format='format:%h', no_patch=True)
+
+    return '{date}-{ref}.json'.format(
+        date=datetime.now().strftime('%Y.%m.%d-%H.%M.%S'), ref=ref
     )
-done
 
 
-. ${scripts_dir}/constants/constants.sh
+def _parse_arguments():
+    parser = ArgumentParser()
+    parser.add_argument('-c', '--ciphers', required=True)
+    parser.add_argument('-a', '--architectures', default=_ARCHITECTURES)
+    parser.add_argument('--options', default='-O3')
+    parser.add_argument('-o', '--output')
 
-restore-cpu ()
-{
-    sudo cpufreq-set -c ${PC_EXECUTION_TIME_CPU} -g powersave
-}
+    arguments = parser.parse_args()
+    if arguments.output is None:
+        arguments.output = _default_output_filename()
 
-trap restore-cpu ERR
+    return arguments
 
-sudo cpufreq-set -c ${PC_EXECUTION_TIME_CPU} -g performance
-${scripts_dir}/collect_ciphers_metrics.sh "-c=${ciphers[*]}" "-a=$1" -s=$scenario -co=-O3 -j="${output}"
 
-restore-cpu
+def _cpufreq_set(cpu, governor):
+    run(('sudo', 'cpufreq-set', '-c', cpu, '-g', governor))
 
-felics-publish "${results_dir}/${output}"
+
+@contextmanager
+def _cpu_performance():
+    constants_file = path.join(_SCRIPTS_DIR, 'constants', 'constants.sh')
+    cpu_pattern = r'PC_EXECUTION_TIME_CPU=(\d+)'
+
+    with open(constants_file) as constants:
+        cpu = re.search(cpu_pattern, constants.read()).group(1)
+
+    try:
+        _cpufreq_set(cpu, 'performance')
+        yield
+    finally:
+        _cpufreq_set(cpu, 'powersave')
+
+
+def _run_all(*commands):
+    for cmd in commands:
+        run(cmd, shell=True)
+
+
+def _check_ciphers(cipher_spec):
+    for cipher in _expand_ciphers(cipher_spec):
+        with changedir(path.join(_CIPHERS_DIR, cipher, 'source')):
+            _run_all(
+                'make cleanall',
+                'make cipher',
+                'make test-cipher'
+            )
+
+
+def _run_felics(ciphers, architectures, compiler_options, output):
+    with _cpu_performance():
+        run((
+            path.join(_SCRIPTS_DIR, 'collect_ciphers_metrics.sh'),
+            '-c='+ciphers, '-a='+architectures, '-co='+compiler_options,
+            '-s=1', '-j='+output
+        ))
+
+
+def _show_results(output):
+    run(('felics-publish', path.join(_RESULTS_DIR, output)))
+
+
+if __name__ == '__main__':
+    args = _parse_arguments()
+
+    _check_ciphers(args.ciphers)
+    _run_felics(args.ciphers, args.architectures, args.options, args.output)
+    _show_results(args.output)

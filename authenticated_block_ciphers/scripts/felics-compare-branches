@@ -16,7 +16,7 @@ now=$(date +%Y.%m.%d-%H.%M.%S)
 for b in ${branch1} ${branch2}
 do
     git checkout ${b}
-    ${scripts_dir}/felics-run "${platforms}" "${ciphers}" "${now}-${b}.json"
+    ${scripts_dir}/felics-run -a "${platforms}" -c "${ciphers}" -o "${now}-${b}.json"
 done
 
 
