@@ -119,7 +119,15 @@ class TexWriter:
         def smallcap(value):
             return r'\textsc{{{}}}'.format(value)
 
-        formatters = defaultdict(lambda: raw, cipher_name=smallcap)
+        def texttt(value):
+            return r'\texttt{{{}}}'.format(value)
+
+        formatters = defaultdict(
+            lambda: raw,
+            cipher_name=smallcap,
+            version=texttt,
+            compiler_options=texttt
+        )
 
         return tuple(formatters[c](setup[c]) for c in self._COLUMNS)
 
