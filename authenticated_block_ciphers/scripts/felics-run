@@ -22,9 +22,6 @@ _SCENARIO = 1
 _ARCHITECTURES = 'AVR MSP ARM PC'
 
 
-print(_AUTH_ROOT)
-
-
 @contextmanager
 def changedir(dest):
     source = getcwd()
