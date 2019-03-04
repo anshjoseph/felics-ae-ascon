@@ -55,7 +55,9 @@
 CIPHER_MAKEFILE=./../../../common/cipher.mk
 BUILD_DIR = ./../build
 
-OPTIONS=COMPILER_OPTIONS='-O3'
+COMPILER_OPTIONS = -O3
+
+OPTIONS=COMPILER_OPTIONS=$(COMPILER_OPTIONS)
 
 
 .PHONY: help pc avr msp arm pc-scenario1 avr-scenario1 msp-scenario1 \
@@ -177,9 +179,9 @@ test-scenario1:
 # Test scenario 2. Use only after scenario2
 test-scenario2:
 	$(BUILD_DIR)/scenario2.elf
-	
+
 # Test scenario 3. Use only after scenario2
-test-scenario2:
+test-scenario3:
 	$(BUILD_DIR)/scenario3.elf
 
 
