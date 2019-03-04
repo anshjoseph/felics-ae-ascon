@@ -17,8 +17,6 @@ _AUTH_ROOT = path.join(_SCRIPTS_DIR, path.pardir)
 _CIPHERS_DIR = path.join(_AUTH_ROOT, 'source', 'ciphers')
 _RESULTS_DIR = path.join(_AUTH_ROOT, 'results')
 
-_SCENARIO = 1
-
 _ARCHITECTURES = 'AVR MSP ARM PC'
 
 
@@ -69,7 +67,7 @@ def _parse_arguments():
 
 
 def _cpufreq_set(cpu, governor):
-    run(('sudo', 'cpufreq-set', '-c', cpu, '-g', governor))
+    run(('sudo', 'cpufreq-set', '-c', cpu, '-g', governor), check=True)
 
 
 @contextmanager
@@ -87,32 +85,32 @@ def _cpu_performance():
         _cpufreq_set(cpu, 'powersave')
 
 
-def _run_all(*commands):
-    for cmd in commands:
-        run(cmd, shell=True)
-
-
 def _check_ciphers(cipher_spec):
     for cipher in _expand_ciphers(cipher_spec):
         with changedir(path.join(_CIPHERS_DIR, cipher, 'source')):
-            _run_all(
-                'make cleanall',
-                'make cipher',
-                'make test-cipher'
-            )
+            for target in 'cleanall', 'cipher', 'test-cipher':
+                run(('make', target), check=True)
 
 
 def _run_felics(ciphers, architectures, compiler_options, output):
+    command = (
+        path.join(_SCRIPTS_DIR, 'collect_ciphers_metrics.sh'),
+        '-s=1',
+        '-c='+ciphers,
+        '-a='+architectures,
+        '-co='+compiler_options,
+        '-j='+output
+    )
+
     with _cpu_performance():
-        run((
-            path.join(_SCRIPTS_DIR, 'collect_ciphers_metrics.sh'),
-            '-c='+ciphers, '-a='+architectures, '-co='+compiler_options,
-            '-s=1', '-j='+output
-        ))
+        run(command, check=True)
 
 
 def _show_results(output):
-    run(('felics-publish', path.join(_RESULTS_DIR, output)))
+    command = (path.join(_SCRIPTS_DIR, 'felics-publish'),
+               path.join(_RESULTS_DIR, output))
+
+    run(command, check=True)
 
 
 if __name__ == '__main__':

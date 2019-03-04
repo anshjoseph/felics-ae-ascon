@@ -238,7 +238,7 @@ if [ -n "$SCRIPT_USER_CIPHERS" ]; then
 		done
 		if [ $FALSE == $cipher_found ] ; then
 			echo "Unknown cipher '$cipher'!"
-			exit
+			exit 1
 		fi
 	done
 else
