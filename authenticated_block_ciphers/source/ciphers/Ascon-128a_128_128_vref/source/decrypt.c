@@ -39,7 +39,7 @@ typedef uint64_t u64;
 
 void permutation(u8* S, int start, int rounds);
 
-int crypto_aead_decrypt(
+static int crypto_aead_decrypt(
     uint8_t *m, size_t *mlen,
     const uint8_t *c, size_t clen,
     const uint8_t *ad, size_t adlen,

@@ -39,14 +39,14 @@ typedef uint64_t u64;
 
 #define ROTR(x,n) (((x)>>(n))|((x)<<(64-(n))))
 
-void load64(u64* x, u8* S) {
+static void load64(u64* x, u8* S) {
   int i;
   *x = 0;
   for (i = 0; i < 8; ++i)
     *x |= ((u64) S[i]) << (56 - i * 8);
 }
 
-void store64(u8* S, u64 x) {
+static void store64(u8* S, u64 x) {
   int i;
   for (i = 0; i < 8; ++i)
     S[i] = (u8) (x >> (56 - i * 8));
@@ -85,7 +85,7 @@ void permutation(u8* S, int start, int rounds) {
   store64(S + 32, x4);
 }
 
-int crypto_aead_encrypt(
+static int crypto_aead_encrypt(
     uint8_t *c, size_t *clen,
     const uint8_t *m, size_t mlen,
     const uint8_t *ad, size_t adlen,
