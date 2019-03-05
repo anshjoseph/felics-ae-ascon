@@ -19,7 +19,7 @@ METRICS = ('code_size', 'code_ram', 'code_time')
 def _parse_architectures(argument):
     archs = set(argument.split(','))
 
-    unknown = archs-ARCHITECTURES
+    unknown = archs-set(ARCHITECTURES)
 
     if unknown:
         raise ValueError('Unknown platforms: {u}'.format(', '.join(unknown)))

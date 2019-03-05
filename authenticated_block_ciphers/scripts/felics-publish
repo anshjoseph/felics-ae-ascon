@@ -9,6 +9,9 @@ import pyexcel_ods
 import pyexcel_xlsx
 
 
+_METRICS = ('code_size', 'code_ram', 'code_time')
+
+
 def _parse_arguments():
     parser = ArgumentParser()
     parser.add_argument('-o', '--out', dest='output')
@@ -105,11 +108,11 @@ class TexWriter:
     def __init__(self, output):
         self._output = output
 
-    def _pad_cell(self, value, padding, column_index):
+    def _pad_cell(self, value, padding, alignment):
         return '{value:{alignment}{width}}'.format(
             value=value,
             width=padding,
-            alignment='<' if column_index == 0 else '>'
+            alignment=alignment
         )
 
     def _extract_row_data(self, setup):
@@ -131,19 +134,32 @@ class TexWriter:
 
         return tuple(formatters[c](setup[c]) for c in self._COLUMNS)
 
+    def _cell_alignment(self, column_index):
+        column_names = tuple(self._COLUMNS)
+
+        if column_names[column_index] in _METRICS:
+            return '>'
+
+        return '<'
+
+    def _pad_row_cells(self, row, paddings):
+        return (
+            self._pad_cell(cell, paddings[c], self._cell_alignment(c))
+            for c, cell in enumerate(row)
+        )
+
     def _make_padded_rows(self, data):
         header = tuple(self._COLUMNS.values())
         rows = (header,) + tuple(self._extract_row_data(setup) for setup in data)
 
         columns_nb = len(header)
         max_lengths = [
-            max(len(row[column]) for row in rows)
-            for column in range(columns_nb)
+            max(len(row[c]) for row in rows)
+            for c in range(columns_nb)
         ]
 
         return (
-            (self._pad_cell(cell, max_lengths[c], c)
-             for c, cell in enumerate(row))
+            self._pad_row_cells(row, max_lengths)
             for row in rows
         )
 
@@ -183,30 +199,28 @@ class ConsoleWriter:
         return max(len(s[metric]) for s in setups)
 
     def _format_rows(self, data):
-        metrics = ('code_size', 'code_ram', 'code_time')
-
         def header(setup):
             return self._ROW_HEADER_TEMPLATE.format_map(setup)
 
         def values(setup):
-            return {m: str(setup[m]) for m in metrics}
+            return {m: str(setup[m]) for m in _METRICS}
 
         results = OrderedDict((header(setup), values(setup))
                               for setup in data)
 
         metrics_widths = {
             m + '_width': self._find_widest_value(m, results.values())
-            for m in metrics
+            for m in _METRICS
         }
 
         return (
             self._ROW_TEMPLATE.format(
                 header=header,
                 header_width=max(len(header) for header in results),
-                **metrics,
+                **_METRICS,
                 **metrics_widths
             )
-            for header, metrics in results.items()
+            for header, _METRICS in results.items()
         )
 
     def dump(self, results):
