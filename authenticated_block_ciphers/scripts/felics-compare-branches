@@ -11,14 +11,28 @@ branch2=$2
 platforms=$3
 ciphers=$4
 
+generate-output-name ()
+{
+    local date=$1
+    local ref=$2
+
+    echo "${date}-${ref//\//>}"
+}
+
 now=$(date +%Y.%m.%d-%H.%M.%S)
 
-for b in ${branch1} ${branch2}
+output1=$(generate-output-name ${now} ${branch1})
+output2=$(generate-output-name ${now} ${branch2})
+
+for b in 1 2
 do
-    git checkout ${b}
-    ${scripts_dir}/felics-run -a "${platforms}" -c "${ciphers}" -o "${now}-${b}.json"
+    branch_var=branch${b}
+    output_var=output${b}
+
+    git checkout ${!branch_var}
+    ${scripts_dir}/felics-run -a "${platforms}" -c "${ciphers}" -o ${!output_var}
 done
 
 
-${scripts_dir}/felics-compare ${results_dir}/${now}-${branch1}.json \
-                              ${results_dir}/${now}-${branch2}.json
+${scripts_dir}/felics-compare ${results_dir}/${output1} \
+                              ${results_dir}/${output2}
