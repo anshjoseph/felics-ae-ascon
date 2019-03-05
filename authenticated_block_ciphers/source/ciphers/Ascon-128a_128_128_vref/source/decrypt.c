@@ -34,10 +34,7 @@
 #include "constants.h"
 
 
-typedef uint8_t u8;
-typedef uint64_t u64;
-
-void permutation(u8* S, int start, int rounds);
+void permutation(uint8_t* S, int start, int rounds);
 
 static int crypto_aead_decrypt(
     uint8_t *m, size_t *mlen,
@@ -56,14 +53,14 @@ static int crypto_aead_decrypt(
   size_t rate = 128 / 8;
   int a = 12;
   int b = 8;
-  u64 s = adlen / rate + 1;
-  u64 t = (clen - klen) / rate + 1;
-  u64 l = (clen - klen) % rate;
+  size_t s = adlen / rate + 1;
+  size_t t = (clen - klen) / rate + 1;
+  size_t l = (clen - klen) % rate;
 
-  u8 S[size];
-  u8 A[s * rate];
-  u8 M[t * rate];
-  u64 i, j;
+  uint8_t S[size];
+  uint8_t A[s * rate];
+  uint8_t M[t * rate];
+  size_t i, j;
 
   // pad associated data
   for (i = 0; i < adlen; ++i)

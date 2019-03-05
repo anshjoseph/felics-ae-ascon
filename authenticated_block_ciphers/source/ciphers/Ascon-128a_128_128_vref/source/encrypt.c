@@ -34,28 +34,25 @@
 #include "constants.h"
 
 
-typedef uint8_t u8;
-typedef uint64_t u64;
-
 #define ROTR(x,n) (((x)>>(n))|((x)<<(64-(n))))
 
-static void load64(u64* x, u8* S) {
+static void load64(uint64_t* x, uint8_t* S) {
   int i;
   *x = 0;
   for (i = 0; i < 8; ++i)
-    *x |= ((u64) S[i]) << (56 - i * 8);
+    *x |= ((uint64_t) S[i]) << (56 - i * 8);
 }
 
-static void store64(u8* S, u64 x) {
+static void store64(uint8_t* S, uint64_t x) {
   int i;
   for (i = 0; i < 8; ++i)
-    S[i] = (u8) (x >> (56 - i * 8));
+    S[i] = (uint8_t) (x >> (56 - i * 8));
 }
 
-void permutation(u8* S, int start, int rounds) {
+void permutation(uint8_t* S, int start, int rounds) {
   int i;
-  u64 x0, x1, x2, x3, x4;
-  u64 t0, t1, t2, t3, t4;
+  uint64_t x0, x1, x2, x3, x4;
+  uint64_t t0, t1, t2, t3, t4;
   load64(&x0, S + 0);
   load64(&x1, S + 8);
   load64(&x2, S + 16);
@@ -85,7 +82,7 @@ void permutation(u8* S, int start, int rounds) {
   store64(S + 32, x4);
 }
 
-static int crypto_aead_encrypt(
+static void crypto_aead_encrypt(
     uint8_t *c, size_t *clen,
     const uint8_t *m, size_t mlen,
     const uint8_t *ad, size_t adlen,
@@ -98,14 +95,14 @@ static int crypto_aead_encrypt(
   size_t rate = 128 / 8;
   int a = 12;
   int b = 8;
-  u64 s = adlen / rate + 1;
-  u64 t = mlen / rate + 1;
-  u64 l = mlen % rate;
+  size_t s = adlen / rate + 1;
+  size_t t = mlen / rate + 1;
+  size_t l = mlen % rate;
 
-  u8 S[size];
-  u8 A[s * rate];
-  u8 M[t * rate];
-  u64 i, j;
+  uint8_t S[size];
+  uint8_t A[s * rate];
+  uint8_t M[t * rate];
+  size_t i, j;
 
   // pad associated data
   for (i = 0; i < adlen; ++i)
@@ -169,8 +166,6 @@ static int crypto_aead_encrypt(
   for (i = 0; i < klen; ++i)
     c[mlen + i] = S[size - klen + i];
   *clen = mlen + klen;
-
-  return 0;
 }
 
 void Encrypt(uint8_t *block, size_t  mlen, uint8_t *key, uint8_t *npub,
