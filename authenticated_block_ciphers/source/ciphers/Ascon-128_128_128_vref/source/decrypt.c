@@ -32,9 +32,8 @@
 
 #include "cipher.h"
 #include "constants.h"
+#include "utils.h"
 
-
-void permutation(uint8_t* S, int start, int rounds);
 
 static int crypto_aead_decrypt(
     uint8_t *m, size_t *mlen,
