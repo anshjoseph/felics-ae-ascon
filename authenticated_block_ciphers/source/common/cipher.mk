@@ -192,13 +192,9 @@ cipher.elf : \
 scenario1.elf : \
 		$(OBJS) \
 		scenario1.o \
-		encrypt_scenario1.o \
-		decrypt_scenario1.o \
 		common.o
 	$(CC) $(LDFLAGS) $(addprefix $(BUILDDIR)/, $(OBJS)) \
 		$(addprefix $(BUILDDIR)/, scenario1.o) \
-		$(addprefix $(BUILDDIR)/, encrypt_scenario1.o) \
-		$(addprefix $(BUILDDIR)/, decrypt_scenario1.o) \
 		$(addprefix $(BUILDDIR)/, common.o) $(LDLIBS) -o $(BUILDDIR)/$@
 
 cipher.bin : $(BUILDDIR)/cipher.elf
@@ -240,21 +236,6 @@ scenario1.o : \
 		$(SOURCEDIR)/constants.h
 	$(CC) -c $(CFLAGS) $< $(INCLUDES) -o $(BUILDDIR)/$@
 
-encrypt_scenario1.o : \
-		$(SCENARIO1SOURCEDIR)/encrypt_scenario1.c \
-		$(SCENARIO1SOURCEDIR)/scenario1.h \
-		$(COMMONSOURCEDIR)/cipher.h \
-		$(COMMONSOURCEDIR)/common.h \
-		$(SOURCEDIR)/constants.h
-	$(CC) -c $(CFLAGS) $< $(INCLUDES) -o $(BUILDDIR)/$@
-
-decrypt_scenario1.o : \
-		$(SCENARIO1SOURCEDIR)/decrypt_scenario1.c \
-		$(SCENARIO1SOURCEDIR)/scenario1.h \
-		$(COMMONSOURCEDIR)/cipher.h \
-		$(COMMONSOURCEDIR)/common.h \
-		$(SOURCEDIR)/constants.h
-	$(CC) -c $(CFLAGS) $< $(INCLUDES) -o $(BUILDDIR)/$@
 
 cipher.lst : cipher.elf
 	$(OBJDUMP) $(OBJDUMPFLAGS) $(BUILDDIR)/$< > $(BUILDDIR)/$@

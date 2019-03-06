@@ -394,9 +394,9 @@ if [ $SCRIPT_MODE_0 -ne $SCRIPT_MODE ] ; then
 	cipher_total=$(($encrypt_rom + $decrypt_rom + $shared_code_total + $shared_constants_total))
 
 	# Scenario 1
-	scenario1_e=$(($encrypt_scenario1_rom + $cipher_e))
-	scenario1_d=$(($decrypt_scenario1_rom + $cipher_d))
-	scenario1_total=$(($encrypt_scenario1_rom + $decrypt_scenario1_rom + $cipher_total))
+	scenario1_e=$(($cipher_e))
+	scenario1_d=$(($cipher_d))
+	scenario1_total=$(($cipher_total))
 fi
 
 
