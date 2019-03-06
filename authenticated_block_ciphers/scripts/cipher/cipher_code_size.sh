@@ -28,7 +28,7 @@
 
 #
 # Call this script to extract the cipher code size
-# 	./cipher_code_size.sh [{-h|--help}] [--version] [{-m|--mode}=[0|1]] [{-s|--scenario}=[0|1|2]] [{-a|--architecture}=[PC|AVR|MSP|ARM]] [{-t|--target}=[...]] [{-o|--output}=[...]] [{-b|build}=[0|1]] [{-co|--compiler_options}='...']
+# 	./cipher_code_size.sh [{-h|--help}] [--version] [{-m|--mode}=[0|1]] [{-a|--architecture}=[PC|AVR|MSP|ARM]] [{-t|--target}=[...]] [{-o|--output}=[...]] [{-b|build}=[0|1]] [{-co|--compiler_options}='...']
 #
 #	To call from a cipher build folder use:
 #		./../../../../scripts/cipher/cipher_code_size.sh [options]
@@ -42,12 +42,6 @@
 #			Specifies which output mode to use
 #				0 - raw table for given cipher
 #				1 - raw data for given cipher
-#				Default: 0
-#		-s, --scenario
-#			Specifies which scenario is used
-#				0 - cipher scenario
-#				1 - scenario 1
-#				2 - scenario 2
 #				Default: 0
 #		-a, --architecture
 #			Specifies which architecture is used
@@ -102,7 +96,7 @@ source $script_path/../common/version.sh
 
 # Default values
 SCRIPT_MODE=$SCRIPT_MODE_0
-SCRIPT_SCENARIO=$SCRIPT_SCENARIO_0
+SCRIPT_SCENARIO=$SCRIPT_SCENARIO_1
 SCRIPT_ARCHITECTURE=$SCRIPT_ARCHITECTURE_PC
 SCRIPT_TARGET=$DEFAULT_SCRIPT_TARGET
 SCRIPT_OUTPUT=$DEFAULT_SCRIPT_OUTPUT
@@ -124,10 +118,6 @@ do
 			;;
 		-m=*|--mode=*)
 			SCRIPT_MODE="${i#*=}"
-			shift
-			;;
-		-s=*|--scenario=*)
-			SCRIPT_SCENARIO="${i#*=}"
 			shift
 			;;
 		-a=*|--architecture=*)
@@ -163,7 +153,6 @@ done
 
 echo "Script settings:"
 echo -e "\t SCRIPT_MODE \t\t\t = $SCRIPT_MODE"
-echo -e "\t SCRIPT_SCENARIO \t\t = $SCRIPT_SCENARIO"
 echo -e "\t SCRIPT_ARCHITECTURE \t\t = $SCRIPT_ARCHITECTURE"
 echo -e "\t SCRIPT_TARGET \t\t\t = $SCRIPT_TARGET"
 echo -e "\t SCRIPT_OUTPUT \t\t\t = $SCRIPT_OUTPUT"
@@ -173,7 +162,6 @@ echo -e "\t SCRIPT_COMPILER_OPTIONS \t = $SCRIPT_COMPILER_OPTIONS"
 
 # Validate inputs
 validate_mode $SCRIPT_MODE
-validate_scenario $SCRIPT_SCENARIO
 validate_architecture $SCRIPT_ARCHITECTURE
 
 
@@ -219,23 +207,7 @@ files=$(ls $pattern)
 
 
 # Add scenario *.elf file to the files
-case $SCRIPT_SCENARIO in
-	$SCRIPT_SCENARIO_0)
-		files="$CIPHER_FILE$ELF_FILE_EXTENSION $files"	
-		;;
-
-	$SCRIPT_SCENARIO_1)
-		files="$SCENARIO1_FILE$ELF_FILE_EXTENSION $files"
-		;;
-
-	$SCRIPT_SCENARIO_2)
-		files="$SCENARIO2_FILE$ELF_FILE_EXTENSION $files"
-		;;
-		
-	$SCRIPT_SCENARIO_3)
-		files="$SCENARIO3_FILE$ELF_FILE_EXTENSION $files"
-		;;
-esac
+files="$SCENARIO1_FILE$ELF_FILE_EXTENSION $files"
 
 
 # Set the size command depending on the architecture
@@ -478,35 +450,12 @@ if [ $SCRIPT_MODE_0 -ne $SCRIPT_MODE ] ; then
 	cipher_d=$(($decrypt_rom + $shared_code_d + $shared_constants_d))
 	cipher_total=$(($encryption_key_schedule_rom + $encrypt_rom + $decryption_key_schedule_rom + $decrypt_rom + $shared_code_total + $shared_constants_total))
 
-	#Scenarios
-	case $SCRIPT_SCENARIO in
-		$SCRIPT_SCENARIO_1)
-			# Scenario 1
-			scenario1_eks=$cipher_eks
-			scenario1_e=$(($encrypt_scenario1_rom + $cipher_e))
-			scenario1_dks=$cipher_dks
-			scenario1_d=$(($decrypt_scenario1_rom + $cipher_d))
-			scenario1_total=$(($encrypt_scenario1_rom + $decrypt_scenario1_rom + $cipher_total))
-			;;
-
-		$SCRIPT_SCENARIO_2)
-			# Scenario 2
-			scenario2_eks=$cipher_eks
-			scenario2_e=$(($encrypt_scenario2_rom + $cipher_e))
-			scenario2_dks=$cipher_dks
-			scenario2_d=$(($decrypt_scenario2_rom + $cipher_d))
-			scenario2_total=$(($encrypt_scenario2_rom + $decrypt_scenario2_rom + $cipher_total))
-			;;
-		
-		$SCRIPT_SCENARIO_3)
-			# Scenario 3
-			scenario3_eks=$cipher_eks
-			scenario3_e=$(($encrypt_scenario3_rom + $cipher_e))
-			scenario3_dks=$cipher_dks
-			scenario3_d=$(($decrypt_scenario3_rom + $cipher_d))
-			scenario3_total=$(($encrypt_scenario3_rom + $decrypt_scenario3_rom + $cipher_total))
-			;;
-	esac
+	# Scenario 1
+	scenario1_eks=$cipher_eks
+	scenario1_e=$(($encrypt_scenario1_rom + $cipher_e))
+	scenario1_dks=$cipher_dks
+	scenario1_d=$(($decrypt_scenario1_rom + $cipher_d))
+	scenario1_total=$(($encrypt_scenario1_rom + $decrypt_scenario1_rom + $cipher_total))
 fi
 
 
@@ -516,24 +465,8 @@ if [ $SCRIPT_MODE_0 -eq $SCRIPT_MODE ] ; then
 	printf "%0.s-" $(seq 1 $TABLE_HORIZONTAL_LINE_LENGTH) >> $SCRIPT_OUTPUT
 	printf "\n" >> $SCRIPT_OUTPUT
 else
-	case $SCRIPT_SCENARIO in
-		$SCRIPT_SCENARIO_0)
-			# Display results
-			printf "%s %s %s %s %s" $cipher_eks $cipher_e $cipher_dks $cipher_d $cipher_total > $SCRIPT_OUTPUT
-			;;
-		$SCRIPT_SCENARIO_1)
-			# Display results
-			printf "%s %s %s %s %s" $scenario1_eks $scenario1_e $scenario1_dks $scenario1_d $scenario1_total > $SCRIPT_OUTPUT
-			;;
-		$SCRIPT_SCENARIO_2)
-			# Display results
-			printf "%s %s %s %s %s" $scenario2_eks $scenario2_e $scenario2_dks $scenario2_d $scenario2_total > $SCRIPT_OUTPUT
-			;;
-		$SCRIPT_SCENARIO_3)
-			# Display results
-			printf "%s %s %s %s %s" $scenario3_eks $scenario3_e $scenario3_dks $scenario3_d $scenario3_total > $SCRIPT_OUTPUT
-			;;
-	esac
+	# Display results
+	printf "%s %s %s %s %s" $scenario1_eks $scenario1_e $scenario1_dks $scenario1_d $scenario1_total > $SCRIPT_OUTPUT
 fi
 
 
