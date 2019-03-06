@@ -30,7 +30,7 @@ set -e
 
 #
 # Call this script to collect the ciphers metrics
-# 	./collect_ciphers_metrics.sh [{-h|--help}] [--version] [{-a|--architectures}=['PC AVR MSP ARM']] [{-s|--scenarios}=['0 1 2']] [{-c|--ciphers}=['Cipher1 Cipher2 ...']] [{-co|--compiler_options}='...']
+# 	./collect_ciphers_metrics.sh [{-h|--help}] [--version] [{-a|--architectures}=['PC AVR MSP ARM']] [{-c|--ciphers}=['Cipher1 Cipher2 ...']] [{-co|--compiler_options}='...']
 #
 #	Options:
 #		-h, --help
@@ -41,10 +41,6 @@ set -e
 #			Specifies for which archiectures to collect ciphers metrics
 #				List of values: 'PC AVR MSP ARM'
 #				Default: all architectures
-#		-s, --scenarios
-#			Specifies for which scenarios to collect ciphers metrics
-#				List of values: '0 1 2'
-#				Default: all scenarios
 #		-c, --ciphers
 #			Specifies for which ciphers to collect the metrics
 #				List of values: 'CipherName_BlockSizeInBits_KeySizeInBits_v01 ...'
@@ -95,10 +91,6 @@ do
 			SCRIPT_USER_ARCHITECTURES="${i#*=}"
 			shift
 			;;
-		-s=*|--scenarios=*)
-			SCRIPT_USER_SCENARIOS="${i#*=}"
-			shift
-			;;
 		-c=*|--ciphers=*)
 			SCRIPT_USER_CIPHERS="${i#*=}"
 			shift
@@ -107,10 +99,10 @@ do
 			SCRIPT_USER_COMPILER_OPTIONS="${i#*=}"
 			shift
 			;;
-        -j=*|--json-output=*)
-            SCRIPT_JSON_OUTPUT="${i#*=}"
-            shift
-            ;;
+		-j=*|--json-output=*)
+			SCRIPT_JSON_OUTPUT="${i#*=}"
+			shift
+			;;
 		*)
 			# Unknown option
 			;;
@@ -159,12 +151,7 @@ else
 	architectures=(${SCRIPT_ARCHITECTURES[@]})
 fi
 
-# If user scenarios are not set, use all scenarios
-if [ -n "$SCRIPT_USER_SCENARIOS" ]; then
-	scenarios=$SCRIPT_USER_SCENARIOS
-else
-	scenarios=(${SCRIPT_SCENARIOS[@]})
-fi
+scenarios=(1)
 
 # If user ciphers are not set, use all ciphers
 if [ -n "$SCRIPT_USER_CIPHERS" ]; then
@@ -213,12 +200,6 @@ do
 	validate_architecture $architecture
 done
 
-# Validate scenarios
-for scenario in $scenarios
-do
-	validate_scenario $scenario
-done
-
 
 results_dir="${current_directory}/${SCRIPT_OUTPUT_PATH}"
 script_json_output="${results_dir}${SCRIPT_JSON_OUTPUT}"
@@ -235,10 +216,6 @@ do
         echo '"powersave" CPU governor yields unreliable results.'
         exit 1
     fi
-
-	for scenario in ${scenarios[@]}
-	do
-		echo -e "\t\t\t\t ---> Scenario: $scenario"
 
 		for directory in ${directories[@]}
 		do
@@ -278,7 +255,6 @@ do
 				echo -e "\t KEY_SIZE = $cipher_key_size"
 				echo -e "\t IMPLEMENTATION_VERSION = $cipher_implementation_version"
 				echo -e "\t ARCHITECTURE = $architecture"			
-				echo -e "\t SCENARIO = $scenario"
 				echo -e "\t COMPILER_OPTIONS = $compiler_option"
 				echo ""
 
@@ -397,7 +373,6 @@ do
 			cd ./../../
 		done
 
-	done
 done
 
 
