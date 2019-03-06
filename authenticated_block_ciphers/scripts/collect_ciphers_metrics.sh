@@ -210,12 +210,12 @@ add_json_table_header "${script_json_output}"
 for architecture in ${architectures[@]}
 do
 	echo -e "\t\t\t ---> Architecture: $architecture"
-	
-    if [ ${architecture} = PC ] && [ $(cat /sys/devices/system/cpu/cpu$PC_EXECUTION_TIME_CPU/cpufreq/scaling_governor) = powersave ]
-    then
-        echo '"powersave" CPU governor yields unreliable results.'
-        exit 1
-    fi
+
+	if [ ${architecture} = PC ] && [ $(cat /sys/devices/system/cpu/cpu$PC_EXECUTION_TIME_CPU/cpufreq/scaling_governor) = powersave ]
+	then
+		echo '"powersave" CPU governor yields unreliable results.'
+		exit 1
+	fi
 
 		for directory in ${directories[@]}
 		do
@@ -248,13 +248,13 @@ do
 			fi
 
 
-			for compiler_option in "${compiler_options[@]}"		
+			for compiler_option in "${compiler_options[@]}"
 			do
 				echo "Run for cipher '$cipher_name':"
 				echo -e "\t BLOCK_SIZE = $cipher_block_size"
 				echo -e "\t KEY_SIZE = $cipher_key_size"
 				echo -e "\t IMPLEMENTATION_VERSION = $cipher_implementation_version"
-				echo -e "\t ARCHITECTURE = $architecture"			
+				echo -e "\t ARCHITECTURE = $architecture"
 				echo -e "\t COMPILER_OPTIONS = $compiler_option"
 				echo ""
 
@@ -274,19 +274,19 @@ do
 				timeout $CHECK_CIPHER_TIMEOUT ./../../../../scripts/cipher/check_cipher.sh -s=$scenario -a=$architecture -c=$cipher_directory_name "-co=$compiler_option" -m=$CIPHER_SCRIPT_MODE -o=$check_cipher_output_file 2> $check_cipher_error_file
 				if [ ! -f $check_cipher_output_file ] ; then
 					echo "missing output file $check_cipher_output_file"
-                    exit 1
+					exit 1
 				fi
 				if [ -f $check_cipher_error_file ] ; then
 					check_cipher_errors=$(cat $check_cipher_error_file)
 				fi
 				if [ "" != "$check_cipher_errors" ] ; then
-                    echo "$check_cipher_errors"
+					echo "$check_cipher_errors"
 					exit 1
 				fi
 
 				check_cipher_result=$(cat $check_cipher_output_file)
 				if [ $FALSE -eq $check_cipher_result ] ; then
-                    echo "check_cipher failed"
+					echo "check_cipher failed"
 					exit 1
 				fi
 
@@ -309,7 +309,7 @@ do
 				echo "" > $cipher_ram_error_file
 				echo "" > $cipher_execution_time_error_file
 
-				
+
 				# Code size
 				timeout $CIPHER_CODE_SIZE_TIMEOUT ./../../../../scripts/cipher/cipher_code_size.sh "-s=$scenario" "-a=$architecture" "-m=$CIPHER_SCRIPT_MODE" "-co=$compiler_option" -o=$cipher_code_size_output_file 2> $cipher_code_size_error_file
 				if [ ! -f $cipher_code_size_output_file ] ; then
@@ -320,22 +320,22 @@ do
 				fi
 				if [ "" != "$cipher_code_size_errors" ] ; then
 					echo "$cipher_code_size_errors"
-                    exit 1
+					exit 1
 				fi
 
 
 				# RAM
 				timeout $CIPHER_RAM_TIMEOUT ./../../../../scripts/cipher/cipher_ram.sh "-s=$scenario" "-a=$architecture" "-m=$CIPHER_SCRIPT_MODE" "-co=$compiler_option" -o=$cipher_ram_output_file 2> $cipher_ram_error_file
 				if [ ! -f $cipher_ram_output_file ] ; then
-                    echo "NO OUTPUT $cipher_ram_output_file"
+					echo "NO OUTPUT $cipher_ram_output_file"
 					continue
 				fi
 				if [ -f $cipher_ram_error_file ] ; then
 					cipher_ram_errors=$(cat $cipher_ram_error_file)
 				fi
 				if [ "" != "$cipher_ram_errors" ] ; then
-                    echo "CIPHER RAM ERRORS: $cipher_ram_error_file ; $cipher_ram_errors"
-                    exit 1
+					echo "CIPHER RAM ERRORS: $cipher_ram_error_file ; $cipher_ram_errors"
+					exit 1
 				fi
 
 
@@ -368,7 +368,7 @@ do
 					rm -f $cipher_execution_time_error_file
 				fi
 			done
-			
+
 
 			cd ./../../
 		done
