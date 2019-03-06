@@ -302,7 +302,8 @@ if [ $SCRIPT_MODE_0 -ne $SCRIPT_MODE ] ; then
 
 			shared_value=${!shared_name}
 			if [ "" == "$shared_value" ] ; then
-				shared_value=0
+				echo "Error: unknown component $shared_file"
+				exit 1
 			fi
 
 
@@ -352,7 +353,8 @@ if [ $SCRIPT_MODE_0 -ne $SCRIPT_MODE ] ; then
 
 			shared_value=${!shared_name}
 			if [ "" == "$shared_value" ] ; then
-				shared_value=0
+				echo "Error: unknown component $shared_file"
+				exit 1
 			fi
 
 
