@@ -30,22 +30,13 @@ set -e
 
 #
 # Call this script to collect the ciphers metrics
-# 	./collect_ciphers_metrics.sh [{-h|--help}] [--version] [{-f|--format}=[0|1|2|3|4|5]] [{-a|--architectures}=['PC AVR MSP ARM']] [{-s|--scenarios}=['0 1 2']] [{-c|--ciphers}=['Cipher1 Cipher2 ...']] [{-co|--compiler_options}='...']
+# 	./collect_ciphers_metrics.sh [{-h|--help}] [--version] [{-a|--architectures}=['PC AVR MSP ARM']] [{-s|--scenarios}=['0 1 2']] [{-c|--ciphers}=['Cipher1 Cipher2 ...']] [{-co|--compiler_options}='...']
 #
 #	Options:
 #		-h, --help
 #			Display help information
 #		--version
 #			Display version information
-#		-f, --format
-#			Specifies which output format to use
-#				0 - use all output formats below
-#				1 - raw table
-#				2 - MediaWiki table
-#				3 - XML table
-#				4 - LaTeX table
-#				5 - CSV table
-#				Default: 0
 #		-a, --architectures
 #			Specifies for which archiectures to collect ciphers metrics
 #				List of values: 'PC AVR MSP ARM'
@@ -64,8 +55,6 @@ set -e
 #				Default: all compiler options
 #
 #	Examples:
-#		./collect_ciphers_metrics.sh -f=0
-#		./collect_ciphers_metrics.sh --format=1
 #		./collect_ciphers_metrics.sh -a='PC AVR' --scenarios="1 2"
 #
 
@@ -90,10 +79,6 @@ source $script_path/common/check_status.sh
 source $script_path/common/version.sh
 
 
-# Default values
-SCRIPT_FORMAT=$SCRIPT_FORMAT_0
-
-
 # Parse script arguments
 for i in "$@"
 do
@@ -104,10 +89,6 @@ do
 			;;
 		--version)
 			display_version
-			shift
-			;;
-		-f=*|--format=*)
-			SCRIPT_FORMAT="${i#*=}"
 			shift
 			;;
 		-a=*|--architectures=*)
@@ -137,44 +118,7 @@ do
 done
 
 
-echo "Script settings:"
-echo -e "\t SCRIPT_FORMAT \t = $SCRIPT_FORMAT"
-
-
-# Validate format
-validate_format $SCRIPT_FORMAT
-
-
 # Include output format
-case $SCRIPT_FORMAT in
-	$SCRIPT_FORMAT_0)
-		source $script_path/formats/results/raw.sh
-		source $script_path/formats/results/mediawiki.sh
-		source $script_path/formats/results/xml.sh
-		source $script_path/formats/results/latex.sh
-		source $script_path/formats/results/csv.sh
-		;;
-	$SCRIPT_FORMAT_1)
-		source $script_path/formats/results/raw.sh
-		;;
-	$SCRIPT_FORMAT_2)
-		source $script_path/formats/results/mediawiki.sh
-		;;
-	$SCRIPT_FORMAT_3)
-		source $script_path/formats/results/xml.sh
-		;;
-	$SCRIPT_FORMAT_4)
-		source $script_path/formats/results/latex.sh
-		;;
-	$SCRIPT_FORMAT_5)
-		source $script_path/formats/results/csv.sh
-		;;
-	*)
-		#Unknown format
-		echo "Unknown format!"
-		exit
-		;;
-esac
 source ${script_path}/formats/results/json.sh
 
 
@@ -295,39 +239,6 @@ do
 	for scenario in ${scenarios[@]}
 	do
 		echo -e "\t\t\t\t ---> Scenario: $scenario"
-
-		script_raw_output=$current_directory/$SCRIPT_OUTPUT_PATH$architecture$SCENARIO_NAME_PART$scenario$SCRIPT_RAW_OUTPUT_EXTENSION
-		script_mediawiki_output=$current_directory/$SCRIPT_OUTPUT_PATH$architecture$SCENARIO_NAME_PART$scenario$SCRIPT_MEDIAWIKI_OUTPUT_EXTENSION
-		script_xml_output=$current_directory/$SCRIPT_OUTPUT_PATH$architecture$SCENARIO_NAME_PART$scenario$SCRIPT_XML_OUTPUT_EXTENSION
-		script_latex_output=$current_directory/$SCRIPT_OUTPUT_PATH$architecture$SCENARIO_NAME_PART$scenario$SCRIPT_LATEX_OUTPUT_EXTENSION
-		script_csv_output=$current_directory/$SCRIPT_OUTPUT_PATH$architecture$SCENARIO_NAME_PART$scenario$SCRIPT_CSV_OUTPUT_EXTENSION
-
-		# Add table header
-		case $SCRIPT_FORMAT in
-			$SCRIPT_FORMAT_0)
-				add_raw_table_header $script_raw_output $scenario $architecture
-				add_mediawiki_table_header $script_mediawiki_output $scenario $architecture
-				add_xml_table_header $script_xml_output $scenario $architecture
-				add_latex_table_header $script_latex_output $scenario $architecture
-				add_csv_table_header $script_csv_output $scenario $architecture
-				;;
-			$SCRIPT_FORMAT_1)
-				add_raw_table_header $script_raw_output $scenario $architecture
-				;;
-			$SCRIPT_FORMAT_2)
-				add_mediawiki_table_header $script_mediawiki_output $scenario $architecture
-				;;
-			$SCRIPT_FORMAT_3)
-				add_xml_table_header $script_xml_output $scenario $architecture
-				;;
-			$SCRIPT_FORMAT_4)
-				add_latex_table_header $script_latex_output $scenario $architecture
-				;;
-			$SCRIPT_FORMAT_5)
-				add_csv_table_header $script_csv_output $scenario $architecture
-				;;
-		esac
-
 
 		for directory in ${directories[@]}
 		do
@@ -461,41 +372,12 @@ do
 					cipher_execution_time_errors=$(cat $cipher_execution_time_error_file)
 				fi
 				if [ "" != "$cipher_execution_time_errors" ] ; then
-                    echo "$cipher_execution_time_errors"
-                    exit 1
+					echo "$cipher_execution_time_errors"
+					exit 1
 				fi
 
-
-				values=( $(cat $cipher_code_size_output_file) $(cat $cipher_ram_output_file)  $(cat $cipher_execution_time_output_file) )
-
-				# Add table row
-				case $SCRIPT_FORMAT in
-					$SCRIPT_FORMAT_0)
-						add_raw_table_row $script_raw_output $scenario $cipher_name $cipher_block_size $cipher_key_size $cipher_implementation_version $cipher_implementation_language "$compiler_option" ${values[@]}
-						add_mediawiki_table_row $script_mediawiki_output $scenario $cipher_name $cipher_block_size $cipher_key_size $cipher_implementation_version $cipher_implementation_language "$compiler_option" ${values[@]}
-						add_xml_table_row $script_xml_output $scenario $cipher_name $cipher_block_size $cipher_key_size $cipher_implementation_version $cipher_implementation_language "$compiler_option" ${values[@]}
-						add_latex_table_row $script_latex_output $scenario $cipher_name $cipher_block_size $cipher_key_size $cipher_implementation_version $cipher_implementation_language "$compiler_option" ${values[@]}
-						add_csv_table_row $script_csv_output $scenario $cipher_name $cipher_block_size $cipher_key_size $cipher_implementation_version $cipher_implementation_language "$compiler_option" ${values[@]}
-						;;
-					$SCRIPT_FORMAT_1)
-						add_raw_table_row $script_raw_output $scenario $cipher_name $cipher_block_size $cipher_key_size $cipher_implementation_version $cipher_implementation_language "$compiler_option" ${values[@]}
-						;;
-					$SCRIPT_FORMAT_2)
-						add_mediawiki_table_row $script_mediawiki_output $scenario $cipher_name $cipher_block_size $cipher_key_size $cipher_implementation_version $cipher_implementation_language "$compiler_option" ${values[@]}
-						;;
-					$SCRIPT_FORMAT_3)
-						add_xml_table_row $script_xml_output $scenario $cipher_name $cipher_block_size $cipher_key_size $cipher_implementation_version $cipher_implementation_language "$compiler_option" ${values[@]}
-						;;
-					$SCRIPT_FORMAT_4)
-						add_latex_table_row $script_latex_output $scenario $cipher_name $cipher_block_size $cipher_key_size $cipher_implementation_version $cipher_implementation_language "$compiler_option" ${values[@]}
-						;;
-					$SCRIPT_FORMAT_5)
-						add_csv_table_row $script_csv_output $scenario $cipher_name $cipher_block_size $cipher_key_size $cipher_implementation_version $cipher_implementation_language "$compiler_option" ${values[@]}
-						;;
-				esac
-
 				add_json_table_row "${script_json_output}" ${architecture} ${cipher_name} ${cipher_block_size} ${cipher_key_size} ${cipher_implementation_version} ${cipher_implementation_language} "${compiler_option}" \
-                                   "${cipher_code_size_output_file}" "${cipher_ram_output_file}" "${cipher_execution_time_output_file}"
+					"${cipher_code_size_output_file}" "${cipher_ram_output_file}" "${cipher_execution_time_output_file}"
 
 				if [ $FALSE -eq $KEEP_GENERATED_FILES ] ; then
 					# Remove generated files
@@ -514,32 +396,6 @@ do
 
 			cd ./../../
 		done
-
-		# Add table footer
-		case $SCRIPT_FORMAT in
-			$SCRIPT_FORMAT_0)
-				add_raw_table_footer $script_raw_output $scenario
-				add_mediawiki_table_footer $script_mediawiki_output $scenario
-				add_xml_table_footer $script_xml_output $scenario
-				add_latex_table_footer $script_latex_output $scenario
-				add_csv_table_footer $script_csv_output $scenario
-				;;
-			$SCRIPT_FORMAT_1)
-				add_raw_table_footer $script_raw_output $scenario
-				;;
-			$SCRIPT_FORMAT_2)
-				add_mediawiki_table_footer $script_mediawiki_output $scenario
-				;;
-			$SCRIPT_FORMAT_3)
-				add_xml_table_footer $script_xml_output $scenario
-				;;
-			$SCRIPT_FORMAT_4)
-				add_latex_table_footer $script_latex_output $scenario
-				;;
-			$SCRIPT_FORMAT_5)
-				add_csv_table_footer $script_csv_output $scenario
-				;;
-		esac
 
 	done
 done
