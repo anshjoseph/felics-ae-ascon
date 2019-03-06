@@ -286,9 +286,7 @@ done
 
 
 if [ $SCRIPT_MODE_0 -ne $SCRIPT_MODE ] ; then
-	shared_code_eks=0
 	shared_code_e=0
-	shared_code_dks=0
 	shared_code_d=0
 	shared_code_total=0
 
@@ -327,14 +325,8 @@ if [ $SCRIPT_MODE_0 -ne $SCRIPT_MODE ] ; then
 		
 		
 			case $code_section in
-				$CODE_SECTION_EKS)
-					shared_code_eks=$(($shared_code_eks + $shared_value))
-					;;
 				$CODE_SECTION_E)
 					shared_code_e=$(($shared_code_e + $shared_value))
-					;;
-				$CODE_SECTION_DKS)
-					shared_code_dks=$(($shared_code_dks + $shared_value))
 					;;
 				$CODE_SECTION_D)
 					shared_code_d=$(($shared_code_d + $shared_value))
@@ -344,9 +336,7 @@ if [ $SCRIPT_MODE_0 -ne $SCRIPT_MODE ] ; then
 	done
 
 
-	shared_constants_eks=0
 	shared_constants_e=0
-	shared_constants_dks=0
 	shared_constants_d=0
 	shared_constants_total=0
 
@@ -385,14 +375,8 @@ if [ $SCRIPT_MODE_0 -ne $SCRIPT_MODE ] ; then
 		
 		
 			case $constants_section in
-				$CONSTANTS_SECTION_EKS)
-					shared_constants_eks=$(($shared_constants_eks + $shared_value))
-					;;
 				$CONSTANTS_SECTION_E)
 					shared_constants_e=$(($shared_constants_e + $shared_value))
-					;;
-				$CONSTANTS_SECTION_DKS)
-					shared_constants_dks=$(($shared_constants_dks + $shared_value))
 					;;
 				$CONSTANTS_SECTION_D)
 					shared_constants_d=$(($shared_constants_d + $shared_value))
@@ -402,58 +386,13 @@ if [ $SCRIPT_MODE_0 -ne $SCRIPT_MODE ] ; then
 	done
 
 	
-	# Check if encryption/decryption key schedule is used
-	use_encryption_key_schedule=$(cat $IMPLEMENTATION_INFO_FILE | grep $USE_ENCRYPTION_KEY_SCHEDULE$SECTION_SEPARATOR | tr -d '\r' | cut -d ':' -f 2 |  tr -d '[[:space:]]')
-	use_decryption_key_schedule=$(cat $IMPLEMENTATION_INFO_FILE | grep $USE_DECRYPTION_KEY_SCHEDULE$SECTION_SEPARATOR | tr -d '\r' | cut -d ':' -f 2 |  tr -d '[[:space:]]')
-
-	# Convert to lowercase
-	use_encryption_key_schedule=${use_encryption_key_schedule,,}
-	use_decryption_key_schedule=${use_decryption_key_schedule,,}
-
-	if [ $USE_KEY_SCHEDULE_NO == "$use_encryption_key_schedule" ] ; then
-		encryption_key_schedule_rom=0
-	fi
-
-	if [ $USE_KEY_SCHEDULE_NO == "$use_decryption_key_schedule" ] ; then
-		decryption_key_schedule_rom=0
-	fi
-
-	# Test if decryption key schedule is empty
-	case $SCRIPT_ARCHITECTURE in
-		$SCRIPT_ARCHITECTURE_PC)
-			if [ $EMPTY_DKS_PC -ge $decryption_key_schedule_rom ] ; then
-				decryption_key_schedule_rom=0
-			fi
-			;;
-		$SCRIPT_ARCHITECTURE_AVR)
-			if [ $EMPTY_DKS_AVR -ge $decryption_key_schedule_rom ] ; then
-				decryption_key_schedule_rom=0
-			fi
-			;;
-		$SCRIPT_ARCHITECTURE_MSP)
-			if [ $EMPTY_DKS_MSP -ge $decryption_key_schedule_rom ] ; then
-				decryption_key_schedule_rom=0
-			fi
-			;;
-		$SCRIPT_ARCHITECTURE_ARM)
-			if [ $EMPTY_DKS_ARM -ge $decryption_key_schedule_rom ] ; then
-				decryption_key_schedule_rom=0
-			fi
-			;;
-	esac
-
-
 	# Cipher
-	cipher_eks=$(($encryption_key_schedule_rom + $shared_code_eks + $shared_constants_eks))
 	cipher_e=$(($encrypt_rom + $shared_code_e + $shared_constants_e))
-	cipher_dks=$(($decryption_key_schedule_rom + $shared_code_dks + $shared_constants_dks))
 	cipher_d=$(($decrypt_rom + $shared_code_d + $shared_constants_d))
-	cipher_total=$(($encryption_key_schedule_rom + $encrypt_rom + $decryption_key_schedule_rom + $decrypt_rom + $shared_code_total + $shared_constants_total))
+	cipher_total=$(($encrypt_rom + $decrypt_rom + $shared_code_total + $shared_constants_total))
 
 	# Scenario 1
-	scenario1_eks=$cipher_eks
 	scenario1_e=$(($encrypt_scenario1_rom + $cipher_e))
-	scenario1_dks=$cipher_dks
 	scenario1_d=$(($decrypt_scenario1_rom + $cipher_d))
 	scenario1_total=$(($encrypt_scenario1_rom + $decrypt_scenario1_rom + $cipher_total))
 fi
@@ -466,7 +405,7 @@ if [ $SCRIPT_MODE_0 -eq $SCRIPT_MODE ] ; then
 	printf "\n" >> $SCRIPT_OUTPUT
 else
 	# Display results
-	printf "%s %s %s %s %s" $scenario1_eks $scenario1_e $scenario1_dks $scenario1_d $scenario1_total > $SCRIPT_OUTPUT
+	printf "%s %s %s" $scenario1_e $scenario1_d $scenario1_total > $SCRIPT_OUTPUT
 fi
 
 

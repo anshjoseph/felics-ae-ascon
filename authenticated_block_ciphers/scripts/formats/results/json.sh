@@ -5,8 +5,8 @@ get_code_size ()
     local results=$1
 
     # Layout:
-    # EKS E DKS D TOTAL
-    cut -d' ' -f2 ${results}
+    # E D TOTAL
+    cut -d' ' -f1 ${results}
 }
 
 get_code_ram ()
