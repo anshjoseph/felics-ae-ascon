@@ -48,6 +48,7 @@ def _order_setups(setups, sort_keys):
     return OrderedDict(
         (arch, _sort_setups(setups_by_arch[arch], sort_keys))
         for arch in _ARCHITECTURES
+        if arch in setups_by_arch
     )
 
 
