@@ -27,14 +27,13 @@
 #
 # Call this makefile from a cipher source directory or build directory to build 
 #	... the given cipher:
-#	make -f ./../../../common/cipher.mk [ARCHITECTURE=[AVR|MSP|ARM|PC]]
-#		[DEBUG=[0|1|3|7]] [MEASURE_CYCLE_COUNT=[0|1]] [SCENARIO=[0|1|2]] 
+#	make -f ./../../../common/cipher.mk [ARCHITECTURE=[AVR|MSP|ARM|PC]]
+#		[DEBUG=[0|1|3|7]] [MEASURE_CYCLE_COUNT=[0|1]] 
 #		[COMPILER_OPTIONS='...'] [all|clean|cleanall|help]
 #
 # 	Examples: 
 #		make -f ./../../../common/cipher.mk
 #		make -f ./../../../common/cipher.mk ARCHITECTURE=PC DEBUG=1
-#			SCENARIO=0
 #		make -f ./../../../common/cipher.mk clean
 #
 
@@ -50,9 +49,6 @@ BUILDDIR = ./../build
 
 COMMONSOURCEDIR = ./../../../common
 SCENARIO1SOURCEDIR = $(COMMONSOURCEDIR)/scenario1
-SCENARIO2SOURCEDIR = $(COMMONSOURCEDIR)/scenario2
-SCENARIO3SOURCEDIR = $(COMMONSOURCEDIR)/scenario3
-
 
 INCLUDES = -I$(SOURCEDIR) -I$(COMMONSOURCEDIR)
 
@@ -66,37 +62,17 @@ SCENARIO1SOURCES = $(wildcard $(SCENARIO1SOURCEDIR)/*.c)
 SCENARIO1ALLOBJS = $(subst $(SCENARIO1SOURCEDIR)/, , $(SCENARIO1SOURCES:.c=.o))
 SCENARIO1OBJS = $(filter-out scenario1.o, $(SCENARIO1ALLOBJS))
 
-SCENARIO2SOURCES = $(wildcard $(SCENARIO2SOURCEDIR)/*.c)
-SCENARIO2ALLOBJS = $(subst $(SCENARIO2SOURCEDIR)/, , $(SCENARIO2SOURCES:.c=.o))
-SCENARIO2OBJS = $(filter-out scenario2.o, $(SCENARIO2ALLOBJS))
-
-SCENARIO3SOURCES = $(wildcard $(SCENARIO3SOURCEDIR)/*.c)
-SCENARIO3ALLOBJS = $(subst $(SCENARIO3SOURCEDIR)/, , $(SCENARIO3SOURCES:.c=.o))
-SCENARIO3OBJS = $(filter-out scenario3.o, $(SCENARIO3ALLOBJS))
-
 LSTS = $(OBJS:.o=.lst)
 CIPHERLSTS = main.lst common.lst
 SCENARIO1LSTS=$(SCENARIO1OBJS:.o=.lst)
-SCENARIO2LSTS=$(SCENARIO2OBJS:.o=.lst)
-SCENARIO3LSTS=$(SCENARIO3OBJS:.o=.lst)
 
 
 ifeq ($(SCENARIO), 1)
 TARGET=target1
 LSTS += $(SCENARIO1LSTS)
 else
-ifeq ($(SCENARIO), 2)
-TARGET=target2
-LSTS += $(SCENARIO2LSTS)
-else
-ifeq ($(SCENARIO), 3)
-TARGET=target3
-LSTS += $(SCENARIO3LSTS)
-else
 TARGET=target
 LSTS += $(CIPHERLSTS)
-endif
-endif
 endif
 
 
@@ -205,19 +181,6 @@ target1 : \
 		scenario1.lst \
 		$(LSTS)
 
-.PHONY : target2 
-target2 : \
-		scenario2.elf \
-		scenario2.lst \
-		$(LSTS)
-
-.PHONY : target3
-target1 : \
-		scenario3.elf \
-		scenario3.lst \
-		$(LSTS)
-
-
 cipher.elf : \
 		$(OBJS) \
 		main.o \
@@ -238,43 +201,11 @@ scenario1.elf : \
 		$(addprefix $(BUILDDIR)/, decrypt_scenario1.o) \
 		$(addprefix $(BUILDDIR)/, common.o) $(LDLIBS) -o $(BUILDDIR)/$@
 
-scenario2.elf : \
-		$(OBJS) \
-		scenario2.o \
-		encrypt_scenario2.o \
-		decrypt_scenario2.o \
-		common.o
-	$(CC) $(LDFLAGS) $(addprefix $(BUILDDIR)/, $(OBJS)) \
-		$(addprefix $(BUILDDIR)/, scenario2.o) \
-		$(addprefix $(BUILDDIR)/, encrypt_scenario2.o) \
-		$(addprefix $(BUILDDIR)/, decrypt_scenario2.o) \
-		$(addprefix $(BUILDDIR)/, common.o) $(LDLIBS) -o $(BUILDDIR)/$@
-		
-scenario3.elf : \
-		$(OBJS) \
-		scenario3.o \
-		encrypt_scenario3.o \
-		decrypt_scenario3.o \
-		common.o
-	$(CC) $(LDFLAGS) $(addprefix $(BUILDDIR)/, $(OBJS)) \
-		$(addprefix $(BUILDDIR)/, scenario3.o) \
-		$(addprefix $(BUILDDIR)/, encrypt_scenario3.o) \
-		$(addprefix $(BUILDDIR)/, decrypt_scenario3.o) \
-		$(addprefix $(BUILDDIR)/, common.o) $(LDLIBS) -o $(BUILDDIR)/$@
-
-
 cipher.bin : $(BUILDDIR)/cipher.elf
 	$(OBJCOPY) -O binary $< $@
 
 scenario1.bin : $(BUILDDIR)/scenario1.elf
 	$(OBJCOPY) -O binary $< $@
-
-scenario2.bin : $(BUILDDIR)/scenario2.elf
-	$(OBJCOPY) -O binary $< $@
-	
-scenario3.bin : $(BUILDDIR)/scenario3.elf
-	$(OBJCOPY) -O binary $< $@
-
 
 %.o : \
 		%.c \
@@ -325,65 +256,10 @@ decrypt_scenario1.o : \
 		$(SOURCEDIR)/constants.h
 	$(CC) -c $(CFLAGS) $< $(INCLUDES) -o $(BUILDDIR)/$@
 
-scenario2.o : \
-		$(SCENARIO2SOURCEDIR)/scenario2.c \
-		$(SCENARIO2SOURCEDIR)/scenario2.h \
-		$(COMMONSOURCEDIR)/cipher.h \
-		$(COMMONSOURCEDIR)/common.h \
-		$(SOURCEDIR)/constants.h
-	$(CC) -c $(CFLAGS) $< $(INCLUDES) -o $(BUILDDIR)/$@
-
-encrypt_scenario2.o : \
-		$(SCENARIO2SOURCEDIR)/encrypt_scenario2.c \
-		$(SCENARIO2SOURCEDIR)/scenario2.h \
-		$(COMMONSOURCEDIR)/cipher.h \
-		$(COMMONSOURCEDIR)/common.h \
-		$(SOURCEDIR)/constants.h
-	$(CC) -c $(CFLAGS) $< $(INCLUDES) -o $(BUILDDIR)/$@
-
-decrypt_scenario2.o : \
-		$(SCENARIO2SOURCEDIR)/decrypt_scenario2.c \
-		$(SCENARIO2SOURCEDIR)/scenario2.h \
-		$(COMMONSOURCEDIR)/cipher.h \
-		$(COMMONSOURCEDIR)/common.h \
-		$(SOURCEDIR)/constants.h
-	$(CC) -c $(CFLAGS) $< $(INCLUDES) -o $(BUILDDIR)/$@
-
-scenario3.o : \
-		$(SCENARIO3SOURCEDIR)/scenario3.c \
-		$(SCENARIO3SOURCEDIR)/scenario3.h \
-		$(COMMONSOURCEDIR)/cipher.h \
-		$(COMMONSOURCEDIR)/common.h \
-		$(SOURCEDIR)/constants.h
-	$(CC) -c $(CFLAGS) $< $(INCLUDES) -o $(BUILDDIR)/$@
-
-encrypt_scenario3.o : \
-		$(SCENARIO3SOURCEDIR)/encrypt_scenario3.c \
-		$(SCENARIO3SOURCEDIR)/scenario3.h \
-		$(COMMONSOURCEDIR)/cipher.h \
-		$(COMMONSOURCEDIR)/common.h \
-		$(SOURCEDIR)/constants.h
-	$(CC) -c $(CFLAGS) $< $(INCLUDES) -o $(BUILDDIR)/$@
-
-decrypt_scenario3.o : \
-		$(SCENARIO3SOURCEDIR)/decrypt_scenario3.c \
-		$(SCENARIO3SOURCEDIR)/scenario3.h \
-		$(COMMONSOURCEDIR)/cipher.h \
-		$(COMMONSOURCEDIR)/common.h \
-		$(SOURCEDIR)/constants.h
-	$(CC) -c $(CFLAGS) $< $(INCLUDES) -o $(BUILDDIR)/$@
-
-
 cipher.lst : cipher.elf
 	$(OBJDUMP) $(OBJDUMPFLAGS) $(BUILDDIR)/$< > $(BUILDDIR)/$@
 
 scenario1.lst : scenario1.elf
-	$(OBJDUMP) $(OBJDUMPFLAGS) $(BUILDDIR)/$< > $(BUILDDIR)/$@
-
-scenario2.lst : scenario2.elf
-	$(OBJDUMP) $(OBJDUMPFLAGS) $(BUILDDIR)/$< > $(BUILDDIR)/$@
-	
-scenario3.lst : scenario3.elf
 	$(OBJDUMP) $(OBJDUMPFLAGS) $(BUILDDIR)/$< > $(BUILDDIR)/$@
 
 %.lst : %.o
@@ -404,26 +280,14 @@ clean :
 	rm -f $(BUILDDIR)/scenario1.bin
 	rm -f $(BUILDDIR)/scenario1.lst
 
-	rm -f $(BUILDDIR)/scenario2.elf
-	rm -f $(BUILDDIR)/scenario2.bin
-	rm -f $(BUILDDIR)/scenario2.lst
-	
-	rm -f $(BUILDDIR)/scenario3.elf
-	rm -f $(BUILDDIR)/scenario3.bin
-	rm -f $(BUILDDIR)/scenario3.lst
-	
 	rm -f $(BUILDDIR)/main.o 
 	rm -f $(BUILDDIR)/common.o
-	
+
 	rm -f $(addprefix $(BUILDDIR)/, $(OBJS))
 	rm -f $(addprefix $(BUILDDIR)/, $(SCENARIO1ALLOBJS))
-	rm -f $(addprefix $(BUILDDIR)/, $(SCENARIO2ALLOBJS))
-	rm -f $(addprefix $(BUILDDIR)/, $(SCENARIO3ALLOBJS))
-	
+
 	rm -f $(addprefix $(BUILDDIR)/, $(LSTS))
 	rm -f $(addprefix $(BUILDDIR)/, $(SCENARIO1LSTS))
-	rm -f $(addprefix $(BUILDDIR)/, $(SCENARIO2LSTS))
-	rm -f $(addprefix $(BUILDDIR)/, $(SCENARIO3LSTS))
 
 	rm -f $(BUILDDIR)/*.su
 	rm -f $(BUILDDIR)/*.map
@@ -436,8 +300,6 @@ cleanall :
 	rm -f $(SOURCEDIR)/*~
 	rm -f $(COMMONSOURCEDIR)/*~
 	rm -f $(SCENARIO1SOURCEDIR)/*~
-	rm -f $(SCENARIO2SOURCEDIR)/*~
-	rm -f $(SCENARIO3SOURCEDIR)/*~
 	rm -f $(BUILDDIR)/*
 	@echo $(DELIMITER) End cleaning: $(CIPHERNAME) $(DELIMITER)
 
@@ -454,7 +316,6 @@ help:
 	@echo ""
 	@echo " 	Examples: "
 	@echo "		make -f ./../../../common/cipher.mk"
-	@echo -n "		make -f ./../../../common/cipher.mk ARCHITECTURE=PC "
-	@echo 			"DEBUG=1 SCENARIO=0"
+	@echo "		make -f ./../../../common/cipher.mk ARCHITECTURE=PC"
 	@echo "		make -f ./../../../common/cipher.mk clean"
 	@echo ""

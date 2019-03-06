@@ -28,10 +28,8 @@
 # Call this makefile from a cipher source directory or build directory to build 
 #	... the given cipher:
 #	make -f ./../../../common/test_cipher.mk [help|pc|avr|msp|arm|pc-scenario1|
-#		avr-scenario1|msp-scenario1|arm-scenario1|pc-scenario2|avr-scenario2|
-#		msp-scenario2|arm-scenario2|cipher|scenario1|scenario2|test-cipher|
-#		test-scenario1|test-scenario2|upload-cipher|upload-scenario1|
-#		upload-scenario2|clean|cleanall]
+#		avr-scenario1|msp-scenario1|arm-scenario1|cipher|scenario1|test-cipher|
+#		test-scenario1|upload-cipher|upload-scenario1|clean|cleanall]
 #
 # 	Examples: 
 #		From cipher source directory or build directory:
@@ -60,10 +58,9 @@ COMPILER_OPTIONS = -O3
 OPTIONS=COMPILER_OPTIONS=$(COMPILER_OPTIONS)
 
 
-.PHONY: help pc avr msp arm pc-scenario1 avr-scenario1 msp-scenario1 \
-	arm-scenario1 pc-scenario2 avr-scenario2 msp-scenario2 arm-scenario2 \
-	cipher scenario1 scenario2 scenario3 test-cipher test-scenario1 test-scenario2 \
-	upload-cipher upload-scenario1 upload-scenario2 clean cleanall
+.PHONY: help pc avr msp arm pc-scenario1 avr-scenario1 msp-scenario1    \
+	arm-scenario1 cipher scenario1 test-cipher test-scenario1       \
+	upload-cipher upload-scenario1 clean cleanall
 
 
 help:
@@ -71,11 +68,10 @@ help:
 	@echo -n "Call this makefile from a cipher source directory or build "
 	@echo 		"directory to build the given cipher:"
 	@echo -n "	make -f ./../source/Makefile [help|pc|avr|msp|arm|pc-scenario1|"
-	@echo -n 		"avr-scenario1|msp-scenario1|arm-scenario1|pc-scenario2|"
-	@echo -n 		"avr-scenario2|msp-scenario2|arm-scenario2|cipher|"
-	@echo -n 		"scenario1|scenario2|test-cipher|test-scenario1|"
-	@echo -n		"test-scenario2|upload-cipher|upload-scenario1|"
-	@echo -n		"upload-scenario2|clean|cleanall]"
+	@echo -n 		"avr-scenario1|msp-scenario1|arm-scenario1|cipher|"
+	@echo -n 		"scenario1|test-cipher|test-scenario1|"
+	@echo -n		"upload-cipher|upload-scenario1|"
+	@echo -n		"clean|cleanall]"
 	@echo ""
 	@echo ""
 	@echo "	Examples: "
@@ -131,25 +127,6 @@ msp-scenario1:
 arm-scenario1:
 	make -f $(CIPHER_MAKEFILE) $(OPTIONS) ARCHITECTURE=ARM SCENARIO=1
 
-
-# Build scenario2 for PC in Release mode
-pc-scenario2:
-	make -f $(CIPHER_MAKEFILE) $(OPTIONS) ARCHITECTURE=PC SCENARIO=2
-
-# Build scenario2 for AVR in Release mode
-avr-scenario2:
-	make -f $(CIPHER_MAKEFILE) $(OPTIONS) ARCHITECTURE=AVR SCENARIO=2
-
-# Build scenario2 for MSP in Release mode
-msp-scenario2:
-	make -f $(CIPHER_MAKEFILE) $(OPTIONS) ARCHITECTURE=MSP SCENARIO=2
-
-# Build scenario2 for ARM in Release mode
-arm-scenario2:
-	make -f $(CIPHER_MAKEFILE) $(OPTIONS) ARCHITECTURE=ARM SCENARIO=2
-
-
-
 # Build cipher for PC in Debug mode
 cipher:
 	make -f $(CIPHER_MAKEFILE) $(OPTIONS) DEBUG=7 SCENARIO=0
@@ -157,16 +134,6 @@ cipher:
 # Build scenario1 for PC in Debug mode
 scenario1:
 	make -f $(CIPHER_MAKEFILE) $(OPTIONS) DEBUG=7 SCENARIO=1
-
-# Build scenario2 for PC in Debug mode
-scenario2:
-	make -f $(CIPHER_MAKEFILE) $(OPTIONS) DEBUG=7 SCENARIO=2
-
-# Build scenario3 for PC in Debug mode
-scenario3:
-	make -f $(CIPHER_MAKEFILE) $(OPTIONS) DEBUG=7 SCENARIO=3
-
-
 
 # Test cipher. Use only after cipher
 test-cipher:
@@ -176,16 +143,6 @@ test-cipher:
 test-scenario1:
 	$(BUILD_DIR)/scenario1.elf
 
-# Test scenario 2. Use only after scenario2
-test-scenario2:
-	$(BUILD_DIR)/scenario2.elf
-
-# Test scenario 3. Use only after scenario2
-test-scenario3:
-	$(BUILD_DIR)/scenario3.elf
-
-
-
 # Upload ARM binary to the board. Use only after arm
 upload-cipher:
 	make -f $(CIPHER_MAKEFILE) ARCHITECTURE=ARM upload-cipher
@@ -194,14 +151,9 @@ upload-cipher:
 upload-scenario1:
 	make -f $(CIPHER_MAKEFILE) ARCHITECTURE=ARM upload-scenario1
 
-# Upload ARM binary to the board. Use only after arm-scenario2
-upload-scenario2:
-	make -f $(CIPHER_MAKEFILE) ARCHITECTURE=ARM upload-scenario2
-
-
 
 # Run the ARM program on the board. Use only after upload-cipher, 
-# 	upload-scenario1 or upload-scenario2
+# 	upload-scenario1
 run:
 	make -f $(CIPHER_MAKEFILE) ARCHITECTURE=ARM run
 

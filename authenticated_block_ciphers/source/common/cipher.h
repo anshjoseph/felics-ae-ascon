@@ -58,15 +58,10 @@
 /*
  * 
  * SCENARIO values:
- * ... SCENARIO_0 0 - cipher operation: encrypt & decrypt one data block
- * ... SCENARIO_1 1 - scenario 1: encrypt & decrypt data in CBC mode
- * ... SCENARIO_2 2 - scenario 2: encrypt & decrypt data in CTR mode
+ * ... SCENARIO_1 1 - scenario 1: full encryption of 128-bit PT with 128-bit AD
  *
  */
-#define SCENARIO_0 0
 #define SCENARIO_1 1
-#define SCENARIO_2 2
-#define SCENARIO_3 3
 
 #ifndef SCENARIO
 #define SCENARIO SCENARIO_0

@@ -96,24 +96,6 @@ upload-scenario1 : scenario1.bin
 	@# Use bossac to load program in flash
 	@$(BOSSAC) --port=$(PORT) -U false -e -w -b $< -R #-d -i -v
 
-# Upload the program to the board. Should be invoked as: 
-#	make -f ./../../../common/cipher.mk ARCHITECTURE=ARM upload-scenario2
-.PHONY : upload-scenario2
-upload-scenario2 : scenario2.bin
-	@# Communicate with the board @1200 Bd resets everything
-	@stty -F $(DEVICE) cs8 1200 hupcl
-	@# Use bossac to load program in flash
-	@$(BOSSAC) --port=$(PORT) -U false -e -w -b $< -R #-d -i -v
-	
-# Upload the program to the board. Should be invoked as: 
-#	make -f ./../../../common/cipher.mk ARCHITECTURE=ARM upload-scenario1
-.PHONY : upload-scenario3
-upload-scenario3 : scenario3.bin
-	@# Communicate with the board @1200 Bd resets everything
-	@stty -F $(DEVICE) cs8 1200 hupcl
-	@# Use bossac to load program in flash
-	@$(BOSSAC) --port=$(PORT) -U false -e -w -b $< -R #-d -i -v
-
 # Run the program stored in the flash memory of the board. Should be invoked as: 
 #	make -f ./../../../common/cipher.mk ARCHITECTURE=ARM run
 # Note that the binary should be uploaded first.
