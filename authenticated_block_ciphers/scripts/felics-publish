@@ -131,7 +131,7 @@ class TexWriter:
             alignment=alignment
         )
 
-    def _list_row_data(self, setup):
+    def _list_row_fields(self, setup):
         def raw(value):
             return str(value)
 
@@ -150,17 +150,17 @@ class TexWriter:
 
         return tuple(formatters[c](setup[c]) for c in self._COLUMNS)
 
-    def _cell_alignment(self, column_index):
-        column_names = tuple(self._COLUMNS)
-
-        if column_names[column_index] in _METRICS:
+    def _cell_alignment(self, column_name):
+        if column_name in _METRICS:
             return '>'
 
         return '<'
 
     def _pad_row_cells(self, row, paddings):
+        columns = tuple(self._COLUMNS)
+
         return (
-            self._pad_cell(cell, paddings[c], self._cell_alignment(c))
+            self._pad_cell(cell, paddings[c], self._cell_alignment(columns[c]))
             for c, cell in enumerate(row)
         )
 
@@ -169,7 +169,7 @@ class TexWriter:
 
     def _make_padded_rows(self, data):
         header = tuple(self._COLUMNS.values())
-        rows = (header,) + tuple(self._list_row_data(setup) for setup in data)
+        rows = (header,) + tuple(self._list_row_fields(setup) for setup in data)
 
         columns_nb = len(header)
         paddings = tuple(
