@@ -228,7 +228,6 @@ do
 			cipher_directory_name=$(basename -- "$(dirname -- "$(pwd)")")
 
 			cipher_name=$(echo $cipher_directory_name | cut -d $DIRECTORY_NAME_SEPARATOR -f 1)
-			cipher_block_size=$(echo $cipher_directory_name | cut -d $DIRECTORY_NAME_SEPARATOR -f 2)
 			cipher_key_size=$(echo $cipher_directory_name | cut -d $DIRECTORY_NAME_SEPARATOR -f 3)
 			cipher_implementation_version=$(echo $cipher_directory_name | cut -d $DIRECTORY_NAME_SEPARATOR -f 4)
 			cipher_implementation_version=${cipher_implementation_version:1:${#cipher_implementation_version}-1}
@@ -252,7 +251,6 @@ do
 			for compiler_option in "${compiler_options[@]}"
 			do
 				echo "Run for cipher '$cipher_name':"
-				echo -e "\t BLOCK_SIZE = $cipher_block_size"
 				echo -e "\t KEY_SIZE = $cipher_key_size"
 				echo -e "\t IMPLEMENTATION_VERSION = $cipher_implementation_version"
 				echo -e "\t ARCHITECTURE = $architecture"
@@ -353,7 +351,7 @@ do
 					exit 1
 				fi
 
-				add_json_table_row "${script_json_output}" ${architecture} ${cipher_name} ${cipher_block_size} ${cipher_key_size} ${cipher_implementation_version} ${cipher_implementation_language} "${compiler_option}" \
+				add_json_table_row "${script_json_output}" ${architecture} ${cipher_name} ${cipher_key_size} ${cipher_implementation_version} ${cipher_implementation_language} "${compiler_option}" \
 					"${cipher_code_size_output_file}" "${cipher_ram_output_file}" "${cipher_execution_time_output_file}"
 
 				if [ $FALSE -eq $KEEP_GENERATED_FILES ] ; then

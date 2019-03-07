@@ -62,21 +62,19 @@ add_json_table_row ()
     local output_file=$1
     local architecture=$2
     local cipher_name=$3
-    local cipher_block_size=$4
-    local cipher_key_size=$5
-    local cipher_implementation_version=$6
-    local cipher_implementation_language=$7
-    local cipher_implementation_compiler_options=$8
+    local cipher_key_size=$4
+    local cipher_implementation_version=$5
+    local cipher_implementation_language=$6
+    local cipher_implementation_compiler_options=$7
 
-    local code_size_file=${9}
-    local code_ram_file=${10}
-    local code_time_file=${11}
+    local code_size_file=$8
+    local code_ram_file=$9
+    local code_time_file=${10}
 
     cat <<-EOF >> ${output_file}
 	{
 	    "cipher_name": "${cipher_name}",
 	    "architecture": "${architecture}",
-	    "block_size": ${cipher_block_size},
 	    "key_size": ${cipher_key_size},
 	    "version": "${cipher_implementation_version}",
 	    "language": "${cipher_implementation_language}",
