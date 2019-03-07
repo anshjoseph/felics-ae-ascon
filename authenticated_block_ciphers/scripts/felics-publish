@@ -131,6 +131,12 @@ class TexWriter:
             alignment=alignment
         )
 
+    def _list_header_fields(self):
+        def bold(s):
+            return r'\textbf{{{s}}}'.format(s=s)
+
+        return tuple(bold(caption) for caption in self._COLUMNS.values())
+
     def _list_row_fields(self, setup):
         def raw(value):
             return str(value)
@@ -168,7 +174,7 @@ class TexWriter:
         return max(len(row[column]) for row in rows)
 
     def _make_padded_rows(self, data):
-        header = tuple(self._COLUMNS.values())
+        header = self._list_header_fields()
         rows = (header,) + tuple(self._list_row_fields(setup) for setup in data)
 
         columns_nb = len(header)
