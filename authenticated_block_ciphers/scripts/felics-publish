@@ -156,17 +156,16 @@ class TexWriter:
 
         return tuple(formatters[c](setup[c]) for c in self._COLUMNS)
 
-    def _cell_alignment(self, column_name):
+    def _alignment(self, column_name):
         if column_name in _METRICS:
             return '>'
-
         return '<'
 
     def _pad_row_cells(self, row, paddings):
-        columns = tuple(self._COLUMNS)
+        column_names = tuple(self._COLUMNS)
 
         return (
-            self._pad_cell(cell, paddings[c], self._cell_alignment(columns[c]))
+            self._pad_cell(cell, paddings[c], self._alignment(column_names[c]))
             for c, cell in enumerate(row)
         )
 
@@ -219,7 +218,7 @@ class ConsoleWriter:
     _ROW_HEADER_TEMPLATE = '{cipher_name} ({version}, {compiler_options}):'
     _ROW_TEMPLATE = '{header:<{header_width}} {code_size:>{code_size_width}} {code_ram:>{code_ram_width}} {code_time:>{code_time_width}}'
 
-    def _find_widest_value(self, metric, setups):
+    def _max_value_width(self, metric, setups):
         return max(len(s[metric]) for s in setups)
 
     def _format_rows(self, data):
@@ -233,7 +232,7 @@ class ConsoleWriter:
                               for setup in data)
 
         metrics_widths = {
-            m + '_width': self._find_widest_value(m, results.values())
+            m + '_width': self._max_value_width(m, results.values())
             for m in _METRICS
         }
 
@@ -241,10 +240,10 @@ class ConsoleWriter:
             self._ROW_TEMPLATE.format(
                 header=header,
                 header_width=max(len(header) for header in results),
-                **_METRICS,
+                **metrics,
                 **metrics_widths
             )
-            for header, _METRICS in results.items()
+            for header, metrics in results.items()
         )
 
     def dump(self, results):
