@@ -46,8 +46,6 @@ def _make_key(data):
     return (
         data['cipher_name'],
         ARCHITECTURES[data['architecture']],
-        data['block_size'],
-        data['key_size'],
         data['version'],
         data['language'],
         data['compiler_options']
@@ -135,7 +133,7 @@ file2 = _load_file(arguments.file2, arguments.archs)
 
 _print_header(file1, file2, arguments.threshold)
 
-SETUP_TEMPLATE = ('{cipher_name}-{block_size}-{key_size} on {architecture} '
+SETUP_TEMPLATE = ('{cipher_name} on {architecture} '
                   '(v{version} in {language} with {compiler_options})')
 
 skipped = []
