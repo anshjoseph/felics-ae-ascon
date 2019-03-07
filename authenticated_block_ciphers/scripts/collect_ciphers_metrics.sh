@@ -51,7 +51,7 @@ set -e
 #				Default: all compiler options
 #
 #	Examples:
-#		./collect_ciphers_metrics.sh -a='PC AVR' --scenarios="1 2"
+#		./collect_ciphers_metrics.sh -a='PC AVR'
 #
 
 
@@ -151,7 +151,8 @@ else
 	architectures=(${SCRIPT_ARCHITECTURES[@]})
 fi
 
-scenarios=(1)
+# TODO: remove scenario management from other scripts
+scenario=1
 
 # If user ciphers are not set, use all ciphers
 if [ -n "$SCRIPT_USER_CIPHERS" ]; then
