@@ -202,9 +202,7 @@ compute-file-median ()
     local medians_file=$2
 
     local keys=(
-        EncryptionKeySheduleCycleCount
         EncryptCycleCount
-        DecryptionKeyScheduleCycleCount
         DecryptCycleCount
     )
 
@@ -375,9 +373,7 @@ case $SCRIPT_ARCHITECTURE in
 		simulate $PC_SCENARIO1_FILE $pc_output_file $make_log_file
 
 		if [ -f $pc_output_file ] ; then
-			eks_execution_time=$(compute_execution_time $pc_output_file 'EncryptionKeySheduleCycleCount')
 			e_execution_time=$(compute_execution_time $pc_output_file 'EncryptCycleCount')
-			dks_execution_time=$(compute_execution_time $pc_output_file 'DecryptionKeyScheduleCycleCount')
 			d_execution_time=$(compute_execution_time $pc_output_file 'DecryptCycleCount')
 		fi
 
@@ -395,9 +391,7 @@ case $SCRIPT_ARCHITECTURE in
 		simulate $file $avr_execution_time_log_file
 
 		if [ -f $avr_execution_time_log_file ] ; then
-			eks_execution_time=$(compute_execution_time $avr_execution_time_log_file 'RunEncryptionKeySchedule' 'EndEncryptionKeySchedule')
 			e_execution_time=$(compute_execution_time $avr_execution_time_log_file 'Encrypt' 'EndEncryption')
-			dks_execution_time=$(compute_execution_time $avr_execution_time_log_file 'RunDecryptionKeySchedule' 'EndDecryptionKeySchedule')
 			d_execution_time=$(compute_execution_time $avr_execution_time_log_file 'Decrypt' 'EndDecryption')
 		fi
 	
@@ -420,9 +414,7 @@ case $SCRIPT_ARCHITECTURE in
 		simulate $MSP_SCENARIO1_MSPDEBUG_EXECUTION_TIME_SECTIONS_COMMANDS_FILE $mspdebug_execution_time_sections_log_file
 
 		if [ -f $mspdebug_execution_time_log_file ] ; then
-			eks_execution_time=$(compute_execution_time $mspdebug_execution_time_sections_log_file 1)
 			e_execution_time=$(compute_execution_time $mspdebug_execution_time_sections_log_file 3)
-			dks_execution_time=$(compute_execution_time $mspdebug_execution_time_sections_log_file 5)
 			d_execution_time=$(compute_execution_time $mspdebug_execution_time_sections_log_file 7)
 		fi
 
@@ -445,9 +437,7 @@ case $SCRIPT_ARCHITECTURE in
 		simulate $file $arm_serial_terminal_output_file $make_log_file $UPLOAD_SCENARIO1
 
 		if [ -f $arm_serial_terminal_output_file ] ; then
-			eks_execution_time=$(compute_execution_time $arm_serial_terminal_output_file 'EncryptionKeySheduleCycleCount')
 			e_execution_time=$(compute_execution_time $arm_serial_terminal_output_file 'EncryptCycleCount')
-			dks_execution_time=$(compute_execution_time $arm_serial_terminal_output_file 'DecryptionKeyScheduleCycleCount')
 			d_execution_time=$(compute_execution_time $arm_serial_terminal_output_file 'DecryptCycleCount')
 		fi
 		
@@ -455,47 +445,6 @@ case $SCRIPT_ARCHITECTURE in
 			# Remove log files
 			rm -f $make_log_file
 			rm -f $arm_serial_terminal_output_file
-		fi
-		;;
-esac
-
-
-# Check if encryption/decryption key schedule is used
-use_encryption_key_schedule=$(cat $IMPLEMENTATION_INFO_FILE | grep $USE_ENCRYPTION_KEY_SCHEDULE$SECTION_SEPARATOR | tr -d '\r' | cut -d ':' -f 2 |  tr -d '[[:space:]]')
-use_decryption_key_schedule=$(cat $IMPLEMENTATION_INFO_FILE | grep $USE_DECRYPTION_KEY_SCHEDULE$SECTION_SEPARATOR | tr -d '\r' | cut -d ':' -f 2 |  tr -d '[[:space:]]')
-
-# Convert to lowercase
-use_encryption_key_schedule=${use_encryption_key_schedule,,}
-use_decryption_key_schedule=${use_decryption_key_schedule,,}
-
-if [ $USE_KEY_SCHEDULE_NO == "$use_encryption_key_schedule" ] ; then
-	eks_execution_time=0
-fi
-
-if [ $USE_KEY_SCHEDULE_NO == "$use_decryption_key_schedule" ] ; then
-	dks_execution_time=0
-fi
-
-# Test if decryption key schedule is empty
-case $SCRIPT_ARCHITECTURE in
-	$SCRIPT_ARCHITECTURE_PC)
-		if [ $EMPTY_DKS_PC -ge $dks_execution_time ] ; then
-			dks_execution_time=0
-		fi
-		;;
-	$SCRIPT_ARCHITECTURE_AVR)
-		if [ $EMPTY_DKS_AVR -ge $dks_execution_time ] ; then
-			dks_execution_time=0
-		fi
-		;;
-	$SCRIPT_ARCHITECTURE_MSP)
-		if [ $EMPTY_DKS_MSP -ge $dks_execution_time ] ; then
-			dks_execution_time=0
-		fi
-		;;
-	$SCRIPT_ARCHITECTURE_ARM)
-		if [ $EMPTY_DKS_ARM -ge $dks_execution_time ] ; then
-			dks_execution_time=0
 		fi
 		;;
 esac
@@ -509,18 +458,18 @@ if [ $SCRIPT_MODE_0 -eq $SCRIPT_MODE ] ; then
 	# Table header
 	printf "%0.s-" $(seq 1 $TABLE_HORIZONTAL_LINE_LENGTH) >> $SCRIPT_OUTPUT
 	printf "\n" >> $SCRIPT_OUTPUT
-	printf "| %10s | %10s | %10s | %10s |\n" "Enc. K.S." "Enc." "Dec. K.S." "Dec." >> $SCRIPT_OUTPUT
+	printf "| %10s | %10s |\n" "Enc." "Dec." >> $SCRIPT_OUTPUT
 	printf "%0.s-" $(seq 1 $TABLE_HORIZONTAL_LINE_LENGTH) >> $SCRIPT_OUTPUT
 	printf "\n" >> $SCRIPT_OUTPUT
 
 	# Table line
-	printf "| %10s | %10s | %10s | %10s | %10s |\n" $total_execution_time $eks_execution_time $e_execution_time $dks_execution_time $d_execution_time >> $SCRIPT_OUTPUT
+	printf "| %10s | %10s | %10s |\n" $total_execution_time $e_execution_time $d_execution_time >> $SCRIPT_OUTPUT
 
 	# Table footer
 	printf "%0.s-" $(seq 1 $TABLE_HORIZONTAL_LINE_LENGTH) >> $SCRIPT_OUTPUT
 	printf "\n" >> $SCRIPT_OUTPUT
 else
-	printf "%s %s %s %s" $eks_execution_time $e_execution_time $dks_execution_time $d_execution_time > $SCRIPT_OUTPUT
+	printf "%s %s" $e_execution_time $d_execution_time > $SCRIPT_OUTPUT
 fi
 
 

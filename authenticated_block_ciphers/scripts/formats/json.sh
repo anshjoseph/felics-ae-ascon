@@ -27,8 +27,8 @@ get_code_time ()
     local results=$1
 
     # Layout:
-    # EKS E DKS D
-    cut -d' ' -f2 ${results}
+    # E D
+    cut -d' ' -f1 ${results}
 }
 
 describe-revision ()
