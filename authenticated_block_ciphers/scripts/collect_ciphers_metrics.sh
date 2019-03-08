@@ -111,7 +111,7 @@ done
 
 
 # Include output format
-source ${script_path}/formats/results/json.sh
+source ${script_path}/formats/json.sh
 
 
 # Change current directory to script source path directory
