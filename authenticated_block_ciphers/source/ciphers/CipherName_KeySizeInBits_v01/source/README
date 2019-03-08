@@ -312,8 +312,8 @@ Constraints
 the "DATA_SIZE" or is equal with the "DATA_SIZE" which is set to 128 bytes in 
 scenario 1 and 128 bits in scenario 2.
 
-2. The values defined in "constants.h" for "BLOCK_SIZE", "KEY_SIZE" and 
-"ROUND_KEY_SIZE" must be in bytes.
+2. The values defined in "constants.h" for "BLOCK_SIZE", and "KEY_SIZE" must be
+in bytes.
 
 
 
