@@ -14,7 +14,3 @@ DecryptCode: aegis_utils, aegis_common
 UseEncryptionKeySchedule: no
 UseDecryptionKeySchedule: no
 
-ImplementationAVR: C
-ImplementationMSP: C
-ImplementationARM: C
-ImplementationPC: C

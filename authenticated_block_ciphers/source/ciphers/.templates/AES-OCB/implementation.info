@@ -14,7 +14,3 @@ DecryptCode: aes_decrypt aes_common ocb_common
 UseEncryptionKeySchedule: no
 UseDecryptionKeySchedule: no
 
-ImplementationAVR: C
-ImplementationMSP: C
-ImplementationARM: C
-ImplementationPC: C
