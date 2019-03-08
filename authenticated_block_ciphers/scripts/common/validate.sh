@@ -32,9 +32,7 @@ TRUE=1
 FALSE=0
 
 INVALID_ARCHITECTURE_ERROR_MESSAGE='Invalid architecture:'
-INVALID_SCENARIO_ERROR_MESSAGE='Invalid scenario:'
 INVALID_MODE_ERROR_MESSAGE='Invalid mode:'
-INVALID_FORMAT_ERROR_MESSAGE='Invalid format:'
 INVALID_VERBOSITY_ERROR_MESSAGE='Invalid verbosity:'
 
 
@@ -74,20 +72,6 @@ function validate_architecture()
 	fi
 }
 
-# Validate given scenario
-# Parameters:
-# 	$1 - the scenario to validate
-function validate_scenario()
-{
-	local scenario=$1
-	local result=$(value_in_array $scenario ${SCRIPT_SCENARIOS[@]})
-
-	if [ $FALSE -eq $result ] ; then
-		echo "$INVALID_SCENARIO_ERROR_MESSAGE '$scenario'!"
-		exit
-	fi
-}
-
 # Validate given mode
 # Parameters:
 # 	$1 - the scenario to validate
@@ -98,20 +82,6 @@ function validate_mode()
 
 	if [ $FALSE -eq $result ] ; then
 		echo "$INVALID_MODE_ERROR_MESSAGE '$mode'!"
-		exit
-	fi
-}
-
-# Validate given format
-# Parameters:
-# 	$1 - the format to validate
-function validate_format()
-{
-	local format=$1
-	local result=$(value_in_array $format ${SCRIPT_FORMATS[@]})
-
-	if [ $FALSE -eq $result ] ; then
-		echo "$INVALID_FORMAT_ERROR_MESSAGE '$format'!"
 		exit
 	fi
 }

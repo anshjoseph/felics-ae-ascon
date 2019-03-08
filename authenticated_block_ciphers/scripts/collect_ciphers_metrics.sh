@@ -236,17 +236,6 @@ do
 				continue
 			fi
 
-
-			cipher_implementation_language=$(cat $IMPLEMENTATION_INFO_FILE | grep $IMPLEMENTATION_TYPE$architecture$SECTION_SEPARATOR | tr -d '\r' | cut -d ':' -f 2 |  tr -d '[[:space:]]')
-
-			# Convert to uppercase
-			cipher_implementation_language=${cipher_implementation_language^^}
-
-			if [ $IMPLEMENTATION_ASM != "$cipher_implementation_language" ] ; then
-				cipher_implementation_language=$IMPLEMENTATION_C
-			fi
-
-
 			for compiler_option in "${compiler_options[@]}"
 			do
 				echo "Run for cipher '$cipher_name':"
@@ -349,7 +338,7 @@ do
 					exit 1
 				fi
 
-				add_json_table_row "${script_json_output}" ${architecture} ${cipher_name} ${cipher_implementation_version} ${cipher_implementation_language} "${compiler_option}" \
+				add_json_table_row "${script_json_output}" ${architecture} ${cipher_name} ${cipher_implementation_version} "${compiler_option}" \
 					"${cipher_code_size_output_file}" "${cipher_ram_output_file}" "${cipher_execution_time_output_file}"
 
 				if [ $FALSE -eq $KEEP_GENERATED_FILES ] ; then

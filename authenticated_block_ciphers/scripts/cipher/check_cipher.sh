@@ -153,7 +153,6 @@ done
 
 echo "Script settings:"
 echo -e "\t SCRIPT_MODE \t\t\t = $SCRIPT_MODE"
-echo -e "\t SCRIPT_SCENARIO \t\t = $SCRIPT_SCENARIO"
 echo -e "\t SCRIPT_ARCHITECTURE \t\t = $SCRIPT_ARCHITECTURE"
 echo -e "\t SCRIPT_TARGET \t\t\t = $SCRIPT_TARGET"
 echo -e "\t SCRIPT_OUTPUT \t\t\t = $SCRIPT_OUTPUT"
@@ -162,7 +161,6 @@ echo -e "\t SCRIPT_COMPILER_OPTIONS \t = $SCRIPT_COMPILER_OPTIONS"
 
 # Validate inputs
 validate_mode $SCRIPT_MODE
-validate_scenario $SCRIPT_SCENARIO
 validate_architecture $SCRIPT_ARCHITECTURE
 
 
@@ -209,6 +207,7 @@ if [ $SUCCESS_EXIT_CODE -ne $? ]; then
 fi
 
 
+# FIXME: does nothing when scenario != 0; remove conditional and scenario option
 if [ $TRUE == $compliant ] && [ $SCRIPT_SCENARIO_0 == $SCRIPT_SCENARIO ] ; then
 	# Clean
 	make -f $CIPHER_MAKEFILE $MAKE_CLEAN_TARGET &>> $MAKE_FILE_LOG

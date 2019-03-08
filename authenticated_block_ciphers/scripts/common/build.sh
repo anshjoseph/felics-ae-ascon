@@ -133,7 +133,6 @@ done
 if [ $SCRIPT_VERBOSE_ENABLED -eq $SCRIPT_VERBOSE ] ; then
 	echo "Script settings:"
 	echo -e "\t SCRIPT_ARCHITECTURE \t\t = $SCRIPT_ARCHITECTURE"
-	echo -e "\t SCRIPT_SCENARIO \t\t = $SCRIPT_SCENARIO"
 	echo -e "\t SCRIPT_VERBOSE \t\t = $SCRIPT_VERBOSE"
 	echo -e "\t SCRIPT_COMPILER_OPTIONS \t = $SCRIPT_COMPILER_OPTIONS"
 fi
@@ -141,7 +140,6 @@ fi
 
 # Validate inputs
 validate_architecture $SCRIPT_ARCHITECTURE
-validate_scenario $SCRIPT_SCENARIO
 
 
 make_log_file=$SCRIPT_ARCHITECTURE$SCENARIO_NAME_PART$SCRIPT_SCENARIO$FILE_NAME_SEPARATOR$SCRIPT_MAKE_LOG
