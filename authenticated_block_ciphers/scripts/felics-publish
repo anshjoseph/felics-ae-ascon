@@ -61,7 +61,6 @@ class SpreadsheetWriter:
 
     _SHEET_COLUMNS = OrderedDict((
         ('cipher_name', 'Designation'),
-        ('key_size', 'Key size (bits)'),
         ('version', 'Version'),
         ('language', 'Language'),
         ('compiler_options', 'Compiler options'),
