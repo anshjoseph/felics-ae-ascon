@@ -33,8 +33,6 @@
 
 CONSTANTS_SOURCE_FILE=./../source/constants.h
 SCENARIO1_CONSTANTS_SOURCE_FILE=./../../../common/scenario1/scenario1.h
-SCENARIO2_CONSTANTS_SOURCE_FILE=./../../../common/scenario2/scenario2.h
-SCENARIO3_CONSTANTS_SOURCE_FILE=./../../../common/scenario3/scenario3.h
 
 BLOCK_SIZE_DEFINE='#define BLOCK_SIZE'
 KEY_SIZE_DEFINE='#define KEY_SIZE'
@@ -52,23 +50,11 @@ PC_CIPHER_GDB_STACK_SECTIONS_COMMANDS_FILE=./../../../../scripts/cipher/stack/pc
 PC_SCENARIO1_GDB_STACK_COMMANDS_FILE=./../../../../scripts/cipher/stack/pc_scenario1_stack.gdb
 PC_SCENARIO1_GDB_STACK_SECTIONS_COMMANDS_FILE=./../../../../scripts/cipher/stack/pc_scenario1_stack_sections.gdb
 
-PC_SCENARIO2_GDB_STACK_COMMANDS_FILE=./../../../../scripts/cipher/stack/pc_scenario2_stack.gdb
-PC_SCENARIO2_GDB_STACK_SECTIONS_COMMANDS_FILE=./../../../../scripts/cipher/stack/pc_scenario2_stack_sections.gdb
-
-PC_SCENARIO3_GDB_STACK_COMMANDS_FILE=./../../../../scripts/cipher/stack/pc_scenario3_stack.gdb
-PC_SCENARIO3_GDB_STACK_SECTIONS_COMMANDS_FILE=./../../../../scripts/cipher/stack/pc_scenario3_stack_sections.gdb
-
 AVR_CIPHER_GDB_STACK_COMMANDS_FILE=./../../../../scripts/cipher/stack/avr_cipher_stack.gdb
 AVR_CIPHER_GDB_STACK_SECTIONS_COMMANDS_FILE=./../../../../scripts/cipher/stack/avr_cipher_stack_sections.gdb
 
 AVR_SCENARIO1_GDB_STACK_COMMANDS_FILE=./../../../../scripts/cipher/stack/avr_scenario1_stack.gdb
 AVR_SCENARIO1_GDB_STACK_SECTIONS_COMMANDS_FILE=./../../../../scripts/cipher/stack/avr_scenario1_stack_sections.gdb
-
-AVR_SCENARIO2_GDB_STACK_COMMANDS_FILE=./../../../../scripts/cipher/stack/avr_scenario2_stack.gdb
-AVR_SCENARIO2_GDB_STACK_SECTIONS_COMMANDS_FILE=./../../../../scripts/cipher/stack/avr_scenario2_stack_sections.gdb
-
-AVR_SCENARIO3_GDB_STACK_COMMANDS_FILE=./../../../../scripts/cipher/stack/avr_scenario3_stack.gdb
-AVR_SCENARIO3_GDB_STACK_SECTIONS_COMMANDS_FILE=./../../../../scripts/cipher/stack/avr_scenario3_stack_sections.gdb
 
 MSP_CIPHER_GDB_STACK_COMMANDS_FILE=./../../../../scripts/cipher/stack/msp_cipher_stack.gdb
 MSP_CIPHER_GDB_STACK_SECTIONS_COMMANDS_FILE=./../../../../scripts/cipher/stack/msp_cipher_stack_sections.gdb
@@ -76,23 +62,11 @@ MSP_CIPHER_GDB_STACK_SECTIONS_COMMANDS_FILE=./../../../../scripts/cipher/stack/m
 MSP_SCENARIO1_GDB_STACK_COMMANDS_FILE=./../../../../scripts/cipher/stack/msp_scenario1_stack.gdb
 MSP_SCENARIO1_GDB_STACK_SECTIONS_COMMANDS_FILE=./../../../../scripts/cipher/stack/msp_scenario1_stack_sections.gdb
 
-MSP_SCENARIO2_GDB_STACK_COMMANDS_FILE=./../../../../scripts/cipher/stack/msp_scenario2_stack.gdb
-MSP_SCENARIO2_GDB_STACK_SECTIONS_COMMANDS_FILE=./../../../../scripts/cipher/stack/msp_scenario2_stack_sections.gdb
-
-MSP_SCENARIO3_GDB_STACK_COMMANDS_FILE=./../../../../scripts/cipher/stack/msp_scenario3_stack.gdb
-MSP_SCENARIO3_GDB_STACK_SECTIONS_COMMANDS_FILE=./../../../../scripts/cipher/stack/msp_scenario3_stack_sections.gdb
-
 ARM_CIPHER_GDB_STACK_COMMANDS_FILE=./../../../../scripts/cipher/stack/arm_cipher_stack.gdb
 ARM_CIPHER_GDB_STACK_SECTIONS_COMMANDS_FILE=./../../../../scripts/cipher/stack/arm_cipher_stack_sections.gdb
 
 ARM_SCENARIO1_GDB_STACK_COMMANDS_FILE=./../../../../scripts/cipher/stack/arm_scenario1_stack.gdb
 ARM_SCENARIO1_GDB_STACK_SECTIONS_COMMANDS_FILE=./../../../../scripts/cipher/stack/arm_scenario1_stack_sections.gdb
-
-ARM_SCENARIO2_GDB_STACK_COMMANDS_FILE=./../../../../scripts/cipher/stack/arm_scenario2_stack.gdb
-ARM_SCENARIO2_GDB_STACK_SECTIONS_COMMANDS_FILE=./../../../../scripts/cipher/stack/arm_scenario2_stack_sections.gdb
-
-ARM_SCENARIO3_GDB_STACK_COMMANDS_FILE=./../../../../scripts/cipher/stack/arm_scenario3_stack.gdb
-ARM_SCENARIO3_GDB_STACK_SECTIONS_COMMANDS_FILE=./../../../../scripts/cipher/stack/arm_scenario3_stack_sections.gdb
 
 
 GDB_STACK_LOG_FILE=gdb_stack.log
@@ -109,8 +83,6 @@ JLINK_GDB_SERVER_STACK_SECTIONS_LOG_FILE=jlink_gdb_server_stack_sections.log
 
 UPLOAD_CIPHER=upload-cipher
 UPLOAD_SCENARIO1=upload-scenario1
-UPLOAD_SCENARIO2=upload-scenario2
-UPLOAD_SCENARIO3=upload-scenario3
 
 MAKE_LOG_FILE=cipher_ram_make.log
 

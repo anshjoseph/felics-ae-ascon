@@ -33,8 +33,6 @@
 
 PC_CIPHER_FILE=./cipher.elf
 PC_SCENARIO1_FILE=./scenario1.elf
-PC_SCENARIO2_FILE=./scenario2.elf
-PC_SCENARIO3_FILE=./scenario3.elf
 
 PC_OUTPUT_FILE=pc_execution_time.log
 
@@ -46,19 +44,11 @@ MSP_CIPHER_MSPDEBUG_EXECUTION_TIME_SECTIONS_COMMANDS_FILE=./../../../../scripts/
 MSP_SCENARIO1_MSPDEBUG_EXECUTION_TIME_COMMANDS_FILE=./../../../../scripts/cipher/execution_time/msp_scenario1_execution_time.cmd
 MSP_SCENARIO1_MSPDEBUG_EXECUTION_TIME_SECTIONS_COMMANDS_FILE=./../../../../scripts/cipher/execution_time/msp_scenario1_execution_time_sections.cmd
 
-MSP_SCENARIO2_MSPDEBUG_EXECUTION_TIME_COMMANDS_FILE=./../../../../scripts/cipher/execution_time/msp_scenario2_execution_time.cmd
-MSP_SCENARIO2_MSPDEBUG_EXECUTION_TIME_SECTIONS_COMMANDS_FILE=./../../../../scripts/cipher/execution_time/msp_scenario2_execution_time_sections.cmd
-
-MSP_SCENARIO3_MSPDEBUG_EXECUTION_TIME_COMMANDS_FILE=./../../../../scripts/cipher/execution_time/msp_scenario3_execution_time.cmd
-MSP_SCENARIO3_MSPDEBUG_EXECUTION_TIME_SECTIONS_COMMANDS_FILE=./../../../../scripts/cipher/execution_time/msp_scenario3_execution_time_sections.cmd
-
 MSPDEBUG_EXECUTION_TIME_LOG_FILE=mspdebug_execution_time.log
 MSPDEBUG_EXECUTION_TIME_SECTIONS_LOG_FILE=mspdebug_execution_time_sections.log
 
 UPLOAD_CIPHER=upload-cipher
 UPLOAD_SCENARIO1=upload-scenario1
-UPLOAD_SCENARIO2=upload-scenario2
-UPLOAD_SCENARIO3=upload-scenario3
 
 MAKE_LOG_FILE=cipher_execution_time_make.log
 
