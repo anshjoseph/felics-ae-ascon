@@ -228,7 +228,7 @@ do
 			cipher_directory_name=$(basename -- "$(dirname -- "$(pwd)")")
 
 			cipher_name=$(echo $cipher_directory_name | cut -d $DIRECTORY_NAME_SEPARATOR -f 1)
-			cipher_implementation_version=$(echo $cipher_directory_name | cut -d $DIRECTORY_NAME_SEPARATOR -f 3)
+			cipher_implementation_version=$(echo $cipher_directory_name | cut -d $DIRECTORY_NAME_SEPARATOR -f 2)
 			cipher_implementation_version=${cipher_implementation_version:1:${#cipher_implementation_version}-1}
 
 			if [ $EXAMPLE_CIPHER_NAME == $cipher_name ] ; then
