@@ -27,8 +27,8 @@
 #
 # Call this makefile from a cipher source directory or build directory to build 
 #	... the given cipher:
-#	make -f ./../../../common/cipher.mk [ARCHITECTURE=[AVR|MSP|ARM|PC]]
-#		[DEBUG=[0|1|3|7]] [MEASURE_CYCLE_COUNT=[0|1]] 
+#	make -f ./../../../common/cipher.mk [ARCHITECTURE=[AVR|MSP|ARM|PC]]
+#		[DEBUG=[0|1|3|7]] [MEASURE_CYCLE_COUNT=[0|1]]
 #		[COMPILER_OPTIONS='...'] [all|clean|cleanall|help]
 #
 # 	Examples: 
