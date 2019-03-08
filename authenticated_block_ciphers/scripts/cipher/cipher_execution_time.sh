@@ -28,7 +28,7 @@
 
 #
 # Call this script to extract the cipher execution time
-# 	./cipher_execution_time.sh [{-h|--help}] [--version] [{-m|--mode}=[0|1]] [{-s|--scenario}=[0|1|2]] [{-a|--architecture}=[PC|AVR|MSP|ARM]] [{-t|--target}=[...]] [{-o|--output}=[...]] [{-b|build}=[0|1]] [{-co|--compiler_options}='...']
+# 	./cipher_execution_time.sh [{-h|--help}] [--version] [{-m|--mode}=[0|1]] [{-a|--architecture}=[PC|AVR|MSP|ARM]] [{-t|--target}=[...]] [{-o|--output}=[...]] [{-b|build}=[0|1]] [{-co|--compiler_options}='...']
 #
 #	To call from a cipher build folder use:
 #		./../../../../scripts/cipher/cipher_execution_time.sh [options]
@@ -42,12 +42,6 @@
 #			Specifies which output mode to use
 #				0 - raw table for given cipher
 #				1 - raw data for given cipher
-#				Default: 0
-#		-s, --scenario
-#			Specifies which scenario is used
-#				0 - cipher scenario
-#				1 - scenario 1
-#				2 - scenario 2
 #				Default: 0
 #		-a, --architecture
 #			Specifies which architecture is used
@@ -102,7 +96,7 @@ source $script_path/../common/version.sh
 
 # Default values
 SCRIPT_MODE=$SCRIPT_MODE_0
-SCRIPT_SCENARIO=$SCRIPT_SCENARIO_0
+SCRIPT_SCENARIO=$SCRIPT_SCENARIO_1
 SCRIPT_ARCHITECTURE=$SCRIPT_ARCHITECTURE_PC
 SCRIPT_TARGET=$DEFAULT_SCRIPT_TARGET
 SCRIPT_OUTPUT=$DEFAULT_SCRIPT_OUTPUT
@@ -124,10 +118,6 @@ do
 			;;
 		-m=*|--mode=*)
 			SCRIPT_MODE="${i#*=}"
-			shift
-			;;
-		-s=*|--scenario=*)
-			SCRIPT_SCENARIO="${i#*=}"
 			shift
 			;;
 		-a=*|--architecture=*)
@@ -163,7 +153,6 @@ done
 
 echo "Script settings:"
 echo -e "\t SCRIPT_MODE \t\t\t = $SCRIPT_MODE"
-echo -e "\t SCRIPT_SCENARIO \t\t = $SCRIPT_SCENARIO"
 echo -e "\t SCRIPT_ARCHITECTURE \t\t = $SCRIPT_ARCHITECTURE"
 echo -e "\t SCRIPT_TARGET \t\t\t = $SCRIPT_TARGET"
 echo -e "\t SCRIPT_OUTPUT \t\t\t = $SCRIPT_OUTPUT"
@@ -173,7 +162,6 @@ echo -e "\t SCRIPT_COMPILER_OPTIONS \t = $SCRIPT_COMPILER_OPTIONS"
 
 # Validate inputs
 validate_mode $SCRIPT_MODE
-validate_scenario $SCRIPT_SCENARIO
 validate_architecture $SCRIPT_ARCHITECTURE
 
 
@@ -358,19 +346,7 @@ cipher_name=$(basename -- "$(dirname -- "$(pwd)")")
 
 
 # Set the searched file pattern
-case $SCRIPT_SCENARIO in
-	$SCRIPT_SCENARIO_0)
-		file=$CIPHER_FILE$ELF_FILE_EXTENSION
-		;;
-
-	$SCRIPT_SCENARIO_1)
-		file=$SCENARIO1_FILE$ELF_FILE_EXTENSION
-		;;
-
-	$SCRIPT_SCENARIO_2)
-		file=$SCENARIO2_FILE$ELF_FILE_EXTENSION
-		;;
-esac
+file=$SCENARIO1_FILE$ELF_FILE_EXTENSION
 
 
 # Get the number of files matching the pattern
@@ -396,48 +372,14 @@ case $SCRIPT_ARCHITECTURE in
 		make_log_file=$SCRIPT_ARCHITECTURE$SCENARIO_NAME_PART$SCRIPT_SCENARIO$FILE_NAME_SEPARATOR$MAKE_LOG_FILE
 		pc_output_file=$SCRIPT_ARCHITECTURE$SCENARIO_NAME_PART$SCRIPT_SCENARIO$FILE_NAME_SEPARATOR$PC_OUTPUT_FILE
 
-		case $SCRIPT_SCENARIO in
-			$SCRIPT_SCENARIO_0)
-				simulate $PC_CIPHER_FILE $pc_output_file $make_log_file
-	
-				if [ -f $pc_output_file ] ; then
-					eks_execution_time=$(compute_execution_time $pc_output_file 'EncryptionKeySheduleCycleCount')
-					e_execution_time=$(compute_execution_time $pc_output_file 'EncryptCycleCount')
-					dks_execution_time=$(compute_execution_time $pc_output_file 'DecryptionKeyScheduleCycleCount')
-					d_execution_time=$(compute_execution_time $pc_output_file 'DecryptCycleCount')
-				fi
-				;;
-			$SCRIPT_SCENARIO_1)
-				simulate $PC_SCENARIO1_FILE $pc_output_file $make_log_file
+		simulate $PC_SCENARIO1_FILE $pc_output_file $make_log_file
 
-				if [ -f $pc_output_file ] ; then
-					eks_execution_time=$(compute_execution_time $pc_output_file 'EncryptionKeySheduleCycleCount')
-					e_execution_time=$(compute_execution_time $pc_output_file 'EncryptCycleCount')
-					dks_execution_time=$(compute_execution_time $pc_output_file 'DecryptionKeyScheduleCycleCount')
-					d_execution_time=$(compute_execution_time $pc_output_file 'DecryptCycleCount')
-				fi
-				;;
-			$SCRIPT_SCENARIO_2)
-				#simulate $PC_SCENARIO2_FILE $pc_output_file $make_log_file
-
-				if [ -f $pc_output_file ] ; then
-					eks_execution_time=$(compute_execution_time $pc_output_file 'EncryptionKeySheduleCycleCount')
-					e_execution_time=$(compute_execution_time $pc_output_file 'EncryptCycleCount')
-					dks_execution_time=$(compute_execution_time $pc_output_file 'DecryptionKeyScheduleCycleCount')
-					d_execution_time=$(compute_execution_time $pc_output_file 'DecryptCycleCount')
-				fi
-				;;
-			$SCRIPT_SCENARIO_3)
-				simulate $PC_SCENARIO3_FILE $pc_output_file $make_log_file
-
-				if [ -f $pc_output_file ] ; then
-					eks_execution_time=$(compute_execution_time $pc_output_file 'EncryptionKeySheduleCycleCount')
-					e_execution_time=$(compute_execution_time $pc_output_file 'EncryptCycleCount')
-					dks_execution_time=$(compute_execution_time $pc_output_file 'DecryptionKeyScheduleCycleCount')
-					d_execution_time=$(compute_execution_time $pc_output_file 'DecryptCycleCount')
-				fi
-				;;
-		esac
+		if [ -f $pc_output_file ] ; then
+			eks_execution_time=$(compute_execution_time $pc_output_file 'EncryptionKeySheduleCycleCount')
+			e_execution_time=$(compute_execution_time $pc_output_file 'EncryptCycleCount')
+			dks_execution_time=$(compute_execution_time $pc_output_file 'DecryptionKeyScheduleCycleCount')
+			d_execution_time=$(compute_execution_time $pc_output_file 'DecryptCycleCount')
+		fi
 
 		if [ $FALSE -eq $KEEP_GENERATED_FILES ] ; then
 			# Remove log files
@@ -445,53 +387,19 @@ case $SCRIPT_ARCHITECTURE in
 			rm -f $pc_output_file
 		fi
 		;;
-		
+
 	$SCRIPT_ARCHITECTURE_AVR)
 
 		avr_execution_time_log_file=$SCRIPT_ARCHITECTURE$SCENARIO_NAME_PART$SCRIPT_SCENARIO$FILE_NAME_SEPARATOR$AVR_EXECUTION_TIME_LOG_FILE		
 
-		case $SCRIPT_SCENARIO in
-			$SCRIPT_SCENARIO_0)
-				simulate $file $avr_execution_time_log_file
+		simulate $file $avr_execution_time_log_file
 
-				if [ -f $avr_execution_time_log_file ] ; then
-					eks_execution_time=$(compute_execution_time $avr_execution_time_log_file 'RunEncryptionKeySchedule' 'EndEncryptionKeySchedule')
-					e_execution_time=$(compute_execution_time $avr_execution_time_log_file 'Encrypt' 'EndEncryption')
-					dks_execution_time=$(compute_execution_time $avr_execution_time_log_file 'RunDecryptionKeySchedule' 'EndDecryptionKeySchedule')
-					d_execution_time=$(compute_execution_time $avr_execution_time_log_file 'Decrypt' 'EndDecryption')
-				fi
-				;;
-			$SCRIPT_SCENARIO_1)
-				simulate $file $avr_execution_time_log_file
-
-				if [ -f $avr_execution_time_log_file ] ; then
-					eks_execution_time=$(compute_execution_time $avr_execution_time_log_file 'RunEncryptionKeySchedule' 'EndEncryptionKeySchedule')
-					e_execution_time=$(compute_execution_time $avr_execution_time_log_file 'Encrypt' 'EndEncryption')
-					dks_execution_time=$(compute_execution_time $avr_execution_time_log_file 'RunDecryptionKeySchedule' 'EndDecryptionKeySchedule')
-					d_execution_time=$(compute_execution_time $avr_execution_time_log_file 'Decrypt' 'EndDecryption')
-				fi
-				;;
-			$SCRIPT_SCENARIO_2)
-				simulate $file $avr_execution_time_log_file
-
-				if [ -f $avr_execution_time_log_file ] ; then
-					eks_execution_time=$(compute_execution_time $avr_execution_time_log_file 'RunEncryptionKeySchedule' 'EndEncryptionKeySchedule')
-					e_execution_time=$(compute_execution_time $avr_execution_time_log_file 'Encrypt' 'EndEncryption')
-					dks_execution_time=$(compute_execution_time $avr_execution_time_log_file 'RunDecryptionKeySchedule' 'EndDecryptionKeySchedule')
-					d_execution_time=$(compute_execution_time $avr_execution_time_log_file 'Decrypt' 'EndDecryption')
-				fi
-				;;
-			$SCRIPT_SCENARIO_3)
-				simulate $file $avr_execution_time_log_file
-
-				if [ -f $avr_execution_time_log_file ] ; then
-					eks_execution_time=$(compute_execution_time $avr_execution_time_log_file 'RunEncryptionKeySchedule' 'EndEncryptionKeySchedule')
-					e_execution_time=$(compute_execution_time $avr_execution_time_log_file 'Encrypt' 'EndEncryption')
-					dks_execution_time=$(compute_execution_time $avr_execution_time_log_file 'RunDecryptionKeySchedule' 'EndDecryptionKeySchedule')
-					d_execution_time=$(compute_execution_time $avr_execution_time_log_file 'Decrypt' 'EndDecryption')
-				fi
-				;;
-		esac
+		if [ -f $avr_execution_time_log_file ] ; then
+			eks_execution_time=$(compute_execution_time $avr_execution_time_log_file 'RunEncryptionKeySchedule' 'EndEncryptionKeySchedule')
+			e_execution_time=$(compute_execution_time $avr_execution_time_log_file 'Encrypt' 'EndEncryption')
+			dks_execution_time=$(compute_execution_time $avr_execution_time_log_file 'RunDecryptionKeySchedule' 'EndDecryptionKeySchedule')
+			d_execution_time=$(compute_execution_time $avr_execution_time_log_file 'Decrypt' 'EndDecryption')
+		fi
 	
 		if [ -f $avr_execution_time_log_file ] ; then
 			total_execution_time=$(compute_execution_time $avr_execution_time_log_file 'main')
@@ -508,52 +416,15 @@ case $SCRIPT_ARCHITECTURE in
 		mspdebug_execution_time_log_file=$SCRIPT_ARCHITECTURE$SCENARIO_NAME_PART$SCRIPT_SCENARIO$FILE_NAME_SEPARATOR$MSPDEBUG_EXECUTION_TIME_LOG_FILE
 		mspdebug_execution_time_sections_log_file=$SCRIPT_ARCHITECTURE$SCENARIO_NAME_PART$SCRIPT_SCENARIO$FILE_NAME_SEPARATOR$MSPDEBUG_EXECUTION_TIME_SECTIONS_LOG_FILE
 
-		case $SCRIPT_SCENARIO in
-			$SCRIPT_SCENARIO_0)
-				simulate $MSP_CIPHER_MSPDEBUG_EXECUTION_TIME_COMMANDS_FILE $mspdebug_execution_time_log_file
-				simulate $MSP_CIPHER_MSPDEBUG_EXECUTION_TIME_SECTIONS_COMMANDS_FILE $mspdebug_execution_time_sections_log_file
+		simulate $MSP_SCENARIO1_MSPDEBUG_EXECUTION_TIME_COMMANDS_FILE $mspdebug_execution_time_log_file
+		simulate $MSP_SCENARIO1_MSPDEBUG_EXECUTION_TIME_SECTIONS_COMMANDS_FILE $mspdebug_execution_time_sections_log_file
 
-				if [ -f $mspdebug_execution_time_log_file ] ; then
-					eks_execution_time=$(compute_execution_time $mspdebug_execution_time_sections_log_file 1)
-					e_execution_time=$(compute_execution_time $mspdebug_execution_time_sections_log_file 3)
-					dks_execution_time=$(compute_execution_time $mspdebug_execution_time_sections_log_file 5)
-					d_execution_time=$(compute_execution_time $mspdebug_execution_time_sections_log_file 7)
-				fi
-				;;
-			$SCRIPT_SCENARIO_1)
-				simulate $MSP_SCENARIO1_MSPDEBUG_EXECUTION_TIME_COMMANDS_FILE $mspdebug_execution_time_log_file
-				simulate $MSP_SCENARIO1_MSPDEBUG_EXECUTION_TIME_SECTIONS_COMMANDS_FILE $mspdebug_execution_time_sections_log_file
-
-				if [ -f $mspdebug_execution_time_log_file ] ; then
-					eks_execution_time=$(compute_execution_time $mspdebug_execution_time_sections_log_file 1)
-					e_execution_time=$(compute_execution_time $mspdebug_execution_time_sections_log_file 3)
-					dks_execution_time=$(compute_execution_time $mspdebug_execution_time_sections_log_file 5)
-					d_execution_time=$(compute_execution_time $mspdebug_execution_time_sections_log_file 7)
-				fi
-				;;
-			$SCRIPT_SCENARIO_2)
-				simulate $MSP_SCENARIO2_MSPDEBUG_EXECUTION_TIME_COMMANDS_FILE $mspdebug_execution_time_log_file
-				simulate $MSP_SCENARIO2_MSPDEBUG_EXECUTION_TIME_SECTIONS_COMMANDS_FILE $mspdebug_execution_time_sections_log_file
-
-				if [ -f $mspdebug_execution_time_log_file ] ; then
-					eks_execution_time=$(compute_execution_time $mspdebug_execution_time_sections_log_file 1)
-					e_execution_time=$(compute_execution_time $mspdebug_execution_time_sections_log_file 3)
-					dks_execution_time=$(compute_execution_time $mspdebug_execution_time_sections_log_file 5)
-					d_execution_time=$(compute_execution_time $mspdebug_execution_time_sections_log_file 7)
-				fi
-				;;
-			$SCRIPT_SCENARIO_3)
-				simulate $MSP_SCENARIO3_MSPDEBUG_EXECUTION_TIME_COMMANDS_FILE $mspdebug_execution_time_log_file
-				simulate $MSP_SCENARIO3_MSPDEBUG_EXECUTION_TIME_SECTIONS_COMMANDS_FILE $mspdebug_execution_time_sections_log_file
-
-				if [ -f $mspdebug_execution_time_log_file ] ; then
-					eks_execution_time=$(compute_execution_time $mspdebug_execution_time_sections_log_file 1)
-					e_execution_time=$(compute_execution_time $mspdebug_execution_time_sections_log_file 3)
-					dks_execution_time=$(compute_execution_time $mspdebug_execution_time_sections_log_file 5)
-					d_execution_time=$(compute_execution_time $mspdebug_execution_time_sections_log_file 7)
-				fi
-				;;
-		esac
+		if [ -f $mspdebug_execution_time_log_file ] ; then
+			eks_execution_time=$(compute_execution_time $mspdebug_execution_time_sections_log_file 1)
+			e_execution_time=$(compute_execution_time $mspdebug_execution_time_sections_log_file 3)
+			dks_execution_time=$(compute_execution_time $mspdebug_execution_time_sections_log_file 5)
+			d_execution_time=$(compute_execution_time $mspdebug_execution_time_sections_log_file 7)
+		fi
 
 		if [ -f $mspdebug_execution_time_log_file ] ; then
 			total_execution_time=$(compute_execution_time $mspdebug_execution_time_log_file 1)
@@ -571,48 +442,14 @@ case $SCRIPT_ARCHITECTURE in
 		make_log_file=$SCRIPT_ARCHITECTURE$SCENARIO_NAME_PART$SCRIPT_SCENARIO$FILE_NAME_SEPARATOR$MAKE_LOG_FILE
 		arm_serial_terminal_output_file=$SCRIPT_ARCHITECTURE$SCENARIO_NAME_PART$SCRIPT_SCENARIO$FILE_NAME_SEPARATOR$ARM_SERIAL_TERMINAL_OUTPUT_FILE
 
-		case $SCRIPT_SCENARIO in
-			$SCRIPT_SCENARIO_0)
-				simulate $file $arm_serial_terminal_output_file $make_log_file $UPLOAD_CIPHER
-			
-				if [ -f $arm_serial_terminal_output_file ] ; then
-					eks_execution_time=$(compute_execution_time $arm_serial_terminal_output_file 'EncryptionKeySheduleCycleCount')
-					e_execution_time=$(compute_execution_time $arm_serial_terminal_output_file 'EncryptCycleCount')
-					dks_execution_time=$(compute_execution_time $arm_serial_terminal_output_file 'DecryptionKeyScheduleCycleCount')
-					d_execution_time=$(compute_execution_time $arm_serial_terminal_output_file 'DecryptCycleCount')
-				fi
-				;;
-			$SCRIPT_SCENARIO_1)
-				simulate $file $arm_serial_terminal_output_file $make_log_file $UPLOAD_SCENARIO1
+		simulate $file $arm_serial_terminal_output_file $make_log_file $UPLOAD_SCENARIO1
 
-				if [ -f $arm_serial_terminal_output_file ] ; then
-					eks_execution_time=$(compute_execution_time $arm_serial_terminal_output_file 'EncryptionKeySheduleCycleCount')
-					e_execution_time=$(compute_execution_time $arm_serial_terminal_output_file 'EncryptCycleCount')
-					dks_execution_time=$(compute_execution_time $arm_serial_terminal_output_file 'DecryptionKeyScheduleCycleCount')
-					d_execution_time=$(compute_execution_time $arm_serial_terminal_output_file 'DecryptCycleCount')
-				fi
-				;;
-			$SCRIPT_SCENARIO_2)
-				simulate $file $arm_serial_terminal_output_file $make_log_file $UPLOAD_SCENARIO2
-
-				if [ -f $arm_serial_terminal_output_file ] ; then
-					eks_execution_time=$(compute_execution_time $arm_serial_terminal_output_file 'EncryptionKeySheduleCycleCount')
-					e_execution_time=$(compute_execution_time $arm_serial_terminal_output_file 'EncryptCycleCount')
-					dks_execution_time=$(compute_execution_time $arm_serial_terminal_output_file 'DecryptionKeyScheduleCycleCount')
-					d_execution_time=$(compute_execution_time $arm_serial_terminal_output_file 'DecryptCycleCount')
-				fi
-				;;
-			$SCRIPT_SCENARIO_3)
-				simulate $file $arm_serial_terminal_output_file $make_log_file $UPLOAD_SCENARIO3
-
-				if [ -f $arm_serial_terminal_output_file ] ; then
-					eks_execution_time=$(compute_execution_time $arm_serial_terminal_output_file 'EncryptionKeySheduleCycleCount')
-					e_execution_time=$(compute_execution_time $arm_serial_terminal_output_file 'EncryptCycleCount')
-					dks_execution_time=$(compute_execution_time $arm_serial_terminal_output_file 'DecryptionKeyScheduleCycleCount')
-					d_execution_time=$(compute_execution_time $arm_serial_terminal_output_file 'DecryptCycleCount')
-				fi
-				;;
-		esac
+		if [ -f $arm_serial_terminal_output_file ] ; then
+			eks_execution_time=$(compute_execution_time $arm_serial_terminal_output_file 'EncryptionKeySheduleCycleCount')
+			e_execution_time=$(compute_execution_time $arm_serial_terminal_output_file 'EncryptCycleCount')
+			dks_execution_time=$(compute_execution_time $arm_serial_terminal_output_file 'DecryptionKeyScheduleCycleCount')
+			d_execution_time=$(compute_execution_time $arm_serial_terminal_output_file 'DecryptCycleCount')
+		fi
 		
 		if [ $FALSE -eq $KEEP_GENERATED_FILES ] ; then
 			# Remove log files
@@ -672,7 +509,7 @@ if [ $SCRIPT_MODE_0 -eq $SCRIPT_MODE ] ; then
 	# Table header
 	printf "%0.s-" $(seq 1 $TABLE_HORIZONTAL_LINE_LENGTH) >> $SCRIPT_OUTPUT
 	printf "\n" >> $SCRIPT_OUTPUT
-	printf "| %10s | %10s | %10s | %10s | %10s |\n" "Scenario" "Enc. K.S." "Enc." "Dec. K.S." "Dec." >> $SCRIPT_OUTPUT
+	printf "| %10s | %10s | %10s | %10s |\n" "Enc. K.S." "Enc." "Dec. K.S." "Dec." >> $SCRIPT_OUTPUT
 	printf "%0.s-" $(seq 1 $TABLE_HORIZONTAL_LINE_LENGTH) >> $SCRIPT_OUTPUT
 	printf "\n" >> $SCRIPT_OUTPUT
 
@@ -683,24 +520,7 @@ if [ $SCRIPT_MODE_0 -eq $SCRIPT_MODE ] ; then
 	printf "%0.s-" $(seq 1 $TABLE_HORIZONTAL_LINE_LENGTH) >> $SCRIPT_OUTPUT
 	printf "\n" >> $SCRIPT_OUTPUT
 else
-	case $SCRIPT_SCENARIO in
-		$SCRIPT_SCENARIO_0)
-			# Display results
-			printf "%s %s %s %s" $eks_execution_time $e_execution_time $dks_execution_time $d_execution_time > $SCRIPT_OUTPUT
-			;;
-		$SCRIPT_SCENARIO_1)
-			# Display results
-			printf "%s %s %s %s" $eks_execution_time $e_execution_time $dks_execution_time $d_execution_time > $SCRIPT_OUTPUT
-			;;
-		$SCRIPT_SCENARIO_2)
-			# Display results
-			printf "%s %s %s %s" $eks_execution_time $e_execution_time $dks_execution_time $d_execution_time > $SCRIPT_OUTPUT
-			;;
-		$SCRIPT_SCENARIO_3)
-			# Display results
-			printf "%s %s %s %s" $eks_execution_time $e_execution_time $dks_execution_time $d_execution_time > $SCRIPT_OUTPUT
-			;;
-	esac
+	printf "%s %s %s %s" $eks_execution_time $e_execution_time $dks_execution_time $d_execution_time > $SCRIPT_OUTPUT
 fi
 
 
