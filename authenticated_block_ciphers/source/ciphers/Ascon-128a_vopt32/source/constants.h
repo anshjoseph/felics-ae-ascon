@@ -40,8 +40,8 @@
 #define CRYPTO_ABYTES 16
 
 
-extern ROM_DATA_DOUBLE_WORD R_O[5][2];
-extern ROM_DATA_DOUBLE_WORD R_E[5][2];
+extern ROM_DATA_BYTE R_O[5][2];
+extern ROM_DATA_BYTE R_E[5][2];
 
 
 #endif /* CONSTANTS_H */
