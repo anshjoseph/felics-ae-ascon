@@ -30,18 +30,14 @@
 #
 ################################################################################
 
-AR = /opt/paclido/msp430-gcc/bin/msp430-elf-ar
-CC = /opt/paclido/msp430-gcc/bin/msp430-elf-gcc -I/opt/paclido/msp430-gcc/support-files/include/
+MSPGCC_DIR = /opt/paclido/msp430-gcc
+MSPGCC_BIN_DIR = $(MSPGCC_DIR)/bin
+MSPGCC_SUPPORT_DIR = $(MSPGCC_DIR)/support-files/include/
+AR = $(MSPGCC_BIN_DIR)/msp430-elf-ar
+CC = $(MSPGCC_BIN_DIR)/msp430-elf-gcc -I$(MSPGCC_SUPPORT_DIR)
 
-%.o : %.c
+%.o: %.c
 	$(CC) -c -mmcu=msp430f1611 -g -O3  -o $@ $<
-
-#printf.o : ./src/printf.c
-#
-#putchar.o : ./src/putchar.c
-#	/opt/paclido/msp430-gcc/bin/msp430-elf-gcc -c -mmcu=msp430f1611 -g -O3  -o $@ $<
-#libprintf.a : printf.o
-#	/opt/paclido/msp430-gcc/bin/msp430-elf-ar -rs $@ $<
 
 vpath %.c ./src
 

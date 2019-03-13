@@ -44,6 +44,7 @@ CFLAGS := \
 	-g \
 	-fdata-sections \
 	-ffunction-sections \
+	-fno-builtin-printf \
 	-Wcast-align \
 	-Wsign-compare \
 	-Waggregate-return \
@@ -61,6 +62,6 @@ OBJCOPY := $(MSPGCC_BIN_DIR)/msp430-elf-objcopy
 # -lprintf is in LDLIBS and not LDFLAGS because we want it to appear on the 
 # ... command line after the object files (i.e. our printf function must be used
 # ... instead of the libc printf function)
-LDLIBS := -L$(PRINTF_DIR) -lprintf -L$(MSPGCC_SUPPORT_DIR) -Wl,-L$(MSPGCC_SUPPORT_DIR)
+LDLIBS := -L$(PRINTF_DIR) -lprintf -L$(MSPGCC_SUPPORT_DIR)
 
 LDFLAGS := $(CFLAGS)

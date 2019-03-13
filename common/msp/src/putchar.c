@@ -36,7 +36,6 @@
 
 int putchar(int c)
 {
-	
 	U1TXBUF = c;
 	return c;
 }

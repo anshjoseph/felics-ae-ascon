@@ -9,7 +9,7 @@
 
 #include <msp430.h>
 
-extern int putchar(int c) __attribute__((weak));
+extern int putchar(int c);
 
 #undef __MSP430LIBC_PRINTF_INT32__
 #undef __MSP430LIBC_PRINTF_INT64__

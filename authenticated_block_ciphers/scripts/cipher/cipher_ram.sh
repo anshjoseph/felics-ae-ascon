@@ -179,7 +179,7 @@ fi
 # 	$5 - the make log file
 function simulate()
 {
-    echo "SIMULATING"
+	echo "SIMULATING"
 
 	local command_file=$1
 	local target_file=$2
@@ -195,15 +195,13 @@ function simulate()
 		$SCRIPT_ARCHITECTURE_AVR)
 			$SIMAVR_SIMULATOR -g -m atmega128 $target_file &> $simulator_output_file &
 			$AVR_GDB -x $command_file &> $gdb_output_file
-			
-            jobs -l %'$SIMAVR_SIMULATOR'
-            kill -PIPE %'$SIMAVR_SIMULATOR'
+
+			jobs -l %'$SIMAVR_SIMULATOR'
+			kill -PIPE %'$SIMAVR_SIMULATOR'
 			;;
 		$SCRIPT_ARCHITECTURE_MSP)
-            echo "SIMULATING MSP"
 			$MSPDEBUG_SIMULATOR -n sim "prog $target_file" gdb &> $simulator_output_file &
 			$MSP_GDB -x $command_file &> $gdb_output_file
-            echo "SIMULATED MSP"
 			;;
 		$SCRIPT_ARCHITECTURE_ARM)
 			# Upload the program to the board
@@ -214,7 +212,7 @@ function simulate()
 
 			jlink_gdb_server_pid=$(ps aux | grep "JLinkGDBServer" | grep -v "grep" | tr -s ' ' | cut -d ' ' -f 2)
 			for pid in $jlink_gdb_server_pid
-			do	
+			do
 				kill -PIPE $pid
 			done
 			;;
