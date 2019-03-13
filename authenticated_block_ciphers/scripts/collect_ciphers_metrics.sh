@@ -247,8 +247,8 @@ do
 
 				compiler_option_name=${compiler_option// /_}
 
-				check_cipher_output_file=$architecture$SCENARIO_NAME_PART$scenario$COMPILER_OPTIONS_NAME_PART$compiler_option_name$FILE_NAME_SEPARATOR$CHECK_CIPHER_OUTPUT_FILE
-				check_cipher_error_file=$architecture$SCENARIO_NAME_PART$scenario$COMPILER_OPTIONS_NAME_PART$compiler_option_name$FILE_NAME_SEPARATOR$CHECK_CIPHER_ERROR_FILE
+				check_cipher_output_file=$architecture$COMPILER_OPTIONS_NAME_PART$compiler_option_name$FILE_NAME_SEPARATOR$CHECK_CIPHER_OUTPUT_FILE
+				check_cipher_error_file=$architecture$COMPILER_OPTIONS_NAME_PART$compiler_option_name$FILE_NAME_SEPARATOR$CHECK_CIPHER_ERROR_FILE
 
 				# Remove log file
 				rm -f $check_cipher_output_file
@@ -257,7 +257,7 @@ do
 				echo "" > $check_cipher_error_file
 
 				# Check cipher
-				timeout $CHECK_CIPHER_TIMEOUT ./../../../../scripts/cipher/check_cipher.sh -s=$scenario -a=$architecture -c=$cipher_directory_name "-co=$compiler_option" -m=$CIPHER_SCRIPT_MODE -o=$check_cipher_output_file 2> $check_cipher_error_file
+				timeout $CHECK_CIPHER_TIMEOUT ./../../../../scripts/cipher/check_cipher.sh -a=$architecture -c=$cipher_directory_name "-co=$compiler_option" -m=$CIPHER_SCRIPT_MODE -o=$check_cipher_output_file 2> $check_cipher_error_file
 				if [ ! -f $check_cipher_output_file ] ; then
 					echo "missing output file $check_cipher_output_file"
 					exit 1

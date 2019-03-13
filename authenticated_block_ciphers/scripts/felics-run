@@ -85,13 +85,6 @@ def _cpu_performance():
         _cpufreq_set(cpu, 'powersave')
 
 
-def _check_ciphers(cipher_spec):
-    for cipher in _expand_ciphers(cipher_spec):
-        with changedir(path.join(_CIPHERS_DIR, cipher, 'source')):
-            for target in 'cleanall', 'cipher', 'test-cipher':
-                run(('make', target), check=True)
-
-
 def _run_felics(ciphers, architectures, compiler_options, output):
     command = (
         path.join(_SCRIPTS_DIR, 'collect_ciphers_metrics.sh'),
@@ -115,6 +108,5 @@ def _show_results(output):
 if __name__ == '__main__':
     args = _parse_arguments()
 
-    _check_ciphers(args.ciphers)
     _run_felics(args.ciphers, args.architectures, args.options, args.output)
     _show_results(args.output)

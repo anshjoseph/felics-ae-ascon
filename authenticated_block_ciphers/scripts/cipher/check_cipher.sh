@@ -28,7 +28,7 @@
 
 #
 # Call this script to check if the cipher implementation is compliant with the framework
-# 	./check_cipher.sh [{-h|--help}] [--version] [{-m|--mode}=[0|1]] [{-s|--scenario}=[0|1|2]] [{-a|--architecture}=[PC|AVR|MSP|ARM]] [{-t|--target}=[...]] [{-o|--output}=[...]] [{-co|--compiler_options}='...']
+# 	./check_cipher.sh [{-h|--help}] [--version] [{-m|--mode}=[0|1]] [{-a|--architecture}=[PC|AVR|MSP|ARM]] [{-t|--target}=[...]] [{-o|--output}=[...]] [{-co|--compiler_options}='...']
 #
 #	To call from a cipher build folder use:
 #		./../../../../scripts/cipher/check_cipher.sh [options]
@@ -42,12 +42,6 @@
 #			Specifies which output mode to use
 #				0 - raw table for given cipher
 #				1 - raw data for given cipher
-#				Default: 0
-#		-s, --scenario
-#			Specifies which scenario is used
-#				0 - cipher scenario
-#				1 - scenario 1
-#				2 - scenario 2
 #				Default: 0
 #		-a, --architecture
 #			Specifies which architecture is used
@@ -97,7 +91,6 @@ source $script_path/../common/version.sh
 
 # Default values
 SCRIPT_MODE=$SCRIPT_MODE_0
-SCRIPT_SCENARIO=$SCRIPT_SCENARIO_0
 SCRIPT_ARCHITECTURE=$SCRIPT_ARCHITECTURE_PC
 SCRIPT_TARGET=$DEFAULT_SCRIPT_TARGET
 SCRIPT_OUTPUT=$DEFAULT_SCRIPT_OUTPUT
@@ -118,10 +111,6 @@ do
 			;;
 		-m=*|--mode=*)
 			SCRIPT_MODE="${i#*=}"
-			shift
-			;;
-		-s=*|--scenario=*)
-			SCRIPT_SCENARIO="${i#*=}"
 			shift
 			;;
 		-a=*|--architecture=*)
@@ -191,32 +180,14 @@ fail ()
 }
 
 
-# Assume that the cipher is compliant
-compliant=$TRUE
-
-# Clean
-make -f $CIPHER_MAKEFILE $MAKE_CLEAN_TARGET &> $MAKE_FILE_LOG
-if [ $SUCCESS_EXIT_CODE -ne $? ]; then
-    fail $MAKE_FILE_LOG
-fi
-
-# Build
-make -f $CIPHER_MAKEFILE ARCHITECTURE=$SCRIPT_ARCHITECTURE SCENARIO=$SCRIPT_SCENARIO COMPILER_OPTIONS="$SCRIPT_COMPILER_OPTIONS" &>> $MAKE_FILE_LOG
-if [ $SUCCESS_EXIT_CODE -ne $? ]; then
-    fail $MAKE_FILE_LOG
-fi
-
-
-# FIXME: does nothing when scenario != 0; remove conditional and scenario option
-if [ $TRUE == $compliant ] && [ $SCRIPT_SCENARIO_0 == $SCRIPT_SCENARIO ] ; then
 	# Clean
-	make -f $CIPHER_MAKEFILE $MAKE_CLEAN_TARGET &>> $MAKE_FILE_LOG
+	make -f $CIPHER_MAKEFILE $MAKE_CLEAN_TARGET &> $MAKE_FILE_LOG
 	if [ $SUCCESS_EXIT_CODE -ne $? ]; then
         fail $MAKE_FILE_LOG
 	fi
 
 	# Build
-	make -f $CIPHER_MAKEFILE ARCHITECTURE=$SCRIPT_ARCHITECTURE SCENARIO=$SCRIPT_SCENARIO COMPILER_OPTIONS="$SCRIPT_COMPILER_OPTIONS" DEBUG=7 &>> $MAKE_FILE_LOG
+	make -f $CIPHER_MAKEFILE ARCHITECTURE=$SCRIPT_ARCHITECTURE SCENARIO=0 COMPILER_OPTIONS="$SCRIPT_COMPILER_OPTIONS" DEBUG=7 &>> $MAKE_FILE_LOG
 	if [ $SUCCESS_EXIT_CODE -ne $? ]; then
         fail $MAKE_FILE_LOG
 	fi
@@ -287,23 +258,7 @@ if [ $TRUE == $compliant ] && [ $SCRIPT_SCENARIO_0 == $SCRIPT_SCENARIO ] ; then
 	else
 		fail <(echo "cannot find results file $RESULT_FILE")
 	fi
-fi
 
 
-if [ $SCRIPT_MODE_0 -eq $SCRIPT_MODE ] ; then
-	if [ $FALSE -eq $compliant ] ; then
-		echo "$(tput setaf 1)NOT OK!$(tput sgr 0)"
-	else
-		echo "$(tput setaf 2)OK!$(tput sgr 0)"
-	fi
-else
-	echo -n $compliant > $SCRIPT_OUTPUT
-fi
-
-
-# Change current working directory
-cd $current_directory
-if [ $SCRIPT_MODE_0 -ne $SCRIPT_MODE ] ; then
-	echo ""
-fi
+echo -n ${TRUE} > ${SCRIPT_OUTPUT}
 echo "End check cipher - $(pwd)"
