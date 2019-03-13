@@ -237,11 +237,6 @@ AVR_MCU(F_CPU, "atmega128");
 
 static int uart_putchar(char c, FILE *stream)
 {
-	if ('\n' == c)
-	{
-		uart_putchar('\r', stream);
-	}
-	
 	loop_until_bit_is_set(UCSR0A, UDRE0);
 	UDR0 = c;
 	
