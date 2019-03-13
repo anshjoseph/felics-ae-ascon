@@ -44,7 +44,7 @@ def _default_output_filename():
     repo = git.Repo(search_parent_directories=True)
     try:
         ref = repo.git.symbolic_ref('HEAD', short=True)
-    except git.exc.GitCommandError:
+    except git.GitCommandError:
         ref = repo.git.show(format='format:%h', no_patch=True)
 
     return '{date}-{ref}.json'.format(
