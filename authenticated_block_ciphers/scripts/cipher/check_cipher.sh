@@ -192,71 +192,57 @@ if [ $SUCCESS_EXIT_CODE -ne $? ]; then
     fail $MAKE_FILE_LOG
 fi
 
+if ! [ -f $CIPHER_ELF_FILE ] ; then
+    fail <(echo "couldn't find executable file '$(pwd)/$CIPHER_ELF_FILE'")
+fi
+
+# Run
 case $SCRIPT_ARCHITECTURE in
     $SCRIPT_ARCHITECTURE_PC)
-        # Run
-        if [ -f $CIPHER_ELF_FILE ] ; then
-            ./$CIPHER_ELF_FILE > $RESULT_FILE
-            if [ $SUCCESS_EXIT_CODE -ne $? ]; then
-                fail <(echo "Error! Run the executable to see the error: '$(pwd)/$CIPHER_ELF_FILE'")
-            fi
-        else
-            fail <(echo "couldn't find executable file '$(pwd)/$CIPHER_ELF_FILE'")
+        ./$CIPHER_ELF_FILE > $RESULT_FILE
+        if [ $SUCCESS_EXIT_CODE -ne $? ]; then
+            fail <(echo "Error! Run the executable to see the error: '$(pwd)/$CIPHER_ELF_FILE'")
         fi
         ;;
 
     $SCRIPT_ARCHITECTURE_AVR)
-        # Run
-        if [ -f $CIPHER_ELF_FILE ] ; then
-            $SIMAVR_SIMULATOR -m atmega128 $CIPHER_ELF_FILE &> $RESULT_FILE
-            if [ $SUCCESS_EXIT_CODE -ne $? ]; then
-                fail <(echo "Error! Run the executable to see the error: '$(pwd)/$CIPHER_ELF_FILE'")
-            fi
-        else
-            fail <(echo "couldn't find executable file '$(pwd)/$CIPHER_ELF_FILE'")
+        $SIMAVR_SIMULATOR -m atmega128 $CIPHER_ELF_FILE &> $RESULT_FILE
+        if [ $SUCCESS_EXIT_CODE -ne $? ]; then
+            fail <(echo "Error! Run the executable to see the error: '$(pwd)/$CIPHER_ELF_FILE'")
         fi
         ;;
 
     $SCRIPT_ARCHITECTURE_MSP)
-        # Run
-        if [ -f $CIPHER_ELF_FILE ] ; then
-            $MSPDEBUG_SIMULATOR -n sim < $MSPDEBUG_CHECK_CIPHER_COMMANDS_FILE &> $RESULT_FILE
-            if [ $SUCCESS_EXIT_CODE -ne $? ]; then
-                fail <(echo "Error! Run the executable to see the error: '$(pwd)/$CIPHER_ELF_FILE'")
-            fi
-        else
-            fail <(echo "couldn't find executable file '$(pwd)/$CIPHER_ELF_FILE'")
+        $MSPDEBUG_SIMULATOR -n sim < $MSPDEBUG_CHECK_CIPHER_COMMANDS_FILE &> $RESULT_FILE
+        if [ $SUCCESS_EXIT_CODE -ne $? ]; then
+            fail <(echo "Error! Run the executable to see the error: '$(pwd)/$CIPHER_ELF_FILE'")
         fi
         ;;
 
     $SCRIPT_ARCHITECTURE_ARM)
-        if [ -f $CIPHER_ELF_FILE ] ; then
-            # Upload the program to the board
-            make -f $CIPHER_MAKEFILE ARCHITECTURE=$SCRIPT_ARCHITECTURE upload-cipher &>> $MAKE_FILE_LOG
+        # Upload the program to the board
+        make -f $CIPHER_MAKEFILE ARCHITECTURE=$SCRIPT_ARCHITECTURE upload-cipher &>> $MAKE_FILE_LOG
 
-            # Run the program stored in the flash memory of the board
-            $ARM_SERIAL_TERMINAL > $RESULT_FILE
-        else
-            fail <(echo "couldn't find executable file '$(pwd)/$CIPHER_ELF_FILE'")
-        fi
+        # Run the program stored in the flash memory of the board
+        $ARM_SERIAL_TERMINAL > $RESULT_FILE
         ;;
 esac
 
 # Check run result
-if [ -f $RESULT_FILE ] ; then
-    correct_count=$(grep -c "$CORRECT" $RESULT_FILE)
-    wrong_count=$(grep -c "$WRONG" $RESULT_FILE)
-
-    if [ $EXPECTED_CORRECT_COUNT -ne $correct_count ] || [ $EXPECTED_WRONG_COUNT -ne $wrong_count ] ; then
-        fail <(echo "Error! Test vectors do not check!" ; echo "correct = $correct_count, wrong = $wrong_count")
-    else
-        if [ $FALSE -eq $KEEP_GENERATED_FILES ] ; then
-            rm -f $MAKE_FILE_LOG
-            rm -f $RESULT_FILE
-        fi
-    fi
-else
+if  ! [ -f $RESULT_FILE ] ; then
     fail <(echo "cannot find results file $RESULT_FILE")
+fi
+
+correct_count=$(grep -c "$CORRECT" $RESULT_FILE)
+wrong_count=$(grep -c "$WRONG" $RESULT_FILE)
+
+if [ $EXPECTED_CORRECT_COUNT -ne $correct_count ] || [ $EXPECTED_WRONG_COUNT -ne $wrong_count ] ; then
+    fail <(echo "Error! Test vectors do not check!" ; echo "correct = $correct_count, wrong = $wrong_count")
+fi
+
+if [ $FALSE -eq $KEEP_GENERATED_FILES ] ; then
+    rm -f $MAKE_FILE_LOG
+    rm -f $RESULT_FILE
 fi
 
 
