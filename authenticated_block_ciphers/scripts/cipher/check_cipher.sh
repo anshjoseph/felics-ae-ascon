@@ -28,44 +28,44 @@
 
 #
 # Call this script to check if the cipher implementation is compliant with the framework
-# 	./check_cipher.sh [{-h|--help}] [--version] [{-m|--mode}=[0|1]] [{-a|--architecture}=[PC|AVR|MSP|ARM]] [{-t|--target}=[...]] [{-o|--output}=[...]] [{-co|--compiler_options}='...']
+#     ./check_cipher.sh [{-h|--help}] [--version] [{-m|--mode}=[0|1]] [{-a|--architecture}=[PC|AVR|MSP|ARM]] [{-t|--target}=[...]] [{-o|--output}=[...]] [{-co|--compiler_options}='...']
 #
-#	To call from a cipher build folder use:
-#		./../../../../scripts/cipher/check_cipher.sh [options]
+#    To call from a cipher build folder use:
+#        ./../../../../scripts/cipher/check_cipher.sh [options]
 #
-#	Options:
-#		-h, --help
-#			Display help information
-#		--version
-#			Display version information
-#		-m, --mode
-#			Specifies which output mode to use
-#				0 - raw table for given cipher
-#				1 - raw data for given cipher
-#				Default: 0
-#		-a, --architecture
-#			Specifies which architecture is used
-#				PC - binary files are build for PC
-#				AVR - binary files are build for AVR device
-#				MSP - binary file are build for MSP device
-#				ARM - binary files are build for ARM device
-#				Default: PC
-#		-t, --target
-#			Specifies which is the target path. The relative path is computed from the directory where script was called
-#				Default: .
-#		-o, --output
-#			Specifies where to output the results. The relative path is computed from the directory where script was called
-#				Default: /dev/tty
-#		-co,--compiler_options
-#			Specifies the compiler options
-#				List of values: '-O3 --param max-unroll-times=5 --param max-unrolled-insns=100 ...'
-#				Default: -O3
+#    Options:
+#        -h, --help
+#            Display help information
+#        --version
+#            Display version information
+#        -m, --mode
+#            Specifies which output mode to use
+#                0 - raw table for given cipher
+#                1 - raw data for given cipher
+#                Default: 0
+#        -a, --architecture
+#            Specifies which architecture is used
+#                PC - binary files are build for PC
+#                AVR - binary files are build for AVR device
+#                MSP - binary file are build for MSP device
+#                ARM - binary files are build for ARM device
+#                Default: PC
+#        -t, --target
+#            Specifies which is the target path. The relative path is computed from the directory where script was called
+#                Default: .
+#        -o, --output
+#            Specifies where to output the results. The relative path is computed from the directory where script was called
+#                Default: /dev/tty
+#        -co,--compiler_options
+#            Specifies the compiler options
+#                List of values: '-O3 --param max-unroll-times=5 --param max-unrolled-insns=100 ...'
+#                Default: -O3
 #
-#	Examples:
-#		./../../../../scripts/cipher/check_cipher.sh -m=0
-#		./../../../../scripts/cipher/check_cipher.sh --mode=1 --architecture=MSP
-#  		./../../../../scripts/cipher/check_cipher.sh -o=results.txt
-#		./check_cipher.sh -t=./../../source/ciphers/CipherName_BlockSizeInBits_KeySizeInBits_v01/build
+#    Examples:
+#        ./../../../../scripts/cipher/check_cipher.sh -m=0
+#        ./../../../../scripts/cipher/check_cipher.sh --mode=1 --architecture=MSP
+#          ./../../../../scripts/cipher/check_cipher.sh -o=results.txt
+#        ./check_cipher.sh -t=./../../source/ciphers/CipherName_BlockSizeInBits_KeySizeInBits_v01/build
 #
 
 
@@ -100,43 +100,43 @@ SCRIPT_COMPILER_OPTIONS=$SCRIPT_COMPILER_OPTION_OPTIMIZE_3
 # Parse script arguments
 for i in "$@"
 do
-	case $i in
-		-h|--help)
-			display_help
-			shift
-			;;
-		--version)
-			display_version
-			shift
-			;;
-		-m=*|--mode=*)
-			SCRIPT_MODE="${i#*=}"
-			shift
-			;;
-		-a=*|--architecture=*)
-			SCRIPT_ARCHITECTURE="${i#*=}"
-			shift
-			;;
-		-t=*|--target=*)
-			if [[ "${i#*=}" ]] ; then
-				SCRIPT_TARGET="${i#*=}"
-			fi
-			shift
-			;;
-		-o=*|--output=*)
-			if [[ "${i#*=}" ]] ; then
-				SCRIPT_OUTPUT="${i#*=}"
-			fi
-			shift
-			;;
-		-co=*|--compiler_options=*)
-			SCRIPT_COMPILER_OPTIONS="${i#*=}"
-			shift
-			;;
-		*)
-			# Unknown option
-			;;
-	esac
+    case $i in
+        -h|--help)
+            display_help
+            shift
+            ;;
+        --version)
+            display_version
+            shift
+            ;;
+        -m=*|--mode=*)
+            SCRIPT_MODE="${i#*=}"
+            shift
+            ;;
+        -a=*|--architecture=*)
+            SCRIPT_ARCHITECTURE="${i#*=}"
+            shift
+            ;;
+        -t=*|--target=*)
+            if [[ "${i#*=}" ]] ; then
+                SCRIPT_TARGET="${i#*=}"
+            fi
+            shift
+            ;;
+        -o=*|--output=*)
+            if [[ "${i#*=}" ]] ; then
+                SCRIPT_OUTPUT="${i#*=}"
+            fi
+            shift
+            ;;
+        -co=*|--compiler_options=*)
+            SCRIPT_COMPILER_OPTIONS="${i#*=}"
+            shift
+            ;;
+        *)
+            # Unknown option
+            ;;
+    esac
 done
 
 
@@ -160,7 +160,7 @@ echo "Begin check cipher - $current_directory"
 
 # Change relative script output path
 if [[ $SCRIPT_OUTPUT != /* ]] ; then
-	SCRIPT_OUTPUT=$current_directory/$SCRIPT_OUTPUT
+    SCRIPT_OUTPUT=$current_directory/$SCRIPT_OUTPUT
 fi
 
 
@@ -180,84 +180,84 @@ fail ()
 }
 
 
-	# Clean
-	make -f $CIPHER_MAKEFILE $MAKE_CLEAN_TARGET &> $MAKE_FILE_LOG
-	if [ $SUCCESS_EXIT_CODE -ne $? ]; then
-        fail $MAKE_FILE_LOG
-	fi
+# Clean
+make -f $CIPHER_MAKEFILE $MAKE_CLEAN_TARGET &> $MAKE_FILE_LOG
+if [ $SUCCESS_EXIT_CODE -ne $? ]; then
+    fail $MAKE_FILE_LOG
+fi
 
-	# Build
-	make -f $CIPHER_MAKEFILE ARCHITECTURE=$SCRIPT_ARCHITECTURE SCENARIO=0 COMPILER_OPTIONS="$SCRIPT_COMPILER_OPTIONS" DEBUG=7 &>> $MAKE_FILE_LOG
-	if [ $SUCCESS_EXIT_CODE -ne $? ]; then
-        fail $MAKE_FILE_LOG
-	fi
+# Build
+make -f $CIPHER_MAKEFILE ARCHITECTURE=$SCRIPT_ARCHITECTURE SCENARIO=0 COMPILER_OPTIONS="$SCRIPT_COMPILER_OPTIONS" DEBUG=7 &>> $MAKE_FILE_LOG
+if [ $SUCCESS_EXIT_CODE -ne $? ]; then
+    fail $MAKE_FILE_LOG
+fi
 
-	case $SCRIPT_ARCHITECTURE in
-		$SCRIPT_ARCHITECTURE_PC)
-			# Run
-			if [ -f $CIPHER_ELF_FILE ] ; then
-				./$CIPHER_ELF_FILE > $RESULT_FILE
-				if [ $SUCCESS_EXIT_CODE -ne $? ]; then
-					fail <(echo "Error! Run the executable to see the error: '$(pwd)/$CIPHER_ELF_FILE'")
-				fi
-			else
-				fail <(echo "couldn't find executable file '$(pwd)/$CIPHER_ELF_FILE'")
-			fi
-			;;
+case $SCRIPT_ARCHITECTURE in
+    $SCRIPT_ARCHITECTURE_PC)
+        # Run
+        if [ -f $CIPHER_ELF_FILE ] ; then
+            ./$CIPHER_ELF_FILE > $RESULT_FILE
+            if [ $SUCCESS_EXIT_CODE -ne $? ]; then
+                fail <(echo "Error! Run the executable to see the error: '$(pwd)/$CIPHER_ELF_FILE'")
+            fi
+        else
+            fail <(echo "couldn't find executable file '$(pwd)/$CIPHER_ELF_FILE'")
+        fi
+        ;;
 
-		$SCRIPT_ARCHITECTURE_AVR)
-			# Run
-			if [ -f $CIPHER_ELF_FILE ] ; then
-				$SIMAVR_SIMULATOR -m atmega128 $CIPHER_ELF_FILE &> $RESULT_FILE
-				if [ $SUCCESS_EXIT_CODE -ne $? ]; then
-					fail <(echo "Error! Run the executable to see the error: '$(pwd)/$CIPHER_ELF_FILE'")
-				fi
-			else
-				fail <(echo "couldn't find executable file '$(pwd)/$CIPHER_ELF_FILE'")
-			fi
-			;;
+    $SCRIPT_ARCHITECTURE_AVR)
+        # Run
+        if [ -f $CIPHER_ELF_FILE ] ; then
+            $SIMAVR_SIMULATOR -m atmega128 $CIPHER_ELF_FILE &> $RESULT_FILE
+            if [ $SUCCESS_EXIT_CODE -ne $? ]; then
+                fail <(echo "Error! Run the executable to see the error: '$(pwd)/$CIPHER_ELF_FILE'")
+            fi
+        else
+            fail <(echo "couldn't find executable file '$(pwd)/$CIPHER_ELF_FILE'")
+        fi
+        ;;
 
-		$SCRIPT_ARCHITECTURE_MSP)
-			# Run
-			if [ -f $CIPHER_ELF_FILE ] ; then
-				$MSPDEBUG_SIMULATOR -n sim < $MSPDEBUG_CHECK_CIPHER_COMMANDS_FILE &> $RESULT_FILE
-				if [ $SUCCESS_EXIT_CODE -ne $? ]; then
-					fail <(echo "Error! Run the executable to see the error: '$(pwd)/$CIPHER_ELF_FILE'")
-				fi
-			else
-				fail <(echo "couldn't find executable file '$(pwd)/$CIPHER_ELF_FILE'")
-			fi
-			;;
+    $SCRIPT_ARCHITECTURE_MSP)
+        # Run
+        if [ -f $CIPHER_ELF_FILE ] ; then
+            $MSPDEBUG_SIMULATOR -n sim < $MSPDEBUG_CHECK_CIPHER_COMMANDS_FILE &> $RESULT_FILE
+            if [ $SUCCESS_EXIT_CODE -ne $? ]; then
+                fail <(echo "Error! Run the executable to see the error: '$(pwd)/$CIPHER_ELF_FILE'")
+            fi
+        else
+            fail <(echo "couldn't find executable file '$(pwd)/$CIPHER_ELF_FILE'")
+        fi
+        ;;
 
-		$SCRIPT_ARCHITECTURE_ARM)
-			if [ -f $CIPHER_ELF_FILE ] ; then
-				# Upload the program to the board
-				make -f $CIPHER_MAKEFILE ARCHITECTURE=$SCRIPT_ARCHITECTURE upload-cipher &>> $MAKE_FILE_LOG
+    $SCRIPT_ARCHITECTURE_ARM)
+        if [ -f $CIPHER_ELF_FILE ] ; then
+            # Upload the program to the board
+            make -f $CIPHER_MAKEFILE ARCHITECTURE=$SCRIPT_ARCHITECTURE upload-cipher &>> $MAKE_FILE_LOG
 
-				# Run the program stored in the flash memory of the board
-				$ARM_SERIAL_TERMINAL > $RESULT_FILE
-			else
-				fail <(echo "couldn't find executable file '$(pwd)/$CIPHER_ELF_FILE'")
-			fi
-			;;
-	esac
+            # Run the program stored in the flash memory of the board
+            $ARM_SERIAL_TERMINAL > $RESULT_FILE
+        else
+            fail <(echo "couldn't find executable file '$(pwd)/$CIPHER_ELF_FILE'")
+        fi
+        ;;
+esac
 
-	# Check run result
-	if [ -f $RESULT_FILE ] ; then
-		correct_count=$(grep -c "$CORRECT" $RESULT_FILE)
-		wrong_count=$(grep -c "$WRONG" $RESULT_FILE)
+# Check run result
+if [ -f $RESULT_FILE ] ; then
+    correct_count=$(grep -c "$CORRECT" $RESULT_FILE)
+    wrong_count=$(grep -c "$WRONG" $RESULT_FILE)
 
-		if [ $EXPECTED_CORRECT_COUNT -ne $correct_count ] || [ $EXPECTED_WRONG_COUNT -ne $wrong_count ] ; then
-			fail <(echo "Error! Test vectors do not check!" ; echo "correct = $correct_count, wrong = $wrong_count")
-		else
-			if [ $FALSE -eq $KEEP_GENERATED_FILES ] ; then
-				rm -f $MAKE_FILE_LOG
-				rm -f $RESULT_FILE
-			fi
-		fi
-	else
-		fail <(echo "cannot find results file $RESULT_FILE")
-	fi
+    if [ $EXPECTED_CORRECT_COUNT -ne $correct_count ] || [ $EXPECTED_WRONG_COUNT -ne $wrong_count ] ; then
+        fail <(echo "Error! Test vectors do not check!" ; echo "correct = $correct_count, wrong = $wrong_count")
+    else
+        if [ $FALSE -eq $KEEP_GENERATED_FILES ] ; then
+            rm -f $MAKE_FILE_LOG
+            rm -f $RESULT_FILE
+        fi
+    fi
+else
+    fail <(echo "cannot find results file $RESULT_FILE")
+fi
 
 
 echo -n ${TRUE} > ${SCRIPT_OUTPUT}
