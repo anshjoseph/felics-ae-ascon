@@ -186,7 +186,7 @@ fail ()
     echo "${error_log}:"
     cat ${error_log}
 
-    echo -n ${FALSE} ${SCRIPT_OUTPUT}
+    echo -n ${FALSE} > ${SCRIPT_OUTPUT}
     exit 1
 }
 
