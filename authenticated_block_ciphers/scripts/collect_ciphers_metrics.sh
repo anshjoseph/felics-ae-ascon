@@ -208,6 +208,24 @@ script_json_output="${results_dir}${SCRIPT_JSON_OUTPUT}"
 add_json_table_header "${script_json_output}"
 
 
+skip-platform ()
+{
+    local directory=$1
+    local platform=$2
+
+    local implem_info=${directory}/source/implementation.info
+
+    if ! grep -q "^Platforms:" ${implem_info}
+    then
+	# No restriction for this implementation. Do not skip.
+	return 1
+    fi
+
+    # Skip if the platform is not listed explicitly.
+    ! grep -q "^Platforms:.*\b${platform}\b" ${implem_info}
+}
+
+
 for architecture in ${architectures[@]}
 do
 	echo -e "\t\t\t ---> Architecture: $architecture"
@@ -220,6 +238,12 @@ do
 
 		for directory in ${directories[@]}
 		do
+			if skip-platform ${directory} ${architecture}
+			then
+				echo -e "${directory}: skipping for ${architecture}..."
+				continue
+			fi
+
 			cd $directory/build
 
 			echo -e "\t\t\t\t\t ---> Cipher: $directory"
