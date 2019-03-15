@@ -134,35 +134,48 @@ static void _multiply_MR3(const uint8_t X[LANE_BYTES], uint8_t Y[LANE_BYTES])
 #endif
 #endif
 
-typedef void (*matrix_multiplication)(const uint8_t X[LANE_BYTES], uint8_t Y[LANE_BYTES]);
-
-static const matrix_multiplication ALPHAS[6] = {
-    _multiply_M,
-    _multiply_M2,
-    _multiply_M3,
-#if LANES_NB >= 5
-    _multiply_MR,
-#if LANES_NB >= 6
-    _multiply_MR2,
-#if LANES_NB >= 7
-    _multiply_MR3
-#endif
-#endif
-#endif
-};
-
 
 void tweakey_state_update(uint8_t TK[TWEAKEY_BYTES])
 {
     /* Skip lane 0, as it is multiplied by the identity matrix. */
 
-    for (size_t j=1; j<LANES_NB; j++)
-    {
-        uint8_t *TKj = TK + j*LANE_BYTES;
+    size_t j;
+    uint8_t *TKj;
+    uint8_t TKj_old[LANE_BYTES];
 
-        uint8_t TKj_old[LANE_BYTES];
-        memcpy(TKj_old, TKj, LANE_BYTES);
+    j = 1;
+    TKj = TK + j*LANE_BYTES;
+    memcpy(TKj_old, TKj, LANE_BYTES);
+    _multiply_M(TKj_old, TKj);
 
-        ALPHAS[j-1](TKj_old, TKj);
-    }
+    j = 2;
+    TKj = TK + j*LANE_BYTES;
+    memcpy(TKj_old, TKj, LANE_BYTES);
+    _multiply_M2(TKj_old, TKj);
+
+    j = 3;
+    TKj = TK + j*LANE_BYTES;
+    memcpy(TKj_old, TKj, LANE_BYTES);
+    _multiply_M3(TKj_old, TKj);
+
+#if LANES_NB >= 5
+    j = 4;
+    TKj = TK + j*LANE_BYTES;
+    memcpy(TKj_old, TKj, LANE_BYTES);
+    _multiply_MR(TKj_old, TKj);
+
+#if LANES_NB >= 6
+    j = 5;
+    TKj = TK + j*LANE_BYTES;
+    memcpy(TKj_old, TKj, LANE_BYTES);
+    _multiply_MR2(TKj_old, TKj);
+
+#if LANES_NB >= 7
+    j = 6;
+    TKj = TK + j*LANE_BYTES;
+    memcpy(TKj_old, TKj, LANE_BYTES);
+    _multiply_MR3(TKj_old, TKj);
+#endif
+#endif
+#endif
 }
