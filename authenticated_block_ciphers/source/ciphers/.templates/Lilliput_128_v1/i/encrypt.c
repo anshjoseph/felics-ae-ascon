@@ -33,7 +33,7 @@ static void _encrypt_message(
 
     if (rest == 0)
     {
-        _fill_msg_tweak(0x1, N, l-1, tweak);
+        _fill_msg_tweak(0x1, N, l, tweak);
         encrypt(key, tweak, checksum, Final);
     }
     else
@@ -48,7 +48,7 @@ static void _encrypt_message(
         encrypt(key, tweak, _0n, Pad);
         xor_arrays(rest, &C[l*BLOCK_BYTES], &M[l*BLOCK_BYTES], Pad);
 
-        _fill_msg_tweak(0x5, N, l, tweak);
+        _fill_msg_tweak(0x5, N, l+1, tweak);
         encrypt(key, tweak, checksum, Final);
     }
 }

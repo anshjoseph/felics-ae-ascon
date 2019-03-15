@@ -33,7 +33,7 @@ static void _decrypt_message(
 
     if (rest == 0)
     {
-        _fill_msg_tweak(0x1, N, l-1, tweak);
+        _fill_msg_tweak(0x1, N, l, tweak);
         encrypt(key, tweak, checksum, Final);
     }
     else
@@ -48,7 +48,7 @@ static void _decrypt_message(
         pad10(rest, &M[l*BLOCK_BYTES], M_rest);
         xor_into(checksum, M_rest);
 
-        _fill_msg_tweak(0x5, N, l, tweak);
+        _fill_msg_tweak(0x5, N, l+1, tweak);
         encrypt(key, tweak, checksum, Final);
     }
 }
