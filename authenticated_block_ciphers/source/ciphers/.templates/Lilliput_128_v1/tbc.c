@@ -41,7 +41,7 @@ static void _nonlinear_layer(uint8_t X[BLOCK_BYTES], const uint8_t RTK[ROUND_TWE
 
     for (size_t j=0; j<ROUND_TWEAKEY_BYTES; j++)
     {
-        F[j] = S[F[j]];
+        F[j] = READ_ROM_DATA_BYTE(S[F[j]]);
     }
 
     for (size_t j=0; j<8; j++)
@@ -83,7 +83,7 @@ static void _permutation_layer(uint8_t X[BLOCK_BYTES], permutation p)
 
     for (size_t j=0; j<BLOCK_BYTES; j++)
     {
-        X[pi[j]] = X_old[j];
+        X[READ_ROM_DATA_BYTE(pi[j])] = X_old[j];
     }
 }
 
