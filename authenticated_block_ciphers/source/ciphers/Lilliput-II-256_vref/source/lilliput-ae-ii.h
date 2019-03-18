@@ -1,1 +1,1 @@
-../../.templates/Lilliput_128_v1/ii/lilliput-ae-ii.h
+../../.templates/Lilliput_vref/ii/lilliput-ae-ii.h

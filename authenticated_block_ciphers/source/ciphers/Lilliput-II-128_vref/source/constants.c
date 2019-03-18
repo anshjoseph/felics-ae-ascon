@@ -1,1 +1,1 @@
-../../.templates/Lilliput_128_v1/constants.c
+../../.templates/Lilliput_vref/constants.c

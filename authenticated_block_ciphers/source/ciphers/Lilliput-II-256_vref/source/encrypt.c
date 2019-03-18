@@ -1,1 +1,1 @@
-../../.templates/Lilliput_128_v1/ii/encrypt.c
+../../.templates/Lilliput_vref/ii/encrypt.c

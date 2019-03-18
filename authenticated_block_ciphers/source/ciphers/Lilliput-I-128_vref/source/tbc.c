@@ -1,1 +1,1 @@
-../../.templates/Lilliput_128_v1/tbc.c
+../../.templates/Lilliput_vref/tbc.c

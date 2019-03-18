@@ -1,1 +1,1 @@
-../../.templates/Lilliput_128_v1/parameters.h
+../../.templates/Lilliput_vref/parameters.h

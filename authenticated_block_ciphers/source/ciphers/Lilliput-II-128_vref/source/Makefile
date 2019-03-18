@@ -1,1 +1,1 @@
-../../.templates/Lilliput_128_v1/Makefile
+../../.templates/Lilliput_vref/Makefile

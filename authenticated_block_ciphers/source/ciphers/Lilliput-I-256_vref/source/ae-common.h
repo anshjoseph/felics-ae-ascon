@@ -1,1 +1,1 @@
-../../.templates/Lilliput_128_v1/ae-common.h
+../../.templates/Lilliput_vref/ae-common.h

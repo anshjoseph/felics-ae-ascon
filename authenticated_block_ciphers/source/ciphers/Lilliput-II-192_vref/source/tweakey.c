@@ -1,1 +1,1 @@
-../../.templates/Lilliput_128_v1/tweakey.c
+../../.templates/Lilliput_vref/tweakey.c
