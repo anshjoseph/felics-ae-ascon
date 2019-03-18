@@ -13,3 +13,6 @@ DecryptCode: utils
 
 UseEncryptionKeySchedule: no
 UseDecryptionKeySchedule: no
+
+# AVR and MSP simulators freeze for this particular implementation.
+Platforms: ARM PC
