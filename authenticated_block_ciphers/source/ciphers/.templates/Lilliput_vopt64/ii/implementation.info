@@ -1,0 +1,16 @@
+ImplementationDescription: Implementation for Lilliput-I optimied for 64-bit
+ImplementationAuthors: Kévin Le Gouguec
+
+EncryptionKeyScheduleConstants:
+EncryptConstants: constants
+DecryptionKeyScheduleConstants:
+DecryptConstants: constants
+
+EncryptionKeyScheduleCode:
+EncryptCode: tbc, tweakey
+DecryptionKeyScheduleCode:
+DecryptCode: tbc, tweakey
+
+UseEncryptionKeySchedule: no
+UseDecryptionKeySchedule: no
+
