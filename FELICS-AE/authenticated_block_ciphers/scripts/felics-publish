@@ -4,6 +4,7 @@ from argparse import ArgumentParser
 from collections import defaultdict, OrderedDict
 import json
 from os import path
+import re
 
 import pyexcel_ods
 import pyexcel_xlsx
@@ -17,6 +18,15 @@ def _parse_sort_order(argument):
     return argument.split(',')
 
 
+def _parse_filter(argument):
+    key, pattern = argument.split('=')
+
+    def accept_setup(setup):
+        return re.match(pattern, setup[key])
+
+    return accept_setup
+
+
 def _parse_arguments():
     parser = ArgumentParser()
 
@@ -24,10 +34,15 @@ def _parse_arguments():
 
     parser.add_argument(
         '-s', '--sort-by', default=('compiler_options', 'cipher_name'),
-        type=_parse_sort_order
+        type=_parse_sort_order, metavar='KEY[,KEY...]'
     )
 
-    parser.add_argument('results')
+    parser.add_argument(
+        '-f', '--filter', default=lambda setup: True, type=_parse_filter,
+        metavar='KEY=REGEX'
+    )
+
+    parser.add_argument('results', metavar='JSON-RESULTS')
 
     return parser.parse_args()
 
@@ -39,11 +54,12 @@ def _sort_setups(setups, keys):
     return sorted(setups, key=make_key)
 
 
-def _order_setups(setups, sort_keys):
+def _group_setups(setups, sort_keys, predicate):
     setups_by_arch = defaultdict(list)
 
     for setup in setups:
-        setups_by_arch[setup['architecture']].append(setup)
+        if predicate(setup):
+            setups_by_arch[setup['architecture']].append(setup)
 
     return OrderedDict(
         (arch, _sort_setups(setups_by_arch[arch], sort_keys))
@@ -268,7 +284,8 @@ if __name__ == '__main__':
     with open(arguments.results) as results_file:
         raw_results = json.load(results_file)['data']
 
-    results_by_arch = _order_setups(raw_results, arguments.sort_by)
+    results_by_arch = _group_setups(raw_results, arguments.sort_by,
+                                    arguments.filter)
 
     writer = _make_writer(arguments.output)
     writer.dump(results_by_arch)
