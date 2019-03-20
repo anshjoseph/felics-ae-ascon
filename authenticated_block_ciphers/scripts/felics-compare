@@ -44,10 +44,10 @@ def _parse_arguments():
 
 def _make_key(data):
     return (
-        data['cipher_name'],
         ARCHITECTURES[data['architecture']],
-        data['version'],
-        data['compiler_options']
+        data['compiler_options'],
+        data['cipher_name'],
+        data['version']
     )
 
     return tuple(data[k] for k in keys)
