@@ -2,8 +2,8 @@
 
 set -eux
 
-auth_root=$(git rev-parse --show-toplevel)/authenticated_block_ciphers
-scripts_dir=${auth_root}/scripts
+scripts_dir=$(dirname $(realpath $0))
+auth_root=${scripts_dir}/..
 results_dir=${auth_root}/results
 
 branch1=$1
