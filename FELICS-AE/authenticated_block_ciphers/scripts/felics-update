@@ -1,0 +1,50 @@
+#!/usr/bin/env python3
+
+from argparse import ArgumentParser
+from collections import OrderedDict
+import json
+
+
+def _parse_arguments():
+    parser = ArgumentParser()
+    parser.add_argument('old')
+    parser.add_argument('new')
+    parser.add_argument('-o', '--output')
+    return parser.parse_args()
+
+
+def _load_file(filename):
+    with open(filename) as f:
+        return json.load(f)
+
+
+def _dump(output, data):
+    with open(output, 'w') as out:
+        json.dump(data, out, indent=4)
+
+
+def _make_key(setup):
+    subkeys = ('architecture', 'cipher_name', 'version', 'compiler_options')
+    return tuple(setup[k] for k in subkeys)
+
+
+def _update(old, new):
+    merged = {
+        'commit': new['commit'],
+        'branch': new['branch']
+    }
+
+    old_setups = OrderedDict((_make_key(s), s) for s in old['data'])
+    new_setups = {_make_key(s): s for s in new['data']}
+
+    merged['data'] = [
+        new_setups.get(k, old_value) for k, old_value in old_setups.items()
+    ]
+
+    return merged
+
+
+if __name__ == '__main__':
+    arguments = _parse_arguments()
+    updated = _update(_load_file(arguments.old), _load_file(arguments.new))
+    _dump(arguments.output, updated)
