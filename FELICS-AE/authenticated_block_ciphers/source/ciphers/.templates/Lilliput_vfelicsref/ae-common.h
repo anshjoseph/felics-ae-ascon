@@ -51,18 +51,24 @@ static inline void pad10(size_t X_len, const uint8_t X[X_len], uint8_t padded[BL
 {
     /* pad10*(X) = X || 1 || 0^{n-|X|-1} */
 
-    /* Assume that len<BLOCK_BYTES. */
+    /* For example, with uint8_t X[3] = { [0]=0x01, [1]=0x02, [2]=0x03 }
+     *
+     * pad10*(X) =
+     *       X[2]     X[1]     X[0]   1 0*
+     *     00000011 00000010 00000001 1 0000000 00000000...
+     *
+     * - padded[0, 11]:  zeroes
+     * - padded[12]:     10000000
+     * - padded[13, 15]: X[0, 2]
+     */
+
+    /* Assume that X_len<BLOCK_BYTES. */
 
     size_t pad_len = BLOCK_BYTES-X_len;
 
-    memcpy(padded+pad_len, X, X_len);
-
+    memset(padded, 0, pad_len-1);
     padded[pad_len-1] = 0x80;
-
-    if (pad_len > 1)
-    {
-        memset(padded, 0, pad_len-1);
-    }
+    memcpy(padded+pad_len, X, X_len);
 }
 
 static inline void fill_index_tweak(
