@@ -13,5 +13,3 @@ DecryptCode: utils
 
 UseEncryptionKeySchedule: no
 UseDecryptionKeySchedule: no
-
-Platforms: AVR MSP
