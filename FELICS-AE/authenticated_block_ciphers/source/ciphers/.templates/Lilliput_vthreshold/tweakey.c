@@ -1,0 +1,208 @@
+#include <stdint.h>
+#include <string.h>
+
+#include "parameters.h"
+#include "random.h"
+#include "tweakey.h"
+
+
+#define LANE_BITS  64
+#define LANE_BYTES (LANE_BITS/8)
+#define LANES_NB   (TWEAKEY_BYTES/LANE_BYTES)
+
+
+void tweakey_state_init(
+    uint8_t TK_X[TWEAKEY_BYTES],
+    uint8_t TK_Y[KEY_BYTES],
+    const uint8_t key[KEY_BYTES],
+    const uint8_t tweak[TWEAK_BYTES]
+)
+{
+    uint8_t SHARES_0[KEY_BYTES];
+    randombytes(sizeof(SHARES_0), SHARES_0);
+
+    memcpy(TK_Y, SHARES_0, KEY_BYTES);
+    memcpy(TK_X, tweak, TWEAK_BYTES);
+
+    for (size_t i=0; i<KEY_BYTES; i++){
+        TK_X[i+TWEAK_BYTES] = key[i] ^ SHARES_0[i];
+    }
+}
+
+
+void tweakey_state_extract(
+    const uint8_t TK_X[TWEAKEY_BYTES],
+    const uint8_t TK_Y[KEY_BYTES],
+    uint8_t round_constant,
+    uint8_t round_tweakey_X[ROUND_TWEAKEY_BYTES],
+    uint8_t round_tweakey_Y[ROUND_TWEAKEY_BYTES]
+)
+{
+    memset(round_tweakey_X, 0, ROUND_TWEAKEY_BYTES);
+    memset(round_tweakey_Y, 0, ROUND_TWEAKEY_BYTES);
+
+    for (size_t j=0; j<LANES_NB; j++)
+    {
+        const uint8_t *TKj_X = TK_X + j*LANE_BYTES;
+
+        for (size_t k=0; k<LANE_BYTES; k++)
+        {
+            round_tweakey_X[k] ^= TKj_X[k];
+        }
+    }
+
+
+    for (size_t j=0; j<(KEY_BYTES / LANE_BYTES); j++)
+    {
+        const uint8_t *TKj_Y = TK_Y + j*LANE_BYTES;
+
+        for (size_t k=0; k<LANE_BYTES; k++)
+        {
+            round_tweakey_Y[k] ^= TKj_Y[k];
+        }
+    }
+
+    round_tweakey_X[0] ^= round_constant;
+}
+
+
+static void _multiply_M(const uint8_t X[LANE_BYTES], uint8_t Y[LANE_BYTES])
+{
+    Y[7] = X[6];
+    Y[6] = X[5];
+    Y[5] = X[5]<<3 ^ X[4];
+    Y[4] = X[4]>>3 ^ X[3];
+    Y[3] = X[2];
+    Y[2] = X[6]<<2 ^ X[1];
+    Y[1] = X[0];
+    Y[0] = X[7];
+}
+
+static void _multiply_M2(const uint8_t X[LANE_BYTES], uint8_t Y[LANE_BYTES])
+{
+    uint8_t x15 = X[5]<<3 ^ X[4];
+    uint8_t x14 = X[4]>>3 ^ X[3];
+
+    Y[7] = X[5];
+    Y[6] = x15;
+    Y[5] = x15<<3  ^ x14;
+    Y[4] = x14>>3  ^ X[2];
+    Y[3] = X[6]<<2 ^ X[1];
+    Y[2] = X[5]<<2 ^ X[0];
+    Y[1] = X[7];
+    Y[0] = X[6];
+}
+
+static void _multiply_M3(const uint8_t X[LANE_BYTES], uint8_t Y[LANE_BYTES])
+{
+    uint8_t x15 = X[5]<<3 ^ X[4];
+    uint8_t x14 = X[4]>>3 ^ X[3];
+    uint8_t x25 = x15<<3  ^ x14;
+    uint8_t x24 = x14>>3  ^ X[2];
+
+    Y[7] = x15;
+    Y[6] = x25;
+    Y[5] = x25<<3  ^ x24;
+    Y[4] = x24>>3  ^ X[6]<<2 ^ X[1];
+    Y[3] = X[5]<<2 ^ X[0];
+    Y[2] = x15<<2  ^ X[7];
+    Y[1] = X[6];
+    Y[0] = X[5];
+}
+
+#if LANES_NB >= 5
+static void _multiply_MR(const uint8_t X[LANE_BYTES], uint8_t Y[LANE_BYTES])
+{
+    Y[0] = X[1];
+    Y[1] = X[2];
+    Y[2] = X[3]    ^ X[4]>>3;
+    Y[3] = X[4];
+    Y[4] = X[5]    ^ X[6]<<3;
+    Y[5] = X[3]<<2 ^ X[6];
+    Y[6] = X[7];
+    Y[7] = X[0];
+}
+
+#if LANES_NB >= 6
+static void _multiply_MR2(const uint8_t X[LANE_BYTES], uint8_t Y[LANE_BYTES])
+{
+    uint8_t x14 = X[5] ^ X[6]<<3;
+
+    Y[0] = X[2];
+    Y[1] = X[3]    ^ X[4]>>3;
+    Y[2] = X[4]    ^ x14>>3;
+    Y[3] = x14;
+    Y[4] = X[3]<<2 ^ X[6]    ^ X[7]<<3;
+    Y[5] = X[4]<<2 ^ X[7];
+    Y[6] = X[0];
+    Y[7] = X[1];
+}
+
+#if LANES_NB >= 7
+static void _multiply_MR3(const uint8_t X[LANE_BYTES], uint8_t Y[LANE_BYTES])
+{
+    uint8_t x14 = X[5]    ^ X[6]<<3;
+    uint8_t x24 = X[3]<<2 ^ X[6]    ^ X[7]<<3 ;
+
+    Y[0] = X[3]    ^ X[4]>>3;
+    Y[1] = X[4]    ^ x14>>3;
+    Y[2] = x14     ^ x24>>3;
+    Y[3] = x24;
+    Y[4] = X[4]<<2 ^ X[7] ^ X[0]<<3;
+    Y[5] = x14<<2  ^ X[0];
+    Y[6] = X[1];
+    Y[7] = X[2];
+}
+#endif
+#endif
+#endif
+
+
+typedef void (*matrix_multiplication)(const uint8_t x[LANE_BYTES], uint8_t y[LANE_BYTES]);
+
+static const matrix_multiplication ALPHAS[] = {
+    _multiply_M,
+    _multiply_M2,
+    _multiply_M3,
+#if LANES_NB >= 5
+    _multiply_MR,
+#if LANES_NB >= 6
+    _multiply_MR2,
+#if LANES_NB >= 7
+    _multiply_MR3
+#endif
+#endif
+#endif
+};
+
+
+void tweakey_state_update(uint8_t TK_X[TWEAKEY_BYTES], uint8_t TK_Y[KEY_BYTES])
+{
+    /* Skip lane 0, as it is multiplied by the identity matrix. */
+
+    /* TODO: unroll these loops; cf felicsref implementation. */
+
+    for (size_t j=1; j<(TWEAK_BYTES/LANE_BYTES); j++)
+    {
+        uint8_t *TKj_X = TK_X + j*LANE_BYTES;
+
+        uint8_t TKj_old_X[LANE_BYTES];
+        memcpy(TKj_old_X, TKj_X, LANE_BYTES);
+
+        ALPHAS[j-1](TKj_old_X, TKj_X);
+    }
+
+    for (size_t j=0; j<(KEY_BYTES/LANE_BYTES); j++)
+    {
+        uint8_t *TKj_X = TK_X + (j + (TWEAK_BYTES/LANE_BYTES))*LANE_BYTES;
+        uint8_t *TKj_Y = TK_Y + j*LANE_BYTES;
+
+        uint8_t TKj_X_old[LANE_BYTES];
+        uint8_t TKj_Y_old[LANE_BYTES];
+        memcpy(TKj_X_old, TKj_X, LANE_BYTES);
+        memcpy(TKj_Y_old, TKj_Y, LANE_BYTES);
+
+        ALPHAS[j-1 + (TWEAK_BYTES/LANE_BYTES)](TKj_X_old, TKj_X);
+        ALPHAS[j-1 + (TWEAK_BYTES/LANE_BYTES)](TKj_Y_old, TKj_Y);
+    }
+}
