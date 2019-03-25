@@ -158,51 +158,104 @@ static void _multiply_MR3(const uint8_t X[LANE_BYTES], uint8_t Y[LANE_BYTES])
 #endif
 
 
-typedef void (*matrix_multiplication)(const uint8_t x[LANE_BYTES], uint8_t y[LANE_BYTES]);
-
-static const matrix_multiplication ALPHAS[] = {
-    _multiply_M,
-    _multiply_M2,
-    _multiply_M3,
-#if LANES_NB >= 5
-    _multiply_MR,
-#if LANES_NB >= 6
-    _multiply_MR2,
-#if LANES_NB >= 7
-    _multiply_MR3
-#endif
-#endif
-#endif
-};
-
+#define TWEAK_LANES (TWEAK_BYTES/LANE_BYTES)
+#define KEY_LANES   (KEY_BYTES/LANE_BYTES)
 
 void tweakey_state_update(uint8_t TK_X[TWEAKEY_BYTES], uint8_t TK_Y[KEY_BYTES])
 {
     /* Skip lane 0, as it is multiplied by the identity matrix. */
 
-    /* TODO: unroll these loops; cf felicsref implementation. */
+    size_t j;
+    uint8_t *TKj_X;
+    uint8_t *TKj_Y;
+    uint8_t TKj_old_X[LANE_BYTES];
+    uint8_t TKj_old_Y[LANE_BYTES];
 
-    for (size_t j=1; j<(TWEAK_BYTES/LANE_BYTES); j++)
-    {
-        uint8_t *TKj_X = TK_X + j*LANE_BYTES;
+    j = 1;
+    TKj_X = TK_X + j*LANE_BYTES;
+    memcpy(TKj_old_X, TKj_X, LANE_BYTES);
+    _multiply_M(TKj_old_X, TKj_X);
 
-        uint8_t TKj_old_X[LANE_BYTES];
-        memcpy(TKj_old_X, TKj_X, LANE_BYTES);
+#if TWEAK_LANES == 2
+    j = 0;
+    TKj_X = TK_X + (j+TWEAK_LANES)*LANE_BYTES;
+    TKj_Y = TK_Y + j*LANE_BYTES;
+    memcpy(TKj_old_X, TKj_X, LANE_BYTES);
+    memcpy(TKj_old_Y, TKj_Y, LANE_BYTES);
+    _multiply_M2(TKj_old_X, TKj_X);
+    _multiply_M2(TKj_old_Y, TKj_Y);
 
-        ALPHAS[j-1](TKj_old_X, TKj_X);
-    }
+    j = 1;
+    TKj_X = TK_X + (j+TWEAK_LANES)*LANE_BYTES;
+    TKj_Y = TK_Y + j*LANE_BYTES;
+    memcpy(TKj_old_X, TKj_X, LANE_BYTES);
+    memcpy(TKj_old_Y, TKj_Y, LANE_BYTES);
+    _multiply_M3(TKj_old_X, TKj_X);
+    _multiply_M3(TKj_old_Y, TKj_Y);
 
-    for (size_t j=0; j<(KEY_BYTES/LANE_BYTES); j++)
-    {
-        uint8_t *TKj_X = TK_X + (j + (TWEAK_BYTES/LANE_BYTES))*LANE_BYTES;
-        uint8_t *TKj_Y = TK_Y + j*LANE_BYTES;
+  #if LANES_NB >= 5
+    j = 2;
+    TKj_X = TK_X + (j+TWEAK_LANES)*LANE_BYTES;
+    TKj_Y = TK_Y + j*LANE_BYTES;
+    memcpy(TKj_old_X, TKj_X, LANE_BYTES);
+    memcpy(TKj_old_Y, TKj_Y, LANE_BYTES);
+    _multiply_MR(TKj_old_X, TKj_X);
+    _multiply_MR(TKj_old_Y, TKj_Y);
 
-        uint8_t TKj_X_old[LANE_BYTES];
-        uint8_t TKj_Y_old[LANE_BYTES];
-        memcpy(TKj_X_old, TKj_X, LANE_BYTES);
-        memcpy(TKj_Y_old, TKj_Y, LANE_BYTES);
+  #if LANES_NB >= 6
+    j = 3;
+    TKj_X = TK_X + (j+TWEAK_LANES)*LANE_BYTES;
+    TKj_Y = TK_Y + j*LANE_BYTES;
+    memcpy(TKj_old_X, TKj_X, LANE_BYTES);
+    memcpy(TKj_old_Y, TKj_Y, LANE_BYTES);
+    _multiply_MR2(TKj_old_X, TKj_X);
+    _multiply_MR2(TKj_old_Y, TKj_Y);
+  #endif
+  #endif
 
-        ALPHAS[j-1 + (TWEAK_BYTES/LANE_BYTES)](TKj_X_old, TKj_X);
-        ALPHAS[j-1 + (TWEAK_BYTES/LANE_BYTES)](TKj_Y_old, TKj_Y);
-    }
+#else  /* TWEAK_LANES == 3 */
+    j = 2;
+    TKj_X = TK_X + j*LANE_BYTES;
+    memcpy(TKj_old_X, TKj_X, LANE_BYTES);
+    _multiply_M2(TKj_old_X, TKj_X);
+
+    j = 0;
+    TKj_X = TK_X + (j+TWEAK_LANES)*LANE_BYTES;
+    TKj_Y = TK_Y + j*LANE_BYTES;
+    memcpy(TKj_old_X, TKj_X, LANE_BYTES);
+    memcpy(TKj_old_Y, TKj_Y, LANE_BYTES);
+    _multiply_M3(TKj_old_X, TKj_X);
+    _multiply_M3(TKj_old_Y, TKj_Y);
+
+  #if LANES_NB >= 5
+    j = 1;
+    TKj_X = TK_X + (j+TWEAK_LANES)*LANE_BYTES;
+    TKj_Y = TK_Y + j*LANE_BYTES;
+    memcpy(TKj_old_X, TKj_X, LANE_BYTES);
+    memcpy(TKj_old_Y, TKj_Y, LANE_BYTES);
+    _multiply_MR(TKj_old_X, TKj_X);
+    _multiply_MR(TKj_old_Y, TKj_Y);
+
+  #if LANES_NB >= 6
+    j = 2;
+    TKj_X = TK_X + (j+TWEAK_LANES)*LANE_BYTES;
+    TKj_Y = TK_Y + j*LANE_BYTES;
+    memcpy(TKj_old_X, TKj_X, LANE_BYTES);
+    memcpy(TKj_old_Y, TKj_Y, LANE_BYTES);
+    _multiply_MR2(TKj_old_X, TKj_X);
+    _multiply_MR2(TKj_old_Y, TKj_Y);
+
+  #if LANES_NB >= 7
+    j = 3;
+    TKj_X = TK_X + (j+TWEAK_LANES)*LANE_BYTES;
+    TKj_Y = TK_Y + j*LANE_BYTES;
+    memcpy(TKj_old_X, TKj_X, LANE_BYTES);
+    memcpy(TKj_old_Y, TKj_Y, LANE_BYTES);
+    _multiply_MR3(TKj_old_X, TKj_X);
+    _multiply_MR3(TKj_old_Y, TKj_Y);
+  #endif
+  #endif
+  #endif
+
+#endif
 }
