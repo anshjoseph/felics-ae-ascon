@@ -58,7 +58,7 @@ run
 # BeginEncryptionKeySchedule breakpoint
 #
 # Save the initial stack pointer in the convenience variable
-set $base = $esp
+set $base = $sp
 # Set the stack content
 restore PC_scenario1_memory.mem binary $base-$analysed_stack_size
 
@@ -82,7 +82,7 @@ continue
 # BeginEncryption breakpoint
 #
 # Save the initial stack pointer in the convenience variable
-set $base = $esp
+set $base = $sp
 # Set the stack content
 restore PC_scenario1_memory.mem binary $base-$analysed_stack_size
 
@@ -106,7 +106,7 @@ continue
 # BeginDecryptionKeySchedule breakpoint
 #
 # Save the initial stack pointer in the convenience variable
-set $base = $esp
+set $base = $sp
 # Set the stack content
 restore PC_scenario1_memory.mem binary $base-$analysed_stack_size
 
@@ -130,7 +130,7 @@ continue
 # BeginDecryption breakpoint
 #
 # Save the initial stack pointer in the convenience variable
-set $base = $esp
+set $base = $sp
 # Set the stack content
 restore PC_scenario1_memory.mem binary $base-$analysed_stack_size
 

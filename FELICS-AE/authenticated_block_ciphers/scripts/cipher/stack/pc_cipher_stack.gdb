@@ -49,7 +49,7 @@ run
 # main breakpoint
 #
 # Save the initial stack pointer in the convenience variable
-set $base = $esp
+set $base = $sp
 # Set the stack content
 restore PC_scenario0_memory.mem binary $base-$analysed_stack_size
 
