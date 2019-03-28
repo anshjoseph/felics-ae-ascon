@@ -8,7 +8,7 @@ import git
 from git.exc import InvalidGitRepositoryError
 
 
-Results = namedtuple('Results', ('commit', 'branch', 'data'))
+Results = namedtuple('Results', ('commit', 'branch', 'data', 'filename'))
 
 
 ARCHITECTURES = {'AVR': 8, 'MSP': 16, 'ARM': 32, 'PC': 64}
@@ -53,8 +53,8 @@ def _make_key(data):
     return tuple(data[k] for k in keys)
 
 
-def _load_file(name, architectures):
-    with open(name) as f:
+def _load_file(filename, architectures):
+    with open(filename) as f:
         results = json.load(f)
 
     data = {
@@ -63,7 +63,7 @@ def _load_file(name, architectures):
         if item['architecture'] in architectures
     }
 
-    return Results(results['commit'], results['branch'], data)
+    return Results(results['commit'], results['branch'], data, filename)
 
 
 def _format_diff(diff, value1, value2):
@@ -107,18 +107,25 @@ def _compute_differences(threshold, data1, data2):
 def _format_revision(setup):
     try:
         repo = git.Repo(search_parent_directories=True)
-    except InvalidGitRepositoryError:
-        return setup.branch
+        summary = repo.git.show(setup.commit, oneline=True, no_patch=True)
+        description = '{s.commit} ({s.branch}) {summary}'.format(
+            s=setup, summary=summary
+        )
 
-    description = repo.git.show(setup.commit, oneline=True, no_patch=True)
-    return '[{branch}] {desc}'.format(branch=setup.branch, desc=description)
+    except InvalidGitRepositoryError:
+        description = '{s.commit} ({s.branch})'.format(s=setup)
+
+    return '\n'.join((
+        '\t'+setup.filename,
+        '\t'+description
+    ))
 
 
 def _print_header(old, new, threshold):
     header = '''Comparing
-\t{old}
+{old}
 against
-\t{new}
+{new}
 
 (tolerance: {t:.2%})
 '''.format(old=_format_revision(old), new=_format_revision(new), t=threshold)
