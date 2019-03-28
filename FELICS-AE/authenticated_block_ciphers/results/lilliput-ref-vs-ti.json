@@ -1,0 +1,114 @@
+{
+    "commit": "be5021c",
+    "branch": "master",
+    "data": [
+        {
+            "cipher_name": "Lilliput-I-128",
+            "architecture": "PC",
+            "version": "felicsref",
+            "compiler_options": "-O3",
+            "code_size": 8414,
+            "code_ram": 896,
+            "code_time": 10565
+        },
+        {
+            "cipher_name": "Lilliput-I-128",
+            "architecture": "PC",
+            "version": "threshold",
+            "compiler_options": "-O3",
+            "code_size": 14123,
+            "code_ram": 1576,
+            "code_time": 46687
+        },
+        {
+            "cipher_name": "Lilliput-I-192",
+            "architecture": "PC",
+            "version": "felicsref",
+            "compiler_options": "-O3",
+            "code_size": 8607,
+            "code_ram": 952,
+            "code_time": 13086
+        },
+        {
+            "cipher_name": "Lilliput-I-192",
+            "architecture": "PC",
+            "version": "threshold",
+            "compiler_options": "-O3",
+            "code_size": 14436,
+            "code_ram": 1664,
+            "code_time": 55218
+        },
+        {
+            "cipher_name": "Lilliput-I-256",
+            "architecture": "PC",
+            "version": "felicsref",
+            "compiler_options": "-O3",
+            "code_size": 8831,
+            "code_ram": 1008,
+            "code_time": 16760
+        },
+        {
+            "cipher_name": "Lilliput-I-256",
+            "architecture": "PC",
+            "version": "threshold",
+            "compiler_options": "-O3",
+            "code_size": 14816,
+            "code_ram": 1784,
+            "code_time": 67536
+        },
+        {
+            "cipher_name": "Lilliput-II-128",
+            "architecture": "PC",
+            "version": "felicsref",
+            "compiler_options": "-O3",
+            "code_size": 7340,
+            "code_ram": 880,
+            "code_time": 12011
+        },
+        {
+            "cipher_name": "Lilliput-II-128",
+            "architecture": "PC",
+            "version": "threshold",
+            "compiler_options": "-O3",
+            "code_size": 13062,
+            "code_ram": 1544,
+            "code_time": 60477
+        },
+        {
+            "cipher_name": "Lilliput-II-192",
+            "architecture": "PC",
+            "version": "felicsref",
+            "compiler_options": "-O3",
+            "code_size": 7504,
+            "code_ram": 920,
+            "code_time": 15491
+        },
+        {
+            "cipher_name": "Lilliput-II-192",
+            "architecture": "PC",
+            "version": "threshold",
+            "compiler_options": "-O3",
+            "code_size": 13317,
+            "code_ram": 1632,
+            "code_time": 71535
+        },
+        {
+            "cipher_name": "Lilliput-II-256",
+            "architecture": "PC",
+            "version": "felicsref",
+            "compiler_options": "-O3",
+            "code_size": 7697,
+            "code_ram": 992,
+            "code_time": 19676
+        },
+        {
+            "cipher_name": "Lilliput-II-256",
+            "architecture": "PC",
+            "version": "threshold",
+            "compiler_options": "-O3",
+            "code_size": 13634,
+            "code_ram": 1752,
+            "code_time": 87629
+        }
+    ]
+}
