@@ -10,7 +10,12 @@ import pyexcel_ods
 import pyexcel_xlsx
 
 
-_ARCHITECTURES = ('AVR', 'MSP', 'ARM', 'PC')
+_ARCHITECTURES = OrderedDict((
+    ('AVR', 'AVR ATmega128'),
+    ('MSP', 'MSP430F1611'),
+    ('ARM', 'ARM Cortex-M3'),
+    ('PC', 'PC')
+))
 _METRICS = ('code_size', 'code_ram', 'code_time')
 
 
@@ -133,13 +138,6 @@ class TexWriter:
         ('code_time', 'Execution time (cycles)')
     ))
 
-    _PLATFORM_NAMES = {
-        'AVR': 'AVR ATmega128',
-        'MSP': 'MSP430F1611',
-        'ARM': 'ARM Cortex-M3',
-        'PC': 'PC'
-    }
-
     def __init__(self, output):
         self._output = output
 
@@ -218,8 +216,113 @@ class TexWriter:
             rows=self._format_rows(data),
             arch=architecture.lower(),
             caption='Performance results on {arch}.'.format(
-                arch=self._PLATFORM_NAMES[architecture]
+                arch=_ARCHITECTURES[architecture]
             )
+        )
+
+    def dump(self, results):
+        tables = (
+            self._make_table(arch, data)
+            for arch, data in results.items()
+        )
+
+        with open(self._output, 'w') as output:
+            output.write('\n'.join(tables))
+
+
+class HtmlWriter:
+
+    _TABLE_TEMPLATE = '''\
+<table>
+<caption>{caption}<span data-label="{label}"></span></caption>
+<thead>
+{header}
+</thead>
+<tbody>
+{body}
+</tbody>
+</table>
+'''
+
+    _COLUMNS = OrderedDict((
+        ('cipher_name', ''),
+        ('version', 'Version'),
+        ('compiler_options', '<code>CFLAGS</code>'),
+        ('code_size', 'Code size (B)'),
+        ('code_ram', 'RAM (B)'),
+        ('code_time', 'Execution time (cycles)')
+    ))
+
+    def __init__(self, output):
+        self._output = output
+
+    def _block(self, tag, content, attributes=None, oneline=False):
+        if attributes is None:
+            start = '<{t}>'.format(t=tag)
+        else:
+            start = '<{t} {a}>'.format(t=tag, a=attributes)
+
+        end = '</{t}>'.format(t=tag)
+
+        if oneline:
+            return start+content+end
+
+        return '\n'.join((start, content, end))
+
+    def _format_header(self):
+        lines = tuple(
+            '<th align="center">{c}</th>'.format(c=value)
+            for value in self._COLUMNS.values()
+        )
+
+        return self._block(
+            'tr', '\n'.join(lines),
+            'class="header" style="text-align: center!important"'
+        )
+
+    def _format_row(self, setup, n):
+        parities = ('even', 'odd')
+        row_class = 'class="{parity}"'.format(parity=parities[n%2])
+
+        def raw(value):
+            return str(value)
+
+        def smallcap(value):
+            return self._block(
+                'span', value, 'style="font-variant: small-caps;"', oneline=True
+            )
+
+        def code(value):
+            return self._block('code', value, oneline=True)
+
+        formatters = defaultdict(
+            lambda: raw,
+            cipher_name=smallcap,
+            version=code,
+            compiler_options=code
+        )
+
+        columns_content = (formatters[c](setup[c]) for c in self._COLUMNS)
+        columns = tuple(
+            self._block('td', content, 'align="center"', oneline=True)
+            for content in columns_content
+        )
+
+        return self._block('tr', '\n'.join(columns), row_class)
+
+    def _format_body(self, setups):
+        return '\n'.join(
+            self._format_row(s, n) for n, s in enumerate(setups, start=1)
+        )
+
+    def _make_table(self, architecture, data):
+        return self._TABLE_TEMPLATE.format(
+            header=self._format_header(),
+            body=self._format_body(data),
+            caption='Performance results on {arch}.'.format(
+                arch=_ARCHITECTURES[architecture]
+            ),
+            label='table:bench-soft-{arch}'.format(arch=architecture.lower())
         )
 
     def dump(self, results):
@@ -279,6 +382,8 @@ def _make_writer(output_filename):
         return SpreadsheetWriter(output_filename)
     if output_filename.endswith('.tex'):
         return TexWriter(output_filename)
+    if output_filename.endswith('.html'):
+        return HtmlWriter(output_filename)
 
     raise ValueError('{f}: unsupported extension'.format(f=output_filename))
 
