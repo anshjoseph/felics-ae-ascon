@@ -19,10 +19,15 @@ def _parse_sort_order(argument):
 
 
 def _parse_filter(argument):
-    key, pattern = argument.split('=')
+    patterns = dict(
+        subfilter.split('=') for subfilter in argument.split(',')
+    )
 
     def accept_setup(setup):
-        return re.match(pattern, setup[key])
+        return all(
+            re.match(pattern, setup[key])
+            for key, pattern in patterns.items()
+        )
 
     return accept_setup
 
@@ -39,7 +44,7 @@ def _parse_arguments():
 
     parser.add_argument(
         '-f', '--filter', default=lambda setup: True, type=_parse_filter,
-        metavar='KEY=REGEX'
+        metavar='KEY=REGEX[,KEY=REGEX...]'
     )
 
     parser.add_argument('results', metavar='JSON-RESULTS')
