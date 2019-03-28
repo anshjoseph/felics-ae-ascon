@@ -49,12 +49,12 @@ add_json_table_header ()
     local commit=$(git rev-parse --short HEAD)
     local branch=$(describe-revision)
 
-    cat <<-EOF > ${output_file}
-	{
-	    "commit": "${commit}",
-	    "branch": "${branch}",
-	    "data": [
-	EOF
+    cat <<EOF > ${output_file}
+{
+    "commit": "${commit}",
+    "branch": "${branch}",
+    "data": [
+EOF
 }
 
 add_json_table_row ()
@@ -69,17 +69,17 @@ add_json_table_row ()
     local code_ram_file=$7
     local code_time_file=$8
 
-    cat <<-EOF >> ${output_file}
-	{
-	    "cipher_name": "${cipher_name}",
-	    "architecture": "${architecture}",
-	    "version": "${cipher_implementation_version}",
-	    "compiler_options": "${cipher_implementation_compiler_options}",
-	    "code_size": $(get_code_size ${code_size_file}),
-	    "code_ram": $(get_code_ram ${code_ram_file}),
-	    "code_time": $(get_code_time ${code_time_file})
-	},
-	EOF
+    cat <<EOF >> ${output_file}
+        {
+            "cipher_name": "${cipher_name}",
+            "architecture": "${architecture}",
+            "version": "${cipher_implementation_version}",
+            "compiler_options": "${cipher_implementation_compiler_options}",
+            "code_size": $(get_code_size ${code_size_file}),
+            "code_ram": $(get_code_ram ${code_ram_file}),
+            "code_time": $(get_code_time ${code_time_file})
+        },
+EOF
 }
 
 add_json_table_footer ()
@@ -87,8 +87,8 @@ add_json_table_footer ()
     local output_file=$1
 
     sed -i '$ s/,$//' ${output_file} # Remove trailing comma.
-    cat <<-EOF >> ${output_file}
-	    ]
-	}
-	EOF
+    cat <<EOF >> ${output_file}
+    ]
+}
+EOF
 }

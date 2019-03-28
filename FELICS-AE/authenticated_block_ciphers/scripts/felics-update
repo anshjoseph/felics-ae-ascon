@@ -15,12 +15,13 @@ def _parse_arguments():
 
 def _load_file(filename):
     with open(filename) as f:
-        return json.load(f)
+        return json.load(f, object_pairs_hook=OrderedDict)
 
 
 def _dump(output, data):
     with open(output, 'w') as out:
         json.dump(data, out, indent=4)
+        print(file=out)         # Add final newline.
 
 
 def _make_key(setup):
@@ -29,10 +30,10 @@ def _make_key(setup):
 
 
 def _update(old, new):
-    merged = {
-        'commit': new['commit'],
-        'branch': new['branch']
-    }
+    merged = OrderedDict((
+        ('commit', new['commit']),
+        ('branch', new['branch'])
+    ))
 
     old_setups = OrderedDict((_make_key(s), s) for s in old['data'])
     new_setups = {_make_key(s): s for s in new['data']}
