@@ -52,6 +52,14 @@ def _parse_arguments():
         metavar='KEY=REGEX[,KEY=REGEX...]'
     )
 
+    parser.add_argument(
+        '-l', '--table-label', default='table:bench-soft-{arch}'
+    )
+
+    parser.add_argument(
+        '-c', '--table-caption', default='Performance results on {arch}.'
+    )
+
     parser.add_argument('results', metavar='JSON-RESULTS')
 
     return parser.parse_args()
@@ -125,7 +133,7 @@ class TexWriter:
 {rows}
   \end{{tabular}}
   \caption{{{caption}}}
-  \label{{table:bench-soft-{arch}}}
+  \label{{{label}}}
 \end{{table}}
 '''[1:]                         # Remove first newline.
 
@@ -138,8 +146,10 @@ class TexWriter:
         ('code_time', 'Execution time (cycles)')
     ))
 
-    def __init__(self, output):
+    def __init__(self, output, caption, label):
         self._output = output
+        self._caption = caption
+        self._label = label
 
     def _pad_cell(self, value, padding, alignment):
         return '{value:{alignment}{width}}'.format(
@@ -214,10 +224,8 @@ class TexWriter:
     def _make_table(self, architecture, data):
         return self._TABLE_TEMPLATE.format(
             rows=self._format_rows(data),
-            arch=architecture.lower(),
-            caption='Performance results on {arch}.'.format(
-                arch=_ARCHITECTURES[architecture]
-            )
+            caption=self._caption.format(arch=_ARCHITECTURES[architecture]),
+            label=self._label.format(arch=architecture.lower())
         )
 
     def dump(self, results):
@@ -253,8 +261,10 @@ class HtmlWriter:
         ('code_time', 'Execution time (cycles)')
     ))
 
-    def __init__(self, output):
+    def __init__(self, output, caption, label):
         self._output = output
+        self._caption = caption
+        self._label = label
 
     def _block(self, tag, content, attributes=None, oneline=False):
         if attributes is None:
@@ -319,9 +329,7 @@ class HtmlWriter:
         return self._TABLE_TEMPLATE.format(
             header=self._format_header(),
             body=self._format_body(data),
-            caption='Performance results on {arch}.'.format(
-                arch=_ARCHITECTURES[architecture]
-            ),
+            caption=self._caption.format(arch=_ARCHITECTURES[architecture]),
             label='table:bench-soft-{arch}'.format(arch=architecture.lower())
         )
 
@@ -375,15 +383,18 @@ class ConsoleWriter:
             print()
 
 
-def _make_writer(output_filename):
+def _make_writer(output_filename, caption, label):
     if output_filename is None:
         return ConsoleWriter()
+
     if output_filename.endswith(('.ods', 'xlsx')):
         return SpreadsheetWriter(output_filename)
+
     if output_filename.endswith('.tex'):
-        return TexWriter(output_filename)
+        return TexWriter(output_filename, caption, label)
+
     if output_filename.endswith('.html'):
-        return HtmlWriter(output_filename)
+        return HtmlWriter(output_filename, caption, label)
 
     raise ValueError('{f}: unsupported extension'.format(f=output_filename))
 
@@ -397,5 +408,7 @@ if __name__ == '__main__':
     results_by_arch = _group_setups(raw_results, arguments.sort_by,
                                     arguments.filter)
 
-    writer = _make_writer(arguments.output)
+    writer = _make_writer(arguments.output, arguments.table_caption,
+                          arguments.table_label)
+
     writer.dump(results_by_arch)
