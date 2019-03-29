@@ -16,7 +16,22 @@ _ARCHITECTURES = OrderedDict((
     ('ARM', 'ARM Cortex-M3'),
     ('PC', 'PC')
 ))
-_METRICS = ('code_size', 'code_ram', 'code_time')
+
+_CONTEXT = OrderedDict((
+    ('cipher_name', ''),
+    ('version', 'Version'),
+    ('compiler_options', 'Compiler options')
+))
+
+_METRICS = OrderedDict((
+    ('code_size', 'Size (bytes)'),
+    ('code_ram', 'RAM (bytes)'),
+    ('code_time', 'Execution time (cycles)')
+))
+
+_COLUMNS = OrderedDict(
+    (k, v) for d in (_CONTEXT, _METRICS) for k, v in d.items()
+)
 
 
 def _parse_sort_order(argument):
@@ -93,23 +108,14 @@ class SpreadsheetWriter:
         '.ods': pyexcel_ods
     }
 
-    _SHEET_COLUMNS = OrderedDict((
-        ('cipher_name', 'Designation'),
-        ('version', 'Version'),
-        ('compiler_options', 'Compiler options'),
-        ('code_size', 'Size (bytes)'),
-        ('code_ram', 'RAM (bytes)'),
-        ('code_time', 'Execution time (cycles)')
-    ))
-
     def __init__(self, output):
         self._output = output
 
     def _make_row(self, setup):
-        return tuple(setup[c] for c in self._SHEET_COLUMNS)
+        return tuple(setup[c] for c in _COLUMNS)
 
     def _make_rows(self, data):
-        header = tuple(self._SHEET_COLUMNS.values())
+        header = tuple(_COLUMNS.values())
         rows = tuple(self._make_row(setup) for setup in data)
 
         return (header,) + rows
@@ -137,15 +143,6 @@ class TexWriter:
 \end{{table}}
 '''[1:]                         # Remove first newline.
 
-    _COLUMNS = OrderedDict((
-        ('cipher_name', ''),
-        ('version', 'Version'),
-        ('compiler_options', r'\texttt{CFLAGS}'),
-        ('code_size', 'Code size (B)'),
-        ('code_ram', 'RAM (B)'),
-        ('code_time', 'Execution time (cycles)')
-    ))
-
     def __init__(self, output, caption, label):
         self._output = output
         self._caption = caption
@@ -162,7 +159,7 @@ class TexWriter:
         def bold(s):
             return r'\textbf{{{s}}}'.format(s=s)
 
-        return tuple(bold(caption) for caption in self._COLUMNS.values())
+        return tuple(bold(caption) for caption in _COLUMNS.values())
 
     def _list_row_fields(self, setup):
         def raw(value):
@@ -181,7 +178,7 @@ class TexWriter:
             compiler_options=texttt
         )
 
-        return tuple(formatters[c](setup[c]) for c in self._COLUMNS)
+        return tuple(formatters[c](setup[c]) for c in _COLUMNS)
 
     def _alignment(self, column_name):
         if column_name in _METRICS:
@@ -189,7 +186,7 @@ class TexWriter:
         return '<'
 
     def _pad_row_cells(self, row, paddings):
-        column_names = tuple(self._COLUMNS)
+        column_names = tuple(_COLUMNS)
 
         return (
             self._pad_cell(cell, paddings[c], self._alignment(column_names[c]))
@@ -252,15 +249,6 @@ class HtmlWriter:
 </table>
 '''
 
-    _COLUMNS = OrderedDict((
-        ('cipher_name', ''),
-        ('version', 'Version'),
-        ('compiler_options', '<code>CFLAGS</code>'),
-        ('code_size', 'Code size (B)'),
-        ('code_ram', 'RAM (B)'),
-        ('code_time', 'Execution time (cycles)')
-    ))
-
     def __init__(self, output, caption, label):
         self._output = output
         self._caption = caption
@@ -282,7 +270,7 @@ class HtmlWriter:
     def _format_header(self):
         lines = tuple(
             '<th align="center">{c}</th>'.format(c=value)
-            for value in self._COLUMNS.values()
+            for value in _COLUMNS.values()
         )
 
         return self._block(
@@ -312,7 +300,7 @@ class HtmlWriter:
             compiler_options=code
         )
 
-        columns_content = (formatters[c](setup[c]) for c in self._COLUMNS)
+        columns_content = (formatters[c](setup[c]) for c in _COLUMNS)
         columns = tuple(
             self._block('td', content, 'align="center"', oneline=True)
             for content in columns_content
