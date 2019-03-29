@@ -20,12 +20,12 @@ _ARCHITECTURES = OrderedDict((
 _CONTEXT = OrderedDict((
     ('cipher_name', ''),
     ('version', 'Version'),
-    ('compiler_options', 'Compiler options')
+    ('compiler_options', 'CFLAGS')
 ))
 
 _METRICS = OrderedDict((
-    ('code_size', 'Size (bytes)'),
-    ('code_ram', 'RAM (bytes)'),
+    ('code_size', 'Code size (B)'),
+    ('code_ram', 'RAM (B)'),
     ('code_time', 'Execution time (cycles)')
 ))
 
@@ -155,30 +155,35 @@ class TexWriter:
             alignment=alignment
         )
 
-    def _list_header_fields(self):
-        def bold(s):
-            return r'\textbf{{{s}}}'.format(s=s)
+    def _formatter(self, fmt):
+        return lambda s: r'\{fmt}{{{s}}}'.format(fmt=fmt, s=s)
 
-        return tuple(bold(caption) for caption in _COLUMNS.values())
-
-    def _list_row_fields(self, setup):
-        def raw(value):
-            return str(value)
-
-        def smallcap(value):
-            return r'\textsc{{{}}}'.format(value)
-
-        def texttt(value):
-            return r'\texttt{{{}}}'.format(value)
-
-        formatters = defaultdict(
-            lambda: raw,
-            cipher_name=smallcap,
-            version=texttt,
-            compiler_options=texttt
+    def _format_header(self):
+        formats = defaultdict(
+            lambda: str,
+            compiler_options=self._formatter('texttt')
         )
 
-        return tuple(formatters[c](setup[c]) for c in _COLUMNS)
+        formatted = (
+            formats[column](caption) for column, caption in _COLUMNS.items()
+        )
+
+        embolden = self._formatter('textbf')
+
+        return tuple(embolden(caption) for caption in formatted)
+
+    def _format_cells(self, setup):
+        smallcaps = self._formatter('textsc')
+        teletype = self._formatter('texttt')
+
+        formats = defaultdict(
+            lambda: str,
+            cipher_name=smallcaps,
+            version=teletype,
+            compiler_options=teletype
+        )
+
+        return tuple(formats[c](setup[c]) for c in _COLUMNS)
 
     def _alignment(self, column_name):
         if column_name in _METRICS:
@@ -197,8 +202,8 @@ class TexWriter:
         return max(len(row[column]) for row in rows)
 
     def _make_padded_rows(self, data):
-        header = self._list_header_fields()
-        rows = (header,) + tuple(self._list_row_fields(setup) for setup in data)
+        header = self._format_header()
+        rows = (header,) + tuple(self._format_cells(setup) for setup in data)
 
         columns_nb = len(header)
         paddings = tuple(
@@ -267,14 +272,27 @@ class HtmlWriter:
 
         return '\n'.join((start, content, end))
 
-    def _format_header(self):
-        lines = tuple(
-            '<th align="center">{c}</th>'.format(c=value)
-            for value in _COLUMNS.values()
+    def _tag_maker(self, tag, attributes=None):
+        return lambda content: self._block(
+            tag, content, attributes, oneline=True
         )
 
+    def _format_header(self):
+        formats = defaultdict(
+            lambda: str,
+            compiler_options=self._tag_maker('code')
+        )
+
+        formatted = (
+            formats[column](caption) for column, caption in _COLUMNS.items()
+        )
+
+        align = self._tag_maker('th', 'align="center"')
+
+        cells = (align(caption) for caption in formatted)
+
         return self._block(
-            'tr', '\n'.join(lines),
+            'tr', '\n'.join(cells),
             'class="header" style="text-align: center!important"'
         )
 
@@ -282,31 +300,23 @@ class HtmlWriter:
         parities = ('even', 'odd')
         row_class = 'class="{parity}"'.format(parity=parities[n%2])
 
-        def raw(value):
-            return str(value)
+        smallcaps = self._tag_maker('span', 'style="font-variant: small-caps;"')
+        code = self._tag_maker('code')
 
-        def smallcap(value):
-            return self._block(
-                'span', value, 'style="font-variant: small-caps;"', oneline=True
-            )
-
-        def code(value):
-            return self._block('code', value, oneline=True)
-
-        formatters = defaultdict(
-            lambda: raw,
-            cipher_name=smallcap,
+        formats = defaultdict(
+            lambda: str,
+            cipher_name=smallcaps,
             version=code,
             compiler_options=code
         )
 
-        columns_content = (formatters[c](setup[c]) for c in _COLUMNS)
-        columns = tuple(
-            self._block('td', content, 'align="center"', oneline=True)
-            for content in columns_content
+        cells_content = (formats[c](setup[c]) for c in _COLUMNS)
+        cells = tuple(
+            self._block('td', cell, 'align="center"', oneline=True)
+            for cell in cells_content
         )
 
-        return self._block('tr', '\n'.join(columns), row_class)
+        return self._block('tr', '\n'.join(cells), row_class)
 
     def _format_body(self, setups):
         return '\n'.join(
