@@ -14,11 +14,12 @@ ${FELICS_PUBLISH}                                                   \
     -f 'cipher_name=.+128.?'                                        \
     -c 'Performance results for 128-bit key algorithms on {arch}.'  \
     -l 'table:bench-soft-128-{arch}'                                \
-    -o ${CI_DIR}/results/felics-128.tex
+    -o ${CI_DIR}/results/implem-soft-128.tex
 
 ${FELICS_PUBLISH}                                           \
     ${FELICS_RESULTS}/lilliput-vs-caesar-usecase-1.json     \
     -f 'cipher_name=Lilliput.+'                             \
     -c 'Performance of \textsc{{Lilliput-AE}} on {arch}.'   \
     -l 'table:bench-soft-lilliput-{arch}'                   \
-    -o ${CI_DIR}/results/felics-lilliput.tex
+    -i='-version'                                           \
+    -o ${CI_DIR}/results/implem-soft-lilliput.tex

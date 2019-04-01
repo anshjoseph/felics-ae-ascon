@@ -34,6 +34,20 @@ _COLUMNS = OrderedDict(
 )
 
 
+def _parse_info(argument):
+    if argument[0] == '-':
+        available = set(_COLUMNS)
+        blacklist = set(argument[1:].split(':'))
+        requested = available-blacklist
+    else:
+        requested = set(arguments.split(':'))
+
+    # Re-order.
+    return OrderedDict((
+        (k, v) for k, v in _COLUMNS.items() if k in requested
+    ))
+
+
 def _parse_sort_order(argument):
     return argument.split(',')
 
@@ -65,6 +79,11 @@ def _parse_arguments():
     parser.add_argument(
         '-f', '--filter', default=lambda setup: True, type=_parse_filter,
         metavar='KEY=REGEX[,KEY=REGEX...]'
+    )
+
+    parser.add_argument(
+        '-i', '--info', default=_COLUMNS, type=_parse_info,
+        metavar='[-INFO:...|INFO:...]'
     )
 
     parser.add_argument(
@@ -135,7 +154,7 @@ class TexWriter:
     _TABLE_TEMPLATE = r'''
 \begin{{table}}[H]
   \centering
-  \begin{{tabular}}{{l|l|l||r|r|r}}
+  \begin{{tabular}}{{{tablespec}}}
 {rows}
   \end{{tabular}}
   \caption{{{caption}}}
@@ -143,10 +162,11 @@ class TexWriter:
 \end{{table}}
 '''[1:]                         # Remove first newline.
 
-    def __init__(self, output, caption, label):
+    def __init__(self, output, caption, label, columns):
         self._output = output
         self._caption = caption
         self._label = label
+        self._columns = columns
 
     def _pad_cell(self, value, padding, alignment):
         return '{value:{alignment}{width}}'.format(
@@ -164,13 +184,16 @@ class TexWriter:
             compiler_options=self._formatter('texttt')
         )
 
-        formatted = (
-            formats[column](caption) for column, caption in _COLUMNS.items()
-        )
+        formatted = {
+            column: formats[column](caption)
+            for column, caption in self._columns.items()
+        }
 
         embolden = self._formatter('textbf')
 
-        return tuple(embolden(caption) for caption in formatted)
+        return {
+            column: embolden(caption) for column, caption in formatted.items()
+        }
 
     def _format_cells(self, setup):
         smallcaps = self._formatter('textsc')
@@ -183,19 +206,19 @@ class TexWriter:
             compiler_options=teletype
         )
 
-        return tuple(formats[c](setup[c]) for c in _COLUMNS)
+        return {
+            col: formats[col](setup[col]) for col in self._columns
+        }
 
-    def _alignment(self, column_name):
-        if column_name in _METRICS:
+    def _alignment(self, column):
+        if column in _METRICS:
             return '>'
         return '<'
 
     def _pad_row_cells(self, row, paddings):
-        column_names = tuple(_COLUMNS)
-
         return (
-            self._pad_cell(cell, paddings[c], self._alignment(column_names[c]))
-            for c, cell in enumerate(row)
+            self._pad_cell(row[col], paddings[col], self._alignment(col))
+            for col in self._columns
         )
 
     def _compute_column_padding(self, rows, column):
@@ -205,10 +228,10 @@ class TexWriter:
         header = self._format_header()
         rows = (header,) + tuple(self._format_cells(setup) for setup in data)
 
-        columns_nb = len(header)
-        paddings = tuple(
-            self._compute_column_padding(rows, c) for c in range(columns_nb)
-        )
+        paddings = {
+            column: self._compute_column_padding(rows, column)
+            for column in self._columns
+        }
 
         return (
             self._pad_row_cells(row, paddings)
@@ -223,11 +246,22 @@ class TexWriter:
             self._format_row(row) for row in self._make_padded_rows(data)
         )
 
+    def _make_tablespec(self):
+        columns = set(self._columns)
+        context_nb = len(columns & set(_CONTEXT))
+        metrics_nb = len(columns & set(_METRICS))
+
+        return '{context}||{metrics}'.format(
+            context='|'.join('l'*context_nb),
+            metrics='|'.join('r'*metrics_nb)
+        )
+
     def _make_table(self, architecture, data):
         return self._TABLE_TEMPLATE.format(
             rows=self._format_rows(data),
             caption=self._caption.format(arch=_ARCHITECTURES[architecture]),
-            label=self._label.format(arch=architecture.lower())
+            label=self._label.format(arch=architecture.lower()),
+            tablespec=self._make_tablespec()
         )
 
     def dump(self, results):
@@ -381,7 +415,7 @@ class ConsoleWriter:
             print()
 
 
-def _make_writer(output_filename, caption, label):
+def _make_writer(output_filename, caption, label, info):
     if output_filename is None:
         return ConsoleWriter()
 
@@ -389,7 +423,7 @@ def _make_writer(output_filename, caption, label):
         return SpreadsheetWriter(output_filename)
 
     if output_filename.endswith('.tex'):
-        return TexWriter(output_filename, caption, label)
+        return TexWriter(output_filename, caption, label, info)
 
     if output_filename.endswith('.html'):
         return HtmlWriter(output_filename, caption, label)
@@ -407,6 +441,6 @@ if __name__ == '__main__':
                                     arguments.filter)
 
     writer = _make_writer(arguments.output, arguments.table_caption,
-                          arguments.table_label)
+                          arguments.table_label, arguments.info)
 
     writer.dump(results_by_arch)
