@@ -37,10 +37,10 @@ _COLUMNS = OrderedDict(
 def _parse_info(argument):
     if argument[0] == '-':
         available = set(_COLUMNS)
-        blacklist = set(argument[1:].split(':'))
+        blacklist = set(argument[1:].split(','))
         requested = available-blacklist
     else:
-        requested = set(arguments.split(':'))
+        requested = set(arguments.split(','))
 
     # Re-order.
     return OrderedDict((
@@ -288,10 +288,11 @@ class HtmlWriter:
 </table>
 '''
 
-    def __init__(self, output, caption, label):
+    def __init__(self, output, caption, label, columns):
         self._output = output
         self._caption = caption
         self._label = label
+        self._columns = columns
 
     def _block(self, tag, content, attributes=None, oneline=False):
         if attributes is None:
@@ -318,7 +319,8 @@ class HtmlWriter:
         )
 
         formatted = (
-            formats[column](caption) for column, caption in _COLUMNS.items()
+            formats[column](caption)
+            for column, caption in self._columns.items()
         )
 
         align = self._tag_maker('th', 'align="center"')
@@ -344,7 +346,7 @@ class HtmlWriter:
             compiler_options=code
         )
 
-        cells_content = (formats[c](setup[c]) for c in _COLUMNS)
+        cells_content = (formats[c](setup[c]) for c in self._columns)
         cells = tuple(
             self._block('td', cell, 'align="center"', oneline=True)
             for cell in cells_content
@@ -426,7 +428,7 @@ def _make_writer(output_filename, caption, label, info):
         return TexWriter(output_filename, caption, label, info)
 
     if output_filename.endswith('.html'):
-        return HtmlWriter(output_filename, caption, label)
+        return HtmlWriter(output_filename, caption, label, info)
 
     raise ValueError('{f}: unsupported extension'.format(f=output_filename))
 
