@@ -1,0 +1,24 @@
+stages:
+  - publish
+
+publish-benchmark-nist:
+  stage: publish
+  image: python:latest
+
+  script:
+    - ./ci/publish-nist.sh
+
+  artifacts:
+    paths:
+      - ci/results/*.tex
+
+publish-benchmark-website:
+  stage: publish
+  image: python:latest
+
+  script:
+    - ./ci/publish-website.sh
+
+  artifacts:
+    paths:
+      - ci/results/*.md
