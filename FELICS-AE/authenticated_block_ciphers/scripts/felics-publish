@@ -2,12 +2,10 @@
 
 from argparse import ArgumentParser
 from collections import defaultdict, OrderedDict
+from importlib import import_module
 import json
 from os import path
 import re
-
-import pyexcel_ods
-import pyexcel_xlsx
 
 
 _ARCHITECTURES = OrderedDict((
@@ -122,11 +120,6 @@ def _group_setups(setups, sort_keys, predicate):
 
 class SpreadsheetWriter:
 
-    _MODULES = {
-        '.xlsx': pyexcel_xlsx,
-        '.ods': pyexcel_ods
-    }
-
     def __init__(self, output):
         self._output = output
 
@@ -139,14 +132,19 @@ class SpreadsheetWriter:
 
         return (header,) + rows
 
+    def _load_export_module(self):
+        _, ext = path.splitext(self._output)
+        return import_module('pyexcel_{ext}'.format(ext=ext[1:]))
+
     def dump(self, results):
+        export_module = self._load_export_module()
+
         spreadsheet_data = OrderedDict(
             (arch, self._make_rows(data))
             for arch, data in results.items()
         )
 
-        _, ext = path.splitext(self._output)
-        self._MODULES[ext].save_data(self._output, spreadsheet_data)
+        export_module.save_data(self._output, spreadsheet_data)
 
 
 class TexWriter:
