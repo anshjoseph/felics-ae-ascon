@@ -38,21 +38,27 @@ def _compute_differences(data1, data2):
     }
 
 
+def _smallcaps(text):
+    return r'\textsc{{{txt}}}'.format(txt=text)
+
+
 def _print_ratios(setups):
     v1 = 'felicsref'
     v2 = 'threshold'
 
-    template = r'    & \textsc{{{cipher:<{pad}}}} & {code_size:.2f} & {code_ram:.2f} & {code_time:.2f} \\'
-    pad = max(len(cipher) for cipher in setups)
+    header = r'    & {cipher:<{pad}} & '
+    rest = r'{code_size:.2f} & {code_ram:.2f} & {code_time:.2f} \\'
 
-    for cipher, metrics in sorted(setups.items()):
-        arguments = dict(
-            cipher=cipher,
-            pad=pad,
-            **_compute_differences(metrics[v1], metrics[v2])
+    ciphers = setups.keys()
+    pad = len(_smallcaps(max(ciphers, key=len)))
+
+    for cipher, values in sorted(setups.items()):
+        metrics = _compute_differences(values[v1], values[v2])
+
+        print(
+            header.format(cipher=_smallcaps(cipher), pad=pad)
+            + rest.format_map(metrics)
         )
-
-        print(template.format_map(arguments))
 
 
 def _print_header(architecture, lines_nb):
