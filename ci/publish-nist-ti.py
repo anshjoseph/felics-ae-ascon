@@ -42,7 +42,7 @@ def _print_ratios(setups):
     v1 = 'felicsref'
     v2 = 'threshold'
 
-    template = r'    \textsc{{{cipher:<{pad}}}} & {code_size:.2f} & {code_ram:.2f} & {code_time:.2f} \\'
+    template = r'    & \textsc{{{cipher:<{pad}}}} & {code_size:.2f} & {code_ram:.2f} & {code_time:.2f} \\'
     pad = max(len(cipher) for cipher in setups)
 
     for cipher, metrics in sorted(setups.items()):
