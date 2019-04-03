@@ -2,18 +2,29 @@
 
 from collections import defaultdict, OrderedDict
 import json
-from os import path
-
-
-_CI_DIR = path.dirname(__file__)
-_FELICS_AE_DIR = path.join(
-    _CI_DIR, '..', 'FELICS-AE', 'authenticated_block_ciphers'
-)
-_RESULTS_FILENAME = path.join(_FELICS_AE_DIR, 'results', 'lilliput-ref-vs-ti.json')
+from sys import argv
 
 
 _METRICS = ('code_size', 'code_ram', 'code_time')
 _ARCHITECTURES = ('AVR', 'MSP', 'ARM', 'PC')
+
+
+_VERSION1 = 'felicsref'
+_VERSION2 = 'threshold'
+
+
+_TABLE_TEMPLATE = r'''
+\begin{{table}}[H]
+  \centering
+  \begin{{tabular}}{{l|l||r|r|r}}
+{header} \\
+    \hline
+{body}
+  \end{{tabular}}
+  \caption{{Performance impact of the thresholding scheme.}}
+  \label{{table:bench-soft-ti}}
+\end{{table}}
+'''[1:]                         # Remove first newline.
 
 
 def _group_setups(filename):
@@ -42,39 +53,66 @@ def _smallcaps(text):
     return r'\textsc{{{txt}}}'.format(txt=text)
 
 
-def _print_ratios(setups):
-    v1 = 'felicsref'
-    v2 = 'threshold'
-
-    header = r'    & {cipher:<{pad}} & '
-    rest = r'{code_size:.2f} & {code_ram:.2f} & {code_time:.2f} \\'
+def _format_ratios(setups, v1, v2):
+    header = r'    & {cipher:<{pad}}'
+    metrics = r'{code_size:.2f} & {code_ram:.2f} & {code_time:.2f} \\'
+    line = '{header} & {metrics}'
 
     ciphers = setups.keys()
     pad = len(_smallcaps(max(ciphers, key=len)))
 
     for cipher, values in sorted(setups.items()):
-        metrics = _compute_differences(values[v1], values[v2])
+        ratios = _compute_differences(values[v1], values[v2])
 
-        print(
-            header.format(cipher=_smallcaps(cipher), pad=pad)
-            + rest.format_map(metrics)
+        yield line.format(
+            header=header.format(cipher=_smallcaps(cipher), pad=pad),
+            metrics=metrics.format_map(ratios)
         )
 
 
-def _print_header(architecture, lines_nb):
-    print(r'\multirow{{{n}}}{{*}}{{{a}}}'.format(a=architecture, n=lines_nb))
+def _indent(text, indent):
+    return '\n'.join(indent*' ' + line for line in text.splitlines())
 
 
-def _print_footer():
-    print(r'\hline')
+def _format_header(v1, v2):
+    fields = (
+        r'\textbf{Platform}',
+        r'\textbf{Member}'
+    ) + tuple(
+        r'$\frac{{{m}_{{{v2}}}}}{{{m}_{{{v1}}}}}$'.format(m=m, v1=v1, v2=v2)
+        for m in ('ROM', 'RAM', 'cycles')
+    )
+
+    return _indent(' & '.join(fields), 4)
 
 
-def _print_table(setups):
-    for arch, arch_setups in setups.items():
-        _print_header(arch, len(arch_setups))
-        _print_ratios(arch_setups)
-        _print_footer()
+def _arch_table(arch, setups, v1, v2):
+    header = r'\multirow{{{n}}}{{*}}{{{a}}}'.format(a=arch, n=len(setups))
+    footer = r'\hline'
+    content = '\n'.join(line for line in _format_ratios(setups, v1, v2))
+
+    return '\n'.join((header, content, footer))
+
+
+def _format_body(setups, v1, v2):
+    tables = (
+        _arch_table(arch, setups, v1, v2) for arch, setups in setups.items()
+    )
+
+    return _indent('\n'.join(tables), 4)
+
+
+def _main(results_filename, output_filename):
+    setups = _group_setups(results_filename)
+
+    table = _TABLE_TEMPLATE.format(
+        header=_format_header(_VERSION1, _VERSION2),
+        body=_format_body(setups, _VERSION1, _VERSION2),
+    )
+
+    with open(output_filename, 'w') as out:
+        out.write(table)
 
 
 if __name__ == '__main__':
-    _print_table(_group_setups(_RESULTS_FILENAME))
+    _main(argv[1], argv[2])

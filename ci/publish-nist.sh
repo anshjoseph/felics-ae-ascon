@@ -23,3 +23,7 @@ ${FELICS_PUBLISH}                                           \
     -l 'table:bench-soft-lilliput-{arch}'                   \
     -i='-version'                                           \
     -o ${CI_DIR}/results/implem-soft-lilliput.tex
+
+${CI_DIR}/publish-nist-ti.py                    \
+    ${FELICS_RESULTS}/lilliput-ref-vs-ti.json   \
+    ${CI_DIR}/results/implem-soft-ti.tex
