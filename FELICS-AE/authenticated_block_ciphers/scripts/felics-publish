@@ -120,14 +120,15 @@ def _group_setups(setups, sort_keys, predicate):
 
 class SpreadsheetWriter:
 
-    def __init__(self, output):
+    def __init__(self, output, columns):
         self._output = output
+        self._columns = columns
 
     def _make_row(self, setup):
-        return tuple(setup[c] for c in _COLUMNS)
+        return tuple(setup[c] for c in self._columns)
 
     def _make_rows(self, data):
-        header = tuple(_COLUMNS.values())
+        header = tuple(self._columns.values())
         rows = tuple(self._make_row(setup) for setup in data)
 
         return (header,) + rows
@@ -420,7 +421,7 @@ def _make_writer(output_filename, caption, label, info):
         return ConsoleWriter()
 
     if output_filename.endswith(('.ods', 'xlsx')):
-        return SpreadsheetWriter(output_filename)
+        return SpreadsheetWriter(output_filename, info)
 
     if output_filename.endswith('.tex'):
         return TexWriter(output_filename, caption, label, info)
