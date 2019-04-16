@@ -40,6 +40,16 @@ static void _nonlinear_layer(uint8_t X[BLOCK_BYTES], const uint8_t RTK[ROUND_TWE
     /* for (size_t j=0; j<ROUND_TWEAKEY_BYTES; j++) */
     /* { */
         __asm__ volatile (
+            "push r4" "\n\t"
+            "push r5" "\n\t"
+            "push r6" "\n\t"
+            "push r7" "\n\t"
+            "push r8" "\n\t"
+            "push r9" "\n\t"
+            "push r10" "\n\t"
+            "push r11" "\n\t"
+            "push r12" "\n\t"
+
             "clr r4" "\n\t"
             "mov.b %[RTK], r5" "\n\t"
             "mov.b %[X], r6" "\n\t"
@@ -76,6 +86,16 @@ static void _nonlinear_layer(uint8_t X[BLOCK_BYTES], const uint8_t RTK[ROUND_TWE
 
             "cmp #8, r4" "\n\t"
             "jnz loopstart%=" "\n\t"
+
+            "pop r12" "\n\t"
+            "pop r11" "\n\t"
+            "pop r10" "\n\t"
+            "pop r9" "\n\t"
+            "pop r8" "\n\t"
+            "pop r7" "\n\t"
+            "pop r6" "\n\t"
+            "pop r5" "\n\t"
+            "pop r4" "\n\t"
             :
             : [X] "m" (X), [RTK] "m" (RTK)
         );
