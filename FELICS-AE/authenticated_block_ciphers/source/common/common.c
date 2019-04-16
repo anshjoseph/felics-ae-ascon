@@ -88,6 +88,18 @@ void DisplayVerifyData(uint8_t *data, uint16_t length, const char *name)
 	VerifyData(data, name);
 }
 
+#ifdef MSP
+static void _die(void)
+{
+	StopDevice();
+}
+#else
+static void _die(void)
+{
+	exit(1);
+}
+#endif
+
 void VerifyData(uint8_t *data, const char *name)
 {
 	uint8_t correct = 1;
@@ -145,7 +157,7 @@ void VerifyData(uint8_t *data, const char *name)
 	else
 	{
 		printf("WRONG!\n");
-        exit(1);
+		_die();
 	}
 }
 
