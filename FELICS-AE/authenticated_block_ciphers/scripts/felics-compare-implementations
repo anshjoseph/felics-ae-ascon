@@ -1,0 +1,90 @@
+#!/usr/bin/env python3
+
+from collections import defaultdict, OrderedDict
+import json
+from sys import argv
+
+
+_METRICS = ('code_size', 'code_ram', 'code_time')
+_ARCHITECTURES = ('AVR', 'MSP', 'ARM', 'PC')
+
+
+def _group_setups(filename):
+    with open(filename) as f:
+        results = json.load(f)
+
+    grouped = {a: defaultdict(dict) for a in _ARCHITECTURES}
+
+    for setup in results['data']:
+        grouped[setup['architecture']][setup['cipher_name']][setup['version']] = setup
+
+    return OrderedDict((
+        (a, grouped[a])
+        for a in sorted(grouped, key=_ARCHITECTURES.index)
+    ))
+
+
+def _compute_differences(data1, data2):
+    return {
+        m: data2[m]/data1[m]
+        for m in _METRICS
+    }
+
+
+def _format_ratios(setups, v1, v2):
+    header = '    {cipher:<{pad}}'
+    metrics = '{code_size:.2f} {code_ram:.2f} {code_time:.2f}'
+    line = '{header} {metrics}'
+
+    ciphers = setups.keys()
+    pad = len(max(ciphers, key=len))
+
+    for cipher, values in sorted(setups.items()):
+        ratios = _compute_differences(values[v1], values[v2])
+
+        yield line.format(
+            header=header.format(cipher=cipher, pad=pad),
+            metrics=metrics.format_map(ratios)
+        )
+
+
+def _format_header(v1, v2):
+    fields = (
+        'platform',
+        'algorithm'
+    ) + tuple(
+        '{m}_{v2} / {m}_{v1}'.format(m=m, v1=v1, v2=v2)
+        for m in ('ROM', 'RAM', 'cycles')
+    )
+
+    return ' '.join(fields)
+
+
+def _arch_table(arch, setups, v1, v2):
+    header = arch
+    content = '\n'.join(line for line in _format_ratios(setups, v1, v2))
+
+    return '\n'.join((header, content))
+
+
+def _format_body(setups, v1, v2):
+    tables = (
+        _arch_table(arch, setups, v1, v2) for arch, setups in setups.items()
+    )
+
+    return '\n'.join(tables)
+
+
+def _main(results_filename, version1, version2):
+    setups = _group_setups(results_filename)
+
+    table = '{header}\n{body}'.format(
+        header=_format_header(version1, version2),
+        body=_format_body(setups, version1, version2),
+    )
+
+    print(table)
+
+
+if __name__ == '__main__':
+    _main(argv[1], argv[2], argv[3])
