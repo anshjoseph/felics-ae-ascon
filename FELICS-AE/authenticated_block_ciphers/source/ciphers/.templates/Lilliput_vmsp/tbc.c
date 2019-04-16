@@ -1,6 +1,8 @@
 #include <stdint.h>
 #include <string.h>
 
+#include <stdio.h>
+
 #include "constants.h"
 #include "parameters.h"
 #include "tbc.h"
@@ -33,22 +35,58 @@ static void _compute_round_tweakeys(
 
 static void _nonlinear_layer(uint8_t X[BLOCK_BYTES], const uint8_t RTK[ROUND_TWEAKEY_BYTES])
 {
-    uint8_t F[ROUND_TWEAKEY_BYTES];
-    for (size_t j=0; j<ROUND_TWEAKEY_BYTES; j++)
-    {
-        F[j] = X[j] ^ RTK[j];
-    }
+    /* uint8_t F[ROUND_TWEAKEY_BYTES]; */
 
-    for (size_t j=0; j<ROUND_TWEAKEY_BYTES; j++)
-    {
-        F[j] = READ_ROM_DATA_BYTE(S[F[j]]);
-    }
+    /* for (size_t j=0; j<ROUND_TWEAKEY_BYTES; j++) */
+    /* { */
+        __asm__ volatile (
+            "clr r4" "\n\t"
+            "mov.b %[RTK], r5" "\n\t"
+            "mov.b %[X], r6" "\n\t"
 
-    for (size_t j=0; j<8; j++)
-    {
-        size_t dest_j = 15-j;
-        X[dest_j] ^= F[j];
-    }
+            "loopstart%=:" "\n\t"
+
+            /* grab RTK[j] */
+            "mov.b @r5, r7" "\n\t"
+
+            /* grab X[j] */
+            "mov.b @r6, r8" "\n\t"
+
+            "xor.b r7, r8" "\n\t"
+            "mov.b S(r8), r9" "\n\t"
+
+            /* 15-j */
+            "mov.b #15, r10" "\n\t" /* TODO reuse r7? */
+            "sub.b r4, r10" "\n\t"
+
+            /* Grab X[15-j] */
+            "mov.b %[X], r11" "\n\t"
+            "add.b r11, r10" "\n\t"
+            "mov.b @r10, r11" "\n\t"
+
+            "xor.b r11, r9" "\n\t"
+
+            /* Write back */
+            "mov.b r9, @r10" "\n\t"
+
+            /* Loops are hard */
+            "inc r4" "\n\t"
+            "inc r5" "\n\t"
+            "inc r6" "\n\t"
+
+            "cmp #8, r4" "\n\t"
+            "jnz loopstart%=" "\n\t"
+            :
+            : [X] "m" (X), [RTK] "m" (RTK)
+        );
+    /* } */
+
+    /* for (size_t j=0; j<8; j++) */
+    /* { */
+    /*     size_t dest_j = 15-j; */
+    /*     /\* X[dest_j] ^= F[j]; *\/ */
+    /*     X[dest_j] = X[dest_j] ^ F[j]; */
+    /* } */
 }
 
 static void _linear_layer(uint8_t X[BLOCK_BYTES])
