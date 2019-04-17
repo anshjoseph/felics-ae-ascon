@@ -56,7 +56,8 @@ VPATH = $(SOURCEDIR):$(COMMONSOURCEDIR)
 
 
 SOURCES = $(wildcard $(SOURCEDIR)/*.c)
-OBJS = $(subst $(SOURCEDIR)/, , $(SOURCES:.c=.o))
+SOURCES_ASM = $(wildcard $(SOURCEDIR)/*.S)
+OBJS = $(subst $(SOURCEDIR)/, , $(SOURCES:.c=.o) $(SOURCES_ASM:.S=.o))
 
 SCENARIO1SOURCES = $(wildcard $(SCENARIO1SOURCEDIR)/*.c)
 SCENARIO1ALLOBJS = $(subst $(SCENARIO1SOURCEDIR)/, , $(SCENARIO1SOURCES:.c=.o))
@@ -211,6 +212,13 @@ scenario1.bin : $(BUILDDIR)/scenario1.elf
 		$(SOURCEDIR)/data_types.h
 	$(CC) -c $(CFLAGS) $< $(INCLUDES) -o $(BUILDDIR)/$@
 
+%.o : \
+		%.S \
+		$(COMMONSOURCEDIR)/cipher.h \
+		$(COMMONSOURCEDIR)/common.h \
+		$(SOURCEDIR)/constants.h \
+		$(SOURCEDIR)/data_types.h
+	$(CC) -c $(CFLAGS) $< $(INCLUDES) -o $(BUILDDIR)/$@
 
 main.o : \
 		$(COMMONSOURCEDIR)/main.c \
