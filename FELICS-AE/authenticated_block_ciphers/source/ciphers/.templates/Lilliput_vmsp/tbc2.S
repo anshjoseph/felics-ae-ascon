@@ -3,29 +3,57 @@
 .type nonlinear, @function
 
 nonlinear:
-	push r4
-	push r7
 	push r8
 	push r9
-	push r10
-	mov r13, r4
-	add #8, r4
-	mov r12, r7
-	add #15, r7
-loopstart:
-	mov.b @r13+, r8
-	mov.b @r12+, r9
+
+	mov.b 0(r13), r8
+	mov.b 0(r12), r9
 	xor.b r8, r9
 	mov.b S(r9), r9
-	mov.b @r7, r10
-	xor.b r9, r10
-	mov.b r10, @r7
-	dec r7
-	cmp r4, r13
-	jnz loopstart
-	pop r10
+	xor.b r9, 15(r12)
+
+	mov.b 1(r13), r8
+	mov.b 1(r12), r9
+	xor.b r8, r9
+	mov.b S(r9), r9
+	xor.b r9, 14(r12)
+
+	mov.b 2(r13), r8
+	mov.b 2(r12), r9
+	xor.b r8, r9
+	mov.b S(r9), r9
+	xor.b r9, 13(r12)
+
+	mov.b 3(r13), r8
+	mov.b 3(r12), r9
+	xor.b r8, r9
+	mov.b S(r9), r9
+	xor.b r9, 12(r12)
+
+	mov.b 4(r13), r8
+	mov.b 4(r12), r9
+	xor.b r8, r9
+	mov.b S(r9), r9
+	xor.b r9, 11(r12)
+
+	mov.b 5(r13), r8
+	mov.b 5(r12), r9
+	xor.b r8, r9
+	mov.b S(r9), r9
+	xor.b r9, 10(r12)
+
+	mov.b 6(r13), r8
+	mov.b 6(r12), r9
+	xor.b r8, r9
+	mov.b S(r9), r9
+	xor.b r9, 9(r12)
+
+	mov.b 7(r13), r8
+	mov.b 7(r12), r9
+	xor.b r8, r9
+	mov.b S(r9), r9
+	xor.b r9, 8(r12)
+
 	pop r9
 	pop r8
-	pop r7
-	pop r4
         ret
