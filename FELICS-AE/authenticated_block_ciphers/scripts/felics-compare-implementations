@@ -21,6 +21,7 @@ def _group_setups(filename):
     return OrderedDict((
         (a, grouped[a])
         for a in sorted(grouped, key=_ARCHITECTURES.index)
+        if grouped[a]
     ))
 
 
