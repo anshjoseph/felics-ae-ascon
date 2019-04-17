@@ -25,40 +25,49 @@ def _group_setups(filename):
     ))
 
 
-def _compute_differences(data1, data2):
-    return {
-        m: data2[m]/data1[m]
-        for m in _METRICS
-    }
+def _format_ratio(ratio, value1, value2):
+    red = '\N{ESCAPE}[01;31m'
+    green = '\N{ESCAPE}[01;32m'
+    reset = '\N{ESCAPE}[0m'
+
+    template = '{color}{ratio:.2%}{reset} ({v1} {arrow} {v2})'
+    arguments = {'ratio': ratio, 'v1': value1, 'v2': value2, 'reset': reset}
+
+    if ratio < 1:
+        arguments['color'] = green
+        arguments['arrow'] = '↘'
+    else:
+        arguments['color'] = red
+        arguments['arrow'] = '↗'
+
+    return template.format_map(arguments)
+
+
+def _compute_ratios(data1, data2):
+    return (_format_ratio(data2[m]/data1[m], data1[m], data2[m])
+            for m in _METRICS)
+
+
+def _format_metrics(ratios):
+    return '\n'.join(
+        '    {m}: {r}'.format(m=m, r=r) for (m, r) in zip(_METRICS, ratios)
+    )
 
 
 def _format_ratios(setups, v1, v2):
-    header = '    {cipher:<{pad}}'
-    metrics = '{code_size:.2f} {code_ram:.2f} {code_time:.2f}'
-    line = '{header} {metrics}'
+    header = '{cipher:<{pad}}'
+    line = '{header}\n{metrics}'
 
     ciphers = setups.keys()
     pad = len(max(ciphers, key=len))
 
     for cipher, values in sorted(setups.items()):
-        ratios = _compute_differences(values[v1], values[v2])
+        ratios = _compute_ratios(values[v1], values[v2])
 
         yield line.format(
             header=header.format(cipher=cipher, pad=pad),
-            metrics=metrics.format_map(ratios)
+            metrics=_format_metrics(ratios)
         )
-
-
-def _format_header(v1, v2):
-    fields = (
-        'platform',
-        'algorithm'
-    ) + tuple(
-        '{m}_{v2} / {m}_{v1}'.format(m=m, v1=v1, v2=v2)
-        for m in ('ROM', 'RAM', 'cycles')
-    )
-
-    return ' '.join(fields)
 
 
 def _arch_table(arch, setups, v1, v2):
@@ -68,7 +77,7 @@ def _arch_table(arch, setups, v1, v2):
     return '\n'.join((header, content))
 
 
-def _format_body(setups, v1, v2):
+def _format_setups(setups, v1, v2):
     tables = (
         _arch_table(arch, setups, v1, v2) for arch, setups in setups.items()
     )
@@ -78,13 +87,8 @@ def _format_body(setups, v1, v2):
 
 def _main(results_filename, version1, version2):
     setups = _group_setups(results_filename)
-
-    table = '{header}\n{body}'.format(
-        header=_format_header(version1, version2),
-        body=_format_body(setups, version1, version2),
-    )
-
-    print(table)
+    print('{v2} / {v1}'.format(v2=version2, v1=version1))
+    print(_format_setups(setups, version1, version2))
 
 
 if __name__ == '__main__':
