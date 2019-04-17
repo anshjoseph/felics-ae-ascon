@@ -46,19 +46,21 @@ static void _nonlinear_layer(uint8_t X[BLOCK_BYTES], const uint8_t RTK[ROUND_TWE
         /* "push r11" "\n\t" */
         /* "push r12" "\n\t" */
 
-        "clr r4" "\n\t"
         "mov %[RTK], r5" "\n\t"
         "mov %[X], r6" "\n\t"
+        "mov r5, r4" "\n\t"
+        "add #8, r4" "\n\t"
+
         "mov r6, r7" "\n\t"
         "add #15, r7" "\n\t"
 
         "loopstart%=:" "\n\t"
 
         /* grab RTK[j] */
-        "mov.b @r5, r8" "\n\t"
+        "mov.b @r5+, r8" "\n\t"
 
         /* grab X[j] */
-        "mov.b @r6, r9" "\n\t"
+        "mov.b @r6+, r9" "\n\t"
 
         "xor.b r8, r9" "\n\t"
         "mov.b S(r9), r9" "\n\t"
@@ -72,12 +74,9 @@ static void _nonlinear_layer(uint8_t X[BLOCK_BYTES], const uint8_t RTK[ROUND_TWE
         "mov.b r10, @r7" "\n\t"
 
         /* Loops are hard */
-        "inc r4" "\n\t"
-        "inc r5" "\n\t"
-        "inc r6" "\n\t"
         "dec r7" "\n\t"
 
-        "cmp #8, r4" "\n\t"
+        "cmp r4, r5" "\n\t"
         "jnz loopstart%=" "\n\t"
 
         /* "pop r12" "\n\t" */
