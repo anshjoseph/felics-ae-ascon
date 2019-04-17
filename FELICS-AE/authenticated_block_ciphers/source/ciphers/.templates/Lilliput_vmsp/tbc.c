@@ -35,17 +35,63 @@ static void _compute_round_tweakeys(
 
 static void _nonlinear_layer(uint8_t X[BLOCK_BYTES], const uint8_t RTK[ROUND_TWEAKEY_BYTES])
 {
-    for (size_t j=0; j<ROUND_TWEAKEY_BYTES; j++)
-    {
-        __asm__ volatile (
-            "xor.b %1, %2" "\n\t"
-            "mov.b S(%2), %2" "\n\t"
-            "xor.b %2, %0" "\n\t"
+    __asm__ volatile (
+        "push r4" "\n\t"
+        "push r5" "\n\t"
+        "push r6" "\n\t"
+        "push r7" "\n\t"
+        "push r8" "\n\t"
+        "push r9" "\n\t"
+        "push r10" "\n\t"
+        /* "push r11" "\n\t" */
+        /* "push r12" "\n\t" */
 
-            : "+r" (X[15-j])
-            : "r" (X[j]), "r" (RTK[j])
-        );
-    }
+        "clr r4" "\n\t"
+        "mov %[RTK], r5" "\n\t"
+        "mov %[X], r6" "\n\t"
+        "mov r6, r7" "\n\t"
+        "add #15, r7" "\n\t"
+
+        "loopstart%=:" "\n\t"
+
+        /* grab RTK[j] */
+        "mov.b @r5, r8" "\n\t"
+
+        /* grab X[j] */
+        "mov.b @r6, r9" "\n\t"
+
+        "xor.b r8, r9" "\n\t"
+        "mov.b S(r9), r9" "\n\t"
+
+        /* Grab X[15-j] */
+        "mov.b @r7, r10" "\n\t"
+
+        "xor.b r9, r10" "\n\t"
+
+        /* Write back */
+        "mov.b r10, @r7" "\n\t"
+
+        /* Loops are hard */
+        "inc r4" "\n\t"
+        "inc r5" "\n\t"
+        "inc r6" "\n\t"
+        "dec r7" "\n\t"
+
+        "cmp #8, r4" "\n\t"
+        "jnz loopstart%=" "\n\t"
+
+        /* "pop r12" "\n\t" */
+        /* "pop r11" "\n\t" */
+        "pop r10" "\n\t"
+        "pop r9" "\n\t"
+        "pop r8" "\n\t"
+        "pop r7" "\n\t"
+        "pop r6" "\n\t"
+        "pop r5" "\n\t"
+        "pop r4" "\n\t"
+        : [X] "+r" (X)
+        : [RTK] "r" (RTK)
+    );
 }
 
 static void _linear_layer(uint8_t X[BLOCK_BYTES])
