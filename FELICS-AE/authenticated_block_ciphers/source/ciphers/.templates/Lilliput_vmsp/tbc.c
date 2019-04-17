@@ -35,22 +35,16 @@ static void _compute_round_tweakeys(
 
 static void _nonlinear_layer(uint8_t X[BLOCK_BYTES], const uint8_t RTK[ROUND_TWEAKEY_BYTES])
 {
-    uint8_t F[ROUND_TWEAKEY_BYTES];
-
     for (size_t j=0; j<ROUND_TWEAKEY_BYTES; j++)
     {
         __asm__ volatile (
             "xor.b %1, %2" "\n\t"
-            "mov.b S(%2), %0" "\n\t"
-            : "=r" (F[j])
+            "mov.b S(%2), %2" "\n\t"
+            "xor.b %2, %0" "\n\t"
+
+            : "+r" (X[15-j])
             : "r" (X[j]), "r" (RTK[j])
         );
-    }
-
-    for (size_t j=0; j<8; j++)
-    {
-        size_t dest_j = 15-j;
-        X[dest_j] ^= F[j];
     }
 }
 
