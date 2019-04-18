@@ -511,8 +511,8 @@ if [ -f $gdb_stack_log_file ] ; then
 fi
 
 if [ -f $gdb_stack_sections_log_file ] ; then
-	e_stack=$(compute_stack_usage $gdb_stack_sections_log_file 2)
-	d_stack=$(compute_stack_usage $gdb_stack_sections_log_file 4)
+	e_stack=$(compute_stack_usage $gdb_stack_sections_log_file 1)
+	d_stack=$(compute_stack_usage $gdb_stack_sections_log_file 2)
 fi
 
 

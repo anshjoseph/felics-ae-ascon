@@ -86,11 +86,6 @@ int main()
 	DisplayData(key, KEY_SIZE, KEY_NAME);
 #endif
 
-
-	BEGIN_ENCRYPTION_KEY_SCHEDULE();
-	RunEncryptionKeySchedule(key, roundKeys);
-	END_ENCRYPTION_KEY_SCHEDULE();
-
 #if defined(DEBUG) && (DEBUG_MEDIUM == (DEBUG_MEDIUM & DEBUG))
 	DisplayData(key, KEY_SIZE, KEY_NAME);
 #endif
@@ -110,11 +105,6 @@ int main()
 #if defined(DEBUG) && (DEBUG_LOW == (DEBUG_LOW & DEBUG))
 	DisplayData(data, DATA_SIZE, CIPHERTEXT_NAME);
 #endif
-
-
-	BEGIN_DECRYPTION_KEY_SCHEDULE();
-	RunDecryptionKeySchedule(key, roundKeys);
-	END_DECRYPTION_KEY_SCHEDULE();
 
 #if defined(DEBUG) && (DEBUG_MEDIUM == (DEBUG_MEDIUM & DEBUG))
 	DisplayData(key, KEY_SIZE, KEY_NAME);

@@ -44,34 +44,6 @@ set $analysed_stack_size=2000
 monitor reset
 
 
-break BeginEncryptionKeySchedule
-# Continue the program execution
-continue
-
-
-#
-# BeginEncryptionKeySchedule breakpoint
-#
-# Save the initial stack pointer in the convenience variable
-set $base = $r13
-# Set the stack content
-restore ARM_scenario1_memory.mem binary $base-$analysed_stack_size
-
-
-delete breakpoints 1
-break EndEncryptionKeySchedule
-# Continue the program execution
-continue
-
-
-#
-# EndEncryptionKeySchedule breakpoint
-#
-# Print the stack content in hexa using artificial arrays
-print/x *((unsigned char*)$base-$analysed_stack_size)@$analysed_stack_size
-
-
-delete breakpoints 2
 break BeginEncryption
 # Continue the program execution
 continue
@@ -86,7 +58,7 @@ set $base = $r13
 restore ARM_scenario1_memory.mem binary $base-$analysed_stack_size
 
 
-delete breakpoints 3
+delete breakpoints 1
 break EndEncryption
 # Continue the program execution
 continue
@@ -99,35 +71,7 @@ continue
 print/x *((unsigned char*)$base-$analysed_stack_size)@$analysed_stack_size
 
 
-delete breakpoints 4
-break BeginDecryptionKeySchedule
-# Continue the program execution
-continue
-
-
-# 
-# BeginDecryptionKeySchedule breakpoint
-#
-# Save the initial stack pointer in the convenience variable
-set $base = $r13
-# Set the stack content
-restore ARM_scenario1_memory.mem binary $base-$analysed_stack_size
-
-
-delete breakpoints 5
-break EndDecryptionKeySchedule
-# Continue the program execution
-continue
-
-
-#
-# EndDecryptionKeySchedule breakpoint
-#
-# Print the stack content in hexa using artificial arrays
-print/x *((unsigned char*)$base-$analysed_stack_size)@$analysed_stack_size
-
-
-delete breakpoints 6
+delete breakpoints 2
 break BeginDecryption
 # Continue the program execution
 continue
@@ -142,7 +86,7 @@ set $base = $r13
 restore ARM_scenario1_memory.mem binary $base-$analysed_stack_size
 
 
-delete breakpoints 7
+delete breakpoints 3
 break EndDecryption
 # Continue the program execution
 continue

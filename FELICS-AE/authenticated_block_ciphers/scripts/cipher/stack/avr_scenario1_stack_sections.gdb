@@ -43,41 +43,11 @@ set $analysed_stack_size=2000
 #
 # Set the breakpoints
 #
-break BeginEncryptionKeySchedule
-break EndEncryptionKeySchedule
-
 break BeginEncryption
 break EndEncryption
 
-break BeginDecryptionKeySchedule
-break EndDecryptionKeySchedule
-
 break BeginDecryption
 break EndDecryption
-
-
-# Continue the program execution
-continue
-
-
-#
-# BeginEncryptionKeySchedule breakpoint
-#
-# Save the initial stack pointer in the convenience variable
-set $base = $sp
-# Set the stack content
-restore AVR_scenario1_memory.mem binary $base-$analysed_stack_size
-
-
-# Continue the program execution
-continue
-
-
-#
-# EndEncryptionKeySchedule breakpoint
-#
-# Print the stack content in hexa using artificial arrays
-print/x *((unsigned char*)$base-$analysed_stack_size)@$analysed_stack_size
 
 
 # Continue the program execution
@@ -99,30 +69,6 @@ continue
 
 #
 # EndEncryption breakpoint
-#
-# Print the stack content in hexa using artificial arrays
-print/x *((unsigned char*)$base-$analysed_stack_size)@$analysed_stack_size
-
-
-# Continue the program execution
-continue
-
-
-# 
-# BeginDecryptionKeySchedule breakpoint
-#
-# Save the initial stack pointer in the convenience variable
-set $base = $sp
-# Set the stack content
-restore AVR_scenario1_memory.mem binary $base-$analysed_stack_size
-
-
-# Continue the program execution
-continue
-
-
-#
-# EndDecryptionKeySchedule breakpoint
 #
 # Print the stack content in hexa using artificial arrays
 print/x *((unsigned char*)$base-$analysed_stack_size)@$analysed_stack_size
