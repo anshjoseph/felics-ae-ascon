@@ -414,8 +414,8 @@ case $SCRIPT_ARCHITECTURE in
 		simulate $MSP_SCENARIO1_MSPDEBUG_EXECUTION_TIME_SECTIONS_COMMANDS_FILE $mspdebug_execution_time_sections_log_file
 
 		if [ -f $mspdebug_execution_time_log_file ] ; then
-			e_execution_time=$(compute_execution_time $mspdebug_execution_time_sections_log_file 3)
-			d_execution_time=$(compute_execution_time $mspdebug_execution_time_sections_log_file 7)
+			e_execution_time=$(compute_execution_time $mspdebug_execution_time_sections_log_file 1)
+			d_execution_time=$(compute_execution_time $mspdebug_execution_time_sections_log_file 3)
 		fi
 
 		if [ -f $mspdebug_execution_time_log_file ] ; then

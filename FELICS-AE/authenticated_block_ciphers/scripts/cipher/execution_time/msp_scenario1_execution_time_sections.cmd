@@ -31,14 +31,8 @@ prog scenario1.elf
 #
 # Set the breakpoints
 #
-setbreak RunEncryptionKeySchedule
-setbreak EndEncryptionKeySchedule
-
 setbreak Encrypt
 setbreak EndEncryption
-
-setbreak RunDecryptionKeySchedule
-setbreak EndDecryptionKeySchedule
 
 setbreak Decrypt
 setbreak EndDecryption
@@ -50,49 +44,25 @@ simio add tracer debugDevice
 
 # Run the program
 run
-# Print status information for the benchmark execution time debug device
+# Print status information before encrypting.
 simio info debugDevice
 
 
 # Run the program
 run
-# Print status information for the benchmark execution time debug device
+# Print status information after encrypting.
 simio info debugDevice
 
 
 # Run the program
 run
-# Print status information for the benchmark execution time debug device
+# Print status information before decrypting.
 simio info debugDevice
 
 
 # Run the program
 run
-# Print status information for the benchmark execution time debug device
-simio info debugDevice
-
-
-# Run the program
-run
-# Print status information for the benchmark execution time debug device
-simio info debugDevice
-
-
-# Run the program
-run
-# Print status information for the benchmark execution time debug device
-simio info debugDevice
-
-
-# Run the program
-run
-# Print status information for the benchmark execution time debug device
-simio info debugDevice
-
-
-# Run the program
-run
-# Print status information for the benchmark execution time debug device
+# Print status information after decrypting.
 simio info debugDevice
 
 
