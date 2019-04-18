@@ -44,26 +44,14 @@ MEMORY_PATTERN=(0x11 0x22 0x33 0x44 0x55 0x66 0x77 0x88 0x99 0xAA)
 MEMORY_FILE=memory.mem
 MEMORY_SIZE=2000
 
-PC_CIPHER_GDB_STACK_COMMANDS_FILE=./../../../../scripts/cipher/stack/pc_cipher_stack.gdb
-PC_CIPHER_GDB_STACK_SECTIONS_COMMANDS_FILE=./../../../../scripts/cipher/stack/pc_cipher_stack_sections.gdb
-
 PC_SCENARIO1_GDB_STACK_COMMANDS_FILE=./../../../../scripts/cipher/stack/pc_scenario1_stack.gdb
 PC_SCENARIO1_GDB_STACK_SECTIONS_COMMANDS_FILE=./../../../../scripts/cipher/stack/pc_scenario1_stack_sections.gdb
-
-AVR_CIPHER_GDB_STACK_COMMANDS_FILE=./../../../../scripts/cipher/stack/avr_cipher_stack.gdb
-AVR_CIPHER_GDB_STACK_SECTIONS_COMMANDS_FILE=./../../../../scripts/cipher/stack/avr_cipher_stack_sections.gdb
 
 AVR_SCENARIO1_GDB_STACK_COMMANDS_FILE=./../../../../scripts/cipher/stack/avr_scenario1_stack.gdb
 AVR_SCENARIO1_GDB_STACK_SECTIONS_COMMANDS_FILE=./../../../../scripts/cipher/stack/avr_scenario1_stack_sections.gdb
 
-MSP_CIPHER_GDB_STACK_COMMANDS_FILE=./../../../../scripts/cipher/stack/msp_cipher_stack.gdb
-MSP_CIPHER_GDB_STACK_SECTIONS_COMMANDS_FILE=./../../../../scripts/cipher/stack/msp_cipher_stack_sections.gdb
-
 MSP_SCENARIO1_GDB_STACK_COMMANDS_FILE=./../../../../scripts/cipher/stack/msp_scenario1_stack.gdb
 MSP_SCENARIO1_GDB_STACK_SECTIONS_COMMANDS_FILE=./../../../../scripts/cipher/stack/msp_scenario1_stack_sections.gdb
-
-ARM_CIPHER_GDB_STACK_COMMANDS_FILE=./../../../../scripts/cipher/stack/arm_cipher_stack.gdb
-ARM_CIPHER_GDB_STACK_SECTIONS_COMMANDS_FILE=./../../../../scripts/cipher/stack/arm_cipher_stack_sections.gdb
 
 ARM_SCENARIO1_GDB_STACK_COMMANDS_FILE=./../../../../scripts/cipher/stack/arm_scenario1_stack.gdb
 ARM_SCENARIO1_GDB_STACK_SECTIONS_COMMANDS_FILE=./../../../../scripts/cipher/stack/arm_scenario1_stack_sections.gdb
