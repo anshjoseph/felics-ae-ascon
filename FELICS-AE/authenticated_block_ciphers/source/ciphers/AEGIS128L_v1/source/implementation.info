@@ -6,7 +6,3 @@ DecryptConstants: TE_constants
 
 EncryptCode: aegis_utils, aegis_common
 DecryptCode: aegis_utils, aegis_common
-
-UseEncryptionKeySchedule: no
-UseDecryptionKeySchedule: no
-

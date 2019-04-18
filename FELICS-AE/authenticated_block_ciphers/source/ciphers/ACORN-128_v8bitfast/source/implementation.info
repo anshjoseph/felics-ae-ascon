@@ -7,7 +7,4 @@ DecryptConstants:
 EncryptCode:
 DecryptCode:
 
-UseEncryptionKeySchedule: no
-UseDecryptionKeySchedule: no
-
 Platforms: AVR MSP

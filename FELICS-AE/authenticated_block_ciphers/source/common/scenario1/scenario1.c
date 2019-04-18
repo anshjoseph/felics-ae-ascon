@@ -107,11 +107,6 @@ int main()
 #endif
 
 	
-	BEGIN_ENCRYPTION_KEY_SCHEDULE();
-	RunEncryptionKeySchedule();
-	END_ENCRYPTION_KEY_SCHEDULE();
-	
-	
 	BEGIN_ENCRYPTION();
 	Encrypt(data, DATA_SIZE, key, npub, ad, ASSOCIATED_DATA_SIZE, c);
 	END_ENCRYPTION();
@@ -121,11 +116,6 @@ int main()
 #endif
 	
 	
-	BEGIN_DECRYPTION_KEY_SCHEDULE();
-	RunDecryptionKeySchedule();
-	END_DECRYPTION_KEY_SCHEDULE();
-	
-
 	BEGIN_DECRYPTION();
 	int valid = Decrypt(data, DATA_SIZE, key, npub, ad, ASSOCIATED_DATA_SIZE, c);
 	END_DECRYPTION();

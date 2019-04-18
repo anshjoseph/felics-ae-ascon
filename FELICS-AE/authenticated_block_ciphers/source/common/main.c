@@ -101,11 +101,6 @@ int main()
 	DisplayVerifyData(state, MAXTEST_BYTES_M, PLAINTEXT_NAME);
 #endif
 
-	BEGIN_ENCRYPTION_KEY_SCHEDULE();
-	RunEncryptionKeySchedule();
-	END_ENCRYPTION_KEY_SCHEDULE();
-	
-
 	BEGIN_ENCRYPTION();
 	Encrypt(state, MAXTEST_BYTES_M, key, npub, ad, MAXTEST_BYTES_AD, c);
 	END_ENCRYPTION();
@@ -119,10 +114,6 @@ int main()
 #if defined(DEBUG) && (DEBUG_LOW == (DEBUG_LOW & DEBUG))
 	DisplayVerifyData(state, MAXTEST_BYTES_M, PLAINTEXT_NAME);
 #endif
-
-	BEGIN_DECRYPTION_KEY_SCHEDULE();
-	RunDecryptionKeySchedule();
-	END_DECRYPTION_KEY_SCHEDULE();
 
 	BEGIN_DECRYPTION();
 	int valid = Decrypt(state, MAXTEST_BYTES_M, key, npub, ad, MAXTEST_BYTES_AD, c);

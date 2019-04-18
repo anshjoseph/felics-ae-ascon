@@ -161,25 +161,6 @@
 
 /*
  *
- * Run the encryption key schedule
- * ... key - the cipher key
- * ... roundKeys - the encryption round keys
- *
- */
-void RunEncryptionKeySchedule(void);
-
-/*
- *
- * Run the decryption key schedule
- * ... key - the cipher key
- * ... roundKeys - the decryption round keys
- *
- */
-void RunDecryptionKeySchedule(void);
-
-
-/*
- *
  * Encrypt the given block using the given round keys
  * ... block - the block to encrypt
  *

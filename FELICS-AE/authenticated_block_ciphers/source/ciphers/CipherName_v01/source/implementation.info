@@ -6,7 +6,3 @@ DecryptConstants: constants
 
 EncryptCode: 
 DecryptCode:
-
-UseEncryptionKeySchedule: no
-UseDecryptionKeySchedule: no
-

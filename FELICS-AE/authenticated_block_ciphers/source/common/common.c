@@ -164,20 +164,6 @@ void VerifyData(uint8_t *data, const char *name)
 #endif
 
 
-void BeginEncryptionKeySchedule()
-{
-#if defined(DEBUG) && (DEBUG_LOW == (DEBUG_LOW & DEBUG))
-	printf("->EncryptionKeySchedule begin\n");
-#endif
-}
-
-void EndEncryptionKeySchedule()
-{
-#if defined(DEBUG) && (DEBUG_LOW == (DEBUG_LOW & DEBUG))
-	printf("->EncryptionKeySchedule end\n");
-#endif
-}
-
 void BeginEncryption()
 {
 #if defined(DEBUG) && (DEBUG_LOW == (DEBUG_LOW & DEBUG))
@@ -191,25 +177,6 @@ void EndEncryption()
 	printf("->Encryption end\n");
 #endif
 }
-
-void BeginDecryptionKeySchedule()
-{
-#if defined(DEBUG) && (DEBUG_LOW == (DEBUG_LOW & DEBUG))
-	printf("->DecryptionKeySchedule begin\n");
-#endif
-}
-
-void EndDecryptionKeySchedule()
-{
-#if defined(DEBUG) && (DEBUG_LOW == (DEBUG_LOW & DEBUG))
-	printf("->DecryptionKeySchedule end\n");
-#endif
-}
-
-void RunEncryptionKeySchedule(void)
-{}
-void RunDecryptionKeySchedule(void)
-{}
 
 void BeginDecryption()
 {

@@ -6,7 +6,3 @@ DecryptConstants:
 
 EncryptCode: utils
 DecryptCode: utils
-
-UseEncryptionKeySchedule: no
-UseDecryptionKeySchedule: no
-

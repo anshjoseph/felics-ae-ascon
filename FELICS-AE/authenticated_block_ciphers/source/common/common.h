@@ -103,16 +103,6 @@ void VerifyTag(uint8_t tag_check);
 #if defined(MEASURE_CYCLE_COUNT) && \
 	(MEASURE_CYCLE_COUNT_ENABLED == MEASURE_CYCLE_COUNT) /* MEASURE_CYCLE_COUNT */
 
-#define BEGIN_ENCRYPTION_KEY_SCHEDULE() CYCLE_COUNT_START
-#define END_ENCRYPTION_KEY_SCHEDULE() \
-	CYCLE_COUNT_STOP; \
-	printf("EncryptionKeySheduleCycleCount: %u\n", CYCLE_COUNT_ELAPSED)
-
-#define BEGIN_DECRYPTION_KEY_SCHEDULE() CYCLE_COUNT_START
-#define END_DECRYPTION_KEY_SCHEDULE() \
-	CYCLE_COUNT_STOP; \
-	printf("DecryptionKeyScheduleCycleCount: %u\n", CYCLE_COUNT_ELAPSED)
-
 #define BEGIN_ENCRYPTION() CYCLE_COUNT_START
 #define END_ENCRYPTION() \
 	CYCLE_COUNT_STOP; \
@@ -127,14 +117,8 @@ void VerifyTag(uint8_t tag_check);
 
 #else /* MEASURE_CYCLE_COUNT */
 
-#define BEGIN_ENCRYPTION_KEY_SCHEDULE() BeginEncryptionKeySchedule()
-#define END_ENCRYPTION_KEY_SCHEDULE() EndEncryptionKeySchedule()
-
 #define BEGIN_ENCRYPTION() BeginEncryption()
 #define END_ENCRYPTION() EndEncryption()
-
-#define BEGIN_DECRYPTION_KEY_SCHEDULE() BeginDecryptionKeySchedule()
-#define END_DECRYPTION_KEY_SCHEDULE() EndDecryptionKeySchedule()
 
 #define BEGIN_DECRYPTION() BeginDecryption()
 #define END_DECRYPTION() EndDecryption()
@@ -154,16 +138,6 @@ void VerifyTag(uint8_t tag_check);
 #if defined(MEASURE_CYCLE_COUNT) && \
 	(MEASURE_CYCLE_COUNT_ENABLED == MEASURE_CYCLE_COUNT) /* MEASURE_CYCLE_COUNT */
 
-#define BEGIN_ENCRYPTION_KEY_SCHEDULE() CYCLE_COUNT_START
-#define END_ENCRYPTION_KEY_SCHEDULE() \
-	CYCLE_COUNT_STOP; \
-	printf("EncryptionKeySheduleCycleCount: %"PRIu64"\n", CYCLE_COUNT_ELAPSED)
-
-#define BEGIN_DECRYPTION_KEY_SCHEDULE() CYCLE_COUNT_START
-#define END_DECRYPTION_KEY_SCHEDULE() \
-	CYCLE_COUNT_STOP; \
-	printf("DecryptionKeyScheduleCycleCount: %"PRIu64"\n", CYCLE_COUNT_ELAPSED)
-
 #define BEGIN_ENCRYPTION() CYCLE_COUNT_START
 #define END_ENCRYPTION() \
 	CYCLE_COUNT_STOP; \
@@ -178,14 +152,8 @@ void VerifyTag(uint8_t tag_check);
 
 #else /* MEASURE_CYCLE_COUNT */
 
-#define BEGIN_ENCRYPTION_KEY_SCHEDULE() BeginEncryptionKeySchedule()
-#define END_ENCRYPTION_KEY_SCHEDULE() EndEncryptionKeySchedule()
-
 #define BEGIN_ENCRYPTION() BeginEncryption()
 #define END_ENCRYPTION() EndEncryption()
-
-#define BEGIN_DECRYPTION_KEY_SCHEDULE() BeginDecryptionKeySchedule()
-#define END_DECRYPTION_KEY_SCHEDULE() EndDecryptionKeySchedule()
 
 #define BEGIN_DECRYPTION() BeginDecryption()
 #define END_DECRYPTION() EndDecryption()
@@ -196,14 +164,8 @@ void VerifyTag(uint8_t tag_check);
 
 #else /* PC */
 
-#define BEGIN_ENCRYPTION_KEY_SCHEDULE() BeginEncryptionKeySchedule()
-#define END_ENCRYPTION_KEY_SCHEDULE() EndEncryptionKeySchedule()
-
 #define BEGIN_ENCRYPTION() BeginEncryption()
 #define END_ENCRYPTION() EndEncryption()
-
-#define BEGIN_DECRYPTION_KEY_SCHEDULE() BeginDecryptionKeySchedule()
-#define END_DECRYPTION_KEY_SCHEDULE() EndDecryptionKeySchedule()
 
 #define BEGIN_DECRYPTION() BeginDecryption()
 #define END_DECRYPTION() EndDecryption()
@@ -213,22 +175,6 @@ void VerifyTag(uint8_t tag_check);
 #endif /* PC */
 
 #endif /* ARM */
-
-
-
-/*
- *
- * Mark the begin of the encryption key schedule
- *
- */
-void BeginEncryptionKeySchedule();
-
-/*
- *
- * Mark the end of the encryption key schedule
- *
- */
-void EndEncryptionKeySchedule();
 
 
 /*
@@ -244,22 +190,6 @@ void BeginEncryption();
  *
  */
 void EndEncryption();
-
-
-/*
- *
- * Mark the begin of the decryption key schedule
- *
- */
-void BeginDecryptionKeySchedule();
-
-/*
- *
- * Mark the end of the decryption key schedule
- *
- */
-void EndDecryptionKeySchedule();
-
 
 /*
  *
