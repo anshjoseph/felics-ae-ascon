@@ -1,14 +1,10 @@
 ImplementationDescription: AEAD ASCON128, opt64
 ImplementationAuthors: Jean-Baptiste Serrou Soares (adapted from supercop)
 
-EncryptionKeyScheduleConstants: 
 EncryptConstants: constants
-DecryptionKeyScheduleConstants: 
 DecryptConstants: constants
 
-EncryptionKeyScheduleCode: 
 EncryptCode:
-DecryptionKeyScheduleCode:
 DecryptCode:
 
 UseEncryptionKeySchedule: no

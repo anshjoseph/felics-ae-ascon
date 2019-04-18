@@ -1,14 +1,10 @@
 ImplementationDescription: AEAD AEGIS128
 ImplementationAuthors: Jean-Baptiste Serrou Soares (adapted from supercop)
 
-EncryptionKeyScheduleConstants: 
 EncryptConstants: TE_constants
-DecryptionKeyScheduleConstants: 
 DecryptConstants: TE_constants
 
-EncryptionKeyScheduleCode: 
 EncryptCode: aegis_utils, aegis_common
-DecryptionKeyScheduleCode:
 DecryptCode: aegis_utils, aegis_common
 
 UseEncryptionKeySchedule: no

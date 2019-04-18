@@ -1,14 +1,10 @@
 ImplementationDescription: AEAD ACORN128 (adapted from supercop's 8bitfast version)
 ImplementationAuthors: Kévin Le Gouguec
 
-EncryptionKeyScheduleConstants: 
 EncryptConstants: 
-DecryptionKeyScheduleConstants: 
 DecryptConstants: 
 
-EncryptionKeyScheduleCode: 
 EncryptCode:
-DecryptionKeyScheduleCode:
 DecryptCode:
 
 UseEncryptionKeySchedule: no

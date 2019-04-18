@@ -1,14 +1,10 @@
 ImplementationDescription: Cipher implementation example
 ImplementationAuthors: 
 
-EncryptionKeyScheduleConstants: constants
 EncryptConstants: constants
-DecryptionKeyScheduleConstants:
 DecryptConstants: constants
 
-EncryptionKeyScheduleCode: 
 EncryptCode: 
-DecryptionKeyScheduleCode:
 DecryptCode:
 
 UseEncryptionKeySchedule: no
