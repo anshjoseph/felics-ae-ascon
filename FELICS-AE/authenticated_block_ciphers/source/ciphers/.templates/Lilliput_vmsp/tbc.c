@@ -34,8 +34,8 @@ static void _compute_round_tweakeys(
 
 
 void nonlinear(uint8_t X[BLOCK_BYTES], const uint8_t RTK[ROUND_TWEAKEY_BYTES]);
-void permutation_enc(const uint8_t old_X[BLOCK_BYTES], uint8_t new_X[BLOCK_BYTES]);
-void permutation_dec(const uint8_t old_X[BLOCK_BYTES], uint8_t new_X[BLOCK_BYTES]);
+void permutation_enc(uint8_t X[BLOCK_BYTES]);
+void permutation_dec(uint8_t X[BLOCK_BYTES]);
 
 static void _linear_layer(uint8_t X[BLOCK_BYTES])
 {
@@ -57,20 +57,19 @@ static void _linear_layer(uint8_t X[BLOCK_BYTES])
 
 static void _permutation_layer(uint8_t X[BLOCK_BYTES], permutation p)
 {
-    if (p == PERMUTATION_NONE)
+    /* TODO: remove permutation arrays */
+
+    switch (p)
     {
-        return;
+        case PERMUTATION_NONE:
+            return;
+        case PERMUTATION_ENCRYPTION:
+            permutation_enc(X);
+            break;
+        case PERMUTATION_DECRYPTION:
+            permutation_dec(X);
+            break;
     }
-
-    uint8_t X_old[BLOCK_BYTES];
-    memcpy(X_old, X, BLOCK_BYTES);
-
-    /* TODO: remove PERMUTATIONS array */
-
-    if (p == PERMUTATION_ENCRYPTION)
-        permutation_enc(X_old, X);
-    else
-        permutation_dec(X_old, X);
 }
 
 static void _one_round_egfn(uint8_t X[BLOCK_BYTES], const uint8_t RTK[ROUND_TWEAKEY_BYTES], permutation p)
