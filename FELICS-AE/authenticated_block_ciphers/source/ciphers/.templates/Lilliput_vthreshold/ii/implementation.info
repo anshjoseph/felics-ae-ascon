@@ -1,16 +1,10 @@
 ImplementationDescription: Threshold implementation for Lilliput-II
 ImplementationAuthors: Alexandre Adomnicai, Kévin Le Gouguec, Léo Reynaud
 
-EncryptionKeyScheduleConstants:
 EncryptConstants: constants
-DecryptionKeyScheduleConstants:
 DecryptConstants: constants
 
-EncryptionKeyScheduleCode:
 EncryptCode: tbc, tweakey
-DecryptionKeyScheduleCode:
 DecryptCode: tbc, tweakey
 
-UseEncryptionKeySchedule: no
-UseDecryptionKeySchedule: no
 
