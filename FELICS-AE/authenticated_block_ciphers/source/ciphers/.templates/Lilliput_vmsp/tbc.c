@@ -57,8 +57,6 @@ static void _linear_layer(uint8_t X[BLOCK_BYTES])
 
 static void _permutation_layer(uint8_t X[BLOCK_BYTES], permutation p)
 {
-    /* TODO: remove permutation arrays */
-
     switch (p)
     {
         case PERMUTATION_NONE:

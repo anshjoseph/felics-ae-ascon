@@ -40,11 +40,6 @@
 #define CRYPTO_ABYTES TAG_BYTES
 
 
-/*
- *
- * Cipher constants
- *
- */
 extern ROM_DATA_BYTE PERMUTATIONS[2][BLOCK_BYTES];
 extern SBOX_BYTE S[256];
 

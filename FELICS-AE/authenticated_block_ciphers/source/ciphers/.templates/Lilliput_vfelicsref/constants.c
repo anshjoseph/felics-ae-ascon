@@ -31,11 +31,6 @@
 #include "constants.h"
 
 
-/*
- *
- * Cipher constants
- *
- */
 const ROM_DATA_BYTE PERMUTATIONS[2][BLOCK_BYTES] = {
     [PERMUTATION_ENCRYPTION] = { 13,  9, 14,  8, 10, 11, 12, 15,  4,  5,  3,  1,  2,  6,  0,  7 },
     [PERMUTATION_DECRYPTION] = { 14, 11, 12, 10,  8,  9, 13, 15,  3,  1,  4,  5,  6,  0,  2,  7 }
