@@ -1,1 +1,8 @@
-../../Lilliput_vfelicsref/ii/implementation.info
+ImplementationDescription: Reference implementation for Lilliput-II
+ImplementationAuthors: Kévin Le Gouguec
+
+EncryptConstants: constants
+DecryptConstants: constants
+
+EncryptCode: tbc, tbc2, tweakey
+DecryptCode: tbc, tbc2, tweakey
