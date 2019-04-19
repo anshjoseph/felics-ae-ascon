@@ -34,6 +34,7 @@ static void _compute_round_tweakeys(
 
 
 void nonlinear(uint8_t X[BLOCK_BYTES], const uint8_t RTK[ROUND_TWEAKEY_BYTES]);
+void permutation2(const uint8_t p[BLOCK_BYTES], const uint8_t old_X[BLOCK_BYTES], uint8_t new_X[BLOCK_BYTES]);
 
 static void _linear_layer(uint8_t X[BLOCK_BYTES])
 {
@@ -65,10 +66,7 @@ static void _permutation_layer(uint8_t X[BLOCK_BYTES], permutation p)
 
     const uint8_t *pi = PERMUTATIONS[p];
 
-    for (size_t j=0; j<BLOCK_BYTES; j++)
-    {
-        X[READ_ROM_DATA_BYTE(pi[j])] = X_old[j];
-    }
+    permutation2(pi, X_old, X);
 }
 
 static void _one_round_egfn(uint8_t X[BLOCK_BYTES], const uint8_t RTK[ROUND_TWEAKEY_BYTES], permutation p)
