@@ -65,7 +65,6 @@ nonlinear:
 permutation_enc:
         ;; r12: X
 	push r4
-	push r5
 	push r6
 	push r7
 	push r8
@@ -73,8 +72,7 @@ permutation_enc:
 	push r10
 	push r11
 
-	mov.b 8(r12), r4
-	mov.b 9(r12), r5
+	mov 8(r12), r4
 	mov.b 10(r12), r6
 	mov.b 11(r12), r7
 	mov.b 12(r12), r8
@@ -86,13 +84,11 @@ permutation_enc:
 	mov.b 1(r12), 9(r12)
 	mov.b 2(r12), 14(r12)
 	mov.b 3(r12), 8(r12)
-	mov.b 4(r12), 10(r12)
-	mov.b 5(r12), 11(r12)
+	mov 4(r12), 10(r12)
 	mov.b 6(r12), 12(r12)
 	mov.b 7(r12), 15(r12)
 	
-	mov.b r4, 4(r12)
-	mov.b r5, 5(r12)
+	mov r4, 4(r12)
 	mov.b r6, 3(r12)
 	mov.b r7, 1(r12)
 	mov.b r8, 2(r12)
@@ -106,7 +102,6 @@ permutation_enc:
 	pop r8
 	pop r7
 	pop r6
-	pop r5
 	pop r4
 
         ret
@@ -116,7 +111,6 @@ permutation_dec:
         push r4
 	push r5
 	push r6
-	push r7
 	push r8
 	push r9
 	push r10
@@ -125,7 +119,6 @@ permutation_dec:
 	mov.b 8(r12), r4
 	mov.b 9(r12), r5
 	mov.b 10(r12), r6
-	mov.b 11(r12), r7
 	mov.b 12(r12), r8
 	mov.b 13(r12), r9
 	mov.b 14(r12), r10
@@ -135,15 +128,13 @@ permutation_dec:
 	mov.b 1(r12), 11(r12)
 	mov.b 2(r12), 12(r12)
 	mov.b 3(r12), 10(r12)
-	mov.b 4(r12), 8(r12)
-	mov.b 5(r12), 9(r12)
+	mov 4(r12), 8(r12)
 	mov.b 6(r12), 13(r12)
 	mov.b 7(r12), 15(r12)
 
 	mov.b r4, 3(r12)
 	mov.b r5, 1(r12)
-	mov.b r6, 4(r12)
-	mov.b r7, 5(r12)
+	mov r6, 4(r12)
 	mov.b r8, 6(r12)
 	mov.b r9, 0(r12)
 	mov.b r10, 2(r12)
@@ -153,7 +144,6 @@ permutation_dec:
 	pop r10
 	pop r9
 	pop r8
-	pop r7
 	pop r6
 	pop r5
 	pop r4
