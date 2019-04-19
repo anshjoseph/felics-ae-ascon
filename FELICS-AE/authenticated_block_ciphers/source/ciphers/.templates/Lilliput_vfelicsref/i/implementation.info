@@ -6,5 +6,3 @@ DecryptConstants: constants
 
 EncryptCode: tbc, tweakey
 DecryptCode: tbc, tweakey
-
-

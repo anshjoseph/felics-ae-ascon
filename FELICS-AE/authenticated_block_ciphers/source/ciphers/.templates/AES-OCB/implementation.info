@@ -6,5 +6,3 @@ DecryptConstants: aes_constants sbox_inv
 
 EncryptCode: aes_encrypt aes_common ocb_common
 DecryptCode: aes_decrypt aes_common ocb_common
-
-

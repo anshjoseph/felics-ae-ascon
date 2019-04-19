@@ -6,5 +6,3 @@ DecryptConstants: TW_constants, perm_constants, lfsr_constants, rcon_constants
 
 EncryptCode: deoxys_common
 DecryptCode: deoxys_common
-
-
