@@ -5,6 +5,8 @@
 .type permutation_enc, @function
 .globl permutation_dec
 .type permutation_dec, @function
+.globl linear
+.type linear, @function
 
 nonlinear:
         push r8
@@ -60,6 +62,36 @@ nonlinear:
 
         pop r9
         pop r8
+        ret
+
+linear:
+        ;; r12: X
+        ;; r4: x7
+        ;; r5: x15
+        push r4
+        push r5
+        mov.b 7(r12), r4
+        mov.b 15(r12), r5
+
+	xor.b 1(r12), r5
+	xor.b 2(r12), r5
+	xor.b 3(r12), r5
+	xor.b 4(r12), r5
+	xor.b 5(r12), r5
+	xor.b 6(r12), r5
+	xor.b r4, r5
+
+        mov.b r5, 15(r12)
+
+        xor.b r4, 14(r12)
+	xor.b r4, 13(r12)
+	xor.b r4, 12(r12)
+	xor.b r4, 11(r12)
+	xor.b r4, 10(r12)
+	xor.b r4, 9(r12)
+
+        pop r5
+        pop r4
         ret
 
 permutation_enc:

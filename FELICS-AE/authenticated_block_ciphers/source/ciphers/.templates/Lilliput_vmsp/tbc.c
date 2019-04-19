@@ -37,24 +37,6 @@ void nonlinear(uint8_t X[BLOCK_BYTES], const uint8_t RTK[ROUND_TWEAKEY_BYTES]);
 void permutation_enc(uint8_t X[BLOCK_BYTES]);
 void permutation_dec(uint8_t X[BLOCK_BYTES]);
 
-static void _linear_layer(uint8_t X[BLOCK_BYTES])
-{
-    X[15] ^= X[1];
-    X[15] ^= X[2];
-    X[15] ^= X[3];
-    X[15] ^= X[4];
-    X[15] ^= X[5];
-    X[15] ^= X[6];
-    X[15] ^= X[7];
-
-    X[14] ^= X[7];
-    X[13] ^= X[7];
-    X[12] ^= X[7];
-    X[11] ^= X[7];
-    X[10] ^= X[7];
-    X[9]  ^= X[7];
-}
-
 static void _permutation_layer(uint8_t X[BLOCK_BYTES], permutation p)
 {
     switch (p)
@@ -73,7 +55,7 @@ static void _permutation_layer(uint8_t X[BLOCK_BYTES], permutation p)
 static void _one_round_egfn(uint8_t X[BLOCK_BYTES], const uint8_t RTK[ROUND_TWEAKEY_BYTES], permutation p)
 {
     nonlinear(X, RTK);
-    _linear_layer(X);
+    linear(X);
     _permutation_layer(X, p);
 }
 
