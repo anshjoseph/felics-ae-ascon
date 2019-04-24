@@ -33,6 +33,7 @@ static void _compute_round_tweakeys(
 }
 
 
+/* Assembly routines. */
 void nonlinear_and_linear(uint8_t X[BLOCK_BYTES], const uint8_t RTK[ROUND_TWEAKEY_BYTES]);
 void permutation_enc(uint8_t X[BLOCK_BYTES]);
 void permutation_dec(uint8_t X[BLOCK_BYTES]);

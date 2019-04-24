@@ -4,5 +4,5 @@ ImplementationAuthors: Kévin Le Gouguec
 EncryptConstants: constants
 DecryptConstants: constants
 
-EncryptCode: tbc, tbc2, tweakey
-DecryptCode: tbc, tbc2, tweakey
+EncryptCode: tbc, tbc_asm, tweakey
+DecryptCode: tbc, tbc_asm, tweakey
