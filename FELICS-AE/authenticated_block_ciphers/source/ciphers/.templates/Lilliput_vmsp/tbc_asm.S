@@ -1,11 +1,7 @@
 .section .text
-.globl nonlinear_and_linear
-.type nonlinear_and_linear, @function
-.globl permutation_enc
-.type permutation_enc, @function
-.globl permutation_dec
-.type permutation_dec, @function
 
+.global nonlinear_and_linear
+.type nonlinear_and_linear, @function
 nonlinear_and_linear:
 	;; r12: X
         ;; r13: RTK
@@ -117,6 +113,8 @@ nonlinear_and_linear:
 ;;
 ;; When possible, move words instead of bytes.
 
+.global permutation_enc
+.type permutation_enc, @function
 permutation_enc:
         ;; r12: X
 	push r4
@@ -161,6 +159,8 @@ permutation_enc:
 
         ret
 
+.global permutation_dec
+.type permutation_dec, @function
 permutation_dec:
         ;; r12: X
         push r4
