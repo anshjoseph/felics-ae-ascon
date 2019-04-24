@@ -7,9 +7,42 @@
 .type permutation_dec, @function
 
 nonlinear_and_linear:
+	;; r12: X
+        ;; r13: RTK
+
+	;; Cf. figure 2.8 in the specification:
+        ;;
+        ;; - x7 is the "universal donor", XORed to x15 to x9
+        ;;   (directly) and to x8 (after going through the S-box).
+        ;;
+        ;; - x15 is the "universal recipient", XORed to x1 to x7
+        ;;   (directly) and to x0 (after going through the S-box).
+        ;;
+        ;; Dedicate r7 and r8 to x7 and x15.  Note that to compute
+        ;;
+        ;;      x15 = x15 xor LOTS OF THINGS
+        ;;
+        ;; We first set r8 to LOTS OF THINGS, *then* XOR it back to
+        ;; 15(r12).  No need to load 15(r12) at all.
+        ;;
+        ;; r9 is our iterator.  For j in [1, 6], we:
+        ;;
+        ;; - load xj into r9,
+        ;; - *first* XOR r9 to r8 (linear layer)
+        ;; - *then* do the non-linear layer:
+        ;;      - r9 = S(r9 xor RTK[j])
+        ;;      - X[15-j] = X[15-j] xor r9
+        ;;
+        ;; Special cases:
+        ;;
+        ;; - j=0 ==> use the result of the non-linear layer to
+        ;;   initialize x15.
+        ;;
+        ;; - j=7 ==> x7 is already cached in r7.
+
 	push r7                 ; x7
         push r8                 ; x15
-        push r9                 ; xj
+        push r9                 ; xj / x{15-j}
 
         mov.b 7(r12), r7
         clr r8
@@ -62,7 +95,7 @@ nonlinear_and_linear:
         xor.b r9, 9(r12)
 
         mov.b r7, r9
-        xor.b r7, r8
+        xor.b r9, r8
         xor.b 7(r13), r9
         mov.b S(r9), r9
         xor.b r9, 8(r12)
