@@ -97,10 +97,6 @@ int main()
 	InitializeNpub(npub);
 /* ----------------------------------------- */	
 
-#if defined(DEBUG) && (DEBUG_LOW == (DEBUG_LOW & DEBUG))
-	DisplayVerifyData(state, MAXTEST_BYTES_M, PLAINTEXT_NAME);
-#endif
-
 	BEGIN_ENCRYPTION();
 	Encrypt(state, MAXTEST_BYTES_M, key, npub, ad, MAXTEST_BYTES_AD, c);
 	END_ENCRYPTION();
@@ -109,12 +105,6 @@ int main()
 	DisplayVerifyData(c, MAXTEST_BYTES_M  + CRYPTO_ABYTES, CIPHERTEXT_NAME);
 #endif
 	
-	
-
-#if defined(DEBUG) && (DEBUG_LOW == (DEBUG_LOW & DEBUG))
-	DisplayVerifyData(state, MAXTEST_BYTES_M, PLAINTEXT_NAME);
-#endif
-
 	BEGIN_DECRYPTION();
 	int valid = Decrypt(state, MAXTEST_BYTES_M, key, npub, ad, MAXTEST_BYTES_AD, c);
 	END_DECRYPTION();
