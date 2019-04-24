@@ -38,27 +38,6 @@ void nonlinear_and_linear(uint8_t X[BLOCK_BYTES], const uint8_t RTK[ROUND_TWEAKE
 void permutation_enc(uint8_t X[BLOCK_BYTES]);
 void permutation_dec(uint8_t X[BLOCK_BYTES]);
 
-static void _permutation_layer(uint8_t X[BLOCK_BYTES], permutation p)
-{
-    switch (p)
-    {
-        case PERMUTATION_NONE:
-            return;
-        case PERMUTATION_ENCRYPTION:
-            permutation_enc(X);
-            break;
-        case PERMUTATION_DECRYPTION:
-            permutation_dec(X);
-            break;
-    }
-}
-
-static void _one_round_egfn(uint8_t X[BLOCK_BYTES], const uint8_t RTK[ROUND_TWEAKEY_BYTES], permutation p)
-{
-    nonlinear_and_linear(X, RTK);
-    _permutation_layer(X, p);
-}
-
 
 void lilliput_tbc_encrypt(
     const uint8_t key[KEY_BYTES],
@@ -72,12 +51,13 @@ void lilliput_tbc_encrypt(
     uint8_t RTK[ROUNDS][ROUND_TWEAKEY_BYTES];
     _compute_round_tweakeys(key, tweak, RTK);
 
-    for (uint8_t i=0; i<ROUNDS-1; i++)
+    for (unsigned i=0; i<ROUNDS-1; i++)
     {
-        _one_round_egfn(ciphertext, RTK[i], PERMUTATION_ENCRYPTION);
+        nonlinear_and_linear(ciphertext, RTK[i]);
+        permutation_enc(ciphertext);
     }
 
-    _one_round_egfn(ciphertext, RTK[ROUNDS-1], PERMUTATION_NONE);
+    nonlinear_and_linear(ciphertext, RTK[ROUNDS-1]);
 }
 
 void lilliput_tbc_decrypt(
@@ -92,10 +72,11 @@ void lilliput_tbc_decrypt(
     uint8_t RTK[ROUNDS][ROUND_TWEAKEY_BYTES];
     _compute_round_tweakeys(key, tweak, RTK);
 
-    for (uint8_t i=0; i<ROUNDS-1; i++)
+    for (unsigned i=0; i<ROUNDS-1; i++)
     {
-        _one_round_egfn(message, RTK[ROUNDS-1-i], PERMUTATION_DECRYPTION);
+        nonlinear_and_linear(message, RTK[ROUNDS-1-i]);
+        permutation_dec(message);
     }
 
-    _one_round_egfn(message, RTK[0], PERMUTATION_NONE);
+    nonlinear_and_linear(message, RTK[0]);
 }
