@@ -163,7 +163,7 @@ permutation_dec:
 
 	mov.b 8(r12), r4
 	mov.b 9(r12), r5
-	mov.b 10(r12), r6
+	mov 10(r12), r6
 	mov.b 12(r12), r8
 	mov.b 13(r12), r9
 	mov.b 14(r12), r10
