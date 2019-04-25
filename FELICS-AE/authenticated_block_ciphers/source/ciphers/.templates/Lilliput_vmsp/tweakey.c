@@ -21,28 +21,6 @@ void tweakey_state_init(
 }
 
 
-void tweakey_state_extract(
-    const uint8_t TK[TWEAKEY_BYTES],
-    uint8_t round_constant,
-    uint8_t round_tweakey[ROUND_TWEAKEY_BYTES]
-)
-{
-    memset(round_tweakey, 0, ROUND_TWEAKEY_BYTES);
-
-    for (size_t j=0; j<LANES_NB; j++)
-    {
-        const uint8_t *TKj = TK + j*LANE_BYTES;
-
-        for (size_t k=0; k<LANE_BYTES; k++)
-        {
-            round_tweakey[k] ^= TKj[k];
-        }
-    }
-
-    round_tweakey[0] ^= round_constant;
-}
-
-
 static void _multiply_M(const uint8_t X[LANE_BYTES], uint8_t Y[LANE_BYTES])
 {
     Y[7] = X[6];
