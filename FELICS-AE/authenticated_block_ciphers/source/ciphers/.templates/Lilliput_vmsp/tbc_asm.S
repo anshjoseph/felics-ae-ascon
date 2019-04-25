@@ -1,12 +1,12 @@
-.section .text
+        .section .text
 
-.global nonlinear_and_linear
-.type nonlinear_and_linear, @function
+        .global nonlinear_and_linear
+        .type nonlinear_and_linear, @function
 nonlinear_and_linear:
-	;; r12: X
+        ;; r12: X
         ;; r13: RTK
 
-	;; Cf. figure 2.8 in the specification:
+        ;; Cf. figure 2.8 in the specification:
         ;;
         ;; - x7 is the "universal donor", XORed to x15 to x9
         ;;   (directly) and to x8 (after going through the S-box).
@@ -36,7 +36,7 @@ nonlinear_and_linear:
         ;;
         ;; - j=7 ==> x7 is already cached in r7.
 
-	push r7                 ; x7
+        push r7                 ; x7
         push r8                 ; x15
         push r9                 ; xj / x{15-j}
 
@@ -99,7 +99,7 @@ nonlinear_and_linear:
         xor.b r8, 15(r12)
 
         pop r9
-	pop r8
+        pop r8
         pop r7
         ret
 
@@ -113,94 +113,94 @@ nonlinear_and_linear:
 ;;
 ;; When possible, move words instead of bytes.
 
-.global permutation_enc
-.type permutation_enc, @function
+        .global permutation_enc
+        .type permutation_enc, @function
 permutation_enc:
         ;; r12: X
-	push r4
-	push r5
-	push r6
-	push r7
-	push r8
-	push r9
-	push r10
+        push r4
+        push r5
+        push r6
+        push r7
+        push r8
+        push r9
+        push r10
 
-	mov 8(r12), r4
-	mov.b 10(r12), r5
-	mov.b 11(r12), r6
-	mov.b 12(r12), r7
-	mov.b 13(r12), r8
-	mov.b 14(r12), r9
-	mov.b 15(r12), r10
+        mov 8(r12), r4
+        mov.b 10(r12), r5
+        mov.b 11(r12), r6
+        mov.b 12(r12), r7
+        mov.b 13(r12), r8
+        mov.b 14(r12), r9
+        mov.b 15(r12), r10
 
-	mov.b 0(r12), 13(r12)
-	mov.b 1(r12), 9(r12)
-	mov.b 2(r12), 14(r12)
-	mov.b 3(r12), 8(r12)
-	mov 4(r12), 10(r12)
-	mov.b 6(r12), 12(r12)
-	mov.b 7(r12), 15(r12)
-	
-	mov r4, 4(r12)
-	mov.b r5, 3(r12)
-	mov.b r6, 1(r12)
-	mov.b r7, 2(r12)
-	mov.b r8, 6(r12)
-	mov.b r9, 0(r12)
-	mov.b r10, 7(r12)
+        mov.b 0(r12), 13(r12)
+        mov.b 1(r12), 9(r12)
+        mov.b 2(r12), 14(r12)
+        mov.b 3(r12), 8(r12)
+        mov 4(r12), 10(r12)
+        mov.b 6(r12), 12(r12)
+        mov.b 7(r12), 15(r12)
+
+        mov r4, 4(r12)
+        mov.b r5, 3(r12)
+        mov.b r6, 1(r12)
+        mov.b r7, 2(r12)
+        mov.b r8, 6(r12)
+        mov.b r9, 0(r12)
+        mov.b r10, 7(r12)
 
         pop r10
-	pop r9
-	pop r8
-	pop r7
-	pop r6
-	pop r5
-	pop r4
+        pop r9
+        pop r8
+        pop r7
+        pop r6
+        pop r5
+        pop r4
 
         ret
 
-.global permutation_dec
-.type permutation_dec, @function
+        .global permutation_dec
+        .type permutation_dec, @function
 permutation_dec:
         ;; r12: X
         push r4
-	push r5
-	push r6
-	push r7
-	push r8
-	push r9
-	push r10
+        push r5
+        push r6
+        push r7
+        push r8
+        push r9
+        push r10
 
-	mov.b 8(r12), r4
-	mov.b 9(r12), r5
-	mov 10(r12), r6
-	mov.b 12(r12), r7
-	mov.b 13(r12), r8
-	mov.b 14(r12), r9
-	mov.b 15(r12), r10
+        mov.b 8(r12), r4
+        mov.b 9(r12), r5
+        mov 10(r12), r6
+        mov.b 12(r12), r7
+        mov.b 13(r12), r8
+        mov.b 14(r12), r9
+        mov.b 15(r12), r10
 
-	mov.b 0(r12), 14(r12)
-	mov.b 1(r12), 11(r12)
-	mov.b 2(r12), 12(r12)
-	mov.b 3(r12), 10(r12)
-	mov 4(r12), 8(r12)
-	mov.b 6(r12), 13(r12)
-	mov.b 7(r12), 15(r12)
+        mov.b 0(r12), 14(r12)
+        mov.b 1(r12), 11(r12)
+        mov.b 2(r12), 12(r12)
+        mov.b 3(r12), 10(r12)
+        mov 4(r12), 8(r12)
+        mov.b 6(r12), 13(r12)
+        mov.b 7(r12), 15(r12)
 
-	mov.b r4, 3(r12)
-	mov.b r5, 1(r12)
-	mov r6, 4(r12)
-	mov.b r7, 6(r12)
-	mov.b r8, 0(r12)
-	mov.b r9, 2(r12)
-	mov.b r10, 7(r12)
-        
-	pop r10
-	pop r9
-	pop r8
-	pop r7
-	pop r6
-	pop r5
-	pop r4
+        mov.b r4, 3(r12)
+        mov.b r5, 1(r12)
+        mov r6, 4(r12)
+        mov.b r7, 6(r12)
+        mov.b r8, 0(r12)
+        mov.b r9, 2(r12)
+        mov.b r10, 7(r12)
+
+        pop r10
+        pop r9
+        pop r8
+        pop r7
+        pop r6
+        pop r5
+        pop r4
 
         ret
