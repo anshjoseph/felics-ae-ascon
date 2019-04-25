@@ -21,16 +21,47 @@ void tweakey_state_init(
 }
 
 
+#define NEWLINE "\n\t"
+
 static void _multiply_M(const uint8_t X[LANE_BYTES], uint8_t Y[LANE_BYTES])
 {
-    Y[7] = X[6];
-    Y[6] = X[5];
-    Y[5] = X[5]<<3 ^ X[4];
-    Y[4] = X[4]>>3 ^ X[3];
-    Y[3] = X[2];
-    Y[2] = X[6]<<2 ^ X[1];
-    Y[1] = X[0];
-    Y[0] = X[7];
+    __asm__ volatile (
+        "mov.b 4(%[X]), r4" NEWLINE
+        "mov.b 5(%[X]), r5" NEWLINE
+        "mov.b 6(%[X]), r6" NEWLINE
+
+        "mov.b 2(%[X]), 3(%[Y])" NEWLINE
+        "mov.b 0(%[X]), 1(%[Y])" NEWLINE
+        "mov.b 7(%[X]), 0(%[Y])" NEWLINE
+
+        /* send x6 to y7 */
+        "mov.b r6, 7(%[Y])" NEWLINE
+        /* now compute y2 from x6 and x1 */
+        "rla.b r6" NEWLINE
+        "rla.b r6" NEWLINE
+        "xor.b 1(%[X]), r6" NEWLINE
+        "mov.b r6, 2(%[Y])" NEWLINE
+
+        /* send x5 to y6 */
+        "mov.b r5, 6(%[Y])" NEWLINE
+        /* now compute y5 from x5 and x4 */
+        "rla.b r5" NEWLINE
+        "rla.b r5" NEWLINE
+        "rla.b r5" NEWLINE
+        "xor.b r4, r5" NEWLINE
+        "mov.b r5, 5(%[Y])" NEWLINE
+
+        /* compute y4 from x4 and x3 */
+        "rra.b r4" NEWLINE
+        "rra.b r4" NEWLINE
+        "rra.b r4" NEWLINE
+        "xor.b 3(%[X]), r4" NEWLINE
+        "mov.b r4, 4(%[Y])" NEWLINE
+
+        : [Y] "=r" (Y)
+        : [X] "r" (X)
+        : "R4", "R5", "R6"
+    );
 }
 
 static void _multiply_M2(const uint8_t X[LANE_BYTES], uint8_t Y[LANE_BYTES])
