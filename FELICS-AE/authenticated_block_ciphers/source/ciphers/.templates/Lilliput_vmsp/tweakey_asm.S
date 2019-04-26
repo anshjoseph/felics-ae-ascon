@@ -81,3 +81,64 @@ tweakey_state_extract:
         pop r5
         pop r4
         ret
+
+        .global multiply_M
+        .type multiply_M, @function
+multiply_M:
+        ;; r12: TK
+        push r4
+        push r5
+        push r6
+        push r7
+        push r8
+        push r9
+        push r10
+        push r11
+
+        ;; lane p=1 = TK[8..15]
+        mov.b 8(r12), r4        ; x0
+        mov.b 9(r12), r5        ; x1
+        mov.b 10(r12), r6       ; x2
+        mov.b 11(r12), r7       ; x3
+        mov.b 12(r12), r8       ; x4
+        mov.b 13(r12), r9       ; x5
+        mov.b 14(r12), r10      ; x6
+        mov.b 15(r12), r11      ; x7
+
+        ;; First, store every yj which depends on a single xi.
+        mov.b r10, 15(r12)      ; x6 -> y7
+        mov.b r9, 14(r12)       ; x5 -> y6
+        mov.b r6, 11(r12)       ; x2 -> y3
+        mov.b r4, 9(r12)        ; x0 -> y1
+        mov.b r11, 8(r12)       ; x7 -> y0
+
+        ;; y5 = x5<<3 ^ x4
+        rla.b r9
+        rla.b r9
+        rla.b r9
+        xor.b r8, r9
+        mov.b r9, 13(r12)
+
+        ;; y4 = x4>>3 ^ x3
+        rra.b r8
+        rra.b r8
+        rra.b r8
+        bic.b #0b11100000, r8
+        xor.b r7, r8
+        mov.b r8, 12(r12)
+
+        ;; y2 = x6<<2 ^ x1
+        rla.b r10
+        rla.b r10
+        xor.b r5, r10
+        mov.b r10, 10(r12)
+
+        pop r11
+        pop r10
+        pop r9
+        pop r8
+        pop r7
+        pop r6
+        pop r5
+        pop r4
+        ret

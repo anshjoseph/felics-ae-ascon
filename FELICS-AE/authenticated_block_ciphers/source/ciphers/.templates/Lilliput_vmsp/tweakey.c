@@ -21,6 +21,8 @@ void tweakey_state_init(
 }
 
 
+void multiply_M(const uint8_t TK[TWEAKEY_BYTES]);
+
 static void _multiply_M2(const uint8_t X[LANE_BYTES], uint8_t Y[LANE_BYTES])
 {
     uint8_t x15 = X[5]<<3 ^ X[4];
@@ -101,8 +103,6 @@ static void _multiply_MR3(const uint8_t X[LANE_BYTES], uint8_t Y[LANE_BYTES])
 #endif
 
 
-#define NEWLINE "\n\t"
-
 void tweakey_state_update(uint8_t TK[TWEAKEY_BYTES])
 {
     /* Skip lane 0, as it is multiplied by the identity matrix. */
@@ -111,58 +111,7 @@ void tweakey_state_update(uint8_t TK[TWEAKEY_BYTES])
     uint8_t *TKj;
     uint8_t TKj_old[LANE_BYTES];
 
-    j = 1;
-    TKj = TK + j*LANE_BYTES;
-    __asm__ volatile (
-        "mov 0(%[Y]), 0(%[X])" NEWLINE
-        "mov 2(%[Y]), 2(%[X])" NEWLINE
-        "mov 4(%[Y]), 4(%[X])" NEWLINE
-        "mov 6(%[Y]), 6(%[X])" NEWLINE
-
-        "push r4" NEWLINE
-        "push r5" NEWLINE
-        "push r6" NEWLINE
-
-        "mov.b 4(%[X]), r4" NEWLINE
-        "mov.b 5(%[X]), r5" NEWLINE
-        "mov.b 6(%[X]), r6" NEWLINE
-
-        "mov.b 2(%[X]), 3(%[Y])" NEWLINE
-        "mov.b 0(%[X]), 1(%[Y])" NEWLINE
-        "mov.b 7(%[X]), 0(%[Y])" NEWLINE
-
-        /* Send x6 to y7. */
-        "mov.b r6, 7(%[Y])" NEWLINE
-        /* Now compute y2 from x6 and x1. */
-        "rla.b r6" NEWLINE
-        "rla.b r6" NEWLINE
-        "xor.b 1(%[X]), r6" NEWLINE
-        "mov.b r6, 2(%[Y])" NEWLINE
-
-        /* Send x5 to y6. */
-        "mov.b r5, 6(%[Y])" NEWLINE
-        /* Now compute y5 from x5 and x4. */
-        "rla.b r5" NEWLINE
-        "rla.b r5" NEWLINE
-        "rla.b r5" NEWLINE
-        "xor.b r4, r5" NEWLINE
-        "mov.b r5, 5(%[Y])" NEWLINE
-
-        /* Compute y4 from x4 and x3. */
-        "rra.b r4" NEWLINE
-        "rra.b r4" NEWLINE
-        "rra.b r4" NEWLINE
-        "bic.b #0b11100000, r4" NEWLINE
-        "xor.b 3(%[X]), r4" NEWLINE
-        "mov.b r4, 4(%[Y])" NEWLINE
-
-        "pop r6" NEWLINE
-        "pop r5" NEWLINE
-        "pop r4" NEWLINE
-        :
-        : [Y] "rm" (TKj), [X] "rm" (TKj_old)
-        : "R4", "R5", "R6", "memory"
-    );
+    multiply_M(TK);
 
     j = 2;
     TKj = TK + j*LANE_BYTES;
