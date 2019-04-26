@@ -3,7 +3,11 @@
 #define LANE_BYTES (LANE_BITS/8)
 #define LANES_NB   (TWEAKEY_BYTES/LANE_BYTES)
 
+        ;; TODO: to perform logical right shift, clear carry then rrc
+        ;; instead of rra then bic.
+
         .section .text
+
 
         .global tweakey_state_extract
         .type tweakey_state_extract, @function
@@ -82,9 +86,10 @@ tweakey_state_extract:
         pop r4
         ret
 
-        .global multiply_M
-        .type multiply_M, @function
-multiply_M:
+
+        .global tweakey_state_update_asm
+        .type tweakey_state_update_asm, @function
+tweakey_state_update_asm:
         ;; r12: TK
         push r4
         push r5
@@ -132,6 +137,60 @@ multiply_M:
         rla.b r10
         xor.b r5, r10
         mov.b r10, 10(r12)
+
+        ;; lane p=2 = TK[16..23]
+        mov.b 16(r12), r4       ; x0
+        mov.b 17(r12), r5       ; x1
+        mov.b 18(r12), r6       ; x2
+        mov.b 19(r12), r7       ; x3
+        mov.b 20(r12), r8       ; x4
+        mov.b 21(r12), r9       ; x5
+        mov.b 22(r12), r10      ; x6
+        mov.b 23(r12), r11      ; x7
+
+        ;; First, store every yj which depends on a single xi.
+        mov.b r9, 23(r12)       ; x5 -> y7
+        mov.b r11, 17(r12)      ; x7 -> y1
+        mov.b r10, 16(r12)      ; x6 -> y0
+
+        ;; Clobber xi's which are not used anywhere else.
+        ;; y3 = x6<<2 ^ x1
+        rla.b r10
+        rla.b r10
+        xor.b r5, r10
+        mov.b r10, 19(r12)
+        ;; y2 = x5<<2 ^ x0
+        rla.b r9
+        rla.b r9
+        xor.b r9, r4
+        mov.b r4, 18(r12)
+        ;; NB: we are not done with r9 = x5<<2
+
+        ;; Clobber x5 with x15 = x5<<3 ^ x4
+        rla.b r9
+        xor.b r8, r9
+        ;; y6 = x15
+        mov.b r9, 22(r12)
+
+        ;; Clobber x4 with x14 = x4>>3 ^ x3
+        rra.b r8
+        rra.b r8
+        rra.b r8
+        bic.b #0b11100000, r8
+        xor.b r7, r8
+        ;; y5 = x15<<3 ^ x14
+        rla.b r9
+        rla.b r9
+        rla.b r9
+        xor.b r8, r9
+        mov.b r9, 21(r12)
+        ;; y4 = x14>>3 ^ x2
+        rra.b r8
+        rra.b r8
+        rra.b r8
+        bic.b #0b11100000, r8
+        xor.b r6, r8
+        mov.b r8, 20(r12)
 
         pop r11
         pop r10
