@@ -3,8 +3,6 @@
 #define LANE_BYTES (LANE_BITS/8)
 #define LANES_NB   (TWEAKEY_BYTES/LANE_BYTES)
 
-        ;; TODO: to perform logical right shift, clear carry then rrc
-        ;; instead of rra then bic.
 
         .section .text
 
