@@ -190,6 +190,82 @@ tweakey_state_update_asm:
         xor.b r6, r8
         mov.b r8, 20(r12)
 
+        ;; lane p=3 = TK[24..31]
+        mov.b 24(r12), r4       ; x0
+        mov.b 25(r12), r5       ; x1
+        mov.b 26(r12), r6       ; x2
+        mov.b 27(r12), r7       ; x3
+        mov.b 28(r12), r8       ; x4
+        mov.b 29(r12), r9       ; x5
+        mov.b 30(r12), r10      ; x6
+        mov.b 31(r12), r11      ; x7
+
+        ;; First, store every yj which depends on a single xi.
+        mov.b r10, 25(r12)      ; x6 -> y1
+        mov.b r9, 24(r12)       ; x5 -> y0
+
+        ;; x5 is only needed for y3 (<<2) and x15 (<<3).
+        ;; y3 = x5<<2 ^ x0
+        rla.b r9
+        rla.b r9
+        xor.b r9, r4
+        mov.b r4, 27(r12)
+
+        ;; Clobber x5 with x15 = x5<<3 ^ x4
+        rla.b r9
+        xor.b r8, r9
+        ;; y7 = x15
+        mov.b r9, 31(r12)
+
+        ;; x15 is only needed for y2 (<<2) and x25 (<<3).
+        ;; y2 = x15<<2 ^ x7
+        rla.b r9
+        rla.b r9
+        xor.b r9, r11
+        mov.b r11, 26(r12)
+
+        ;; x15 is now only used for x25 = x15<<3 ^ x14.
+
+        ;; First, compute x14 = x4>>3 ^ x3. Since none of x3 and x4
+        ;; are used anywhere else, clobber x4 with x14.
+        rra.b r8
+        rra.b r8
+        rra.b r8
+        bic.b #0b11100000, r8
+        xor.b r7, r8
+
+        ;; Clobber x15 with x25 = x15<<3 ^ x14
+        rla.b r9
+        xor.b r8, r9
+
+        ;; y6 = x25
+        mov.b r9, 30(r12)
+
+        ;; Clobber x14 with x24 = x14>>3 ^ x2
+        rra.b r8
+        rra.b r8
+        rra.b r8
+        bic.b #0b11100000, r8
+        xor.b r6, r8
+
+        ;; y5 = x25<<3 ^ x24
+        rla.b r9
+        rla.b r9
+        rla.b r9
+        xor.b r8, r9
+        mov.b r9, 29(r12)
+
+        ;; y4 = x24>>3 ^ x6<<2 ^ x1
+        rra.b r8
+        rra.b r8
+        rra.b r8
+        bic.b #0b11100000, r8
+        rla.b r10
+        rla.b r10
+        xor.b r10, r8
+        xor.b r5, r8
+        mov.b r8, 28(r12)
+
         pop r11
         pop r10
         pop r9

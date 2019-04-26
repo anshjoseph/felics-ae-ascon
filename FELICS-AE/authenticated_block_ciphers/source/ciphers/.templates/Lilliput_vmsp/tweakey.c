@@ -21,23 +21,6 @@ void tweakey_state_init(
 }
 
 
-static void _multiply_M3(const uint8_t X[LANE_BYTES], uint8_t Y[LANE_BYTES])
-{
-    uint8_t x15 = X[5]<<3 ^ X[4];
-    uint8_t x14 = X[4]>>3 ^ X[3];
-    uint8_t x25 = x15<<3  ^ x14;
-    uint8_t x24 = x14>>3  ^ X[2];
-
-    Y[7] = x15;
-    Y[6] = x25;
-    Y[5] = x25<<3  ^ x24;
-    Y[4] = x24>>3  ^ X[6]<<2 ^ X[1];
-    Y[3] = X[5]<<2 ^ X[0];
-    Y[2] = x15<<2  ^ X[7];
-    Y[1] = X[6];
-    Y[0] = X[5];
-}
-
 #if LANES_NB >= 5
 static void _multiply_MR(const uint8_t X[LANE_BYTES], uint8_t Y[LANE_BYTES])
 {
@@ -97,11 +80,6 @@ void tweakey_state_update(uint8_t TK[TWEAKEY_BYTES])
     uint8_t TKj_old[LANE_BYTES];
 
     tweakey_state_update_asm(TK);
-
-    j = 3;
-    TKj = TK + j*LANE_BYTES;
-    memcpy(TKj_old, TKj, LANE_BYTES);
-    _multiply_M3(TKj_old, TKj);
 
 #if LANES_NB >= 5
     j = 4;
