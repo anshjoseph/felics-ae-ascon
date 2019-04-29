@@ -1,7 +1,26 @@
 #include "parameters.h"
+
 #define LANE_BITS  64
 #define LANE_BYTES (LANE_BITS/8)
 #define LANES_NB   (TWEAKEY_BYTES/LANE_BYTES)
+
+        .macro rll3.b r
+        rla.b \r
+        rla.b \r
+        rla.b \r
+        .endm
+
+        .macro rrl3.b r
+        rra.b \r
+        rra.b \r
+        rra.b \r
+        bic.b #0b11100000, \r
+        .endm
+
+        .macro rll2.b r
+        rla.b \r
+        rla.b \r
+        .endm
 
 
         .section .text
@@ -119,23 +138,17 @@ tweakey_state_update_asm:
         mov.b r11, 8(r12)       ; x7 -> y0
 
         ;; y5 = x5<<3 ^ x4
-        rla.b r9
-        rla.b r9
-        rla.b r9
+        rll3.b r9
         xor.b r8, r9
         mov.b r9, 13(r12)
 
         ;; y4 = x4>>3 ^ x3
-        rra.b r8
-        rra.b r8
-        rra.b r8
-        bic.b #0b11100000, r8
+        rrl3.b r8
         xor.b r7, r8
         mov.b r8, 12(r12)
 
         ;; y2 = x6<<2 ^ x1
-        rla.b r10
-        rla.b r10
+        rll2.b r10
         xor.b r5, r10
         mov.b r10, 10(r12)
 
@@ -154,13 +167,11 @@ tweakey_state_update_asm:
 
         ;; Clobber xi's which are not used anywhere else.
         ;; y3 = x6<<2 ^ x1
-        rla.b r10
-        rla.b r10
+        rll2.b r10
         xor.b r5, r10
         mov.b r10, 19(r12)
         ;; y2 = x5<<2 ^ x0
-        rla.b r9
-        rla.b r9
+        rll2.b r9
         xor.b r9, r4
         mov.b r4, 18(r12)
         ;; NB: we are not done with r9 = x5<<2
@@ -172,22 +183,14 @@ tweakey_state_update_asm:
         mov.b r9, 22(r12)
 
         ;; Clobber x4 with x14 = x4>>3 ^ x3
-        rra.b r8
-        rra.b r8
-        rra.b r8
-        bic.b #0b11100000, r8
+        rrl3.b r8
         xor.b r7, r8
         ;; y5 = x15<<3 ^ x14
-        rla.b r9
-        rla.b r9
-        rla.b r9
+        rll3.b r9
         xor.b r8, r9
         mov.b r9, 21(r12)
         ;; y4 = x14>>3 ^ x2
-        rra.b r8
-        rra.b r8
-        rra.b r8
-        bic.b #0b11100000, r8
+        rrl3.b r8
         xor.b r6, r8
         mov.b r8, 20(r12)
 
@@ -207,8 +210,7 @@ tweakey_state_update_asm:
 
         ;; x5 is only needed for y3 (<<2) and x15 (<<3).
         ;; y3 = x5<<2 ^ x0
-        rla.b r9
-        rla.b r9
+        rll2.b r9
         xor.b r9, r4
         mov.b r4, 27(r12)
 
@@ -220,8 +222,7 @@ tweakey_state_update_asm:
 
         ;; x15 is only needed for y2 (<<2) and x25 (<<3).
         ;; y2 = x15<<2 ^ x7
-        rla.b r9
-        rla.b r9
+        rll2.b r9
         xor.b r9, r11
         mov.b r11, 26(r12)
 
@@ -229,10 +230,7 @@ tweakey_state_update_asm:
 
         ;; First, compute x14 = x4>>3 ^ x3. Since none of x3 and x4
         ;; are used anywhere else, clobber x4 with x14.
-        rra.b r8
-        rra.b r8
-        rra.b r8
-        bic.b #0b11100000, r8
+        rrl3.b r8
         xor.b r7, r8
 
         ;; Clobber x15 with x25 = x15<<3 ^ x14
@@ -243,26 +241,17 @@ tweakey_state_update_asm:
         mov.b r9, 30(r12)
 
         ;; Clobber x14 with x24 = x14>>3 ^ x2
-        rra.b r8
-        rra.b r8
-        rra.b r8
-        bic.b #0b11100000, r8
+        rrl3.b r8
         xor.b r6, r8
 
         ;; y5 = x25<<3 ^ x24
-        rla.b r9
-        rla.b r9
-        rla.b r9
+        rll3.b r9
         xor.b r8, r9
         mov.b r9, 29(r12)
 
         ;; y4 = x24>>3 ^ x6<<2 ^ x1
-        rra.b r8
-        rra.b r8
-        rra.b r8
-        bic.b #0b11100000, r8
-        rla.b r10
-        rla.b r10
+        rrl3.b r8
+        rll2.b r10
         xor.b r10, r8
         xor.b r5, r8
         mov.b r8, 28(r12)
@@ -286,23 +275,17 @@ tweakey_state_update_asm:
         mov.b r4, 39(r12)       ; x0 -> y7
 
         ;; y2 = x3 ^ x4>>3
-        rra.b r8
-        rra.b r8
-        rra.b r8
-        bic.b #0b11100000, r8
+        rrl3.b r8
         xor.b r7, r8
         mov.b r8, 34(r12)
 
         ;; y5 = x3<<2 ^ x6
-        rla.b r7
-        rla.b r7
+        rll2.b r7
         xor.b r10, r7
         mov.b r7, 37(r12)
 
         ;; y4 = x5 ^ x6<<3
-        rla.b r10
-        rla.b r10
-        rla.b r10
+        rll3.b r10
         xor.b r9, r10
         mov.b r10, 36(r12)
 
@@ -322,42 +305,30 @@ tweakey_state_update_asm:
 
         ;; Clobber x0 with x14 = x5 ^ x6<<3
         mov.b r10, r4
-        rla.b r4
-        rla.b r4
-        rla.b r4
+        rll3.b r4
         xor.b r9, r4
         ;; y3 = x14
         mov.b r4, 43(r12)
         ;; y2 = x4 ^ x14>>3
-        rra.b r4
-        rra.b r4
-        rra.b r4
-        bic.b #0b11100000, r4
+        rrl3.b r4
         xor.b r8, r4
         mov.b r4, 42(r12)
 
         ;; Clobber x0 with x4>>3, since x4 is still needed for y5.
         mov.b r8, r4
-        rra.b r4
-        rra.b r4
-        rra.b r4
-        bic.b #0b11100000, r4
+        rrl3.b r4
         ;; y1 = x3 ^ x4>>3
         xor.b r7, r4
         mov.b r4, 41(r12)
 
         ;; y5 = x4<<2 ^ x7
-        rla.b r8
-        rla.b r8
+        rll2.b r8
         xor.b r11, r8
         mov.b r8, 45(r12)
 
         ;; y4 = x3<<2 ^ x6 ^ x7<<3
-        rla.b r7
-        rla.b r7
-        rla.b r11
-        rla.b r11
-        rla.b r11
+        rll2.b r7
+        rll3.b r11
         xor.b r7, r10
         xor.b r11, r10
         mov.b r10, 44(r12)
