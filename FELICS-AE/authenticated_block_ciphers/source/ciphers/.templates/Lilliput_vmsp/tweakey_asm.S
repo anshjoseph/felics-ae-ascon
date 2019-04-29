@@ -153,13 +153,11 @@ tweakey_state_update_asm:
         mov.b 19(r12), r7       ; x3
         mov.b 20(r12), r8       ; x4
         mov.b 21(r12), r9       ; x5
-        mov.b 22(r12), r10      ; x6
-        mov.b 23(r12), r11      ; x7
+        mov 22(r12), r10        ; x6, x7
 
         ;; First, store every yj which depends on a single xi.
         mov.b r9, 23(r12)       ; x5 -> y7
-        mov.b r11, 17(r12)      ; x7 -> y1
-        mov.b r10, 16(r12)      ; x6 -> y0
+        mov r10, 16(r12)        ; x6, x7 -> y0, y1
 
         ;; Clobber xi's which are not used anywhere else.
         ;; y3 = x6<<2 ^ x1
@@ -317,9 +315,7 @@ tweakey_state_update_asm:
 
 #if LANES_NB >= 6
         ;; lane p=5 = TK[40..47] ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-        ;; TODO: move x0..1 as a single word.
-        mov.b 40(r12), r4       ; x0
-        mov.b 41(r12), r5       ; x1
+        mov 40(r12), r4         ; x0, x1
         mov.b 42(r12), r6       ; x2
         mov.b 43(r12), r7       ; x3
         mov.b 44(r12), r8       ; x4
@@ -329,8 +325,7 @@ tweakey_state_update_asm:
 
         ;; First, store every yj which depends on a single xi.
         mov.b r6, 40(r12)       ; x2 -> y0
-        mov.b r4, 46(r12)       ; x0 -> y6
-        mov.b r5, 47(r12)       ; x1 -> y7
+        mov r4, 46(r12)         ; x0,x1 -> y6,y7
 
         ;; Clobber x5 with x14 = x5 ^ x6<<3; first clobber x0 with x6<<3.
         mov.b r10, r4
