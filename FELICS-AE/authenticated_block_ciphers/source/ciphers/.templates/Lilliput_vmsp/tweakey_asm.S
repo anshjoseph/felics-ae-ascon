@@ -85,9 +85,6 @@ tweakey_state_extract:
         ret
 
 
-        ;; TODO: some rra might not need a bic afterward, because they
-        ;; operate on registers that were *already* right-shifted.
-
         ;; TODO: check whether some intermediate variables could be
         ;; replaced with dedicated instructions; eg for MR^2, maybe it
         ;; is more efficient to bic x6 instead of <<3 then >>3 for y2.
