@@ -2,6 +2,7 @@
 
 from collections import namedtuple, OrderedDict
 import json
+from subprocess import Popen
 from sys import argv
 
 import matplotlib.pyplot
@@ -66,15 +67,29 @@ def _sort_data(files, metric):
     )
 
 
+def _show_commit(event):
+    xs = event.artist.get_xdata()
+
+    commit = xs[event.ind][0]
+
+    if event.ind > 0:
+        rev = '{old}..{new}'.format(old=xs[event.ind-1][0], new=commit)
+    else:
+        rev = '{old}..{new}'.format(old=commit+'^', new=commit)
+
+    Popen(('gitk', rev))
+
+
 def _plot(data, metric):
-    _, axes = matplotlib.pyplot.subplots()
+    fig, axes = matplotlib.pyplot.subplots()
 
     for cm in data:
-        axes.plot(cm.commits, cm.metrics, label=str(cm.cipher))
+        axes.plot(cm.commits, cm.metrics, 'o-', label=str(cm.cipher), picker=5)
 
     axes.set_ylabel(metric)
     axes.set_ylim(bottom=0)
     axes.legend().set_visible(True)
+    fig.canvas.callbacks.connect('pick_event', _show_commit)
 
     matplotlib.pyplot.show()
 
