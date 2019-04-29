@@ -85,10 +85,6 @@ tweakey_state_extract:
         ret
 
 
-        ;; TODO: check whether some intermediate variables could be
-        ;; replaced with dedicated instructions; eg for MR^2, maybe it
-        ;; is more efficient to bic x6 instead of <<3 then >>3 for y2.
-
         .global tweakey_state_update_asm
         .type tweakey_state_update_asm, @function
 tweakey_state_update_asm:
@@ -324,31 +320,31 @@ tweakey_state_update_asm:
         mov.b r6, 40(r12)       ; x2 -> y0
         mov r4, 46(r12)         ; x0,x1 -> y6,y7
 
-        ;; Clobber x5 with x14 = x5 ^ x6<<3; first clobber x0 with x6<<3.
+        ;; Clobber x0 with x14 = x5 ^ x6<<3
         mov.b r10, r4
         rla.b r4
         rla.b r4
         rla.b r4
-        xor.b r4, r9
+        xor.b r9, r4
         ;; y3 = x14
-        mov.b r9, 43(r12)
+        mov.b r4, 43(r12)
         ;; y2 = x4 ^ x14>>3
-        rra.b r9
-        rra.b r9
-        rra.b r9
-        bic.b #0b11100000, r9
-        xor.b r8, r9
-        mov.b r9, 42(r12)
+        rra.b r4
+        rra.b r4
+        rra.b r4
+        bic.b #0b11100000, r4
+        xor.b r8, r4
+        mov.b r4, 42(r12)
 
-        ;; Clobber x5 with x4>>3, since x4 is still needed for y5.
-        mov.b r8, r9
-        rra.b r9
-        rra.b r9
-        rra.b r9
-        bic.b #0b11100000, r9
+        ;; Clobber x0 with x4>>3, since x4 is still needed for y5.
+        mov.b r8, r4
+        rra.b r4
+        rra.b r4
+        rra.b r4
+        bic.b #0b11100000, r4
         ;; y1 = x3 ^ x4>>3
-        xor.b r7, r9
-        mov.b r9, 41(r12)
+        xor.b r7, r4
+        mov.b r4, 41(r12)
 
         ;; y5 = x4<<2 ^ x7
         rla.b r8
