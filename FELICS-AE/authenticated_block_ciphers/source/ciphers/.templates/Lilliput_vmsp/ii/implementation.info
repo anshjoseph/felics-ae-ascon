@@ -6,3 +6,5 @@ DecryptConstants: constants
 
 EncryptCode: tbc, tbc_asm, tweakey, tweakey_asm
 DecryptCode: tbc, tbc_asm, tweakey, tweakey_asm
+
+Platforms: MSP
