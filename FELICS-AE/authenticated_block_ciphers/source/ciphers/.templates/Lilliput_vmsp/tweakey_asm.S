@@ -98,7 +98,10 @@ tweakey_state_update_asm:
         push r10
         push r11
 
-        ;; lane p=1 = TK[8..15]
+        ;; lane p=0 = TK[0..7] ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+        ;; Skip this lane, as it is multiplied by the identity matrix.
+
+        ;; lane p=1 = TK[8..15] ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
         mov.b 8(r12), r4        ; x0
         mov.b 9(r12), r5        ; x1
         mov.b 10(r12), r6       ; x2
@@ -136,7 +139,7 @@ tweakey_state_update_asm:
         xor.b r5, r10
         mov.b r10, 10(r12)
 
-        ;; lane p=2 = TK[16..23]
+        ;; lane p=2 = TK[16..23] ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
         mov.b 16(r12), r4       ; x0
         mov.b 17(r12), r5       ; x1
         mov.b 18(r12), r6       ; x2
@@ -190,7 +193,7 @@ tweakey_state_update_asm:
         xor.b r6, r8
         mov.b r8, 20(r12)
 
-        ;; lane p=3 = TK[24..31]
+        ;; lane p=3 = TK[24..31] ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
         mov.b 24(r12), r4       ; x0
         mov.b 25(r12), r5       ; x1
         mov.b 26(r12), r6       ; x2
