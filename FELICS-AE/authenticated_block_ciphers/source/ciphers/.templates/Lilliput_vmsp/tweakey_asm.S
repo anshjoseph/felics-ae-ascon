@@ -269,6 +269,46 @@ tweakey_state_update_asm:
         xor.b r5, r8
         mov.b r8, 28(r12)
 
+#if LANES_NB >= 5
+        ;; lane p=4 = TK[32..39] ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+        mov.b 32(r12), r4       ; x0
+        mov.b 33(r12), r5       ; x1
+        mov.b 34(r12), r6       ; x2
+        mov.b 35(r12), r7       ; x3
+        mov.b 36(r12), r8       ; x4
+        mov.b 37(r12), r9       ; x5
+        mov.b 38(r12), r10      ; x6
+        mov.b 39(r12), r11      ; x7
+
+        ;; First, store every yj which depends on a single xi.
+        mov.b r5, 32(r12)       ; x1 -> y0
+        mov.b r6, 33(r12)       ; x2 -> y1
+        mov.b r8, 35(r12)       ; x4 -> y3
+        mov.b r11, 38(r12)      ; x7 -> y6
+        mov.b r4, 39(r12)       ; x0 -> y7
+
+        ;; y2 = x3 ^ x4>>3
+        rra.b r8
+        rra.b r8
+        rra.b r8
+        bic.b #0b11100000, r8
+        xor.b r7, r8
+        mov.b r8, 34(r12)
+
+        ;; y5 = x3<<2 ^ x6
+        rla.b r7
+        rla.b r7
+        xor.b r10, r7
+        mov.b r7, 37(r12)
+
+        ;; y4 = x5 ^ x6<<3
+        rla.b r10
+        rla.b r10
+        rla.b r10
+        xor.b r9, r10
+        mov.b r10, 36(r12)
+#endif
+
         pop r11
         pop r10
         pop r9
