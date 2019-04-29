@@ -104,9 +104,9 @@ tweakey_state_extract:
         ret
 
 
-        .global tweakey_state_update_asm
-        .type tweakey_state_update_asm, @function
-tweakey_state_update_asm:
+        .global tweakey_state_update
+        .type tweakey_state_update, @function
+tweakey_state_update:
         ;; r12: TK
         push r4
         push r5
@@ -332,6 +332,70 @@ tweakey_state_update_asm:
         xor.b r7, r10
         xor.b r11, r10
         mov.b r10, 44(r12)
+
+#if LANES_NB >= 7
+        ;; lane p=6 = TK[48..55] ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+        mov.b 48(r12), r4       ; x0
+        mov.b 49(r12), r5       ; x1
+        mov.b 50(r12), r6       ; x2
+        mov.b 51(r12), r7       ; x3
+        mov.b 52(r12), r8       ; x4
+        mov.b 53(r12), r9       ; x5
+        mov.b 54(r12), r10      ; x6
+        mov.b 55(r12), r11      ; x7
+
+        ;; First, store every yj which depends on a single xi.
+        mov.b r5, 54(r12)       ; x1 -> y6
+        mov.b r6, 55(r12)       ; x2 -> y7
+
+        ;; Clobber x1 with y0 = x3 ^ x4>>3
+        mov.b r8, r5
+        rrl3.b r5
+        xor.b r7, r5
+        mov.b r5, 48(r12)
+
+        ;; Clobber x1 with x6<<3, then x5 with x14 = x5 ^ x6<<3
+        mov.b r10, r5
+        rll3.b r5
+        xor.b r5, r9
+
+        ;; Clobber x1 with x7<<3, then x3 with x24 = x3<<2 ^ x6 ^ x7<<3
+        mov.b r11, r5
+        rll3.b r5
+        rll2.b r7
+        xor.b r5, r7
+        xor.b r10, r7
+
+        ;; y3 = x24
+        mov.b r7, 51(r12)
+
+        ;; Clobber x24 with y2 = x14 ^ x24>>3
+        rrl3.b r7
+        xor.b r9, r7
+        mov.b r7, 50(r12)
+
+        ;; Clobber x2 with x4<<2, x3 with x0<<3
+        mov.b r8, r6
+        rll2.b r6
+        mov.b r4, r7
+        rll3.b r7
+        ;; Clobber x7 with y4 = x4<<2 ^ x7 ^ x0<<3
+        xor.b r6, r11
+        xor.b r7, r11
+        mov.b r11, 52(r12)
+
+        ;; Clobber x1 with x14<<2
+        mov.b r9, r5
+        rll2.b r5
+        ;; y5 = x14<<2 ^ x0
+        xor.b r5, r4
+        mov.b r4, 53(r12)
+
+        ;; y1 = x4 ^ x14>>3
+        rrl3.b r9
+        xor.b r9, r8
+        mov.b r8, 49(r12)
+#endif
 #endif
 #endif
 
