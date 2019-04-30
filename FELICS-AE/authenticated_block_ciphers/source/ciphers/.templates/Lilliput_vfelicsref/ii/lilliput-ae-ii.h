@@ -7,25 +7,38 @@
 
 static void _init_msg_tweak(const uint8_t tag[TAG_BYTES], uint8_t tweak[TWEAK_BYTES])
 {
-    /* The t-bit tweak is filled as follows:
+    /* With an s-bit block index, the t-bit tweak is filled as follows:
      *
      * - bits [  1, t-1]: tag + block index
-     *        [  1,  64]: tag[ 1.. 64] XOR block index
-     *        [ 65, t-1]: tag[65..t-1]
+     *        [  1,   s]: tag[1..s] XOR block index
+     *        [s+1, t-1]: tag[s+1..t-1]
      * - bit t: 1
+     *
+     * This function sets bits s+1 to t once and for all.
      */
 
-    memcpy(tweak+sizeof(uint64_t), tag+sizeof(uint64_t), TAG_BYTES-sizeof(uint64_t));
+    memcpy(tweak+sizeof(size_t), tag+sizeof(size_t), TAG_BYTES-sizeof(size_t));
     tweak[TWEAK_BYTES-1] |= 0x80;
 }
 
-static void _fill_msg_tweak(const uint8_t tag[TAG_BYTES], uint64_t block_index, uint8_t tweak[TWEAK_BYTES])
+static void _fill_msg_tweak(const uint8_t tag[TAG_BYTES], size_t block_index, uint8_t tweak[TWEAK_BYTES])
 {
-    /* Assume bits 65 to t-1 are set. */
+    /* With an s-bit block index, the t-bit tweak is filled as follows:
+     *
+     * - bits [  1, t-1]: tag + block index
+     *        [  1,   s]: tag[1..s] XOR block index
+     *        [s+1, t-1]: tag[s+1..t-1]
+     * - bit t: 1
+     *
+     * This function assumes bits s+1 to t have already been set, and
+     * only sets bits 1 to s.
+     */
+
+    copy_block_index(block_index, tweak);
+
     for (size_t i=0; i<sizeof(block_index); i++)
     {
-        uint8_t index_i = block_index >> i*8 & 0xff;
-        tweak[i] = tag[i] ^ index_i;
+        tweak[i] ^= tag[i];
     }
 }
 

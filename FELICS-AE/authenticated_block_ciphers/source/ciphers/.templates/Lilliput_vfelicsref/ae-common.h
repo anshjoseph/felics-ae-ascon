@@ -71,26 +71,33 @@ static inline void pad10(size_t X_len, const uint8_t X[X_len], uint8_t padded[BL
     memcpy(padded+pad_len, X, X_len);
 }
 
+static inline void copy_block_index(size_t index, uint8_t tweak[TWEAK_BYTES])
+{
+    /* NB: little-endian architectures can simply use:
+     *     memcpy(tweak, &index, sizeof(index)); */
+    for (size_t i=0; i<sizeof(index); i++)
+    {
+        tweak[i] = index >> 8*i & 0xff;
+    }
+}
+
 static inline void fill_index_tweak(
-    uint8_t  prefix,
-    uint64_t block_index,
-    uint8_t  tweak[TWEAK_BYTES]
+    uint8_t prefix,
+    size_t  block_index,
+    uint8_t tweak[TWEAK_BYTES]
 )
 {
-    /* The t-bit tweak is filled as follows:
+    /* With an s-bit block index, the t-bit tweak is filled as follows:
      *
      * - bits [  1, t-4]: block index
-     *        [  1,  64]: actual 64-bit block index
-     *        [ 65, t-4]: 0-padding
-     * - bits [t-3,   t]: constant 4-bit prefix
+     *        [  1,   s]: actual block index
+     *        [s+1, t-4]: 0-padding
+     * - bits [t-3,   t]: 4-bit prefix
      */
 
-    for (size_t i=0; i<sizeof(block_index); i++)
-    {
-        tweak[i] = block_index >> 8*i & 0xff;
-    }
+    copy_block_index(block_index, tweak);
 
-    /* Assume padding bytes have already been memset to 0. */
+    /* Assume padding bytes have already been set to 0. */
 
     tweak[TWEAK_BYTES-1] |= prefix << 4;
 }
