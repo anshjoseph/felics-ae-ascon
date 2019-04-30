@@ -1,6 +1,10 @@
 #ifndef AE_COMMON_H
 #define AE_COMMON_H
 
+#if __BYTE_ORDER__ != __ORDER_LITTLE_ENDIAN__
+#error "tweak-formatting functions assume little-endian byte order."
+#endif
+
 #include <stddef.h>
 #include <stdint.h>
 #include <string.h>
@@ -73,12 +77,7 @@ static inline void pad10(size_t X_len, const uint8_t X[X_len], uint8_t padded[BL
 
 static inline void copy_block_index(size_t index, uint8_t tweak[TWEAK_BYTES])
 {
-    /* NB: little-endian architectures can simply use:
-     *     memcpy(tweak, &index, sizeof(index)); */
-    for (size_t i=0; i<sizeof(index); i++)
-    {
-        tweak[i] = index >> 8*i & 0xff;
-    }
+    memcpy(tweak, &index, sizeof(index));
 }
 
 static inline void fill_index_tweak(
