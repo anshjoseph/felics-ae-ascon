@@ -1,6 +1,8 @@
 #include <stdint.h>
 #include <string.h>
 
+#include "cipher.h"
+
 #include "constants.h"
 #include "parameters.h"
 #include "tbc.h"
@@ -19,7 +21,7 @@ static void _compute_round_tweakeys(
     uint8_t RTK[ROUNDS][ROUND_TWEAKEY_BYTES]
 )
 {
-    uint8_t TK[TWEAKEY_BYTES];
+    RAM_DATA_BYTE TK[TWEAKEY_BYTES];
     tweakey_state_init(TK, key, tweak);
     tweakey_state_extract(TK, 0, RTK[0]);
 
@@ -33,7 +35,7 @@ static void _compute_round_tweakeys(
 
 static void _nonlinear_layer(uint8_t X[BLOCK_BYTES], const uint8_t RTK[ROUND_TWEAKEY_BYTES])
 {
-    uint8_t F[ROUND_TWEAKEY_BYTES];
+    RAM_DATA_BYTE F[ROUND_TWEAKEY_BYTES];
     for (size_t j=0; j<ROUND_TWEAKEY_BYTES; j++)
     {
         F[j] = X[j] ^ RTK[j];
@@ -76,7 +78,7 @@ static void _permutation_layer(uint8_t X[BLOCK_BYTES], permutation p)
         return;
     }
 
-    uint8_t X_old[BLOCK_BYTES];
+    RAM_DATA_BYTE X_old[BLOCK_BYTES];
     memcpy(X_old, X, BLOCK_BYTES);
 
     const uint8_t *pi = PERMUTATIONS[p];
@@ -104,8 +106,8 @@ void lilliput_tbc_encrypt(
 {
     _state_init(ciphertext, message);
 
-    uint8_t TK[TWEAKEY_BYTES];
-    uint8_t RTK[ROUND_TWEAKEY_BYTES];
+    RAM_DATA_BYTE TK[TWEAKEY_BYTES];
+    RAM_DATA_BYTE RTK[ROUND_TWEAKEY_BYTES];
     tweakey_state_init(TK, key, tweak);
 
     for (unsigned i=0; i<ROUNDS-1; i++)
@@ -128,10 +130,10 @@ void lilliput_tbc_decrypt(
 {
     _state_init(message, ciphertext);
 
-    uint8_t RTK[ROUNDS][ROUND_TWEAKEY_BYTES];
+    RAM_DATA_BYTE RTK[ROUNDS][ROUND_TWEAKEY_BYTES];
     _compute_round_tweakeys(key, tweak, RTK);
 
-    for (uint8_t i=0; i<ROUNDS-1; i++)
+    for (unsigned i=0; i<ROUNDS-1; i++)
     {
         _one_round_egfn(message, RTK[ROUNDS-1-i], PERMUTATION_DECRYPTION);
     }

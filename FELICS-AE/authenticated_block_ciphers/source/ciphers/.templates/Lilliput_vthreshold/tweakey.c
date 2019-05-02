@@ -1,6 +1,8 @@
 #include <stdint.h>
 #include <string.h>
 
+#include "cipher.h"
+
 #include "parameters.h"
 #include "random.h"
 #include "tweakey.h"
@@ -18,7 +20,7 @@ void tweakey_state_init(
     const uint8_t tweak[TWEAK_BYTES]
 )
 {
-    uint8_t SHARES_0[KEY_BYTES];
+    RAM_DATA_BYTE SHARES_0[KEY_BYTES];
     randombytes(sizeof(SHARES_0), SHARES_0);
 
     memcpy(TK_Y, SHARES_0, KEY_BYTES);
@@ -168,8 +170,8 @@ void tweakey_state_update(uint8_t TK_X[TWEAKEY_BYTES], uint8_t TK_Y[KEY_BYTES])
     size_t j;
     uint8_t *TKj_X;
     uint8_t *TKj_Y;
-    uint8_t TKj_old_X[LANE_BYTES];
-    uint8_t TKj_old_Y[LANE_BYTES];
+    RAM_DATA_BYTE TKj_old_X[LANE_BYTES];
+    RAM_DATA_BYTE TKj_old_Y[LANE_BYTES];
 
     j = 1;
     TKj_X = TK_X + j*LANE_BYTES;

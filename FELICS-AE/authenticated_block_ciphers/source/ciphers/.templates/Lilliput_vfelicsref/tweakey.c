@@ -1,6 +1,8 @@
 #include <stdint.h>
 #include <string.h>
 
+#include "cipher.h"
+
 #include "parameters.h"
 #include "tweakey.h"
 
@@ -141,7 +143,7 @@ void tweakey_state_update(uint8_t TK[TWEAKEY_BYTES])
 
     size_t j;
     uint8_t *TKj;
-    uint8_t TKj_old[LANE_BYTES];
+    RAM_DATA_BYTE TKj_old[LANE_BYTES];
 
     j = 1;
     TKj = TK + j*LANE_BYTES;

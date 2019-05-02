@@ -1,6 +1,8 @@
 #include <stdint.h>
 #include <string.h>
 
+#include "cipher.h"
+
 #include "constants.h"
 #include "parameters.h"
 #include "random.h"
@@ -15,8 +17,8 @@ static void _state_init(
     const uint8_t message[BLOCK_BYTES]
 )
 {
-    uint8_t SHARES_0[BLOCK_BYTES];
-    uint8_t SHARES_1[BLOCK_BYTES];
+    RAM_DATA_BYTE SHARES_0[BLOCK_BYTES];
+    RAM_DATA_BYTE SHARES_1[BLOCK_BYTES];
     randombytes(sizeof(SHARES_0), SHARES_0);
     randombytes(sizeof(SHARES_1), SHARES_1);
 
@@ -36,8 +38,8 @@ static void _compute_round_tweakeys(
     uint8_t RTK_Y[ROUNDS][ROUND_TWEAKEY_BYTES]
 )
 {
-    uint8_t TK_X[TWEAKEY_BYTES];
-    uint8_t TK_Y[TWEAKEY_BYTES];
+    RAM_DATA_BYTE TK_X[TWEAKEY_BYTES];
+    RAM_DATA_BYTE TK_Y[TWEAKEY_BYTES];
     tweakey_state_init(TK_X, TK_Y, key, tweak);
     tweakey_state_extract(TK_X, TK_Y, 0, RTK_X[0], RTK_Y[0]);
 
@@ -60,9 +62,9 @@ static void _nonlinear_layer(
     uint8_t x_hi, y_hi, z_hi;   // High nibbles for the Feistel network
     uint8_t x_lo, y_lo, z_lo;   // Low nibbles for the Feistel network
     uint8_t tmp0, tmp1, tmp2;
-    uint8_t TMP_X[ROUND_TWEAKEY_BYTES];
-    uint8_t TMP_Y[ROUND_TWEAKEY_BYTES];
-    uint8_t TMP_Z[ROUND_TWEAKEY_BYTES];
+    RAM_DATA_BYTE TMP_X[ROUND_TWEAKEY_BYTES];
+    RAM_DATA_BYTE TMP_Y[ROUND_TWEAKEY_BYTES];
+    RAM_DATA_BYTE TMP_Z[ROUND_TWEAKEY_BYTES];
 
     // Apply the RTK to two shares
     for (size_t j=0; j<ROUND_TWEAKEY_BYTES; j++)
@@ -142,7 +144,7 @@ static void _permutation_layer(uint8_t X[BLOCK_BYTES], permutation p)
         return;
     }
 
-    uint8_t X_old[BLOCK_BYTES];
+    RAM_DATA_BYTE X_old[BLOCK_BYTES];
     memcpy(X_old, X, BLOCK_BYTES);
 
     const uint8_t *pi = PERMUTATIONS[p];
@@ -179,15 +181,15 @@ void lilliput_tbc_encrypt(
     uint8_t ciphertext[BLOCK_BYTES]
 )
 {
-    uint8_t X[BLOCK_BYTES];
-    uint8_t Y[BLOCK_BYTES];
-    uint8_t Z[BLOCK_BYTES];
+    RAM_DATA_BYTE X[BLOCK_BYTES];
+    RAM_DATA_BYTE Y[BLOCK_BYTES];
+    RAM_DATA_BYTE Z[BLOCK_BYTES];
     _state_init(X, Y, Z, message);
 
-    uint8_t TK_X[TWEAKEY_BYTES];
-    uint8_t TK_Y[TWEAKEY_BYTES];
-    uint8_t RTK_X[ROUND_TWEAKEY_BYTES];
-    uint8_t RTK_Y[ROUND_TWEAKEY_BYTES];
+    RAM_DATA_BYTE TK_X[TWEAKEY_BYTES];
+    RAM_DATA_BYTE TK_Y[TWEAKEY_BYTES];
+    RAM_DATA_BYTE RTK_X[ROUND_TWEAKEY_BYTES];
+    RAM_DATA_BYTE RTK_Y[ROUND_TWEAKEY_BYTES];
     tweakey_state_init(TK_X, TK_Y, key, tweak);
 
     for (unsigned i=0; i<ROUNDS-1; i++)
@@ -213,13 +215,13 @@ void lilliput_tbc_decrypt(
     uint8_t message[BLOCK_BYTES]
 )
 {
-    uint8_t X[BLOCK_BYTES];
-    uint8_t Y[BLOCK_BYTES];
-    uint8_t Z[BLOCK_BYTES];
+    RAM_DATA_BYTE X[BLOCK_BYTES];
+    RAM_DATA_BYTE Y[BLOCK_BYTES];
+    RAM_DATA_BYTE Z[BLOCK_BYTES];
     _state_init(X, Y, Z, ciphertext);
 
-    uint8_t RTK_X[ROUNDS][ROUND_TWEAKEY_BYTES];
-    uint8_t RTK_Y[ROUNDS][ROUND_TWEAKEY_BYTES];
+    RAM_DATA_BYTE RTK_X[ROUNDS][ROUND_TWEAKEY_BYTES];
+    RAM_DATA_BYTE RTK_Y[ROUNDS][ROUND_TWEAKEY_BYTES];
     _compute_round_tweakeys(key, tweak, RTK_X, RTK_Y);
 
     for (unsigned i=0; i<ROUNDS-1; i++)
