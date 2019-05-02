@@ -41,8 +41,19 @@ static inline void decrypt(const uint8_t K[KEY_BYTES],
 
 static inline void xor_into(uint8_t dest[BLOCK_BYTES], const uint8_t src[BLOCK_BYTES])
 {
-    for (size_t i=0; i<BLOCK_BYTES; i++)
-        dest[i] ^= src[i];
+    __asm__ volatile (
+        "xor 0(%[src]), 0(%[dest])" "\n\t"
+        "xor 2(%[src]), 2(%[dest])" "\n\t"
+        "xor 4(%[src]), 4(%[dest])" "\n\t"
+        "xor 6(%[src]), 6(%[dest])" "\n\t"
+        "xor 8(%[src]), 8(%[dest])" "\n\t"
+        "xor 10(%[src]), 10(%[dest])" "\n\t"
+        "xor 12(%[src]), 12(%[dest])" "\n\t"
+        "xor 14(%[src]), 14(%[dest])" "\n\t"
+        :
+        : [dest] "p" (dest), [src] "p" (src)
+        : "memory"
+    );
 }
 
 static inline void xor_arrays(size_t len, uint8_t out[len], const uint8_t a[len], const uint8_t b[len])
