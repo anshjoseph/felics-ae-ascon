@@ -19,10 +19,10 @@ static bool _lilliput_ae_decrypt(
 {
     _encrypt_message(key, ciphertext_len, ciphertext, nonce, tag, message);
 
-    uint8_t auth[BLOCK_BYTES];
+    RAM_DATA_BYTE auth[BLOCK_BYTES];
     process_associated_data(key, auth_data_len, auth_data, auth);
 
-    uint8_t effective_tag[TAG_BYTES];
+    RAM_DATA_BYTE effective_tag[TAG_BYTES];
     _generate_tag(key, ciphertext_len, message, nonce, auth, effective_tag);
 
     return memcmp(tag, effective_tag, TAG_BYTES) == 0;

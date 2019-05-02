@@ -18,8 +18,8 @@ static void _encrypt_message(
     size_t l = M_len / BLOCK_BYTES;
     size_t rest = M_len % BLOCK_BYTES;
 
-    uint8_t tweak[TWEAK_BYTES];
-    uint8_t checksum[BLOCK_BYTES];
+    RAM_DATA_BYTE tweak[TWEAK_BYTES];
+    RAM_DATA_BYTE checksum[BLOCK_BYTES];
 
     memset(tweak, 0, TWEAK_BYTES);
     memset(checksum, 0, BLOCK_BYTES);
@@ -38,8 +38,8 @@ static void _encrypt_message(
     }
     else
     {
-        uint8_t M_rest[BLOCK_BYTES];
-        uint8_t Pad[BLOCK_BYTES];
+        RAM_DATA_BYTE M_rest[BLOCK_BYTES];
+        RAM_DATA_BYTE Pad[BLOCK_BYTES];
 
         pad10(rest, &M[l*BLOCK_BYTES], M_rest);
         xor_into(checksum, M_rest);
@@ -64,10 +64,10 @@ static void _lilliput_ae_encrypt(
     uint8_t       tag[TAG_BYTES]
 )
 {
-    uint8_t auth[BLOCK_BYTES];
+    RAM_DATA_BYTE auth[BLOCK_BYTES];
     process_associated_data(key, auth_data_len, auth_data, auth);
 
-    uint8_t final[BLOCK_BYTES];
+    RAM_DATA_BYTE final[BLOCK_BYTES];
     _encrypt_message(key, message_len, message, nonce, ciphertext, final);
 
     _generate_tag(final, auth, tag);

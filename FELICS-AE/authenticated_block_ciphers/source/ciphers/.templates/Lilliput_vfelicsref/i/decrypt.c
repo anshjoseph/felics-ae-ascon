@@ -18,8 +18,8 @@ static void _decrypt_message(
     size_t l = C_len / BLOCK_BYTES;
     size_t rest = C_len % BLOCK_BYTES;
 
-    uint8_t tweak[TWEAK_BYTES];
-    uint8_t checksum[BLOCK_BYTES];
+    RAM_DATA_BYTE tweak[TWEAK_BYTES];
+    RAM_DATA_BYTE checksum[BLOCK_BYTES];
 
     memset(tweak, 0, TWEAK_BYTES);
     memset(checksum, 0, BLOCK_BYTES);
@@ -38,8 +38,8 @@ static void _decrypt_message(
     }
     else
     {
-        uint8_t M_rest[BLOCK_BYTES];
-        uint8_t Pad[BLOCK_BYTES];
+        RAM_DATA_BYTE M_rest[BLOCK_BYTES];
+        RAM_DATA_BYTE Pad[BLOCK_BYTES];
 
         _fill_msg_tweak(0x4, N, l, tweak);
         encrypt(key, tweak, _0n, Pad);
@@ -64,13 +64,13 @@ static bool _lilliput_ae_decrypt(
     uint8_t       message[ciphertext_len]
 )
 {
-    uint8_t auth[BLOCK_BYTES];
+    RAM_DATA_BYTE auth[BLOCK_BYTES];
     process_associated_data(key, auth_data_len, auth_data, auth);
 
-    uint8_t final[BLOCK_BYTES];
+    RAM_DATA_BYTE final[BLOCK_BYTES];
     _decrypt_message(key, ciphertext_len, ciphertext, nonce, message, final);
 
-    uint8_t effective_tag[TAG_BYTES];
+    RAM_DATA_BYTE effective_tag[TAG_BYTES];
     _generate_tag(final, auth, effective_tag);
 
     return memcmp(tag, effective_tag, TAG_BYTES) == 0;

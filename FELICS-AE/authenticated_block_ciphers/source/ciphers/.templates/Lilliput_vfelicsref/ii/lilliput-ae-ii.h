@@ -63,9 +63,9 @@ static void _generate_tag(
     uint8_t       tag[TAG_BYTES]
 )
 {
-    uint8_t Ek_Mj[BLOCK_BYTES];
-    uint8_t tag_tmp[TAG_BYTES];
-    uint8_t tweak[TWEAK_BYTES];
+    RAM_DATA_BYTE Ek_Mj[BLOCK_BYTES];
+    RAM_DATA_BYTE tag_tmp[TAG_BYTES];
+    RAM_DATA_BYTE tweak[TWEAK_BYTES];
 
     memset(tweak, 0, TWEAK_BYTES);
     memcpy(tag_tmp, Auth, TAG_BYTES);
@@ -82,7 +82,7 @@ static void _generate_tag(
 
     if (rest != 0)
     {
-        uint8_t M_rest[BLOCK_BYTES];
+        RAM_DATA_BYTE M_rest[BLOCK_BYTES];
         pad10(rest, &M[l*BLOCK_BYTES], M_rest);
         fill_index_tweak(0x4, l, tweak);
         encrypt(key, tweak, M_rest, Ek_Mj);
@@ -102,12 +102,12 @@ static void _encrypt_message(
     uint8_t       C[M_len]
 )
 {
-    uint8_t Ek_N[BLOCK_BYTES];
+    RAM_DATA_BYTE Ek_N[BLOCK_BYTES];
 
-    uint8_t tweak[TWEAK_BYTES];
+    RAM_DATA_BYTE tweak[TWEAK_BYTES];
     _init_msg_tweak(tag, tweak);
 
-    uint8_t padded_N[BLOCK_BYTES];
+    RAM_DATA_BYTE padded_N[BLOCK_BYTES];
     memcpy(padded_N, N, NONCE_BYTES);
     padded_N[BLOCK_BYTES-1] = 0;
 

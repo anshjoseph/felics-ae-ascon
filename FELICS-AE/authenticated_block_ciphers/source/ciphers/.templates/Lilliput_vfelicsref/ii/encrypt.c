@@ -17,7 +17,7 @@ static void _lilliput_ae_encrypt(
     uint8_t       tag[TAG_BYTES]
 )
 {
-    uint8_t auth[BLOCK_BYTES];
+    RAM_DATA_BYTE auth[BLOCK_BYTES];
     process_associated_data(key, auth_data_len, auth_data, auth);
 
     _generate_tag(key, message_len, message, nonce, auth, tag);

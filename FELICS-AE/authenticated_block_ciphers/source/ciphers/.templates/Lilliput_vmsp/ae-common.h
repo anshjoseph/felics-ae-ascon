@@ -9,6 +9,8 @@
 #include <stdint.h>
 #include <string.h>
 
+#include "cipher.h"
+
 #include "tbc.h"
 #include "parameters.h"
 
@@ -116,8 +118,8 @@ static void process_associated_data(
     uint8_t       Auth[BLOCK_BYTES]
 )
 {
-    uint8_t Ek_Ai[BLOCK_BYTES];
-    uint8_t tweak[TWEAK_BYTES];
+    RAM_DATA_BYTE Ek_Ai[BLOCK_BYTES];
+    RAM_DATA_BYTE tweak[TWEAK_BYTES];
 
     memset(tweak, 0, TWEAK_BYTES);
     memset(Auth, 0, BLOCK_BYTES);
@@ -134,7 +136,7 @@ static void process_associated_data(
 
     if (rest != 0)
     {
-        uint8_t A_rest[BLOCK_BYTES];
+        RAM_DATA_BYTE A_rest[BLOCK_BYTES];
         pad10(rest, &A[l_a*BLOCK_BYTES], A_rest);
         fill_index_tweak(0x6, l_a, tweak);
         encrypt(key, tweak, A_rest, Ek_Ai);
