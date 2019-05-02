@@ -48,16 +48,20 @@ void lilliput_tbc_encrypt(
 {
     _state_init(ciphertext, message);
 
-    uint8_t RTK[ROUNDS][ROUND_TWEAKEY_BYTES];
-    _compute_round_tweakeys(key, tweak, RTK);
+    uint8_t TK[TWEAKEY_BYTES];
+    uint8_t RTK[ROUND_TWEAKEY_BYTES];
+    tweakey_state_init(TK, key, tweak);
 
     for (unsigned i=0; i<ROUNDS-1; i++)
     {
-        nonlinear_and_linear(ciphertext, RTK[i]);
+        tweakey_state_extract(TK, i, RTK);
+        nonlinear_and_linear(ciphertext, RTK);
         permutation_enc(ciphertext);
+        tweakey_state_update(TK);
     }
 
-    nonlinear_and_linear(ciphertext, RTK[ROUNDS-1]);
+    tweakey_state_extract(TK, ROUNDS-1, RTK);
+    nonlinear_and_linear(ciphertext, RTK);
 }
 
 void lilliput_tbc_decrypt(

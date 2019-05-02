@@ -104,15 +104,19 @@ void lilliput_tbc_encrypt(
 {
     _state_init(ciphertext, message);
 
-    uint8_t RTK[ROUNDS][ROUND_TWEAKEY_BYTES];
-    _compute_round_tweakeys(key, tweak, RTK);
+    uint8_t TK[TWEAKEY_BYTES];
+    uint8_t RTK[ROUND_TWEAKEY_BYTES];
+    tweakey_state_init(TK, key, tweak);
 
-    for (uint8_t i=0; i<ROUNDS-1; i++)
+    for (unsigned i=0; i<ROUNDS-1; i++)
     {
-        _one_round_egfn(ciphertext, RTK[i], PERMUTATION_ENCRYPTION);
+        tweakey_state_extract(TK, i, RTK);
+        _one_round_egfn(ciphertext, RTK, PERMUTATION_ENCRYPTION);
+        tweakey_state_update(TK);
     }
 
-    _one_round_egfn(ciphertext, RTK[ROUNDS-1], PERMUTATION_NONE);
+    tweakey_state_extract(TK, ROUNDS-1, RTK);
+    _one_round_egfn(ciphertext, RTK, PERMUTATION_NONE);
 }
 
 void lilliput_tbc_decrypt(

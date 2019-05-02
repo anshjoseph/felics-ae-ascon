@@ -184,20 +184,23 @@ void lilliput_tbc_encrypt(
     uint8_t Z[BLOCK_BYTES];
     _state_init(X, Y, Z, message);
 
-    uint8_t RTK_X[ROUNDS][ROUND_TWEAKEY_BYTES];
-    uint8_t RTK_Y[ROUNDS][ROUND_TWEAKEY_BYTES];
-    _compute_round_tweakeys(key, tweak, RTK_X, RTK_Y);
+    uint8_t TK_X[TWEAKEY_BYTES];
+    uint8_t TK_Y[TWEAKEY_BYTES];
+    uint8_t RTK_X[ROUND_TWEAKEY_BYTES];
+    uint8_t RTK_Y[ROUND_TWEAKEY_BYTES];
+    tweakey_state_init(TK_X, TK_Y, key, tweak);
 
-
-    for (uint8_t i=0; i<ROUNDS-1; i++)
+    for (unsigned i=0; i<ROUNDS-1; i++)
     {
-        _one_round_egfn(X, Y, Z, RTK_X[i], RTK_Y[i], PERMUTATION_ENCRYPTION);
+        tweakey_state_extract(TK_X, TK_Y, i, RTK_X, RTK_Y);
+        _one_round_egfn(X, Y, Z, RTK_X, RTK_Y, PERMUTATION_ENCRYPTION);
+        tweakey_state_update(TK_X, TK_Y);
     }
 
-    _one_round_egfn(X, Y, Z, RTK_X[ROUNDS-1], RTK_Y[ROUNDS-1], PERMUTATION_NONE);
+    tweakey_state_extract(TK_X, TK_Y, ROUNDS-1, RTK_X, RTK_Y);
+    _one_round_egfn(X, Y, Z, RTK_X, RTK_Y, PERMUTATION_NONE);
 
-
-    for (size_t i=0; i<BLOCK_BYTES; i++)
+    for (unsigned i=0; i<BLOCK_BYTES; i++)
     {
         ciphertext[i] = X[i] ^ Y[i] ^ Z[i];
     }
@@ -219,7 +222,7 @@ void lilliput_tbc_decrypt(
     uint8_t RTK_Y[ROUNDS][ROUND_TWEAKEY_BYTES];
     _compute_round_tweakeys(key, tweak, RTK_X, RTK_Y);
 
-    for (uint8_t i=0; i<ROUNDS-1; i++)
+    for (unsigned i=0; i<ROUNDS-1; i++)
     {
         _one_round_egfn(X, Y, Z, RTK_X[ROUNDS-1-i], RTK_Y[ROUNDS-1-i], PERMUTATION_DECRYPTION);
     }
