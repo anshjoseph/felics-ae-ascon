@@ -89,7 +89,7 @@
  *
  */
 #define ALIGN_PC_BOUNDRY 8
-#define ALIGN_AVR_BOUNDRY 2
+#define ALIGN_AVR_BOUNDRY 1
 #define ALIGN_MSP_BOUNDRY 2
 #define ALIGN_ARM_BOUNDRY 8
 
