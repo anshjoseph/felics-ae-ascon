@@ -19,21 +19,21 @@ static void _encrypt_message(
     size_t rest = M_len % BLOCK_BYTES;
 
     RAM_DATA_BYTE tweak[TWEAK_BYTES];
-    RAM_DATA_BYTE checksum[BLOCK_BYTES];
+    _init_msg_tweak(N, tweak);
 
-    memset(tweak, 0, TWEAK_BYTES);
+    RAM_DATA_BYTE checksum[BLOCK_BYTES];
     memset(checksum, 0, BLOCK_BYTES);
 
     for (size_t j=0; j<l; j++)
     {
         xor_into(checksum, &M[j*BLOCK_BYTES]);
-        _fill_msg_tweak(0x0, N, j, tweak);
+        _fill_msg_tweak(0x0, j, tweak);
         encrypt(key, tweak, &M[j*BLOCK_BYTES], &C[j*BLOCK_BYTES]);
     }
 
     if (rest == 0)
     {
-        _fill_msg_tweak(0x1, N, l, tweak);
+        _fill_msg_tweak(0x1, l, tweak);
         encrypt(key, tweak, checksum, Final);
     }
     else
@@ -44,11 +44,11 @@ static void _encrypt_message(
         pad10(rest, &M[l*BLOCK_BYTES], M_rest);
         xor_into(checksum, M_rest);
 
-        _fill_msg_tweak(0x4, N, l, tweak);
+        _fill_msg_tweak(0x4, l, tweak);
         encrypt(key, tweak, _0n, Pad);
         xor_arrays(rest, &C[l*BLOCK_BYTES], &M[l*BLOCK_BYTES], Pad);
 
-        _fill_msg_tweak(0x5, N, l+1, tweak);
+        _fill_msg_tweak(0x5, l+1, tweak);
         encrypt(key, tweak, checksum, Final);
     }
 }
