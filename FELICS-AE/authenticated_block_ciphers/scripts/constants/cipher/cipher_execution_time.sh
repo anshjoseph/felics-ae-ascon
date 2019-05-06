@@ -49,7 +49,7 @@ UPLOAD_SCENARIO1=upload-scenario1
 
 MAKE_LOG_FILE=cipher_execution_time_make.log
 
-ARM_SERIAL_TERMINAL=./../../../../../common/arm/arm_serial_terminal.py
+ARM_SERIAL_TERMINAL=../../../architecture/arm/arm_serial_terminal.py
 
 ARM_SERIAL_TERMINAL_OUTPUT_FILE=serial.out
 

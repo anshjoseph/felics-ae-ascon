@@ -31,7 +31,7 @@
 
 
 # System directory code path
-SYSTEM_DIR := ../../../../../common/arm
+SYSTEM_DIR := ../../../architecture/arm
 
 CC := arm-none-eabi-gcc
 OBJDUMP := arm-none-eabi-objdump

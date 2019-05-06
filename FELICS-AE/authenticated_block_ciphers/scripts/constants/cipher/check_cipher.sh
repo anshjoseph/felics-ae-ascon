@@ -31,7 +31,8 @@
 #
 
 
-CIPHER_MAKEFILE=./../../../common/cipher.mk
+SOURCE_DIR=../../..
+CIPHER_MAKEFILE=${SOURCE_DIR}/common/cipher.mk
 MAKE_FILE_LOG=make.log
 
 SUCCESS_EXIT_CODE=0
@@ -45,6 +46,6 @@ CORRECT=CORRECT!
 EXPECTED_WRONG_COUNT=0
 EXPECTED_CORRECT_COUNT=5
 
-ARM_SERIAL_TERMINAL=./../../../../../common/arm/arm_serial_terminal.py
+ARM_SERIAL_TERMINAL=${SOURCE_DIR}/architecture/arm/arm_serial_terminal.py
 
-MSPDEBUG_CHECK_CIPHER_COMMANDS_FILE=./../../../../../common/msp/check_cipher.cmd
+MSPDEBUG_CHECK_CIPHER_COMMANDS_FILE=${SOURCE_DIR}/architecture/msp/check_cipher.cmd

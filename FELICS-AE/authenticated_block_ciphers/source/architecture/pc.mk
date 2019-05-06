@@ -30,7 +30,7 @@
 
 
 # Include directory code path
-INCLUDE_DIR := ../../../../../common/pc/include
+INCLUDE_DIR := ../../../architecture/pc/include
 
 CC := gcc
 
