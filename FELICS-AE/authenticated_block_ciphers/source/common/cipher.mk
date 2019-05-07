@@ -104,6 +104,7 @@ pre-build : \
 		pre-build-include \
 		pre-build-debug \
 		pre-build-scenario \
+		pre-build-helpers \
 		pre-build-measure_cycle_count \
 		pre-build-compiler_options
 	@echo $(DELIMITER) Start building $(CIPHERNAME) $(DELIMITER)

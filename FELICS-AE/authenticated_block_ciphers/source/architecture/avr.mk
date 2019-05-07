@@ -60,3 +60,5 @@ OBJCOPY := avr-objcopy
 LDLIBS :=
 
 LDFLAGS := $(CFLAGS)
+
+pre-build-helpers:

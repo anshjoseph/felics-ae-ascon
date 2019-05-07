@@ -102,3 +102,5 @@ upload-scenario1 : scenario1.bin
 .PHONY : run
 run :
 	./$(ARM_SERIAL_TERMINAL) $(DEVICE)
+
+pre-build-helpers:

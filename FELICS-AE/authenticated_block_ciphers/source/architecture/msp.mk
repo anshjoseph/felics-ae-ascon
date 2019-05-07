@@ -65,3 +65,6 @@ OBJCOPY := $(MSPGCC_BIN_DIR)/msp430-elf-objcopy
 LDLIBS := -L$(PRINTF_DIR) -lprintf -L$(MSPGCC_SUPPORT_DIR)
 
 LDFLAGS := $(CFLAGS)
+
+pre-build-helpers:
+	make -C $(PRINTF_DIR)

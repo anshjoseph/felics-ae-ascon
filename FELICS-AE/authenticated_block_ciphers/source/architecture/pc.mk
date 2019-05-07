@@ -57,3 +57,5 @@ OBJCOPY := objcopy
 LDLIBS :=
 
 LDFLAGS := $(CFLAGS)
+
+pre-build-helpers:
