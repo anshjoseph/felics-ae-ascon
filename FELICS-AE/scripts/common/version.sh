@@ -29,10 +29,8 @@
 
 FRAMEWORK_NAME='FELICS'
 FRAMEWORK_FULL_NAME="FELICS - Fair Evaluation of Lightweight Cryptographic Systems"
-FRAMEWORK_VERSION_FILE_PATH=/../VERSION
 
 FRAMEWORK_MODULE_NAME='Authenticated Block Ciphers'
-FRAMEWORK_MODULE_DIRECTORY='authenticated_block_ciphers'
 
 COPYRIGHT="Copyright (C) 2015 University of Luxembourg"
 
@@ -52,23 +50,19 @@ function display_version()
 	line1_length=${#line1}
 	position1=$(($HORIZONTAL_LINE_LENGTH / 2 + $line1_length / 2))
 
+	script_dir=$(dirname $0)
+	root_dir=${script_dir}/../..
+	version_file=${root_dir}/VERSION
 
-	script_path=$(pwd)/$(dirname $0)
-
-	directory=$(basename $script_path)
-	while [ $FRAMEWORK_MODULE_DIRECTORY != $directory ] && [ "/" != $directory ]
-	do
-		script_path=$(dirname $script_path)
-		directory=$(basename $script_path)
-	done
-	
-	version_file=$script_path$FRAMEWORK_VERSION_FILE_PATH
-	if [ -f $version_file ] ; then
-		framework_version=$(cat $version_file)
+	if [ -f ${version_file} ]
+	then
+		framework_version=$(cat ${version_file})
+	elif [ -e ${root_dir}/.git ]
+	then
+		framework_version=$(git describe --always)
 	else
 		framework_version="unknown"
 	fi
-
 	
 	line2="version $framework_version"
 	line2_length=${#line2}
