@@ -32,7 +32,8 @@
 #include "constants.h"
 
 
-void Encrypt(uint8_t *block, uint8_t *roundKeys)
+void Encrypt(uint8_t *block, size_t mlen, uint8_t *key, uint8_t *npub,
+             uint8_t *ad, size_t adlen, uint8_t *c)
 {
 	/* Add here the cipher encryption implementation */
 }
