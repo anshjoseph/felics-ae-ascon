@@ -300,7 +300,7 @@ help:
 	@echo 		"directory to build the given cipher:"
 	@echo -n "	make -f ./../../../common/cipher.mk "
 	@echo -n		"[ARCHITECTURE=[AVR|MSP|ARM|PC]] [DEBUG=[0|1|3|7]] "
-	@echo -n		"[MEASURE_CYCLE_COUNT=[0|1]] [SCENARIO=[0|1|2]] " 
+	@echo -n		"[MEASURE_CYCLE_COUNT=[0|1]] [SCENARIO=[0|1]] "
 	@echo -n		"[COMPILER_OPTIONS='...'] [all|clean|cleanall|help]"
 	@echo ""
 	@echo ""

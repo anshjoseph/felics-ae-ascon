@@ -32,7 +32,7 @@ function display_help()
 {
 	echo ""
 	echo " Call this script to build the cipher with the given parameters"
-	echo " 	./build.sh [{-h|--help}] [--version] [{-a|--architecture}=[PC|AVR|MSP|ARM]] [{-s|--scenario}=[0|1|2]] [{-v|--verbose}=[0|1]] [{-co|--compiler_options}='...']"
+	echo " 	./build.sh [{-h|--help}] [--version] [{-a|--architecture}=[PC|AVR|MSP|ARM]] [{-s|--scenario}=[0|1]] [{-v|--verbose}=[0|1]] [{-co|--compiler_options}='...']"
 	echo ""
 	echo "	To call from a cipher build folder use:"
 	echo "		./../../../../scripts/common/build.sh [options]"
@@ -46,7 +46,6 @@ function display_help()
 	echo "			Specifies which scenario is used"
 	echo "				0 - cipher scenario"
 	echo "				1 - scenario 1"
-	echo "				2 - scenario 2"
 	echo "				Default: 0"
 	echo "		-a, --architecture"
 	echo "			Specifies which architecture is used"

@@ -32,7 +32,7 @@ function display_help()
 {
 	echo ""
 	echo "Call this script to check if the cipher implementation is compliant with the framework"
-	echo "	./check_cipher.sh [{-h|--help}] [--version] [{-m|--mode}=[0|1]] [{-s|--scenario}=[0|1|2]] [{-a|--architecture}=[PC|AVR|MSP|ARM]] [{-t|--target}=[...]] [{-o|--output}=[...]] [{-co|--compiler_options}='...']"
+	echo "	./check_cipher.sh [{-h|--help}] [--version] [{-m|--mode}=[0|1]] [{-a|--architecture}=[PC|AVR|MSP|ARM]] [{-t|--target}=[...]] [{-o|--output}=[...]] [{-co|--compiler_options}='...']"
 
 	echo "	To call from a cipher build folder use:"
 	echo "		./../../../../scripts/cipher/check_cipher.sh [options]"
@@ -46,12 +46,6 @@ function display_help()
 	echo "			Specifies which output mode to use"
 	echo "				0 - raw table for given cipher"
 	echo "				1 - raw data for given cipher"
-	echo "				Default: 0"
-	echo "		-s, --scenario"
-	echo "			Specifies which scenario is used"
-	echo "				0 - cipher scenario"
-	echo "				1 - scenario 1"
-	echo "				2 - scenario 2"
 	echo "				Default: 0"
 	echo "		-a, --architecture"
 	echo "			Specifies which architecture is used"
