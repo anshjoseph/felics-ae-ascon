@@ -67,30 +67,6 @@
 
 #endif
 
-/* Architecture = PC ; Scenario = 2 */
-#if defined(SCENARIO) && (SCENARIO_2 == SCENARIO)
-
-/* Replace with your custom data types and read macros for this architecture and scenario */
-#define DATA_SBOX_BYTE ROM_DATA_BYTE
-#define READ_SBOX_BYTE READ_ROM_DATA_BYTE
-
-#define DATA_KS_BYTE ROM_DATA_BYTE
-#define READ_KS_BYTE READ_ROM_DATA_BYTE
-
-#endif
-
-/* Architecture = PC ; Scenario = 3 */
-#if defined(SCENARIO) && (SCENARIO_3 == SCENARIO)
-
-/* Replace with your custom data types and read macros for this architecture and scenario */
-#define DATA_SBOX_BYTE ROM_DATA_BYTE
-#define READ_SBOX_BYTE READ_ROM_DATA_BYTE
-
-#define DATA_KS_BYTE ROM_DATA_BYTE
-#define READ_KS_BYTE READ_ROM_DATA_BYTE
-
-#endif
-
 #endif /* PC */
 
 
@@ -111,30 +87,6 @@
 
 /* Architecture = AVR ; Scenario = 1 */
 #if defined(SCENARIO) && (SCENARIO_1 == SCENARIO)
-
-/* Replace with your custom data types and read macros for this architecture and scenario */
-#define DATA_SBOX_BYTE ROM_DATA_BYTE
-#define READ_SBOX_BYTE READ_ROM_DATA_BYTE
-
-#define DATA_KS_BYTE ROM_DATA_BYTE
-#define READ_KS_BYTE READ_ROM_DATA_BYTE
-
-#endif
-
-/* Architecture = AVR ; Scenario = 2 */
-#if defined(SCENARIO) && (SCENARIO_2 == SCENARIO)
-
-/* Replace with your custom data types and read macros for this architecture and scenario */
-#define DATA_SBOX_BYTE ROM_DATA_BYTE
-#define READ_SBOX_BYTE READ_ROM_DATA_BYTE
-
-#define DATA_KS_BYTE ROM_DATA_BYTE
-#define READ_KS_BYTE READ_ROM_DATA_BYTE
-
-#endif
-
-/* Architecture = AVR ; Scenario = 3 */
-#if defined(SCENARIO) && (SCENARIO_3 == SCENARIO)
 
 /* Replace with your custom data types and read macros for this architecture and scenario */
 #define DATA_SBOX_BYTE ROM_DATA_BYTE
@@ -175,30 +127,6 @@
 
 #endif
 
-/* Architecture = MSP ; Scenario = 2 */
-#if defined(SCENARIO) && (SCENARIO_2 == SCENARIO)
-
-/* Replace with your custom data types and read macros for this architecture and scenario */
-#define DATA_SBOX_BYTE ROM_DATA_BYTE
-#define READ_SBOX_BYTE READ_ROM_DATA_BYTE
-
-#define DATA_KS_BYTE ROM_DATA_BYTE
-#define READ_KS_BYTE READ_ROM_DATA_BYTE
-
-#endif
-
-/* Architecture = MSP ; Scenario = 3 */
-#if defined(SCENARIO) && (SCENARIO_3 == SCENARIO)
-
-/* Replace with your custom data types and read macros for this architecture and scenario */
-#define DATA_SBOX_BYTE ROM_DATA_BYTE
-#define READ_SBOX_BYTE READ_ROM_DATA_BYTE
-
-#define DATA_KS_BYTE ROM_DATA_BYTE
-#define READ_KS_BYTE READ_ROM_DATA_BYTE
-
-#endif
-
 #endif /* MSP */
 
 
@@ -219,30 +147,6 @@
 
 /* Architecture = ARM ; Scenario = 1 */
 #if defined(SCENARIO) && (SCENARIO_1 == SCENARIO)
-
-/* Replace with your custom data types and read macros for this architecture and scenario */
-#define DATA_SBOX_BYTE ROM_DATA_BYTE
-#define READ_SBOX_BYTE READ_ROM_DATA_BYTE
-
-#define DATA_KS_BYTE ROM_DATA_BYTE
-#define READ_KS_BYTE READ_ROM_DATA_BYTE
-
-#endif
-
-/* Architecture = ARM ; Scenario = 2 */
-#if defined(SCENARIO) && (SCENARIO_2 == SCENARIO)
-
-/* Replace with your custom data types and read macros for this architecture and scenario */
-#define DATA_SBOX_BYTE ROM_DATA_BYTE
-#define READ_SBOX_BYTE READ_ROM_DATA_BYTE
-
-#define DATA_KS_BYTE ROM_DATA_BYTE
-#define READ_KS_BYTE READ_ROM_DATA_BYTE
-
-#endif
-
-/* Architecture = ARM ; Scenario = 3 */
-#if defined(SCENARIO) && (SCENARIO_3 == SCENARIO)
 
 /* Replace with your custom data types and read macros for this architecture and scenario */
 #define DATA_SBOX_BYTE ROM_DATA_BYTE

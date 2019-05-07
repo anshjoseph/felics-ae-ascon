@@ -63,17 +63,6 @@
 
 #endif
 
-/* Architecture = PC ; Scenario = 2 */
-#if defined(SCENARIO) && (SCENARIO_2 == SCENARIO)
-
-#define DATA_SBOX_BYTE ROM_DATA_BYTE
-#define READ_SBOX_BYTE READ_ROM_DATA_BYTE
-
-#define DATA_KS_BYTE ROM_DATA_BYTE
-#define READ_KS_BYTE READ_ROM_DATA_BYTE
-
-#endif
-
 #endif /* PC */
 
 
@@ -93,17 +82,6 @@
 
 /* Architecture = AVR ; Scenario = 1 */
 #if defined(SCENARIO) && (SCENARIO_1 == SCENARIO)
-
-#define DATA_SBOX_BYTE ROM_DATA_BYTE
-#define READ_SBOX_BYTE READ_ROM_DATA_BYTE
-
-#define DATA_KS_BYTE ROM_DATA_BYTE
-#define READ_KS_BYTE READ_ROM_DATA_BYTE
-
-#endif
-
-/* Architecture = AVR ; Scenario = 2 */
-#if defined(SCENARIO) && (SCENARIO_2 == SCENARIO)
 
 #define DATA_SBOX_BYTE ROM_DATA_BYTE
 #define READ_SBOX_BYTE READ_ROM_DATA_BYTE
@@ -141,17 +119,6 @@
 
 #endif
 
-/* Architecture = MSP ; Scenario = 2 */
-#if defined(SCENARIO) && (SCENARIO_2 == SCENARIO)
-
-#define DATA_SBOX_BYTE ROM_DATA_BYTE
-#define READ_SBOX_BYTE READ_ROM_DATA_BYTE
-
-#define DATA_KS_BYTE ROM_DATA_BYTE
-#define READ_KS_BYTE READ_ROM_DATA_BYTE
-
-#endif
-
 #endif /* MSP */
 
 
@@ -171,17 +138,6 @@
 
 /* Architecture = ARM ; Scenario = 1 */
 #if defined(SCENARIO) && (SCENARIO_1 == SCENARIO)
-
-#define DATA_SBOX_BYTE ROM_DATA_BYTE
-#define READ_SBOX_BYTE READ_ROM_DATA_BYTE
-
-#define DATA_KS_BYTE ROM_DATA_BYTE
-#define READ_KS_BYTE READ_ROM_DATA_BYTE
-
-#endif
-
-/* Architecture = ARM ; Scenario = 2 */
-#if defined(SCENARIO) && (SCENARIO_2 == SCENARIO)
 
 #define DATA_SBOX_BYTE ROM_DATA_BYTE
 #define READ_SBOX_BYTE READ_ROM_DATA_BYTE
