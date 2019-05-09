@@ -29,3 +29,32 @@ files contain:
 
 These JSON files can then be analyzed or exported into other formats
 by other scripts.
+
+`felics-publish`
+----------------
+
+This script parses the setups in a JSON file, and either displays them
+to the console, or exports them to another format, such as:
+
+- HTML tables,
+- LaTeX tables,
+- XLSX or OpenDocument spreadsheet (requires the `pyexcel-xlsx` and
+  `pyexcel-ods` packages, respectively).
+
+Various options allow the user to filter or sort setups, or pick the
+information to display. For example:
+
+``` sh
+options=(
+    # Only show results for the reference version of cipher Foobar.
+    --filter='cipher_name=Foobar.+,version=ref'
+    # Sort by CFLAGS, then by performance in terms of execution time.
+    --sort-by='compiler_options,code_time'
+    # Remove the "version" column.
+    --info='-version'
+    # Convert to spreadsheet.
+    --out=foobar-ref.ods
+)
+
+./felics-publish some-results.json ${options[@]}
+```
