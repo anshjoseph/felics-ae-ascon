@@ -22,7 +22,7 @@ def _parse_architectures(argument):
     unknown = archs-set(ARCHITECTURES)
 
     if unknown:
-        raise ValueError('Unknown platforms: {u}'.format(', '.join(unknown)))
+        raise ValueError('Unknown platforms: {}'.format(', '.join(unknown)))
 
     return archs
 
@@ -33,7 +33,7 @@ def _parse_arguments():
     parser.add_argument('file2')
     parser.add_argument(
         '--threshold', default=0.01, type=float,
-        help='hide difference when abs(old-new)/old < THRESHOLD'
+        help='hide difference when abs(new-old)/old < THRESHOLD'
     )
     parser.add_argument(
         '--archs', default=set(ARCHITECTURES), type=_parse_architectures,
@@ -49,8 +49,6 @@ def _make_key(data):
         data['cipher_name'],
         data['version']
     )
-
-    return tuple(data[k] for k in keys)
 
 
 def _load_file(filename, architectures):
