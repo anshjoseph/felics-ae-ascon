@@ -29,10 +29,10 @@ To add a new cipher implementation:
     - add these files to `implementation.info`'s `EncryptCode` and
       `DecryptCode` sections (comma-separated, without extension).
 
-4. To make your implementation portable, use the types defined in
-   `cipher.h` (included by `data_types.h`). These types provide
-   uniform macros for platform-specific types, memory access
-   functions, and alignment.
+4. To make your implementation portable across all four platforms, use
+   the types defined in `cipher.h` (included by `data_types.h`). These
+   types provide uniform macros for platform-specific types, memory
+   access functions, and alignment.
 
 5. Optionally, to reduce duplication across versions, you may want to
    use symbolic links; the `source/ciphers/.templates` folder stores
