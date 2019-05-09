@@ -1,0 +1,44 @@
+#!/bin/bash
+
+set -eux
+
+scripts_dir=$(dirname $(realpath $0))
+root_dir=${scripts_dir}/..
+results_dir=${root_dir}/results
+
+if (($# != 4))
+then
+    echo "Usage: $0 REVISION1 REVISION2 PLATFORMS CIPHERS"
+    exit 1
+fi
+
+rev1=$1
+rev2=$2
+platforms=$3
+ciphers=$4
+
+generate-output-name ()
+{
+    local date=$1
+    local ref=$2
+
+    echo "${date}-${ref//\//>}"
+}
+
+now=$(date +%Y.%m.%d-%H.%M.%S)
+
+output1=$(generate-output-name ${now} ${rev1})
+output2=$(generate-output-name ${now} ${rev2})
+
+for b in 1 2
+do
+    rev_var=rev${b}
+    output_var=output${b}
+
+    git checkout ${!rev_var}
+    ${scripts_dir}/felics-run -a "${platforms}" -o ${!output_var} "${ciphers}"
+done
+
+
+${scripts_dir}/felics-compare ${results_dir}/${output1} \
+                              ${results_dir}/${output2}

@@ -68,3 +68,8 @@ that one may not find significant. Results are highlighted (green for
 reduced figures, red for increased ones) so that performance
 regressions can be identified at a glance.
 
+`felics-compare-revisions`
+--------------------------
+
+This script automatically checks out two Git revisions, runs the
+requested benchmarks, then compares the results.
