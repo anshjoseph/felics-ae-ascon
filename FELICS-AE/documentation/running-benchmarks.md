@@ -72,4 +72,10 @@ regressions can be identified at a glance.
 --------------------------
 
 This script automatically checks out two Git revisions, runs the
-requested benchmarks, then compares the results.
+requested benchmarks, then compares the results with `felics-compare`.
+
+`felics-compare-implementations`
+--------------------------------
+
+This script compares two different versions of the same algorithms,
+using the same display format as `felics-compare`.
