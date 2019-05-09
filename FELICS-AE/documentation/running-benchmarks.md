@@ -86,3 +86,17 @@ requested benchmarks, then compares the results with `felics-compare`.
 
 This script compares two different versions of the same algorithms,
 using the same display format as `felics-compare`.
+
+`felics-update`
+---------------
+
+This script parses two JSON files, copies the first file, and updates
+the copy with results from the second file.
+
+`felics-plot`
+-------------
+
+This script parses a list of JSON files and displays a graph showing
+the evolution of a metric across commits. Each point in the graph can
+be clicked to bring up a `gitk` window showing the commits between the
+selected point and the previous one.
