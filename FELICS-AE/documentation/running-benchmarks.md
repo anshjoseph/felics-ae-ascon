@@ -33,8 +33,15 @@ by other scripts.
 `felics-publish`
 ----------------
 
-This script parses the setups in a JSON file, and either displays them
-to the console, or exports them to another format, such as:
+The most basic invocation of this script will simply display the
+metrics for every setup in a JSON file, grouping them by hardware
+platforms:
+
+``` sh
+./felics-publish some-results.json
+```
+
+This script can also export these results to another format, such as:
 
 - HTML tables,
 - LaTeX tables,
