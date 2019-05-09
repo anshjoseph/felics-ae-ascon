@@ -13,9 +13,9 @@ import git
 
 
 _SCRIPTS_DIR = path.dirname(path.realpath(argv[0]))
-_AUTH_ROOT = path.join(_SCRIPTS_DIR, path.pardir)
-_CIPHERS_DIR = path.join(_AUTH_ROOT, 'source', 'ciphers')
-_RESULTS_DIR = path.join(_AUTH_ROOT, 'results')
+_ROOT_DIR = path.join(_SCRIPTS_DIR, path.pardir)
+_CIPHERS_DIR = path.join(_ROOT_DIR, 'source', 'ciphers')
+_RESULTS_DIR = path.join(_ROOT_DIR, 'results')
 
 _ARCHITECTURES = 'AVR MSP ARM PC'
 
@@ -41,7 +41,7 @@ def _expand_ciphers(argument):
 
 
 def _default_output_filename():
-    repo = git.Repo(search_parent_directories=True)
+    repo = git.Repo(path=_SCRIPTS_DIR, search_parent_directories=True)
     try:
         ref = repo.git.symbolic_ref('HEAD', short=True)
     except git.GitCommandError:
