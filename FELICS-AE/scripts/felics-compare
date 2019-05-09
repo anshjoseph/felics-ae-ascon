@@ -131,38 +131,43 @@ against
     print(header)
 
 
-arguments = _parse_arguments()
-file1 = _load_file(arguments.file1, arguments.archs)
-file2 = _load_file(arguments.file2, arguments.archs)
+def _main():
+    arguments = _parse_arguments()
+    file1 = _load_file(arguments.file1, arguments.archs)
+    file2 = _load_file(arguments.file2, arguments.archs)
 
-_print_header(file1, file2, arguments.threshold)
+    _print_header(file1, file2, arguments.threshold)
 
-SETUP_TEMPLATE = ('{cipher_name} on {architecture} '
-                  '(v{version} with {compiler_options})')
+    SETUP_TEMPLATE = ('{cipher_name} on {architecture} '
+                      '(v{version} with {compiler_options})')
 
-skipped = []
+    skipped = []
 
-for setup, data1 in sorted(file1.data.items()):
+    for setup, data1 in sorted(file1.data.items()):
 
-    formatted_setup = SETUP_TEMPLATE.format_map(data1)
+        formatted_setup = SETUP_TEMPLATE.format_map(data1)
 
-    if setup not in file2.data:
-        skipped.append(formatted_setup)
-        continue
+        if setup not in file2.data:
+            skipped.append(formatted_setup)
+            continue
 
-    data2 = file2.data[setup]
+        data2 = file2.data[setup]
 
-    differences = _compute_differences(arguments.threshold, data1, data2)
+        differences = _compute_differences(arguments.threshold, data1, data2)
 
-    if not differences:
-        continue
+        if not differences:
+            continue
 
-    print(formatted_setup)
+        print(formatted_setup)
 
-    _show_differences(differences, data1, data2)
+        _show_differences(differences, data1, data2)
 
-    print()
+        print()
 
-if skipped:
-    print('Setups not found in {f2}:'.format(f2=arguments.file2))
-    print('\n'.join('\t'+setup for setup in skipped))
+    if skipped:
+        print('Setups not found in {f2}:'.format(f2=arguments.file2))
+        print('\n'.join('\t'+setup for setup in skipped))
+
+
+if __name__ == '__main__':
+    _main()

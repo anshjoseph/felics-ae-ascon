@@ -58,3 +58,13 @@ options=(
 
 ./felics-publish some-results.json ${options[@]}
 ```
+
+`felics-compare`
+----------------
+
+This script computes and displays the evolution between two sets of
+performance metrics, with an optional threshold to hide evolutions
+that one may not find significant. Results are highlighted (green for
+reduced figures, red for increased ones) so that performance
+regressions can be identified at a glance.
+
