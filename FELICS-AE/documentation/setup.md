@@ -11,10 +11,17 @@ NB: this guide has been written with the Ubuntu 16.04 distribution of
 GNU/Linux in mind. Although any distribution should be able to run
 FELICS-AE, specific steps to install software packages may vary.
 
-TODO: add stock ubuntu packages
-
 AVR-specific
 ------------
+
+The following dependencies have been installed using the
+distribution's package manager:
+
+- avr-gcc
+- avr-libc
+- default-jdk
+- default-jre
+- gdb-avr
 
 ### simavr
 
@@ -33,6 +40,11 @@ install Avrora:
 MSP-specific
 ------------
 
+The following dependencies have been installed using the
+distribution's package manager:
+
+- libusb-dev
+
 ### MSP430-GCC
 
 We use version 7.3.2.154 of the compiler provide by Texas Instruments:
@@ -48,6 +60,15 @@ developer's repository:
 
 ARM-specific
 ------------
+
+The following dependencies have been installed using the
+distribution's package manager:
+
+- binutils-arm-none-eabi
+- gcc-arm-none-eabi
+- gdb-arm-none-eabi
+
+### J-Link Software
 
 We use the J-Link software collection provided by SEGGER:
 
