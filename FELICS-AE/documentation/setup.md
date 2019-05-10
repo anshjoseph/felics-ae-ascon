@@ -4,8 +4,8 @@ Setting up FELICS-AE
 This guide provides instructions to install the software FELICS-AE
 depends on.
 
-1. Installing dependencies
-==========================
+1 - Installing dependencies
+===========================
 
 NB: this guide has been written with the Ubuntu 16.04 distribution of
 GNU/Linux in mind. Although any distribution should be able to run
@@ -76,8 +76,8 @@ We use the J-Link software collection provided by SEGGER:
 
 <https://www.segger.com/downloads/jlink/#J-LinkSoftwareAndDocumentationPack>
 
-2. Configuring FELICS-AE
-========================
+2 - Configuring FELICS-AE
+=========================
 
 Some configuration files must be edited so that FELICS-AE can find the
 newly-installed dependencies.
