@@ -88,7 +88,7 @@ void DisplayVerifyData(uint8_t *data, uint16_t length, const char *name)
 	VerifyData(data, name);
 }
 
-#ifdef MSP
+#if defined(AVR) || defined(MSP)
 static void _die(void)
 {
 	StopDevice();
