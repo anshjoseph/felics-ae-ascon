@@ -1,13 +1,13 @@
 Based on FELICS v1.1.0:
-Homepage: https://www.cryptolux.org/index.php/FELICS
-Maintainer: Daniel Dinu <dumitru-daniel.dinu@uni.lu>
-Authors:
-    Daniel Dinu <dumitru-daniel.dinu@uni.lu>
-    Johann Großschädl <johann.groszschaedl@uni.lu>
-    Dmitry Khovratovich <dmitry.khovratovich@uni.lu>
-    Yann Le Corre <yann.lecorre@uni.lu>
-    Nicky Mouha <nicky.mouha@esat.kuleuven.be>
-    André Stemper <andre.stemper@uni.lu>
+    Homepage: https://www.cryptolux.org/index.php/FELICS
+    Maintainer: Daniel Dinu <dumitru-daniel.dinu@uni.lu>
+    Authors:
+        Daniel Dinu <dumitru-daniel.dinu@uni.lu>
+        Johann Großschädl <johann.groszschaedl@uni.lu>
+        Dmitry Khovratovich <dmitry.khovratovich@uni.lu>
+        Yann Le Corre <yann.lecorre@uni.lu>
+        Nicky Mouha <nicky.mouha@esat.kuleuven.be>
+        André Stemper <andre.stemper@uni.lu>
 
 Adaptations for Authenticated Encryption:
     PACLIDO consortium:
