@@ -31,20 +31,22 @@
 #
 
 
+DEPENDENCIES_DIR=/opt/paclido
+
 PC_SIZE=size
 AVR_SIZE=avr-size
-MSP_SIZE=/opt/paclido/msp430-gcc/bin/msp430-elf-size
+MSP_SIZE=${DEPENDENCIES_DIR}/msp430-gcc/bin/msp430-elf-size
 ARM_SIZE=arm-none-eabi-size
 
 
 PC_GDB=gdb
 AVR_GDB=avr-gdb
-MSP_GDB=/opt/paclido/msp430-gcc/bin/msp430-elf-gdb
+MSP_GDB=${DEPENDENCIES_DIR}/msp430-gcc/bin/msp430-elf-gdb
 ARM_GDB=arm-none-eabi-gdb
 
-SIMAVR_SIMULATOR=/opt/paclido/simavr/bin/simavr
-MSPDEBUG_SIMULATOR=/opt/paclido/mspdebug/usr/local/bin/mspdebug
+SIMAVR_SIMULATOR=${DEPENDENCIES_DIR}/simavr/bin/simavr
+MSPDEBUG_SIMULATOR=${DEPENDENCIES_DIR}/mspdebug/usr/local/bin/mspdebug
 
 JLINK_GDB_SERVER=JLinkGDBServer
 
-AVRORA_SIMULATOR='java -jar /opt/paclido/avrora-beta-1.7.117-patched.jar'
+AVRORA_SIMULATOR="java -jar ${DEPENDENCIES_DIR}/avrora-beta-1.7.117-patched.jar"

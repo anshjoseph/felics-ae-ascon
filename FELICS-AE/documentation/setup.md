@@ -65,8 +65,10 @@ The following dependencies have been installed using the
 distribution's package manager:
 
 - binutils-arm-none-eabi
+- bossa-cli
 - gcc-arm-none-eabi
 - gdb-arm-none-eabi
+- python-serial
 
 ### J-Link Software
 
@@ -77,4 +79,26 @@ We use the J-Link software collection provided by SEGGER:
 2. Configuring FELICS-AE
 ========================
 
-TODO: config.sh, msp.mk…
+Some configuration files must be edited so that FELICS-AE can find the
+newly-installed dependencies.
+
+`config.sh`
+-----------
+
+`scripts/config/config.sh` records the path for programs used during
+measurements, such as code size analyzers, debuggers and simulators.
+
+Platform-specific makefiles
+---------------------------
+
+The folder `source/architecture` contains architecture-specific
+makefile snippets:
+
+- `avr.mk`
+- `msp.mk`
+- `arm.mk`
+- `pc.mk`
+
+These include files define several variables pointing to compilers,
+header files…
+
