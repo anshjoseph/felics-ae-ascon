@@ -35,21 +35,10 @@ static void _compute_round_tweakeys(
 
 static void _nonlinear_layer(uint8_t X[BLOCK_BYTES], const uint8_t RTK[ROUND_TWEAKEY_BYTES])
 {
-    RAM_DATA_BYTE F[ROUND_TWEAKEY_BYTES];
-    for (size_t j=0; j<ROUND_TWEAKEY_BYTES; j++)
-    {
-        F[j] = X[j] ^ RTK[j];
-    }
-
-    for (size_t j=0; j<ROUND_TWEAKEY_BYTES; j++)
-    {
-        F[j] = READ_ROM_DATA_BYTE(S[F[j]]);
-    }
-
     for (size_t j=0; j<8; j++)
     {
         size_t dest_j = 15-j;
-        X[dest_j] ^= F[j];
+        X[dest_j] ^= READ_ROM_DATA_BYTE(S[X[j] ^ RTK[j]]);
     }
 }
 
