@@ -33,12 +33,16 @@ static void _compute_round_tweakeys(
 }
 
 
+static uint8_t _Fj(uint8_t Xj, const uint8_t RTKj)
+{
+    return READ_ROM_DATA_BYTE(S[Xj ^ RTKj]);
+}
+
 static void _nonlinear_layer(uint8_t X[BLOCK_BYTES], const uint8_t RTK[ROUND_TWEAKEY_BYTES])
 {
     for (size_t j=0; j<8; j++)
     {
-        size_t dest_j = 15-j;
-        X[dest_j] ^= READ_ROM_DATA_BYTE(S[X[j] ^ RTK[j]]);
+        X[15-j] ^= _Fj(X[j], RTK[j]);
     }
 }
 
