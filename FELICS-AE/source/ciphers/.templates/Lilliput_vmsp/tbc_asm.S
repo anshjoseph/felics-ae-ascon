@@ -32,7 +32,7 @@ nonlinear_and_linear:
         ;; Special cases:
         ;;
         ;; - j=0 ==> use the result of the non-linear layer to
-        ;;   initialize x15.
+        ;;           initialize r8 (future x15).
         ;;
         ;; - j=7 ==> x7 is already cached in r7.
 
@@ -41,12 +41,10 @@ nonlinear_and_linear:
         push r9                 ; xj / x{15-j}
 
         mov.b 7(r12), r7
-        clr r8
 
-        mov.b 0(r12), r9
-        xor.b 0(r13), r9
-        mov.b S(r9), r9
-        mov.b r9, r8
+        mov.b 0(r12), r8
+        xor.b 0(r13), r8
+        mov.b S(r8), r8
 
         mov.b 1(r12), r9
         xor.b r9, r8
