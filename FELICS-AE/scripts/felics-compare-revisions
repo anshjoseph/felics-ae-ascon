@@ -22,7 +22,7 @@ generate-output-name ()
     local date=$1
     local ref=$2
 
-    echo "${date}-${ref//\//>}"
+    echo "${date}-${ref//\//>}.json"
 }
 
 now=$(date +%Y.%m.%d-%H.%M.%S)
