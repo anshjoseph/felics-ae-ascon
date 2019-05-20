@@ -48,20 +48,15 @@ static void _nonlinear_layer(uint8_t X[BLOCK_BYTES], const uint8_t RTK[ROUND_TWE
 
 static void _linear_layer(uint8_t X[BLOCK_BYTES])
 {
-    X[15] ^= X[1];
-    X[15] ^= X[2];
-    X[15] ^= X[3];
-    X[15] ^= X[4];
-    X[15] ^= X[5];
-    X[15] ^= X[6];
-    X[15] ^= X[7];
+    for (size_t j=1; j<8; j++)
+    {
+        X[15] ^= X[j];
+    }
 
-    X[14] ^= X[7];
-    X[13] ^= X[7];
-    X[12] ^= X[7];
-    X[11] ^= X[7];
-    X[10] ^= X[7];
-    X[9]  ^= X[7];
+    for (size_t j=14; j>8; j--)
+    {
+        X[j] ^= X[7];
+    }
 }
 
 static void _permutation_layer(uint8_t X[BLOCK_BYTES], permutation p)
