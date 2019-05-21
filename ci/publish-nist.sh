@@ -3,7 +3,7 @@
 set -eux
 
 CI_DIR=$(dirname $0)
-FELICS_AE_DIR=${CI_DIR}/../FELICS-AE/authenticated_block_ciphers
+FELICS_AE_DIR=${CI_DIR}/../sp4.2-software-implementations/FELICS-AE
 FELICS_PUBLISH=${FELICS_AE_DIR}/scripts/felics-publish
 FELICS_RESULTS=${FELICS_AE_DIR}/results
 
