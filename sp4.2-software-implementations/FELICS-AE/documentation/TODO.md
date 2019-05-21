@@ -1,10 +1,8 @@
-# Remove scenario 0
+# Simplify measurement scripts
 
-As long as scenarios come with their own test vectors, I do not see
-the point of having a "test" scenario.
-
-If all benchmark runs end with sanity checks on their vectors, and
-fail loudly if the output is incorrect, then scenario 0 is redundant.
+- remove `--build`
+- remove `--compiler_options`
+- remove `--mode`
 
 # Port more scripts to Python
 
