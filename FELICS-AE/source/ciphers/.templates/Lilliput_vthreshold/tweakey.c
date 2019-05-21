@@ -3,6 +3,7 @@
 
 #include "cipher.h"
 
+#include "multiplications.h"
 #include "parameters.h"
 #include "random.h"
 #include "tweakey.h"
@@ -68,97 +69,14 @@ void tweakey_state_extract(
 }
 
 
-static void _multiply_M(const uint8_t X[LANE_BYTES], uint8_t Y[LANE_BYTES])
+typedef void (*matrix_multiplication)(const uint8_t x[LANE_BYTES], uint8_t y[LANE_BYTES]);
+
+static void _multiply(uint8_t TKj[LANE_BYTES], matrix_multiplication alpha)
 {
-    Y[7] = X[6];
-    Y[6] = X[5];
-    Y[5] = X[5]<<3 ^ X[4];
-    Y[4] = X[4]>>3 ^ X[3];
-    Y[3] = X[2];
-    Y[2] = X[6]<<2 ^ X[1];
-    Y[1] = X[0];
-    Y[0] = X[7];
+    RAM_DATA_BYTE TKj_old[LANE_BYTES];
+    memcpy(TKj_old, TKj, LANE_BYTES);
+    alpha(TKj_old, TKj);
 }
-
-static void _multiply_M2(const uint8_t X[LANE_BYTES], uint8_t Y[LANE_BYTES])
-{
-    uint8_t x15 = X[5]<<3 ^ X[4];
-    uint8_t x14 = X[4]>>3 ^ X[3];
-
-    Y[7] = X[5];
-    Y[6] = x15;
-    Y[5] = x15<<3  ^ x14;
-    Y[4] = x14>>3  ^ X[2];
-    Y[3] = X[6]<<2 ^ X[1];
-    Y[2] = X[5]<<2 ^ X[0];
-    Y[1] = X[7];
-    Y[0] = X[6];
-}
-
-static void _multiply_M3(const uint8_t X[LANE_BYTES], uint8_t Y[LANE_BYTES])
-{
-    uint8_t x15 = X[5]<<3 ^ X[4];
-    uint8_t x14 = X[4]>>3 ^ X[3];
-    uint8_t x25 = x15<<3  ^ x14;
-    uint8_t x24 = x14>>3  ^ X[2];
-
-    Y[7] = x15;
-    Y[6] = x25;
-    Y[5] = x25<<3  ^ x24;
-    Y[4] = x24>>3  ^ X[6]<<2 ^ X[1];
-    Y[3] = X[5]<<2 ^ X[0];
-    Y[2] = x15<<2  ^ X[7];
-    Y[1] = X[6];
-    Y[0] = X[5];
-}
-
-#if LANES_NB >= 5
-static void _multiply_MR(const uint8_t X[LANE_BYTES], uint8_t Y[LANE_BYTES])
-{
-    Y[0] = X[1];
-    Y[1] = X[2];
-    Y[2] = X[3]    ^ X[4]>>3;
-    Y[3] = X[4];
-    Y[4] = X[5]    ^ X[6]<<3;
-    Y[5] = X[3]<<2 ^ X[6];
-    Y[6] = X[7];
-    Y[7] = X[0];
-}
-
-#if LANES_NB >= 6
-static void _multiply_MR2(const uint8_t X[LANE_BYTES], uint8_t Y[LANE_BYTES])
-{
-    uint8_t x14 = X[5] ^ X[6]<<3;
-
-    Y[0] = X[2];
-    Y[1] = X[3]    ^ X[4]>>3;
-    Y[2] = X[4]    ^ x14>>3;
-    Y[3] = x14;
-    Y[4] = X[3]<<2 ^ X[6]    ^ X[7]<<3;
-    Y[5] = X[4]<<2 ^ X[7];
-    Y[6] = X[0];
-    Y[7] = X[1];
-}
-
-#if LANES_NB >= 7
-static void _multiply_MR3(const uint8_t X[LANE_BYTES], uint8_t Y[LANE_BYTES])
-{
-    uint8_t x14 = X[5]    ^ X[6]<<3;
-    uint8_t x24 = X[3]<<2 ^ X[6]    ^ X[7]<<3 ;
-
-    Y[0] = X[3]    ^ X[4]>>3;
-    Y[1] = X[4]    ^ x14>>3;
-    Y[2] = x14     ^ x24>>3;
-    Y[3] = x24;
-    Y[4] = X[4]<<2 ^ X[7] ^ X[0]<<3;
-    Y[5] = x14<<2  ^ X[0];
-    Y[6] = X[1];
-    Y[7] = X[2];
-}
-#endif
-#endif
-#endif
-
 
 #define TWEAK_LANES (TWEAK_BYTES/LANE_BYTES)
 #define KEY_LANES   (KEY_BYTES/LANE_BYTES)
@@ -167,94 +85,42 @@ void tweakey_state_update(uint8_t TK_X[TWEAKEY_BYTES], uint8_t TK_Y[KEY_BYTES])
 {
     /* Skip lane 0, as it is multiplied by the identity matrix. */
 
-    size_t j;
-    uint8_t *TKj_X;
-    uint8_t *TKj_Y;
-    RAM_DATA_BYTE TKj_old_X[LANE_BYTES];
-    RAM_DATA_BYTE TKj_old_Y[LANE_BYTES];
+    _multiply(TK_X + 1*LANE_BYTES, _multiply_M);
 
-    j = 1;
-    TKj_X = TK_X + j*LANE_BYTES;
-    memcpy(TKj_old_X, TKj_X, LANE_BYTES);
-    _multiply_M(TKj_old_X, TKj_X);
+#if TWEAK_LANES == 2            /* t=128 => Lilliput-II */
+    _multiply(TK_X + (0+TWEAK_LANES)*LANE_BYTES, _multiply_M2);
+    _multiply(TK_Y + 0*LANE_BYTES, _multiply_M2);
 
-#if TWEAK_LANES == 2
-    j = 0;
-    TKj_X = TK_X + (j+TWEAK_LANES)*LANE_BYTES;
-    TKj_Y = TK_Y + j*LANE_BYTES;
-    memcpy(TKj_old_X, TKj_X, LANE_BYTES);
-    memcpy(TKj_old_Y, TKj_Y, LANE_BYTES);
-    _multiply_M2(TKj_old_X, TKj_X);
-    _multiply_M2(TKj_old_Y, TKj_Y);
-
-    j = 1;
-    TKj_X = TK_X + (j+TWEAK_LANES)*LANE_BYTES;
-    TKj_Y = TK_Y + j*LANE_BYTES;
-    memcpy(TKj_old_X, TKj_X, LANE_BYTES);
-    memcpy(TKj_old_Y, TKj_Y, LANE_BYTES);
-    _multiply_M3(TKj_old_X, TKj_X);
-    _multiply_M3(TKj_old_Y, TKj_Y);
+    _multiply(TK_X + (1+TWEAK_LANES)*LANE_BYTES, _multiply_M3);
+    _multiply(TK_Y + 1*LANE_BYTES, _multiply_M3);
 
   #if LANES_NB >= 5
-    j = 2;
-    TKj_X = TK_X + (j+TWEAK_LANES)*LANE_BYTES;
-    TKj_Y = TK_Y + j*LANE_BYTES;
-    memcpy(TKj_old_X, TKj_X, LANE_BYTES);
-    memcpy(TKj_old_Y, TKj_Y, LANE_BYTES);
-    _multiply_MR(TKj_old_X, TKj_X);
-    _multiply_MR(TKj_old_Y, TKj_Y);
+    _multiply(TK_X + (2+TWEAK_LANES)*LANE_BYTES, _multiply_MR);
+    _multiply(TK_Y + 2*LANE_BYTES, _multiply_MR);
 
   #if LANES_NB >= 6
-    j = 3;
-    TKj_X = TK_X + (j+TWEAK_LANES)*LANE_BYTES;
-    TKj_Y = TK_Y + j*LANE_BYTES;
-    memcpy(TKj_old_X, TKj_X, LANE_BYTES);
-    memcpy(TKj_old_Y, TKj_Y, LANE_BYTES);
-    _multiply_MR2(TKj_old_X, TKj_X);
-    _multiply_MR2(TKj_old_Y, TKj_Y);
+    _multiply(TK_X + (3+TWEAK_LANES)*LANE_BYTES, _multiply_MR2);
+    _multiply(TK_Y + 3*LANE_BYTES, _multiply_MR2);
   #endif
   #endif
 
-#else  /* TWEAK_LANES == 3 */
-    j = 2;
-    TKj_X = TK_X + j*LANE_BYTES;
-    memcpy(TKj_old_X, TKj_X, LANE_BYTES);
-    _multiply_M2(TKj_old_X, TKj_X);
+#else  /* TWEAK_LANES == 3      t=192 => Lilliput-I */
+    _multiply(TK_X + 2*LANE_BYTES, _multiply_M2);
 
-    j = 0;
-    TKj_X = TK_X + (j+TWEAK_LANES)*LANE_BYTES;
-    TKj_Y = TK_Y + j*LANE_BYTES;
-    memcpy(TKj_old_X, TKj_X, LANE_BYTES);
-    memcpy(TKj_old_Y, TKj_Y, LANE_BYTES);
-    _multiply_M3(TKj_old_X, TKj_X);
-    _multiply_M3(TKj_old_Y, TKj_Y);
+    _multiply(TK_X + (0+TWEAK_LANES)*LANE_BYTES, _multiply_M3);
+    _multiply(TK_Y + 0*LANE_BYTES, _multiply_M3);
 
   #if LANES_NB >= 5
-    j = 1;
-    TKj_X = TK_X + (j+TWEAK_LANES)*LANE_BYTES;
-    TKj_Y = TK_Y + j*LANE_BYTES;
-    memcpy(TKj_old_X, TKj_X, LANE_BYTES);
-    memcpy(TKj_old_Y, TKj_Y, LANE_BYTES);
-    _multiply_MR(TKj_old_X, TKj_X);
-    _multiply_MR(TKj_old_Y, TKj_Y);
+    _multiply(TK_X + (1+TWEAK_LANES)*LANE_BYTES, _multiply_MR);
+    _multiply(TK_Y + 1*LANE_BYTES, _multiply_MR);
 
   #if LANES_NB >= 6
-    j = 2;
-    TKj_X = TK_X + (j+TWEAK_LANES)*LANE_BYTES;
-    TKj_Y = TK_Y + j*LANE_BYTES;
-    memcpy(TKj_old_X, TKj_X, LANE_BYTES);
-    memcpy(TKj_old_Y, TKj_Y, LANE_BYTES);
-    _multiply_MR2(TKj_old_X, TKj_X);
-    _multiply_MR2(TKj_old_Y, TKj_Y);
+    _multiply(TK_X + (2+TWEAK_LANES)*LANE_BYTES, _multiply_MR2);
+    _multiply(TK_Y + 2*LANE_BYTES, _multiply_MR2);
 
   #if LANES_NB >= 7
-    j = 3;
-    TKj_X = TK_X + (j+TWEAK_LANES)*LANE_BYTES;
-    TKj_Y = TK_Y + j*LANE_BYTES;
-    memcpy(TKj_old_X, TKj_X, LANE_BYTES);
-    memcpy(TKj_old_Y, TKj_Y, LANE_BYTES);
-    _multiply_MR3(TKj_old_X, TKj_X);
-    _multiply_MR3(TKj_old_Y, TKj_Y);
+    _multiply(TK_X + (3+TWEAK_LANES)*LANE_BYTES, _multiply_MR3);
+    _multiply(TK_Y + 3*LANE_BYTES, _multiply_MR3);
   #endif
   #endif
   #endif
