@@ -45,92 +45,92 @@ void tweakey_state_extract(
 }
 
 
-static void _multiply_M(const uint8_t X[LANE_BYTES], uint8_t Y[LANE_BYTES])
+static void _multiply_M(const uint8_t x[LANE_BYTES], uint8_t y[LANE_BYTES])
 {
-    Y[7] = X[6];
-    Y[6] = X[5];
-    Y[5] = X[5]<<3 ^ X[4];
-    Y[4] = X[4]>>3 ^ X[3];
-    Y[3] = X[2];
-    Y[2] = X[6]<<2 ^ X[1];
-    Y[1] = X[0];
-    Y[0] = X[7];
+    y[7] = x[6];
+    y[6] = x[5];
+    y[5] = x[5]<<3 ^ x[4];
+    y[4] = x[4]>>3 ^ x[3];
+    y[3] = x[2];
+    y[2] = x[6]<<2 ^ x[1];
+    y[1] = x[0];
+    y[0] = x[7];
 }
 
-static void _multiply_M2(const uint8_t X[LANE_BYTES], uint8_t Y[LANE_BYTES])
+static void _multiply_M2(const uint8_t x[LANE_BYTES], uint8_t y[LANE_BYTES])
 {
-    uint8_t x15 = X[5]<<3 ^ X[4];
-    uint8_t x14 = X[4]>>3 ^ X[3];
+    uint8_t x_M_5 = x[5]<<3 ^ x[4];
+    uint8_t x_M_4 = x[4]>>3 ^ x[3];
 
-    Y[7] = X[5];
-    Y[6] = x15;
-    Y[5] = x15<<3  ^ x14;
-    Y[4] = x14>>3  ^ X[2];
-    Y[3] = X[6]<<2 ^ X[1];
-    Y[2] = X[5]<<2 ^ X[0];
-    Y[1] = X[7];
-    Y[0] = X[6];
+    y[7] = x[5];
+    y[6] = x_M_5;
+    y[5] = x_M_5<<3 ^ x_M_4;
+    y[4] = x_M_4>>3 ^ x[2];
+    y[3] = x[6]<<2  ^ x[1];
+    y[2] = x[5]<<2  ^ x[0];
+    y[1] = x[7];
+    y[0] = x[6];
 }
 
-static void _multiply_M3(const uint8_t X[LANE_BYTES], uint8_t Y[LANE_BYTES])
+static void _multiply_M3(const uint8_t x[LANE_BYTES], uint8_t y[LANE_BYTES])
 {
-    uint8_t x15 = X[5]<<3 ^ X[4];
-    uint8_t x14 = X[4]>>3 ^ X[3];
-    uint8_t x25 = x15<<3  ^ x14;
-    uint8_t x24 = x14>>3  ^ X[2];
+    uint8_t x_M_5  = x[5]<<3  ^ x[4];
+    uint8_t x_M_4  = x[4]>>3  ^ x[3];
+    uint8_t x_M2_5 = x_M_5<<3 ^ x_M_4;
+    uint8_t x_M2_4 = x_M_4>>3 ^ x[2];
 
-    Y[7] = x15;
-    Y[6] = x25;
-    Y[5] = x25<<3  ^ x24;
-    Y[4] = x24>>3  ^ X[6]<<2 ^ X[1];
-    Y[3] = X[5]<<2 ^ X[0];
-    Y[2] = x15<<2  ^ X[7];
-    Y[1] = X[6];
-    Y[0] = X[5];
+    y[7] = x_M_5;
+    y[6] = x_M2_5;
+    y[5] = x_M2_5<<3 ^ x_M2_4;
+    y[4] = x_M2_4>>3 ^ x[6]<<2 ^ x[1];
+    y[3] = x[5]<<2   ^ x[0];
+    y[2] = x_M_5<<2  ^ x[7];
+    y[1] = x[6];
+    y[0] = x[5];
 }
 
 #if LANES_NB >= 5
-static void _multiply_MR(const uint8_t X[LANE_BYTES], uint8_t Y[LANE_BYTES])
+static void _multiply_MR(const uint8_t x[LANE_BYTES], uint8_t y[LANE_BYTES])
 {
-    Y[0] = X[1];
-    Y[1] = X[2];
-    Y[2] = X[3]    ^ X[4]>>3;
-    Y[3] = X[4];
-    Y[4] = X[5]    ^ X[6]<<3;
-    Y[5] = X[3]<<2 ^ X[6];
-    Y[6] = X[7];
-    Y[7] = X[0];
+    y[0] = x[1];
+    y[1] = x[2];
+    y[2] = x[3]    ^ x[4]>>3;
+    y[3] = x[4];
+    y[4] = x[5]    ^ x[6]<<3;
+    y[5] = x[3]<<2 ^ x[6];
+    y[6] = x[7];
+    y[7] = x[0];
 }
 
 #if LANES_NB >= 6
-static void _multiply_MR2(const uint8_t X[LANE_BYTES], uint8_t Y[LANE_BYTES])
+static void _multiply_MR2(const uint8_t x[LANE_BYTES], uint8_t y[LANE_BYTES])
 {
-    uint8_t x14 = X[5] ^ X[6]<<3;
+    uint8_t x_MR_4 = x[5] ^ x[6]<<3;
 
-    Y[0] = X[2];
-    Y[1] = X[3]    ^ X[4]>>3;
-    Y[2] = X[4]    ^ x14>>3;
-    Y[3] = x14;
-    Y[4] = X[3]<<2 ^ X[6]    ^ X[7]<<3;
-    Y[5] = X[4]<<2 ^ X[7];
-    Y[6] = X[0];
-    Y[7] = X[1];
+    y[0] = x[2];
+    y[1] = x[3]    ^ x[4]>>3;
+    y[2] = x[4]    ^ x_MR_4>>3;
+    y[3] = x_MR_4;
+    y[4] = x[3]<<2 ^ x[6]      ^ x[7]<<3;
+    y[5] = x[4]<<2 ^ x[7];
+    y[6] = x[0];
+    y[7] = x[1];
 }
 
 #if LANES_NB >= 7
-static void _multiply_MR3(const uint8_t X[LANE_BYTES], uint8_t Y[LANE_BYTES])
+static void _multiply_MR3(const uint8_t x[LANE_BYTES], uint8_t y[LANE_BYTES])
 {
-    uint8_t x14 = X[5]    ^ X[6]<<3;
-    uint8_t x24 = X[3]<<2 ^ X[6]    ^ X[7]<<3 ;
+    uint8_t x_MR_4  = x[5]    ^ x[6]<<3;
+    uint8_t x_MR2_4 = x[3]<<2 ^ x[6]    ^ x[7]<<3;
 
-    Y[0] = X[3]    ^ X[4]>>3;
-    Y[1] = X[4]    ^ x14>>3;
-    Y[2] = x14     ^ x24>>3;
-    Y[3] = x24;
-    Y[4] = X[4]<<2 ^ X[7] ^ X[0]<<3;
-    Y[5] = x14<<2  ^ X[0];
-    Y[6] = X[1];
-    Y[7] = X[2];
+    y[0] = x[3]      ^ x[4]>>3;
+    y[1] = x[4]      ^ x_MR_4>>3;
+    y[2] = x_MR_4    ^ x_MR2_4>>3;
+    y[3] = x_MR2_4;
+    y[4] = x[0]<<3   ^ x[4]<<2   ^ x[7];
+    y[5] = x_MR_4<<2 ^ x[0];
+    y[6] = x[1];
+    y[7] = x[2];
 }
 #endif
 #endif
