@@ -171,7 +171,7 @@ fail ()
 
 
 # Clean
-if ! make -f $CIPHER_MAKEFILE $MAKE_CLEAN_TARGET &> $MAKE_FILE_LOG
+if ! make -f $CIPHER_MAKEFILE clean &> $MAKE_FILE_LOG
 then
     fail $MAKE_FILE_LOG
 fi

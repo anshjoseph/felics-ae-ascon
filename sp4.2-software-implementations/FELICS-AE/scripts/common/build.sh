@@ -144,7 +144,7 @@ validate_architecture $SCRIPT_ARCHITECTURE
 make_log_file=$SCRIPT_ARCHITECTURE$SCENARIO_NAME_PART$SCRIPT_SCENARIO$FILE_NAME_SEPARATOR$SCRIPT_MAKE_LOG
 
 # Clean
-make -f $CIPHER_MAKEFILE $MAKE_CLEAN_TARGET &> $make_log_file
+make -f $CIPHER_MAKEFILE clean &> $make_log_file
 check_status $? $(pwd)/$make_log_file
 
 # Build
