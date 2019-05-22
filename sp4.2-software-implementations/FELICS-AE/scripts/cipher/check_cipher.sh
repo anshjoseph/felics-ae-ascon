@@ -30,7 +30,7 @@ set -e
 
 #
 # Call this script to check if the cipher implementation is compliant with the framework
-#     ./check_cipher.sh [{-h|--help}] [--version] [{-a|--architecture}=[PC|AVR|MSP|ARM]] [{-t|--target}=[...]] [{-o|--output}=[...]] [{-co|--compiler_options}='...']
+#     ./check_cipher.sh [{-h|--help}] [--version] [{-a|--architecture}=[PC|AVR|MSP|ARM]] [{-t|--target}=[...]] [{-co|--compiler_options}='...']
 #
 #    To call from a cipher build folder use:
 #        ./../../../../scripts/cipher/check_cipher.sh [options]
@@ -50,9 +50,6 @@ set -e
 #        -t, --target
 #            Specifies which is the target path. The relative path is computed from the directory where script was called
 #                Default: .
-#        -o, --output
-#            Specifies where to output the results. The relative path is computed from the directory where script was called
-#                Default: /dev/tty
 #        -co,--compiler_options
 #            Specifies the compiler options
 #                List of values: '-O3 --param max-unroll-times=5 --param max-unrolled-insns=100 ...'
@@ -89,7 +86,6 @@ source $script_path/../common/version.sh
 # Default values
 SCRIPT_ARCHITECTURE=$SCRIPT_ARCHITECTURE_PC
 SCRIPT_TARGET=$DEFAULT_SCRIPT_TARGET
-SCRIPT_OUTPUT=$DEFAULT_SCRIPT_OUTPUT
 SCRIPT_COMPILER_OPTIONS=$SCRIPT_COMPILER_OPTION_OPTIMIZE_3
 
 
@@ -115,12 +111,6 @@ do
             fi
             shift
             ;;
-        -o=*|--output=*)
-            if [[ "${i#*=}" ]] ; then
-                SCRIPT_OUTPUT="${i#*=}"
-            fi
-            shift
-            ;;
         -co=*|--compiler_options=*)
             SCRIPT_COMPILER_OPTIONS="${i#*=}"
             shift
@@ -135,7 +125,6 @@ done
 echo "Script settings:"
 echo -e "\t SCRIPT_ARCHITECTURE \t\t = $SCRIPT_ARCHITECTURE"
 echo -e "\t SCRIPT_TARGET \t\t\t = $SCRIPT_TARGET"
-echo -e "\t SCRIPT_OUTPUT \t\t\t = $SCRIPT_OUTPUT"
 echo -e "\t SCRIPT_COMPILER_OPTIONS \t = $SCRIPT_COMPILER_OPTIONS"
 
 
@@ -146,12 +135,6 @@ validate_architecture $SCRIPT_ARCHITECTURE
 # Set the current working directory
 current_directory=$(pwd)
 echo "Begin check cipher - $current_directory"
-
-
-# Change relative script output path
-if [[ $SCRIPT_OUTPUT != /* ]] ; then
-    SCRIPT_OUTPUT=$current_directory/$SCRIPT_OUTPUT
-fi
 
 
 # Change current working directory
@@ -165,7 +148,6 @@ fail ()
     echo "${error_log}:"
     cat ${error_log}
 
-    echo -n ${FALSE} > ${SCRIPT_OUTPUT}
     exit 1
 }
 
