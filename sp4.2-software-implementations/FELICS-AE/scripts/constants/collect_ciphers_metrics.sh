@@ -31,8 +31,6 @@
 #
 
 
-CIPHER_SCRIPT_MODE=1
-
 MAKE_FILE_LOG=collect_ciphers_metrics_make.log
 
 CHECK_CIPHER_OUTPUT_FILE=check_cipher.log
