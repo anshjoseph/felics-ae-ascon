@@ -1,8 +1,16 @@
 # Simplify measurement scripts
 
-- remove `--build`
-- remove `--compiler_options`
 - remove `--mode`
+- replace `if [ ! -f $some_output_file ]` and `if [ -f
+  $some_error_file ]` in `collect_ciphers_metrics.sh` with `set -e` in
+  relevant scripts
+
+Once scripts have become simple enough…
+
+# Remove `upload-*` target from Makefiles
+
+Use dedicated script; no use cluttering makefiles. Used by
+`cipher_execution_time.sh` and `check_cipher.sh`.
 
 # Port more scripts to Python
 

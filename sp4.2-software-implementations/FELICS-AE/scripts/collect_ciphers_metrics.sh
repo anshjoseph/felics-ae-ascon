@@ -319,9 +319,12 @@ do
 				echo "" > $cipher_ram_error_file
 				echo "" > $cipher_execution_time_error_file
 
+				# Build scenario.
+				# TODO: use cipher.mk directly.
+				${script_path}/common/build.sh -a=${architecture} -s=${scenario} -co="${compiler_option}"
 
 				# Code size
-				timeout $CIPHER_CODE_SIZE_TIMEOUT ./../../../../scripts/cipher/cipher_code_size.sh "-s=$scenario" "-a=$architecture" "-m=$CIPHER_SCRIPT_MODE" "-co=$compiler_option" -o=$cipher_code_size_output_file 2> $cipher_code_size_error_file
+				timeout $CIPHER_CODE_SIZE_TIMEOUT ./../../../../scripts/cipher/cipher_code_size.sh "-s=$scenario" "-a=$architecture" "-m=$CIPHER_SCRIPT_MODE" -o=$cipher_code_size_output_file 2> $cipher_code_size_error_file
 				if [ ! -f $cipher_code_size_output_file ] ; then
 					continue
 				fi
@@ -333,9 +336,8 @@ do
 					exit 1
 				fi
 
-
 				# RAM
-				timeout $CIPHER_RAM_TIMEOUT ./../../../../scripts/cipher/cipher_ram.sh "-s=$scenario" "-a=$architecture" "-m=$CIPHER_SCRIPT_MODE" "-co=$compiler_option" -o=$cipher_ram_output_file 2> $cipher_ram_error_file
+				timeout $CIPHER_RAM_TIMEOUT ./../../../../scripts/cipher/cipher_ram.sh "-s=$scenario" "-a=$architecture" "-m=$CIPHER_SCRIPT_MODE" -o=$cipher_ram_output_file 2> $cipher_ram_error_file
 				if [ ! -f $cipher_ram_output_file ] ; then
 					echo "NO OUTPUT $cipher_ram_output_file"
 					continue
@@ -348,9 +350,23 @@ do
 					exit 1
 				fi
 
+				# Execution time.
+				# Re-build scenario with cycle count instrumentation for ARM and PC.
+				if [ ${architecture} = ARM -o ${architecture} = PC ]
+				then
+					cipher_mk=${script_path}/../source/common/cipher.mk
+					make_log_file=${architecture}_scenario${scenario}_cipher_execution_time_make.log
 
-				# Execution time
-				timeout $CIPHER_EXECUTION_TIME_TIMEOUT ./../../../../scripts/cipher/cipher_execution_time.sh "-s=$scenario" "-a=$architecture" "-m=$CIPHER_SCRIPT_MODE" "-co=$compiler_option" -o=$cipher_execution_time_output_file 2> $cipher_execution_time_error_file
+					make -f ${cipher_mk} clean &> ${make_log_file}
+					make -f ${cipher_mk}						\
+						 ARCHITECTURE=${architecture}			\
+						 SCENARIO=${scenario}					\
+						 MEASURE_CYCLE_COUNT=1					\
+						 COMPILER_OPTIONS="${compiler_option}"	\
+						&> ${make_log_file}
+				fi
+
+				timeout $CIPHER_EXECUTION_TIME_TIMEOUT ./../../../../scripts/cipher/cipher_execution_time.sh "-s=$scenario" "-a=$architecture" "-m=$CIPHER_SCRIPT_MODE" -o=$cipher_execution_time_output_file 2> $cipher_execution_time_error_file
 				if [ ! -f $cipher_execution_time_output_file ] ; then
 					continue
 				fi

@@ -28,7 +28,7 @@
 
 #
 # Call this script to extract the cipher code size
-# 	./cipher_code_size.sh [{-h|--help}] [--version] [{-m|--mode}=[0|1]] [{-a|--architecture}=[PC|AVR|MSP|ARM]] [{-t|--target}=[...]] [{-o|--output}=[...]] [{-b|build}=[0|1]] [{-co|--compiler_options}='...']
+# 	./cipher_code_size.sh [{-h|--help}] [--version] [{-m|--mode}=[0|1]] [{-a|--architecture}=[PC|AVR|MSP|ARM]] [{-t|--target}=[...]] [{-o|--output}=[...]]
 #
 #	To call from a cipher build folder use:
 #		./../../../../scripts/cipher/cipher_code_size.sh [options]
@@ -56,15 +56,6 @@
 #		-o, --output
 #			Specifies where to output the results. The relative path is computed from the directory where script was called
 #				Default: /dev/tty
-#		-b, --build
-#			Specifies if script should build the source files
-#				0 - do not build source files
-#				1 - build source files
-#				Default: 1
-#		-co,--compiler_options
-#			Specifies the compiler options
-#				List of values: '-O3 --param max-unroll-times=5 --param max-unrolled-insns=100 ...'
-#				Default: -O3
 #
 #	Examples:
 #		./../../../../scripts/cipher/cipher_code_size.sh -m=0
@@ -100,8 +91,6 @@ SCRIPT_SCENARIO=$SCRIPT_SCENARIO_1
 SCRIPT_ARCHITECTURE=$SCRIPT_ARCHITECTURE_PC
 SCRIPT_TARGET=$DEFAULT_SCRIPT_TARGET
 SCRIPT_OUTPUT=$DEFAULT_SCRIPT_OUTPUT
-SCRIPT_BUILD=$SCRIPT_BUILD_ENABLED
-SCRIPT_COMPILER_OPTIONS=$SCRIPT_COMPILER_OPTION_OPTIMIZE_3
 
 
 # Parse script arguments
@@ -136,14 +125,6 @@ do
 			fi
 			shift
 			;;
-		-b=*|--build=*)
-			SCRIPT_BUILD="${i#*=}"
-			shift
-			;;
-		-co=*|--compiler_options=*)
-			SCRIPT_COMPILER_OPTIONS="${i#*=}"
-			shift
-			;;
 		*)
 			# Unknown option
 			;;
@@ -156,18 +137,11 @@ echo -e "\t SCRIPT_MODE \t\t\t = $SCRIPT_MODE"
 echo -e "\t SCRIPT_ARCHITECTURE \t\t = $SCRIPT_ARCHITECTURE"
 echo -e "\t SCRIPT_TARGET \t\t\t = $SCRIPT_TARGET"
 echo -e "\t SCRIPT_OUTPUT \t\t\t = $SCRIPT_OUTPUT"
-echo -e "\t SCRIPT_BUILD \t\t\t = $SCRIPT_BUILD"
-echo -e "\t SCRIPT_COMPILER_OPTIONS \t = $SCRIPT_COMPILER_OPTIONS"
 
 
 # Validate inputs
 validate_mode $SCRIPT_MODE
 validate_architecture $SCRIPT_ARCHITECTURE
-
-
-if [ $SCRIPT_BUILD_ENABLED -eq $SCRIPT_BUILD ] ; then
-	$script_path/../common/build.sh -a=$SCRIPT_ARCHITECTURE -s=$SCRIPT_SCENARIO -co="$SCRIPT_COMPILER_OPTIONS" -v=$SCRIPT_VERBOSE_DISABLED
-fi
 
 
 # Set the current working directory
