@@ -30,7 +30,7 @@ set -e
 
 #
 # Call this script to check if the cipher implementation is compliant with the framework
-#     ./check_cipher.sh [{-h|--help}] [--version] [{-a|--architecture}=[PC|AVR|MSP|ARM]] [{-t|--target}=[...]] [{-co|--compiler_options}='...']
+#     ./check_cipher.sh [{-h|--help}] [--version] [{-a|--architecture}=[PC|AVR|MSP|ARM]] [{-co|--compiler_options}='...']
 #
 #    To call from a cipher build folder use:
 #        ./../../../../scripts/cipher/check_cipher.sh [options]
@@ -47,9 +47,6 @@ set -e
 #                MSP - binary file are build for MSP device
 #                ARM - binary files are build for ARM device
 #                Default: PC
-#        -t, --target
-#            Specifies which is the target path. The relative path is computed from the directory where script was called
-#                Default: .
 #        -co,--compiler_options
 #            Specifies the compiler options
 #                List of values: '-O3 --param max-unroll-times=5 --param max-unrolled-insns=100 ...'
@@ -59,7 +56,6 @@ set -e
 #        ./../../../../scripts/cipher/check_cipher.sh0
 #        ./../../../../scripts/cipher/check_cipher.sh --architecture=MSP
 #          ./../../../../scripts/cipher/check_cipher.sh -o=results.txt
-#        ./check_cipher.sh -t=./../../source/ciphers/CipherName_BlockSizeInBits_KeySizeInBits_v01/build
 #
 
 
@@ -85,7 +81,6 @@ source $script_path/../common/version.sh
 
 # Default values
 SCRIPT_ARCHITECTURE=$SCRIPT_ARCHITECTURE_PC
-SCRIPT_TARGET=$DEFAULT_SCRIPT_TARGET
 SCRIPT_COMPILER_OPTIONS=$SCRIPT_COMPILER_OPTION_OPTIMIZE_3
 
 
@@ -105,12 +100,6 @@ do
             SCRIPT_ARCHITECTURE="${i#*=}"
             shift
             ;;
-        -t=*|--target=*)
-            if [[ "${i#*=}" ]] ; then
-                SCRIPT_TARGET="${i#*=}"
-            fi
-            shift
-            ;;
         -co=*|--compiler_options=*)
             SCRIPT_COMPILER_OPTIONS="${i#*=}"
             shift
@@ -124,7 +113,6 @@ done
 
 echo "Script settings:"
 echo -e "\t SCRIPT_ARCHITECTURE \t\t = $SCRIPT_ARCHITECTURE"
-echo -e "\t SCRIPT_TARGET \t\t\t = $SCRIPT_TARGET"
 echo -e "\t SCRIPT_COMPILER_OPTIONS \t = $SCRIPT_COMPILER_OPTIONS"
 
 
@@ -133,13 +121,7 @@ validate_architecture $SCRIPT_ARCHITECTURE
 
 
 # Set the current working directory
-current_directory=$(pwd)
-echo "Begin check cipher - $current_directory"
-
-
-# Change current working directory
-cd $SCRIPT_TARGET
-echo "Changed working directory: $(pwd)"
+echo "Begin check cipher - $(pwd)"
 
 
 fail ()

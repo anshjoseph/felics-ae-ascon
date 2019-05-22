@@ -272,7 +272,7 @@ do
 				compiler_option_name=${compiler_option// /_}
 
 				# Check cipher
-				timeout $CHECK_CIPHER_TIMEOUT ./../../../../scripts/cipher/check_cipher.sh -a=$architecture -c=$cipher_directory_name "-co=$compiler_option"
+				timeout $CHECK_CIPHER_TIMEOUT ./../../../../scripts/cipher/check_cipher.sh -a=$architecture "-co=$compiler_option"
 
 				cipher_code_size_output_file=$architecture$SCENARIO_NAME_PART$scenario$COMPILER_OPTIONS_NAME_PART$compiler_option_name$FILE_NAME_SEPARATOR$CIPHER_CODE_SIZE_OUTPUT_FILE
 				cipher_ram_output_file=$architecture$SCENARIO_NAME_PART$scenario$COMPILER_OPTIONS_NAME_PART$compiler_option_name$FILE_NAME_SEPARATOR$CIPHER_RAM_OUTPUT_FILE
