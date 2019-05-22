@@ -281,7 +281,7 @@ do
 				echo "" > $check_cipher_error_file
 
 				# Check cipher
-				timeout $CHECK_CIPHER_TIMEOUT ./../../../../scripts/cipher/check_cipher.sh -a=$architecture -c=$cipher_directory_name "-co=$compiler_option" -m=$CIPHER_SCRIPT_MODE -o=$check_cipher_output_file 2> $check_cipher_error_file
+				timeout $CHECK_CIPHER_TIMEOUT ./../../../../scripts/cipher/check_cipher.sh -a=$architecture -c=$cipher_directory_name "-co=$compiler_option" -o=$check_cipher_output_file 2> $check_cipher_error_file
 				if [ ! -f $check_cipher_output_file ] ; then
 					echo "missing output file $check_cipher_output_file"
 					exit 1
@@ -324,7 +324,7 @@ do
 				${script_path}/common/build.sh -a=${architecture} -s=${scenario} -co="${compiler_option}"
 
 				# Code size
-				timeout $CIPHER_CODE_SIZE_TIMEOUT ./../../../../scripts/cipher/cipher_code_size.sh "-s=$scenario" "-a=$architecture" "-m=$CIPHER_SCRIPT_MODE" -o=$cipher_code_size_output_file 2> $cipher_code_size_error_file
+				timeout $CIPHER_CODE_SIZE_TIMEOUT ./../../../../scripts/cipher/cipher_code_size.sh "-s=$scenario" "-a=$architecture" -o=$cipher_code_size_output_file 2> $cipher_code_size_error_file
 				if [ ! -f $cipher_code_size_output_file ] ; then
 					continue
 				fi

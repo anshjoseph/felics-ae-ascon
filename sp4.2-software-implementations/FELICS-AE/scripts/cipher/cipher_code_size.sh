@@ -28,7 +28,7 @@
 
 #
 # Call this script to extract the cipher code size
-# 	./cipher_code_size.sh [{-h|--help}] [--version] [{-m|--mode}=[0|1]] [{-a|--architecture}=[PC|AVR|MSP|ARM]] [{-t|--target}=[...]] [{-o|--output}=[...]]
+# 	./cipher_code_size.sh [{-h|--help}] [--version] [{-a|--architecture}=[PC|AVR|MSP|ARM]] [{-t|--target}=[...]] [{-o|--output}=[...]]
 #
 #	To call from a cipher build folder use:
 #		./../../../../scripts/cipher/cipher_code_size.sh [options]
@@ -38,11 +38,6 @@
 #			Display help information
 #		--version
 #			Display version information
-#		-m, --mode
-#			Specifies which output mode to use
-#				0 - raw table for given cipher
-#				1 - raw data for given cipher
-#				Default: 0
 #		-a, --architecture
 #			Specifies which architecture is used
 #				PC - binary files are build for PC
@@ -58,8 +53,8 @@
 #				Default: /dev/tty
 #
 #	Examples:
-#		./../../../../scripts/cipher/cipher_code_size.sh -m=0
-#		./../../../../scripts/cipher/cipher_code_size.sh --mode=1 --architecture=MSP
+#		./../../../../scripts/cipher/cipher_code_size.sh0
+#		./../../../../scripts/cipher/cipher_code_size.sh --architecture=MSP
 #  		./../../../../scripts/cipher/cipher_code_size.sh -o=results.txt
 #		./cipher_code_size.sh -t=./../../source/ciphers/CipherName_BlockSizeInBits_KeySizeInBits_v01/build
 #
@@ -86,7 +81,6 @@ source $script_path/../common/version.sh
 
 
 # Default values
-SCRIPT_MODE=$SCRIPT_MODE_0
 SCRIPT_SCENARIO=$SCRIPT_SCENARIO_1
 SCRIPT_ARCHITECTURE=$SCRIPT_ARCHITECTURE_PC
 SCRIPT_TARGET=$DEFAULT_SCRIPT_TARGET
@@ -103,10 +97,6 @@ do
 			;;
 		--version)
 			display_version
-			shift
-			;;
-		-m=*|--mode=*)
-			SCRIPT_MODE="${i#*=}"
 			shift
 			;;
 		-a=*|--architecture=*)
@@ -133,14 +123,12 @@ done
 
 
 echo "Script settings:"
-echo -e "\t SCRIPT_MODE \t\t\t = $SCRIPT_MODE"
 echo -e "\t SCRIPT_ARCHITECTURE \t\t = $SCRIPT_ARCHITECTURE"
 echo -e "\t SCRIPT_TARGET \t\t\t = $SCRIPT_TARGET"
 echo -e "\t SCRIPT_OUTPUT \t\t\t = $SCRIPT_OUTPUT"
 
 
 # Validate inputs
-validate_mode $SCRIPT_MODE
 validate_architecture $SCRIPT_ARCHITECTURE
 
 
@@ -204,19 +192,6 @@ case $SCRIPT_ARCHITECTURE in
 esac
 
 
-if [ $SCRIPT_MODE_0 -eq $SCRIPT_MODE ] ; then
-	# Clear output
-	echo -n "" > $SCRIPT_OUTPUT
-	
-	# Table header
-	printf "%0.s-" $(seq 1 $TABLE_HORIZONTAL_LINE_LENGTH) >> $SCRIPT_OUTPUT
-	printf "\n" >> $SCRIPT_OUTPUT
-	printf "| %-30s | %10s | %10s | %10s | %10s | %10s |\n" "Component" "ROM" "text" "data" "bss" "dec" >> $SCRIPT_OUTPUT
-	printf "%0.s-" $(seq 1 $TABLE_HORIZONTAL_LINE_LENGTH) >> $SCRIPT_OUTPUT
-	printf "\n" >> $SCRIPT_OUTPUT
-fi
-
-
 for file in $files
 do
 	# Get the section sizes line for current file
@@ -234,160 +209,143 @@ do
 
 	# Compute the ROM requirement	
 	rom=$(($text + $data))
-	
 
 	# Get the component name (file name without the extension)
 	component=${file%$OBJECT_FILE_EXTENSION}
 	if [ "$component" == "$file" ] ; then
 		component=${file%$ELF_FILE_EXTENSION}
 	fi
-	
 
-	if [ $SCRIPT_MODE_0 -eq $SCRIPT_MODE ] ; then
-		# Table line
-		printf "| %-30s | %10s | %10s | %10s | %10s | %10s |\n" $component $rom $text $data $bss $dec >> $SCRIPT_OUTPUT
-	else
-		# Set the component section sizes
-		declare $component"_text"=$text
-		declare $component"_data"=$data
-		declare $component"_bss"=$bss
-		declare $component"_dec"=$dec
+	# Set the component section sizes
+	declare $component"_text"=$text
+	declare $component"_data"=$data
+	declare $component"_bss"=$bss
+	declare $component"_dec"=$dec
 
-		# Set the component ROM requirement
-		declare $component"_rom"=$rom
-	fi
+	# Set the component ROM requirement
+	declare $component"_rom"=$rom
 done
 
 
-if [ $SCRIPT_MODE_0 -ne $SCRIPT_MODE ] ; then
-	shared_code_e=0
-	shared_code_d=0
-	shared_code_total=0
+shared_code_e=0
+shared_code_d=0
+shared_code_total=0
 
-	# Read and process code implementation information
-	declare -a shared_parts
-	for code_section in ${CODE_SECTIONS[@]}
+# Read and process code implementation information
+declare -a shared_parts
+for code_section in ${CODE_SECTIONS[@]}
+do
+    shared_files=$(cat $IMPLEMENTATION_INFO_FILE | grep $code_section$SECTION_SEPARATOR | tr -d '\r' | cut -d ':' -f 2 | tr ',' ' ')
+
+    for shared_file in $shared_files
+    do
+	shared_name=$shared_file"_rom"
+
+	shared_value=${!shared_name}
+	if [ "" == "$shared_value" ] ; then
+	    echo "Error: unknown component $shared_file"
+	    exit 1
+	fi
+
+
+	# Test if the shared file ROM was added to the total
+	used_part=$FALSE
+	for shared_part in ${shared_parts[@]}
 	do
-		shared_files=$(cat $IMPLEMENTATION_INFO_FILE | grep $code_section$SECTION_SEPARATOR | tr -d '\r' | cut -d ':' -f 2 | tr ',' ' ')
-
-		for shared_file in $shared_files
-		do
-			shared_name=$shared_file"_rom"
-
-			shared_value=${!shared_name}
-			if [ "" == "$shared_value" ] ; then
-				echo "Error: unknown component $shared_file"
-				exit 1
-			fi
-
-
-			# Test if the shared file ROM was added to the total
-			used_part=$FALSE
-			for shared_part in ${shared_parts[@]}
-			do
-				if [ "$shared_part" == "$shared_file" ] ; then
-					used_part=$TRUE
-					break
-				fi
-			done
-
-		
-			# Add the shared file ROM to total
-			if [ $FALSE -eq $used_part ]; then
-				shared_code_total=$(($shared_code_total + $shared_value))
-				shared_parts+=($shared_file) 
-			fi
-		
-		
-			case $code_section in
-				$CODE_SECTION_E)
-					shared_code_e=$(($shared_code_e + $shared_value))
-					;;
-				$CODE_SECTION_D)
-					shared_code_d=$(($shared_code_d + $shared_value))
-					;;
-			esac
-		done
-	done
-
-
-	shared_constants_e=0
-	shared_constants_d=0
-	shared_constants_total=0
-
-	# Read and process constants implementation information
-	declare -a shared_parts
-	for constants_section in ${CONSTANTS_SECTIONS[@]}
-	do
-		shared_files=$(cat $IMPLEMENTATION_INFO_FILE | grep $constants_section$SECTION_SEPARATOR | tr -d '\r' | cut -d ':' -f 2 | tr ',' ' ')
-
-		for shared_file in $shared_files
-		do
-			shared_name=$shared_file"_rom"
-
-			shared_value=${!shared_name}
-			if [ "" == "$shared_value" ] ; then
-				echo "Error: unknown component $shared_file"
-				exit 1
-			fi
-
-
-			# Test if the shared file ROM was added to the total
-			used_part=$FALSE
-			for shared_part in ${shared_parts[@]}
-			do
-				if [ "$shared_part" == "$shared_file" ] ; then
-					used_part=$TRUE
-					break
-				fi
-			done
-
-		
-			# Add the shared file ROM to total
-			if [ $FALSE -eq $used_part ]; then
-				shared_constants_total=$(($shared_constants_total + $shared_value))
-				shared_parts+=($shared_file) 
-			fi
-		
-		
-			case $constants_section in
-				$CONSTANTS_SECTION_E)
-					shared_constants_e=$(($shared_constants_e + $shared_value))
-					;;
-				$CONSTANTS_SECTION_D)
-					shared_constants_d=$(($shared_constants_d + $shared_value))
-					;;
-			esac
-		done
+	    if [ "$shared_part" == "$shared_file" ] ; then
+		used_part=$TRUE
+		break
+	    fi
 	done
 
 	
-	# Cipher
-	cipher_e=$(($encrypt_rom + $shared_code_e + $shared_constants_e))
-	cipher_d=$(($decrypt_rom + $shared_code_d + $shared_constants_d))
-	cipher_total=$(($encrypt_rom + $decrypt_rom + $shared_code_total + $shared_constants_total))
+	# Add the shared file ROM to total
+	if [ $FALSE -eq $used_part ]; then
+	    shared_code_total=$(($shared_code_total + $shared_value))
+	    shared_parts+=($shared_file) 
+	fi
+	
+	
+	case $code_section in
+	    $CODE_SECTION_E)
+		shared_code_e=$(($shared_code_e + $shared_value))
+		;;
+	    $CODE_SECTION_D)
+		shared_code_d=$(($shared_code_d + $shared_value))
+		;;
+	esac
+    done
+done
 
-	# Scenario 1
-	scenario1_e=$(($cipher_e))
-	scenario1_d=$(($cipher_d))
-	scenario1_total=$(($cipher_total))
-fi
+
+shared_constants_e=0
+shared_constants_d=0
+shared_constants_total=0
+
+# Read and process constants implementation information
+declare -a shared_parts
+for constants_section in ${CONSTANTS_SECTIONS[@]}
+do
+    shared_files=$(cat $IMPLEMENTATION_INFO_FILE | grep $constants_section$SECTION_SEPARATOR | tr -d '\r' | cut -d ':' -f 2 | tr ',' ' ')
+
+    for shared_file in $shared_files
+    do
+	shared_name=$shared_file"_rom"
+
+	shared_value=${!shared_name}
+	if [ "" == "$shared_value" ] ; then
+	    echo "Error: unknown component $shared_file"
+	    exit 1
+	fi
 
 
-# Dipslay results
-if [ $SCRIPT_MODE_0 -eq $SCRIPT_MODE ] ; then
-	# Table footer
-	printf "%0.s-" $(seq 1 $TABLE_HORIZONTAL_LINE_LENGTH) >> $SCRIPT_OUTPUT
-	printf "\n" >> $SCRIPT_OUTPUT
-else
-	# Display results
-	printf "%s %s %s" $scenario1_e $scenario1_d $scenario1_total > $SCRIPT_OUTPUT
-fi
+	# Test if the shared file ROM was added to the total
+	used_part=$FALSE
+	for shared_part in ${shared_parts[@]}
+	do
+	    if [ "$shared_part" == "$shared_file" ] ; then
+		used_part=$TRUE
+		break
+	    fi
+	done
+
+	
+	# Add the shared file ROM to total
+	if [ $FALSE -eq $used_part ]; then
+	    shared_constants_total=$(($shared_constants_total + $shared_value))
+	    shared_parts+=($shared_file) 
+	fi
+	
+	
+	case $constants_section in
+	    $CONSTANTS_SECTION_E)
+		shared_constants_e=$(($shared_constants_e + $shared_value))
+		;;
+	    $CONSTANTS_SECTION_D)
+		shared_constants_d=$(($shared_constants_d + $shared_value))
+		;;
+	esac
+    done
+done
+
+
+# Cipher
+cipher_e=$(($encrypt_rom + $shared_code_e + $shared_constants_e))
+cipher_d=$(($decrypt_rom + $shared_code_d + $shared_constants_d))
+cipher_total=$(($encrypt_rom + $decrypt_rom + $shared_code_total + $shared_constants_total))
+
+# Scenario 1
+scenario1_e=$(($cipher_e))
+scenario1_d=$(($cipher_d))
+scenario1_total=$(($cipher_total))
+
+
+# Display results
+printf "%s %s %s" $scenario1_e $scenario1_d $scenario1_total > $SCRIPT_OUTPUT
 
 
 # Change current working directory
 cd $current_directory
-if [ $SCRIPT_MODE_0 -ne $SCRIPT_MODE ] ; then
-	echo ""
-fi
+
+echo ""
 echo "End cipher code size - $(pwd)"

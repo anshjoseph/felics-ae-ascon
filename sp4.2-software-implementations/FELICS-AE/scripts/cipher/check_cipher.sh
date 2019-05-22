@@ -28,7 +28,7 @@
 
 #
 # Call this script to check if the cipher implementation is compliant with the framework
-#     ./check_cipher.sh [{-h|--help}] [--version] [{-m|--mode}=[0|1]] [{-a|--architecture}=[PC|AVR|MSP|ARM]] [{-t|--target}=[...]] [{-o|--output}=[...]] [{-co|--compiler_options}='...']
+#     ./check_cipher.sh [{-h|--help}] [--version] [{-a|--architecture}=[PC|AVR|MSP|ARM]] [{-t|--target}=[...]] [{-o|--output}=[...]] [{-co|--compiler_options}='...']
 #
 #    To call from a cipher build folder use:
 #        ./../../../../scripts/cipher/check_cipher.sh [options]
@@ -38,11 +38,6 @@
 #            Display help information
 #        --version
 #            Display version information
-#        -m, --mode
-#            Specifies which output mode to use
-#                0 - raw table for given cipher
-#                1 - raw data for given cipher
-#                Default: 0
 #        -a, --architecture
 #            Specifies which architecture is used
 #                PC - binary files are build for PC
@@ -62,8 +57,8 @@
 #                Default: -O3
 #
 #    Examples:
-#        ./../../../../scripts/cipher/check_cipher.sh -m=0
-#        ./../../../../scripts/cipher/check_cipher.sh --mode=1 --architecture=MSP
+#        ./../../../../scripts/cipher/check_cipher.sh0
+#        ./../../../../scripts/cipher/check_cipher.sh --architecture=MSP
 #          ./../../../../scripts/cipher/check_cipher.sh -o=results.txt
 #        ./check_cipher.sh -t=./../../source/ciphers/CipherName_BlockSizeInBits_KeySizeInBits_v01/build
 #
@@ -90,7 +85,6 @@ source $script_path/../common/version.sh
 
 
 # Default values
-SCRIPT_MODE=$SCRIPT_MODE_0
 SCRIPT_ARCHITECTURE=$SCRIPT_ARCHITECTURE_PC
 SCRIPT_TARGET=$DEFAULT_SCRIPT_TARGET
 SCRIPT_OUTPUT=$DEFAULT_SCRIPT_OUTPUT
@@ -107,10 +101,6 @@ do
             ;;
         --version)
             display_version
-            shift
-            ;;
-        -m=*|--mode=*)
-            SCRIPT_MODE="${i#*=}"
             shift
             ;;
         -a=*|--architecture=*)
@@ -141,7 +131,6 @@ done
 
 
 echo "Script settings:"
-echo -e "\t SCRIPT_MODE \t\t\t = $SCRIPT_MODE"
 echo -e "\t SCRIPT_ARCHITECTURE \t\t = $SCRIPT_ARCHITECTURE"
 echo -e "\t SCRIPT_TARGET \t\t\t = $SCRIPT_TARGET"
 echo -e "\t SCRIPT_OUTPUT \t\t\t = $SCRIPT_OUTPUT"
@@ -149,7 +138,6 @@ echo -e "\t SCRIPT_COMPILER_OPTIONS \t = $SCRIPT_COMPILER_OPTIONS"
 
 
 # Validate inputs
-validate_mode $SCRIPT_MODE
 validate_architecture $SCRIPT_ARCHITECTURE
 
 

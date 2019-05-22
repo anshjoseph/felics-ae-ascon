@@ -1,9 +1,5 @@
 #!/bin/bash
 
-# TODO: remove -co
-# TODO: remove -b
-# TODO: remove -m
-
 #
 # University of Luxembourg
 # Laboratory of Algorithmics, Cryptology and Security (LACS)
@@ -32,7 +28,7 @@
 
 #
 # Call this script to extract the cipher RAM consumption
-# 	./cipher_ram.sh [{-h|--help}] [--version] [{-m|--mode}=[0|1]] [{-a|--architecture}=[PC|AVR|MSP|ARM]] [{-t|--target}=[...]] [{-o|--output}=[...]]
+# 	./cipher_ram.sh [{-h|--help}] [--version] [{-a|--architecture}=[PC|AVR|MSP|ARM]] [{-t|--target}=[...]] [{-o|--output}=[...]]
 #
 #	To call from a cipher build folder use:
 #		./../../../../scripts/cipher/cipher_ram.sh [options]
@@ -42,11 +38,6 @@
 #			Display help information
 #		--version
 #			Display version information
-#		-m, --mode
-#			Specifies which output mode to use
-#				0 - raw table for given cipher
-#				1 - raw data for given cipher
-#				Default: 0
 #		-a, --architecture
 #			Specifies which architecture is used
 #				PC - binary files are build for PC
@@ -62,8 +53,8 @@
 #				Default: /dev/tty
 #
 #	Examples:
-#		./../../../../scripts/cipher/cipher_ram.sh -m=0
-#		./../../../../scripts/cipher/cipher_ram.sh --mode=1 --architecture=MSP
+#		./../../../../scripts/cipher/cipher_ram.sh
+#		./../../../../scripts/cipher/cipher_ram.sh --architecture=MSP
 #  		./../../../../scripts/cipher/cipher_ram.sh -o=results.txt
 #		./cipher_ram.sh -t=./../../source/ciphers/CipherName_BlockSizeInBits_KeySizeInBits_v01/build
 #
@@ -90,7 +81,6 @@ source $script_path/../common/version.sh
 
 
 # Default values
-SCRIPT_MODE=$SCRIPT_MODE_0
 SCRIPT_SCENARIO=$SCRIPT_SCENARIO_1
 SCRIPT_ARCHITECTURE=$SCRIPT_ARCHITECTURE_PC
 SCRIPT_TARGET=$DEFAULT_SCRIPT_TARGET
@@ -107,10 +97,6 @@ do
 			;;
 		--version)
 			display_version
-			shift
-			;;
-		-m=*|--mode=*)
-			SCRIPT_MODE="${i#*=}"
 			shift
 			;;
 		-a=*|--architecture=*)
@@ -137,14 +123,12 @@ done
 
 
 echo "Script settings:"
-echo -e "\t SCRIPT_MODE \t\t\t = $SCRIPT_MODE"
 echo -e "\t SCRIPT_ARCHITECTURE \t\t = $SCRIPT_ARCHITECTURE"
 echo -e "\t SCRIPT_TARGET \t\t\t = $SCRIPT_TARGET"
 echo -e "\t SCRIPT_OUTPUT \t\t\t = $SCRIPT_OUTPUT"
 
 
 # Validate inputs
-validate_mode $SCRIPT_MODE
 validate_architecture $SCRIPT_ARCHITECTURE
 
 
@@ -503,32 +487,12 @@ fi
 
 
 # Dipslay results
-if [ $SCRIPT_MODE_0 -eq $SCRIPT_MODE ] ; then
-	# Clear output
-	echo -n "" > $SCRIPT_OUTPUT
-	
-	# Table header
-	printf "%0.s-" $(seq 1 $TABLE_HORIZONTAL_LINE_LENGTH) >> $SCRIPT_OUTPUT
-	printf "\n" >> $SCRIPT_OUTPUT
-	printf "| %10s | %10s | %10s | %10s | %10s | %10s | %10s |\n" "Data Size" "Associated Data Size" "Key Size" "Data RAM" "Scenario" "Enc." "Dec." >> $SCRIPT_OUTPUT
-	printf "%0.s-" $(seq 1 $TABLE_HORIZONTAL_LINE_LENGTH) >> $SCRIPT_OUTPUT
-	printf "\n" >> $SCRIPT_OUTPUT
-
-	# Table line
-	printf "| %10s | %10s | %10s | %10s | %10s | %10s | %10s |\n" $data_size $associated_data_size $key_size $data_ram_total $total_stack $e_stack $d_stack >> $SCRIPT_OUTPUT
-
-	# Table footer
-	printf "%0.s-" $(seq 1 $TABLE_HORIZONTAL_LINE_LENGTH) >> $SCRIPT_OUTPUT
-	printf "\n" >> $SCRIPT_OUTPUT
-else
-    # Display results
-    printf "%s %s %s %s %s %s" $e_stack $d_stack $data_ram_e $data_ram_d $data_ram_common $data_ram_total > $SCRIPT_OUTPUT
-fi
+# Display results
+printf "%s %s %s %s %s %s" $e_stack $d_stack $data_ram_e $data_ram_d $data_ram_common $data_ram_total > $SCRIPT_OUTPUT
 	
 
 # Change current working directory
 cd $current_directory
-if [ $SCRIPT_MODE_0 -ne $SCRIPT_MODE ] ; then
-	echo ""
-fi
+
+echo ""
 echo "End cipher RAM - $(pwd)"

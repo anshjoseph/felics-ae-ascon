@@ -72,20 +72,6 @@ function validate_architecture()
 	fi
 }
 
-# Validate given mode
-# Parameters:
-# 	$1 - the scenario to validate
-function validate_mode()
-{
-	local mode=$1
-	local result=$(value_in_array $mode ${SCRIPT_MODES[@]})
-
-	if [ $FALSE -eq $result ] ; then
-		echo "$INVALID_MODE_ERROR_MESSAGE '$mode'!"
-		exit
-	fi
-}
-
 # Validate given verbosity
 # Parameters:
 # 	$1 - the verbosity to validate
