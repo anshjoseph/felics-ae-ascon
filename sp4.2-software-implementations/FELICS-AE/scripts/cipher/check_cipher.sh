@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 #
 # University of Luxembourg
 # Laboratory of Algorithmics, Cryptology and Security (LACS)
@@ -168,43 +170,37 @@ fail ()
 }
 
 
-# TODO: simplify error checking; replace "cmd ; if 0 -ne $?" with "if ! cmd"
-
 # Clean
-make -f $CIPHER_MAKEFILE $MAKE_CLEAN_TARGET &> $MAKE_FILE_LOG
-if [ $SUCCESS_EXIT_CODE -ne $? ]; then
+if ! make -f $CIPHER_MAKEFILE $MAKE_CLEAN_TARGET &> $MAKE_FILE_LOG
+then
     fail $MAKE_FILE_LOG
 fi
 
 # Build
-make -f $CIPHER_MAKEFILE ARCHITECTURE=$SCRIPT_ARCHITECTURE SCENARIO=0 COMPILER_OPTIONS="$SCRIPT_COMPILER_OPTIONS" DEBUG=7 &>> $MAKE_FILE_LOG
-if [ $SUCCESS_EXIT_CODE -ne $? ]; then
+if ! make -f $CIPHER_MAKEFILE ARCHITECTURE=$SCRIPT_ARCHITECTURE SCENARIO=0 COMPILER_OPTIONS="$SCRIPT_COMPILER_OPTIONS" DEBUG=7 &>> $MAKE_FILE_LOG
+then
     fail $MAKE_FILE_LOG
-fi
-
-if ! [ -f $CIPHER_ELF_FILE ] ; then
-    fail <(echo "couldn't find executable file '$(pwd)/$CIPHER_ELF_FILE'")
 fi
 
 # Run
 case $SCRIPT_ARCHITECTURE in
     $SCRIPT_ARCHITECTURE_PC)
-        ./$CIPHER_ELF_FILE > $RESULT_FILE
-        if [ $SUCCESS_EXIT_CODE -ne $? ]; then
+        if ! ./$CIPHER_ELF_FILE > $RESULT_FILE
+        then
             fail <(echo "Error! Run the executable to see the error: '$(pwd)/$CIPHER_ELF_FILE'")
         fi
         ;;
 
     $SCRIPT_ARCHITECTURE_AVR)
-        $SIMAVR_SIMULATOR -m atmega128 $CIPHER_ELF_FILE &> $RESULT_FILE
-        if [ $SUCCESS_EXIT_CODE -ne $? ]; then
+        if ! $SIMAVR_SIMULATOR -m atmega128 $CIPHER_ELF_FILE &> $RESULT_FILE
+        then
             fail <(echo "Error! Run the executable to see the error: '$(pwd)/$CIPHER_ELF_FILE'")
         fi
         ;;
 
     $SCRIPT_ARCHITECTURE_MSP)
-        $MSPDEBUG_SIMULATOR -n sim < $MSPDEBUG_CHECK_CIPHER_COMMANDS_FILE &> $RESULT_FILE
-        if [ $SUCCESS_EXIT_CODE -ne $? ]; then
+        if ! $MSPDEBUG_SIMULATOR -n sim < $MSPDEBUG_CHECK_CIPHER_COMMANDS_FILE &> $RESULT_FILE
+        then
             fail <(echo "Error! Run the executable to see the error: '$(pwd)/$CIPHER_ELF_FILE'")
         fi
         ;;
@@ -218,23 +214,17 @@ case $SCRIPT_ARCHITECTURE in
         ;;
 esac
 
-# Check run result
-if  ! [ -f $RESULT_FILE ] ; then
-    fail <(echo "cannot find results file $RESULT_FILE")
-fi
+check-count ()
+{
+    grep -c "$1" ${RESULT_FILE} || (($?==1))
+}
 
-correct_count=$(grep -c "$CORRECT" $RESULT_FILE)
-wrong_count=$(grep -c "$WRONG" $RESULT_FILE)
+correct_count=$(check-count "CORRECT!")
+wrong_count=$(check-count "WRONG!")
 
 if [ $EXPECTED_CORRECT_COUNT -ne $correct_count ] || [ $EXPECTED_WRONG_COUNT -ne $wrong_count ] ; then
     fail <(echo "Error! Test vectors do not check!" ; echo "correct = $correct_count, wrong = $wrong_count")
 fi
 
-if [ $FALSE -eq $KEEP_GENERATED_FILES ] ; then
-    rm -f $MAKE_FILE_LOG
-    rm -f $RESULT_FILE
-fi
 
-
-echo -n ${TRUE} > ${SCRIPT_OUTPUT}
 echo "End check cipher - $(pwd)"
