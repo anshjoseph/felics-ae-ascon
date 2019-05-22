@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 #
 # University of Luxembourg
 # Laboratory of Algorithmics, Cryptology and Security (LACS)
@@ -305,8 +307,7 @@ files_number=$(find . -maxdepth 1 -type f -name "$file" | wc -l)
 
 if [ $files_number -eq 0 ] ; then
 	echo "There is no file matching the pattern: '$file' for cipher '$cipher_name'!"
-	echo "Exit!"
-	exit
+	exit 1
 fi
 
 

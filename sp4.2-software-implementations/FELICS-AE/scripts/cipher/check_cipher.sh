@@ -168,6 +168,8 @@ fail ()
 }
 
 
+# TODO: simplify error checking; replace "cmd ; if 0 -ne $?" with "if ! cmd"
+
 # Clean
 make -f $CIPHER_MAKEFILE $MAKE_CLEAN_TARGET &> $MAKE_FILE_LOG
 if [ $SUCCESS_EXIT_CODE -ne $? ]; then

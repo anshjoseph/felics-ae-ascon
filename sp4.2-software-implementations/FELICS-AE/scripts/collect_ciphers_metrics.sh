@@ -305,50 +305,20 @@ do
 				cipher_ram_output_file=$architecture$SCENARIO_NAME_PART$scenario$COMPILER_OPTIONS_NAME_PART$compiler_option_name$FILE_NAME_SEPARATOR$CIPHER_RAM_OUTPUT_FILE
 				cipher_execution_time_output_file=$architecture$SCENARIO_NAME_PART$scenario$COMPILER_OPTIONS_NAME_PART$compiler_option_name$FILE_NAME_SEPARATOR$CIPHER_EXECUTION_TIME_OUTPUT_FILE
 
-				cipher_code_size_error_file=$architecture$SCENARIO_NAME_PART$scenario$COMPILER_OPTIONS_NAME_PART$compiler_option_name$FILE_NAME_SEPARATOR$CIPHER_CODE_SIZE_ERROR_FILE
-				cipher_ram_error_file=$architecture$SCENARIO_NAME_PART$scenario$COMPILER_OPTIONS_NAME_PART$compiler_option_name$FILE_NAME_SEPARATOR$CIPHER_RAM_ERROR_FILE
-				cipher_execution_time_error_file=$architecture$SCENARIO_NAME_PART$scenario$COMPILER_OPTIONS_NAME_PART$compiler_option_name$FILE_NAME_SEPARATOR$CIPHER_EXECUTION_TIME_ERROR_FILE
-
 				# Remove log files
 				rm -f $cipher_code_size_output_file
 				rm -f $cipher_ram_output_file
 				rm -f $cipher_execution_time_output_file
 
-				# Clear error files
-				echo "" > $cipher_code_size_error_file
-				echo "" > $cipher_ram_error_file
-				echo "" > $cipher_execution_time_error_file
-
 				# Build scenario.
 				# TODO: use cipher.mk directly.
 				${script_path}/common/build.sh -a=${architecture} -s=${scenario} -co="${compiler_option}"
 
-				# Code size
-				timeout $CIPHER_CODE_SIZE_TIMEOUT ./../../../../scripts/cipher/cipher_code_size.sh "-s=$scenario" "-a=$architecture" -o=$cipher_code_size_output_file 2> $cipher_code_size_error_file
-				if [ ! -f $cipher_code_size_output_file ] ; then
-					continue
-				fi
-				if [ -f $cipher_code_size_error_file ] ; then
-					cipher_code_size_errors=$(cat $cipher_code_size_error_file)
-				fi
-				if [ "" != "$cipher_code_size_errors" ] ; then
-					echo "$cipher_code_size_errors"
-					exit 1
-				fi
+				# Code size.
+				timeout $CIPHER_CODE_SIZE_TIMEOUT ./../../../../scripts/cipher/cipher_code_size.sh "-s=$scenario" "-a=$architecture" -o=$cipher_code_size_output_file
 
-				# RAM
-				timeout $CIPHER_RAM_TIMEOUT ./../../../../scripts/cipher/cipher_ram.sh "-s=$scenario" "-a=$architecture" -o=$cipher_ram_output_file 2> $cipher_ram_error_file
-				if [ ! -f $cipher_ram_output_file ] ; then
-					echo "NO OUTPUT $cipher_ram_output_file"
-					continue
-				fi
-				if [ -f $cipher_ram_error_file ] ; then
-					cipher_ram_errors=$(cat $cipher_ram_error_file)
-				fi
-				if [ "" != "$cipher_ram_errors" ] ; then
-					echo "CIPHER RAM ERRORS: $cipher_ram_error_file ; $cipher_ram_errors"
-					exit 1
-				fi
+				# RAM.
+				timeout $CIPHER_RAM_TIMEOUT ./../../../../scripts/cipher/cipher_ram.sh "-s=$scenario" "-a=$architecture" -o=$cipher_ram_output_file
 
 				# Execution time.
 				# Re-build scenario with cycle count instrumentation for ARM and PC.
@@ -366,17 +336,7 @@ do
 						&> ${make_log_file}
 				fi
 
-				timeout $CIPHER_EXECUTION_TIME_TIMEOUT ./../../../../scripts/cipher/cipher_execution_time.sh "-s=$scenario" "-a=$architecture" -o=$cipher_execution_time_output_file 2> $cipher_execution_time_error_file
-				if [ ! -f $cipher_execution_time_output_file ] ; then
-					continue
-				fi
-				if [ -f $cipher_execution_time_error_file ] ; then
-					cipher_execution_time_errors=$(cat $cipher_execution_time_error_file)
-				fi
-				if [ "" != "$cipher_execution_time_errors" ] ; then
-					echo "$cipher_execution_time_errors"
-					exit 1
-				fi
+				timeout $CIPHER_EXECUTION_TIME_TIMEOUT ./../../../../scripts/cipher/cipher_execution_time.sh "-s=$scenario" "-a=$architecture" -o=$cipher_execution_time_output_file
 
 				add_json_table_row "${script_json_output}" ${architecture} ${cipher_name} ${cipher_implementation_version} "${compiler_option}" \
 					"${cipher_code_size_output_file}" "${cipher_ram_output_file}" "${cipher_execution_time_output_file}"
