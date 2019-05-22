@@ -28,7 +28,7 @@
 
 #
 # Call this script to build the cipher with the given parameters
-# 	./build.sh [{-h|--help}] [--version] [{-a|--architecture}=[PC|AVR|MSP|ARM]] [{-s|--scenario}=[0|1]] [{-v|--verbose}=[0|1]] [{-co|--compiler_options}='...']
+# 	./build.sh [{-h|--help}] [--version] [{-a|--architecture}=[PC|AVR|MSP|ARM]] [{-s|--scenario}=[0|1]] [{-co|--compiler_options}='...']
 #
 #	To call from a cipher build folder use:
 #		./../../../../scripts/common/build.sh [options]
@@ -50,11 +50,6 @@
 #				MSP - binary file are build for MSP device
 #				ARM - binary files are build for ARM device
 #				Default: PC
-#		-v, --verbose
-#			Specifies if information are diplayed
-#				0 - no information is diplayed
-#				1 - information is diplayed
-#				Default: 1
 #		-co,--compiler_options
 #			Specifies the compiler options
 #				List of values: '-O3 --param max-unroll-times=5 --param max-unrolled-insns=100 ...'
@@ -63,7 +58,7 @@
 #	Examples:
 #		./../../../../scripts/common/build.sh -a=PC
 #		./../../../../scripts/common/build.sh --architecture=MSP -s=0
-# 		./../../../../scripts/common/build.sh --scenario=1 -v=0
+# 		./../../../../scripts/common/build.sh --scenario=1
 #
 
 
@@ -90,7 +85,6 @@ source $script_path/../common/version.sh
 # Default values
 SCRIPT_ARCHITECTURE=$SCRIPT_ARCHITECTURE_PC
 SCRIPT_SCENARIO=$SCRIPT_SCENARIO_0
-SCRIPT_VERBOSE=$SCRIPT_VERBOSE_ENABLED
 SCRIPT_COMPILER_OPTIONS=$SCRIPT_COMPILER_OPTION_OPTIMIZE_3
 
 
@@ -114,10 +108,6 @@ do
 			SCRIPT_SCENARIO="${i#*=}"
 			shift
 			;;
-		-v=*|--verbose=*)
-			SCRIPT_VERBOSE="${i#*=}"
-			shift
-			;;
 		-co=*|--compiler_options=*)
 			SCRIPT_COMPILER_OPTIONS="${i#*=}"
 			shift
@@ -129,12 +119,9 @@ do
 done
 
 
-if [ $SCRIPT_VERBOSE_ENABLED -eq $SCRIPT_VERBOSE ] ; then
-	echo "Script settings:"
-	echo -e "\t SCRIPT_ARCHITECTURE \t\t = $SCRIPT_ARCHITECTURE"
-	echo -e "\t SCRIPT_VERBOSE \t\t = $SCRIPT_VERBOSE"
-	echo -e "\t SCRIPT_COMPILER_OPTIONS \t = $SCRIPT_COMPILER_OPTIONS"
-fi
+echo "Script settings:"
+echo -e "\t SCRIPT_ARCHITECTURE \t\t = $SCRIPT_ARCHITECTURE"
+echo -e "\t SCRIPT_COMPILER_OPTIONS \t = $SCRIPT_COMPILER_OPTIONS"
 
 
 # Validate inputs
@@ -150,8 +137,3 @@ check_status $? $(pwd)/$make_log_file
 # Build
 make -f $CIPHER_MAKEFILE ARCHITECTURE=$SCRIPT_ARCHITECTURE SCENARIO=$SCRIPT_SCENARIO COMPILER_OPTIONS="$SCRIPT_COMPILER_OPTIONS" &> $make_log_file
 check_status $? $(pwd)/$make_log_file
-
-if [ $FALSE -eq $KEEP_GENERATED_FILES ] ; then
-	# Remove the log file
-	rm -f $make_log_file
-fi

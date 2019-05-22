@@ -278,20 +278,15 @@ do
 				cipher_ram_output_file=$architecture$SCENARIO_NAME_PART$scenario$COMPILER_OPTIONS_NAME_PART$compiler_option_name$FILE_NAME_SEPARATOR$CIPHER_RAM_OUTPUT_FILE
 				cipher_execution_time_output_file=$architecture$SCENARIO_NAME_PART$scenario$COMPILER_OPTIONS_NAME_PART$compiler_option_name$FILE_NAME_SEPARATOR$CIPHER_EXECUTION_TIME_OUTPUT_FILE
 
-				# Remove log files
-				rm -f $cipher_code_size_output_file
-				rm -f $cipher_ram_output_file
-				rm -f $cipher_execution_time_output_file
-
 				# Build scenario.
 				# TODO: use cipher.mk directly.
 				${script_path}/common/build.sh -a=${architecture} -s=${scenario} -co="${compiler_option}"
 
 				# Code size.
-				timeout $CIPHER_CODE_SIZE_TIMEOUT ./../../../../scripts/cipher/cipher_code_size.sh "-s=$scenario" "-a=$architecture" -o=$cipher_code_size_output_file
+				timeout $CIPHER_CODE_SIZE_TIMEOUT ./../../../../scripts/cipher/cipher_code_size.sh "-a=$architecture" -o=$cipher_code_size_output_file
 
 				# RAM.
-				timeout $CIPHER_RAM_TIMEOUT ./../../../../scripts/cipher/cipher_ram.sh "-s=$scenario" "-a=$architecture" -o=$cipher_ram_output_file
+				timeout $CIPHER_RAM_TIMEOUT ./../../../../scripts/cipher/cipher_ram.sh "-a=$architecture" -o=$cipher_ram_output_file
 
 				# Execution time.
 				# Re-build scenario with cycle count instrumentation for ARM and PC.
@@ -301,31 +296,18 @@ do
 					make_log_file=${architecture}_scenario${scenario}_cipher_execution_time_make.log
 
 					make -f ${cipher_mk} clean &> ${make_log_file}
-					make -f ${cipher_mk}						\
-						 ARCHITECTURE=${architecture}			\
-						 SCENARIO=${scenario}					\
-						 MEASURE_CYCLE_COUNT=1					\
-						 COMPILER_OPTIONS="${compiler_option}"	\
+					make -f ${cipher_mk}                            \
+						 ARCHITECTURE=${architecture}           \
+						 SCENARIO=${scenario}                   \
+						 MEASURE_CYCLE_COUNT=1                  \
+						 COMPILER_OPTIONS="${compiler_option}"  \
 						&> ${make_log_file}
 				fi
 
-				timeout $CIPHER_EXECUTION_TIME_TIMEOUT ./../../../../scripts/cipher/cipher_execution_time.sh "-s=$scenario" "-a=$architecture" -o=$cipher_execution_time_output_file
+				timeout $CIPHER_EXECUTION_TIME_TIMEOUT ./../../../../scripts/cipher/cipher_execution_time.sh "-a=$architecture" -o=$cipher_execution_time_output_file
 
 				add_json_table_row "${script_json_output}" ${architecture} ${cipher_name} ${cipher_implementation_version} "${compiler_option}" \
 					"${cipher_code_size_output_file}" "${cipher_ram_output_file}" "${cipher_execution_time_output_file}"
-
-				if [ $FALSE -eq $KEEP_GENERATED_FILES ] ; then
-					# Remove generated files
-					rm -f $check_cipher_output_file
-					rm -f $cipher_code_size_output_file
-					rm -f $cipher_ram_output_file
-					rm -f $cipher_execution_time_output_file
-
-					rm -f $check_cipher_error_file
-					rm -f $cipher_code_size_error_file
-					rm -f $cipher_ram_error_file
-					rm -f $cipher_execution_time_error_file
-				fi
 			done
 
 

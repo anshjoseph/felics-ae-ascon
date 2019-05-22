@@ -423,11 +423,6 @@ case $SCRIPT_ARCHITECTURE in
 		simulate $AVR_SCENARIO1_GDB_STACK_COMMANDS_FILE $file $gdb_stack_log_file $simavr_stack_log_file
 		simulate $AVR_SCENARIO1_GDB_STACK_SECTIONS_COMMANDS_FILE $file $gdb_stack_sections_log_file $simavr_stack_sections_log_file
 
-		if [ $FALSE -eq $KEEP_GENERATED_FILES ] ; then
-			# Remove log files
-			rm -f $simavr_stack_log_file
-			rm -f $simavr_stack_sections_log_file
-		fi
 		;;
 	
 	$SCRIPT_ARCHITECTURE_MSP)
@@ -437,12 +432,6 @@ case $SCRIPT_ARCHITECTURE in
 
 		simulate $MSP_SCENARIO1_GDB_STACK_COMMANDS_FILE $file $gdb_stack_log_file $mspdebug_stack_log_file
 		simulate $MSP_SCENARIO1_GDB_STACK_SECTIONS_COMMANDS_FILE $file $gdb_stack_sections_log_file $mspdebug_stack_sections_log_file
-
-		if [ $FALSE -eq $KEEP_GENERATED_FILES ] ; then
-			# Remove log files
-			rm -f $mspdebug_stack_log_file
-			rm -f $mspdebug_stack_sections_log_file
-		fi
 		;;
 
 	$SCRIPT_ARCHITECTURE_ARM)
@@ -453,13 +442,6 @@ case $SCRIPT_ARCHITECTURE in
 
 		simulate $ARM_SCENARIO1_GDB_STACK_COMMANDS_FILE $UPLOAD_SCENARIO1 $gdb_stack_log_file $jlink_gdb_server_stack_log_file $make_log_file
 		simulate $ARM_SCENARIO1_GDB_STACK_SECTIONS_COMMANDS_FILE $UPLOAD_SCENARIO1 $gdb_stack_sections_log_file $jlink_gdb_server_stack_sections_log_file $make_log_file
-
-		if [ $FALSE -eq $KEEP_GENERATED_FILES ] ; then
-			# Remove log files
-			rm -f $make_log_file
-			rm -f $jlink_gdb_server_stack_log_file
-			rm -f $jlink_gdb_server_stack_sections_log_file
-		fi
 		;;
 esac
 
@@ -478,15 +460,6 @@ if [ -f $gdb_stack_sections_log_file ] ; then
 fi
 
 
-if [ $FALSE -eq $KEEP_GENERATED_FILES ] ; then
-	# Remove memory and gdb log files
-	rm -f $memory_file
-	rm -f $gdb_stack_log_file
-	rm -f $gdb_stack_sections_log_file
-fi
-
-
-# Dipslay results
 # Display results
 printf "%s %s %s %s %s %s" $e_stack $d_stack $data_ram_e $data_ram_d $data_ram_common $data_ram_total > $SCRIPT_OUTPUT
 	

@@ -32,9 +32,6 @@ TRUE=1
 FALSE=0
 
 INVALID_ARCHITECTURE_ERROR_MESSAGE='Invalid architecture:'
-INVALID_MODE_ERROR_MESSAGE='Invalid mode:'
-INVALID_VERBOSITY_ERROR_MESSAGE='Invalid verbosity:'
-
 
 # Check if the given value is in the given array
 # Parameters:
@@ -68,20 +65,6 @@ function validate_architecture()
 
 	if [ $FALSE -eq $result ] ; then
 		echo "$INVALID_ARCHITECTURE_ERROR_MESSAGE '$architecture'!"
-		exit
-	fi
-}
-
-# Validate given verbosity
-# Parameters:
-# 	$1 - the verbosity to validate
-function validate_verbosity()
-{
-	local verbosity=$1
-	local result=$(value_in_array $verbosity ${SCRIPT_VERBOSITIES[@]})
-
-	if [ $FALSE -eq $result ] ; then
-		echo "$INVALID_VERBOSITY_ERROR_MESSAGE '$verbosity'!"
 		exit
 	fi
 }

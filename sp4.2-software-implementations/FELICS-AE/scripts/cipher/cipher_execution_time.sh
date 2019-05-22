@@ -330,12 +330,6 @@ case $SCRIPT_ARCHITECTURE in
 			e_execution_time=$(compute_execution_time $pc_output_file 'EncryptCycleCount')
 			d_execution_time=$(compute_execution_time $pc_output_file 'DecryptCycleCount')
 		fi
-
-		if [ $FALSE -eq $KEEP_GENERATED_FILES ] ; then
-			# Remove log files
-			rm -f $make_log_file
-			rm -f $pc_output_file
-		fi
 		;;
 
 	$SCRIPT_ARCHITECTURE_AVR)
@@ -351,11 +345,6 @@ case $SCRIPT_ARCHITECTURE in
 	
 		if [ -f $avr_execution_time_log_file ] ; then
 			total_execution_time=$(compute_execution_time $avr_execution_time_log_file 'main')
-		fi
-
-		if [ $FALSE -eq $KEEP_GENERATED_FILES ] ; then
-			# Remove log file
-			rm -f $avr_execution_time_log_file
 		fi
 		;;
 
@@ -375,12 +364,6 @@ case $SCRIPT_ARCHITECTURE in
 		if [ -f $mspdebug_execution_time_log_file ] ; then
 			total_execution_time=$(compute_execution_time $mspdebug_execution_time_log_file 1)
 		fi
-
-		if [ $FALSE -eq $KEEP_GENERATED_FILES ] ; then
-			# Remove log files
-			rm -f $mspdebug_execution_time_log_file
-			rm -f $mspdebug_execution_time_sections_log_file
-		fi
 		;;
 
 	$SCRIPT_ARCHITECTURE_ARM)
@@ -393,12 +376,6 @@ case $SCRIPT_ARCHITECTURE in
 		if [ -f $arm_serial_terminal_output_file ] ; then
 			e_execution_time=$(compute_execution_time $arm_serial_terminal_output_file 'EncryptCycleCount')
 			d_execution_time=$(compute_execution_time $arm_serial_terminal_output_file 'DecryptCycleCount')
-		fi
-		
-		if [ $FALSE -eq $KEEP_GENERATED_FILES ] ; then
-			# Remove log files
-			rm -f $make_log_file
-			rm -f $arm_serial_terminal_output_file
 		fi
 		;;
 esac
