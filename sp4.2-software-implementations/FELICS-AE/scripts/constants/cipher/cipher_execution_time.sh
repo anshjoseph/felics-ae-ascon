@@ -53,11 +53,4 @@ ARM_SERIAL_TERMINAL=../../../architecture/arm/arm_serial_terminal.py
 
 ARM_SERIAL_TERMINAL_OUTPUT_FILE=serial.out
 
-EMPTY_DKS_PC=850
-EMPTY_DKS_AVR=8
-EMPTY_DKS_MSP=8
-EMPTY_DKS_ARM=12
-
-TABLE_HORIZONTAL_LINE_LENGTH=66
-
 CIPHER_MAKEFILE=./../../../common/cipher.mk

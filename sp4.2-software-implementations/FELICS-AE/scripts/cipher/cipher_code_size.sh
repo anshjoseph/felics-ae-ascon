@@ -66,7 +66,6 @@ source $script_path/../config/config.sh
 
 # Include constants files
 source $script_path/../constants/constants.sh
-source $script_path/../constants/cipher/cipher_code_size.sh
 
 # Include help file
 source $script_path/../help/cipher/cipher_code_size.sh

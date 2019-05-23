@@ -60,7 +60,6 @@ script_path=$(dirname $0)
 
 # Include constants files
 source $script_path/constants/constants.sh
-source $script_path/constants/collect_ciphers_metrics.sh
 
 # Include help file
 source $script_path/help/collect_ciphers_metrics.sh
@@ -239,7 +238,7 @@ run-benchmark ()
     echo -e "\t COMPILER_OPTIONS = ${options}"
     echo ""
 
-    timeout ${CHECK_CIPHER_TIMEOUT} ${script_path}/cipher/check_cipher.sh \
+    timeout 120 ${script_path}/cipher/check_cipher.sh \
             -a=${architecture} -co="${options}"
 
     local options_part=${options// /_}
@@ -251,10 +250,10 @@ run-benchmark ()
     # TODO: use cipher.mk directly.
     ${script_path}/common/build.sh -a=${architecture} -s=1 -co="${options}"
 
-    timeout $CIPHER_CODE_SIZE_TIMEOUT ${script_path}/cipher/cipher_code_size.sh \
+    timeout 120 ${script_path}/cipher/cipher_code_size.sh \
             "-a=$architecture" -o=$code_size_output
 
-    timeout $CIPHER_RAM_TIMEOUT ${script_path}/cipher/cipher_ram.sh \
+    timeout 120 ${script_path}/cipher/cipher_ram.sh \
             "-a=$architecture" -o=$code_ram_output
 
     # Re-build scenario with cycle count instrumentation for ARM and PC.
@@ -272,7 +271,7 @@ run-benchmark ()
             &> ${make_log_file}
     fi
 
-    timeout $CIPHER_EXECUTION_TIME_TIMEOUT ${script_path}/cipher/cipher_execution_time.sh \
+    timeout 120 ${script_path}/cipher/cipher_execution_time.sh \
             "-a=$architecture" -o=$code_time_output
 
     add_json_table_row "${script_json_output}" ${architecture} ${cipher_name}                                               \
