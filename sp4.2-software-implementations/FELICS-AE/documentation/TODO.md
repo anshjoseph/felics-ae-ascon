@@ -13,3 +13,8 @@ Advantages over Bash:
 
 - better error-reporting (fast, loud and precise failures)
 - automatic script usage documentation
+
+# Convert `implementation.info` to JSON
+
+So that hypothetical Python scripts can simply `json.load()` them into
+native types instead of parsing them manually.
