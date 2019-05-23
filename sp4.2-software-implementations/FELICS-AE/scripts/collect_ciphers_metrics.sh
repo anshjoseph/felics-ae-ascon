@@ -226,6 +226,62 @@ skip-platform ()
 }
 
 
+run-benchmark ()
+{
+    local cipher_name=$1
+    local version=$2
+    local architecture=$3
+    local options=$4
+
+    echo "Run for cipher '${cipher_name}':"
+    echo -e "\t IMPLEMENTATION_VERSION = ${version}"
+    echo -e "\t ARCHITECTURE = ${architecture}"
+    echo -e "\t COMPILER_OPTIONS = ${options}"
+    echo ""
+
+    timeout ${CHECK_CIPHER_TIMEOUT} ${script_path}/cipher/check_cipher.sh \
+            -a=${architecture} -co="${options}"
+
+    local options_part=${options// /_}
+    local output_base="${architecture}_scenario1_${options// /_}"
+    local code_size_output=${output_base}_code_size.log
+    local code_ram_output=${output_base}_code_ram.log
+    local code_time_output=${output_base}_code_time.log
+
+    # TODO: use cipher.mk directly.
+    ${script_path}/common/build.sh -a=${architecture} -s=1 -co="${options}"
+
+    timeout $CIPHER_CODE_SIZE_TIMEOUT ${script_path}/cipher/cipher_code_size.sh \
+            "-a=$architecture" -o=$code_size_output
+
+    timeout $CIPHER_RAM_TIMEOUT ${script_path}/cipher/cipher_ram.sh \
+            "-a=$architecture" -o=$code_ram_output
+
+    # Re-build scenario with cycle count instrumentation for ARM and PC.
+    if [ ${architecture} = ARM -o ${architecture} = PC ]
+    then
+        local cipher_mk=${script_path}/../source/common/cipher.mk
+        local make_log_file=${output_base}_code_time_make.log
+
+        make -f ${cipher_mk} clean &> ${make_log_file}
+        make -f ${cipher_mk}                    \
+             ARCHITECTURE=${architecture}       \
+             SCENARIO=1                         \
+             MEASURE_CYCLE_COUNT=1              \
+             COMPILER_OPTIONS="${options}"      \
+            &> ${make_log_file}
+    fi
+
+    timeout $CIPHER_EXECUTION_TIME_TIMEOUT ${script_path}/cipher/cipher_execution_time.sh \
+            "-a=$architecture" -o=$code_time_output
+
+    add_json_table_row "${script_json_output}" ${architecture} ${cipher_name}                                               \
+                       ${version} "${options}"                                                                              \
+                       "${code_size_output}" "${code_ram_output}" "${code_time_output}"
+
+}
+
+
 for architecture in ${architectures[@]}
 do
 	echo -e "\t\t\t ---> Architecture: $architecture"
@@ -262,54 +318,8 @@ do
 
 			for compiler_option in "${compiler_options[@]}"
 			do
-				echo "Run for cipher '$cipher_name':"
-				echo -e "\t IMPLEMENTATION_VERSION = $cipher_implementation_version"
-				echo -e "\t ARCHITECTURE = $architecture"
-				echo -e "\t COMPILER_OPTIONS = $compiler_option"
-				echo ""
-
-
-				compiler_option_name=${compiler_option// /_}
-
-				# Check cipher
-				timeout $CHECK_CIPHER_TIMEOUT ./../../../../scripts/cipher/check_cipher.sh -a=$architecture "-co=$compiler_option"
-
-				cipher_code_size_output_file=$architecture$SCENARIO_NAME_PART$scenario$COMPILER_OPTIONS_NAME_PART$compiler_option_name$FILE_NAME_SEPARATOR$CIPHER_CODE_SIZE_OUTPUT_FILE
-				cipher_ram_output_file=$architecture$SCENARIO_NAME_PART$scenario$COMPILER_OPTIONS_NAME_PART$compiler_option_name$FILE_NAME_SEPARATOR$CIPHER_RAM_OUTPUT_FILE
-				cipher_execution_time_output_file=$architecture$SCENARIO_NAME_PART$scenario$COMPILER_OPTIONS_NAME_PART$compiler_option_name$FILE_NAME_SEPARATOR$CIPHER_EXECUTION_TIME_OUTPUT_FILE
-
-				# Build scenario.
-				# TODO: use cipher.mk directly.
-				${script_path}/common/build.sh -a=${architecture} -s=${scenario} -co="${compiler_option}"
-
-				# Code size.
-				timeout $CIPHER_CODE_SIZE_TIMEOUT ./../../../../scripts/cipher/cipher_code_size.sh "-a=$architecture" -o=$cipher_code_size_output_file
-
-				# RAM.
-				timeout $CIPHER_RAM_TIMEOUT ./../../../../scripts/cipher/cipher_ram.sh "-a=$architecture" -o=$cipher_ram_output_file
-
-				# Execution time.
-				# Re-build scenario with cycle count instrumentation for ARM and PC.
-				if [ ${architecture} = ARM -o ${architecture} = PC ]
-				then
-					cipher_mk=${script_path}/../source/common/cipher.mk
-					make_log_file=${architecture}_scenario${scenario}_cipher_execution_time_make.log
-
-					make -f ${cipher_mk} clean &> ${make_log_file}
-					make -f ${cipher_mk}                            \
-						 ARCHITECTURE=${architecture}           \
-						 SCENARIO=${scenario}                   \
-						 MEASURE_CYCLE_COUNT=1                  \
-						 COMPILER_OPTIONS="${compiler_option}"  \
-						&> ${make_log_file}
-				fi
-
-				timeout $CIPHER_EXECUTION_TIME_TIMEOUT ./../../../../scripts/cipher/cipher_execution_time.sh "-a=$architecture" -o=$cipher_execution_time_output_file
-
-				add_json_table_row "${script_json_output}" ${architecture} ${cipher_name} ${cipher_implementation_version} "${compiler_option}" \
-					"${cipher_code_size_output_file}" "${cipher_ram_output_file}" "${cipher_execution_time_output_file}"
+                            run-benchmark "${cipher_name}" "${cipher_implementation_version}" "${architecture}" "${compiler_option}"
 			done
-
 
 			cd ./../../
 		done
