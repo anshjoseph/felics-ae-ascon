@@ -30,7 +30,7 @@ set -e
 
 #
 # Call this script to extract the cipher RAM consumption
-# 	./cipher_ram.sh [{-h|--help}] [--version] [{-a|--architecture}=[PC|AVR|MSP|ARM]] [{-t|--target}=[...]] [{-o|--output}=[...]]
+# 	./cipher_ram.sh [{-h|--help}] [--version] [{-a|--architecture}=[PC|AVR|MSP|ARM]] [{-o|--output}=[...]]
 #
 #	To call from a cipher build folder use:
 #		./../../../../scripts/cipher/cipher_ram.sh [options]
@@ -47,9 +47,6 @@ set -e
 #				MSP - binary file are build for MSP device
 #				ARM - binary files are build for ARM device
 #				Default: PC
-#		-t, --target
-#			Specifies which is the target path. The relative path is computed from the directory where script was called
-#				Default: .
 #		-o, --output
 #			Specifies where to output the results. The relative path is computed from the directory where script was called
 #				Default: /dev/tty
@@ -58,7 +55,6 @@ set -e
 #		./../../../../scripts/cipher/cipher_ram.sh
 #		./../../../../scripts/cipher/cipher_ram.sh --architecture=MSP
 #  		./../../../../scripts/cipher/cipher_ram.sh -o=results.txt
-#		./cipher_ram.sh -t=./../../source/ciphers/CipherName_BlockSizeInBits_KeySizeInBits_v01/build
 #
 
 
@@ -85,7 +81,6 @@ source $script_path/../common/version.sh
 # Default values
 SCRIPT_SCENARIO=$SCRIPT_SCENARIO_1
 SCRIPT_ARCHITECTURE=$SCRIPT_ARCHITECTURE_PC
-SCRIPT_TARGET=$DEFAULT_SCRIPT_TARGET
 SCRIPT_OUTPUT=$DEFAULT_SCRIPT_OUTPUT
 
 
@@ -105,12 +100,6 @@ do
 			SCRIPT_ARCHITECTURE="${i#*=}"
 			shift
 			;;
-		-t=*|--target=*)
-			if [[ "${i#*=}" ]] ; then
-				SCRIPT_TARGET="${i#*=}"
-			fi
-			shift
-			;;
 		-o=*|--output=*)
 			if [[ "${i#*=}" ]] ; then
 				SCRIPT_OUTPUT="${i#*=}"
@@ -126,7 +115,6 @@ done
 
 echo "Script settings:"
 echo -e "\t SCRIPT_ARCHITECTURE \t\t = $SCRIPT_ARCHITECTURE"
-echo -e "\t SCRIPT_TARGET \t\t\t = $SCRIPT_TARGET"
 echo -e "\t SCRIPT_OUTPUT \t\t\t = $SCRIPT_OUTPUT"
 
 
@@ -212,20 +200,7 @@ function compute_stack_usage()
 }
 
 
-# Set the current working directory
-current_directory=$(pwd)
-echo "Begin cipher RAM - $current_directory"
-
-
-# Change relative script output path
-if [[ $SCRIPT_OUTPUT != /* ]] ; then
-	SCRIPT_OUTPUT=$current_directory/$SCRIPT_OUTPUT
-fi
-
-
-# Change current working directory
-cd $SCRIPT_TARGET
-echo "Changed working directory: $(pwd)"
+echo "Begin cipher RAM - $(pwd)"
 
 
 # Get the state, key, round keys size
@@ -463,9 +438,6 @@ fi
 # Display results
 printf "%s %s %s %s %s %s" $e_stack $d_stack $data_ram_e $data_ram_d $data_ram_common $data_ram_total > $SCRIPT_OUTPUT
 	
-
-# Change current working directory
-cd $current_directory
 
 echo ""
 echo "End cipher RAM - $(pwd)"
