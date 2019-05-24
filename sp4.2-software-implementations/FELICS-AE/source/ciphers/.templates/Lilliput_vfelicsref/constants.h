@@ -40,18 +40,4 @@
 #define CRYPTO_ABYTES TAG_BYTES
 
 
-extern ROM_DATA_BYTE PERMUTATIONS[2][BLOCK_BYTES];
-extern SBOX_BYTE S[256];
-
-
-enum permutation
-{
-    PERMUTATION_ENCRYPTION = 0, /* PI(i) */
-    PERMUTATION_DECRYPTION = 1, /* PI^-1(i) */
-    PERMUTATION_NONE
-};
-
-typedef enum permutation permutation;
-
-
 #endif /* CONSTANTS_H */

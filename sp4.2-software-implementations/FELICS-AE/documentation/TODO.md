@@ -1,3 +1,10 @@
+# Remove `constants.c` files
+
+- Lilliput-AE
+    - vthreshold
+    - vmsp
+- others
+
 # Remove `upload-*` target from Makefiles
 
 Use dedicated script; no use cluttering makefiles. Used by

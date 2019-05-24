@@ -1,5 +1,5 @@
 ImplementationDescription: Reference implementation for Lilliput-II
 ImplementationAuthors: Kévin Le Gouguec
 
-EncryptCode: tbc, tweakey, constants
-DecryptCode: tbc, tweakey,  constants
+EncryptCode: tbc, tweakey
+DecryptCode: tbc, tweakey
