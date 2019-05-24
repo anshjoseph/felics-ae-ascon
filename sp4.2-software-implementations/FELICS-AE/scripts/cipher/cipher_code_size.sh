@@ -143,10 +143,6 @@ fi
 files=$(ls $pattern)
 
 
-# Add scenario *.elf file to the files
-files="$SCENARIO1_FILE$ELF_FILE_EXTENSION $files"
-
-
 # Set the size command depending on the architecture
 case $SCRIPT_ARCHITECTURE in
 	$SCRIPT_ARCHITECTURE_PC)
@@ -169,33 +165,17 @@ esac
 
 for file in $files
 do
-	# Get the section sizes line for current file
-	if [ -e $file ] ; then
-		size=$($script_size $file | grep $file)
-	else
-		continue
-	fi
+	size=$($script_size $file | grep $file)
 
 	# Get the section sizes
 	text=$(echo $size | cut -d ' ' -f 1)
 	data=$(echo $size | cut -d ' ' -f 2)
-	bss=$(echo $size | cut -d ' ' -f 3)
-	dec=$(echo $size | cut -d ' ' -f 4)
 
 	# Compute the ROM requirement	
 	rom=$(($text + $data))
 
 	# Get the component name (file name without the extension)
 	component=${file%$OBJECT_FILE_EXTENSION}
-	if [ "$component" == "$file" ] ; then
-		component=${file%$ELF_FILE_EXTENSION}
-	fi
-
-	# Set the component section sizes
-	declare $component"_text"=$text
-	declare $component"_data"=$data
-	declare $component"_bss"=$bss
-	declare $component"_dec"=$dec
 
 	# Set the component ROM requirement
 	declare $component"_rom"=$rom
