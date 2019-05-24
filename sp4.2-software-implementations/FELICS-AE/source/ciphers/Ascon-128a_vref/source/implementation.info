@@ -1,8 +1,5 @@
 ImplementationDescription: AEAD ASCON128-a
 ImplementationAuthors: Jean-Baptiste Serrou Soares (adapted from supercop)
 
-EncryptConstants: 
-DecryptConstants: 
-
 EncryptCode: utils
 DecryptCode: utils

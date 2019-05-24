@@ -1,8 +1,5 @@
 ImplementationDescription: AEAD DEOXYS-I-128-*
 ImplementationAuthors: Jean-Baptiste Serrou Soares (adapted from supercop)
 
-EncryptConstants: TW_constants, perm_constants, lfsr_constants, rcon_constants
-DecryptConstants: TW_constants, perm_constants, lfsr_constants, rcon_constants
-
-EncryptCode: deoxys_common
-DecryptCode: deoxys_common
+EncryptCode: deoxys_common, TW_constants, perm_constants, lfsr_constants, rcon_constants
+DecryptCode: deoxys_common, TW_constants, perm_constants, lfsr_constants, rcon_constants

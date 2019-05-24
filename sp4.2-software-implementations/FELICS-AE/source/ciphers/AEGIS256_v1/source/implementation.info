@@ -1,8 +1,5 @@
 ImplementationDescription: AEAD AEGIS256
 ImplementationAuthors: Jean-Baptiste Serrou Soares (adapted from supercop)
 
-EncryptConstants: TE_constants
-DecryptConstants: TE_constants
-
-EncryptCode: aegis_utils, aegis_common
-DecryptCode: aegis_utils, aegis_common
+EncryptCode: aegis_utils, aegis_common, TE_constants
+DecryptCode: aegis_utils, aegis_common, TE_constants

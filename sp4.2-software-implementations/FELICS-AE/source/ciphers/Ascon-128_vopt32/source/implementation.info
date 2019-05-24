@@ -1,10 +1,7 @@
 ImplementationDescription: AEAD ASCON128, opt32
 ImplementationAuthors: Jean-Baptiste Serrou Soares (adapted from supercop)
 
-EncryptConstants: constants
-DecryptConstants: constants
-
-EncryptCode:
-DecryptCode:
+EncryptCode: constants
+DecryptCode: constants
 
 Platforms: ARM

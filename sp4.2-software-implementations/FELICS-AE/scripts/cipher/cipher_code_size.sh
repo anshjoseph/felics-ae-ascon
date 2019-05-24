@@ -233,61 +233,10 @@ do
 done
 
 
-shared_constants_e=0
-shared_constants_d=0
-shared_constants_total=0
-
-# Read and process constants implementation information
-declare -a shared_parts
-for constants_section in ${CONSTANTS_SECTIONS[@]}
-do
-    shared_files=$(cat $IMPLEMENTATION_INFO_FILE | grep $constants_section$SECTION_SEPARATOR | tr -d '\r' | cut -d ':' -f 2 | tr ',' ' ')
-
-    for shared_file in $shared_files
-    do
-	shared_name=$shared_file"_rom"
-
-	shared_value=${!shared_name}
-	if [ "" == "$shared_value" ] ; then
-	    echo "Error: unknown component $shared_file"
-	    exit 1
-	fi
-
-
-	# Test if the shared file ROM was added to the total
-	used_part=$FALSE
-	for shared_part in ${shared_parts[@]}
-	do
-	    if [ "$shared_part" == "$shared_file" ] ; then
-		used_part=$TRUE
-		break
-	    fi
-	done
-
-	
-	# Add the shared file ROM to total
-	if [ $FALSE -eq $used_part ]; then
-	    shared_constants_total=$(($shared_constants_total + $shared_value))
-	    shared_parts+=($shared_file) 
-	fi
-	
-	
-	case $constants_section in
-	    $CONSTANTS_SECTION_E)
-		shared_constants_e=$(($shared_constants_e + $shared_value))
-		;;
-	    $CONSTANTS_SECTION_D)
-		shared_constants_d=$(($shared_constants_d + $shared_value))
-		;;
-	esac
-    done
-done
-
-
 # Cipher
-cipher_e=$(($encrypt_rom + $shared_code_e + $shared_constants_e))
-cipher_d=$(($decrypt_rom + $shared_code_d + $shared_constants_d))
-cipher_total=$(($encrypt_rom + $decrypt_rom + $shared_code_total + $shared_constants_total))
+cipher_e=$(($encrypt_rom + $shared_code_e))
+cipher_d=$(($decrypt_rom + $shared_code_d))
+cipher_total=$(($encrypt_rom + $decrypt_rom + $shared_code_total))
 
 # Scenario 1
 scenario1_e=$(($cipher_e))
