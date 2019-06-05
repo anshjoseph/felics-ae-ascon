@@ -1,5 +1,5 @@
-ImplementationDescription: Reference implementation for Lilliput-II
-ImplementationAuthors: Kévin Le Gouguec
+ImplementationDescription: Implementation of Lilliput-I optimized for speed on MSP430
+ImplementationAuthors: Kévin Le Gouguec, Gaëtan Leplus
 
 EncryptCode: tbc, tbc_asm, tweakey, tweakey_asm
 DecryptCode: tbc, tbc_asm, tweakey, tweakey_asm
