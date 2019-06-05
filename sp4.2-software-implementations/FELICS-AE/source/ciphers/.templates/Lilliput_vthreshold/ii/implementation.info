@@ -1,5 +1,5 @@
 ImplementationDescription: Threshold implementation for Lilliput-II
 ImplementationAuthors: Alexandre Adomnicai, Kévin Le Gouguec, Léo Reynaud
 
-EncryptCode: tbc, tweakey, constants
-DecryptCode: tbc, tweakey, constants
+EncryptCode: tbc, tweakey
+DecryptCode: tbc, tweakey

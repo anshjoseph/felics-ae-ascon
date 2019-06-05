@@ -1,7 +1,6 @@
 # Remove `constants.c` files
 
 - Lilliput-AE
-    - vthreshold
     - vmsp
 - others
 
