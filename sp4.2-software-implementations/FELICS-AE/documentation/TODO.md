@@ -1,8 +1,6 @@
 # Remove `constants.c` files
 
-- Lilliput-AE
-    - vmsp
-- others
+Done for Lilliput-AE.
 
 # Remove `upload-*` target from Makefiles
 

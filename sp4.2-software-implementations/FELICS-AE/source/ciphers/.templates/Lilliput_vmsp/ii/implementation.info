@@ -1,7 +1,7 @@
 ImplementationDescription: Reference implementation for Lilliput-II
 ImplementationAuthors: Kévin Le Gouguec
 
-EncryptCode: tbc, tbc_asm, tweakey, tweakey_asm, constants
-DecryptCode: tbc, tbc_asm, tweakey, tweakey_asm, constants
+EncryptCode: tbc, tbc_asm, tweakey, tweakey_asm
+DecryptCode: tbc, tbc_asm, tweakey, tweakey_asm
 
 Platforms: MSP

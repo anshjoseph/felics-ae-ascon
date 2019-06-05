@@ -11,6 +11,9 @@
 #include "tweakey.h"
 
 
+extern SBOX_BYTE S[256];
+
+
 static void _state_init(uint8_t X[BLOCK_BYTES], const uint8_t message[BLOCK_BYTES])
 {
     memcpy(X, message, BLOCK_BYTES);
