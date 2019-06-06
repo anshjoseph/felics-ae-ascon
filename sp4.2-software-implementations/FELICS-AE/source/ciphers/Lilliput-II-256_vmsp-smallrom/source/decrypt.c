@@ -1,0 +1,1 @@
+../../.templates/Lilliput_vmsp-smallrom/ii/decrypt.c

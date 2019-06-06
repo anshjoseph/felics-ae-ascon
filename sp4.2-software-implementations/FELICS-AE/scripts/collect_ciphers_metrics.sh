@@ -207,23 +207,21 @@ script_json_output="${results_dir}${SCRIPT_JSON_OUTPUT}"
 add_json_table_header "${script_json_output}"
 
 
-skip-platform ()
+skip-setup ()
 {
-    local directory=$1
-    local platform=$2
+	local implem_info=$1
+	local key=$2
+	local value=$3
 
-    local implem_info=${directory}/source/implementation.info
+	if ! grep -q "^${key}:" ${implem_info}
+	then
+		# No restriction for this implementation. Do not skip.
+		return 1
+	fi
 
-    if ! grep -q "^Platforms:" ${implem_info}
-    then
-	# No restriction for this implementation. Do not skip.
-	return 1
-    fi
-
-    # Skip if the platform is not listed explicitly.
-    ! grep -q "^Platforms:.*\b${platform}\b" ${implem_info}
+	# Skip if the value is not listed explicitly.
+	! grep -q "^${key}:.*${value}" ${implem_info}
 }
-
 
 run-benchmark ()
 {
@@ -293,9 +291,9 @@ do
 
 		for directory in ${directories[@]}
 		do
-			if skip-platform ${directory} ${architecture}
+			if skip-setup ${directory}/source/implementation.info Platforms ${architecture}
 			then
-				echo -e "${directory}: skipping for ${architecture}..."
+				echo "${directory}: skipping for ${architecture}..."
 				continue
 			fi
 
@@ -317,7 +315,13 @@ do
 
 			for compiler_option in "${compiler_options[@]}"
 			do
-                            run-benchmark "${cipher_name}" "${cipher_implementation_version}" "${architecture}" "${compiler_option}"
+				if skip-setup ../source/implementation.info Options "${compiler_option}"
+				then
+					echo "${directory}: skipping for ${compiler_option}..."
+					continue
+				fi
+
+				run-benchmark "${cipher_name}" "${cipher_implementation_version}" "${architecture}" "${compiler_option}"
 			done
 
 			cd ./../../
