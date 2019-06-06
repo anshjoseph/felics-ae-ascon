@@ -1,1 +1,0 @@
-../../.templates/Lilliput_vmsp/i/encrypt.c

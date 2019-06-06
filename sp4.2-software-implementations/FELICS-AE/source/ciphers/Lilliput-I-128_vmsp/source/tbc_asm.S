@@ -1,1 +1,0 @@
-../../.templates/Lilliput_vmsp/tbc_asm.S
