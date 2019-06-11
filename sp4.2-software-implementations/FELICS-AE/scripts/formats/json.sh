@@ -43,11 +43,24 @@ describe-revision ()
     fi
 }
 
+inside-repo ()
+{
+    git status &> /dev/null
+}
+
 add_json_table_header ()
 {
     local output_file=$1
-    local commit=$(git rev-parse --short HEAD)
-    local branch=$(describe-revision)
+
+    if ! inside-repo
+    then
+        local commit="unknown"
+        local branch="unknown"
+    else
+        local commit=$(git rev-parse --short HEAD)
+        local branch=$(describe-revision)
+    fi
+
 
     cat <<EOF > ${output_file}
 {
