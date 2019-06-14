@@ -73,6 +73,46 @@ _extract_loop:
         ret
 
 
+_multiply_M:
+        ;; r12: TK_j
+
+        ;; Assume r4 to r11 are pushed and popped by
+        ;; tweakey_state_update.
+
+        mov.b 0(r12), r4        ; x0
+        mov.b 1(r12), r5        ; x1
+        mov.b 2(r12), r6        ; x2
+        mov.b 3(r12), r7        ; x3
+        mov.b 4(r12), r8        ; x4
+        mov.b 5(r12), r9        ; x5
+        mov.b 6(r12), r10       ; x6
+        mov.b 7(r12), r11       ; x7
+
+        ;; First, store every yj which depends on a single xi.
+        mov.b r10, 7(r12)       ; x6 -> y7
+        mov.b r9, 6(r12)        ; x5 -> y6
+        mov.b r6, 3(r12)        ; x2 -> y3
+        mov.b r4, 1(r12)        ; x0 -> y1
+        mov.b r11, 0(r12)       ; x7 -> y0
+
+        ;; y5 = x5<<3 ^ x4
+        rll3.b r9
+        xor.b r8, r9
+        mov.b r9, 5(r12)
+
+        ;; y4 = x4>>3 ^ x3
+        rrl3.b r8
+        xor.b r7, r8
+        mov.b r8, 4(r12)
+
+        ;; y2 = x6<<2 ^ x1
+        rll2.b r10
+        xor.b r5, r10
+        mov.b r10, 2(r12)
+
+        ret
+
+
         .global tweakey_state_update
         .type tweakey_state_update, @function
 tweakey_state_update:
@@ -90,140 +130,23 @@ tweakey_state_update:
         ;; Skip this lane, as it is multiplied by the identity matrix.
 
         ;; lane p=1 = TK[8..15] ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-        mov.b 8(r12), r4        ; x0
-        mov.b 9(r12), r5        ; x1
-        mov.b 10(r12), r6       ; x2
-        mov.b 11(r12), r7       ; x3
-        mov.b 12(r12), r8       ; x4
-        mov.b 13(r12), r9       ; x5
-        mov.b 14(r12), r10      ; x6
-        mov.b 15(r12), r11      ; x7
+        push r12
 
-        ;; First, store every yj which depends on a single xi.
-        mov.b r10, 15(r12)      ; x6 -> y7
-        mov.b r9, 14(r12)       ; x5 -> y6
-        mov.b r6, 11(r12)       ; x2 -> y3
-        mov.b r4, 9(r12)        ; x0 -> y1
-        mov.b r11, 8(r12)       ; x7 -> y0
-
-        ;; y5 = x5<<3 ^ x4
-        rll3.b r9
-        xor.b r8, r9
-        mov.b r9, 13(r12)
-
-        ;; y4 = x4>>3 ^ x3
-        rrl3.b r8
-        xor.b r7, r8
-        mov.b r8, 12(r12)
-
-        ;; y2 = x6<<2 ^ x1
-        rll2.b r10
-        xor.b r5, r10
-        mov.b r10, 10(r12)
+        add #8, r12
+        call #_multiply_M
 
         ;; lane p=2 = TK[16..23] ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-        mov.b 16(r12), r4       ; x0
-        mov.b 17(r12), r5       ; x1
-        mov.b 18(r12), r6       ; x2
-        mov.b 19(r12), r7       ; x3
-        mov.b 20(r12), r8       ; x4
-        mov.b 21(r12), r9       ; x5
-        mov 22(r12), r10        ; x6, x7
-
-        ;; First, store every yj which depends on a single xi.
-        mov.b r9, 23(r12)       ; x5 -> y7
-        mov r10, 16(r12)        ; x6, x7 -> y0, y1
-
-        ;; Clobber xi's which are not used anywhere else.
-        ;; y3 = x6<<2 ^ x1
-        rll2.b r10
-        xor.b r5, r10
-        mov.b r10, 19(r12)
-        ;; y2 = x5<<2 ^ x0
-        rll2.b r9
-        xor.b r9, r4
-        mov.b r4, 18(r12)
-        ;; NB: we are not done with r9 = x5<<2
-
-        ;; Clobber x5 with x15 = x5<<3 ^ x4
-        rla.b r9
-        xor.b r8, r9
-        ;; y6 = x15
-        mov.b r9, 22(r12)
-
-        ;; Clobber x4 with x14 = x4>>3 ^ x3
-        rrl3.b r8
-        xor.b r7, r8
-        ;; y5 = x15<<3 ^ x14
-        rll3.b r9
-        xor.b r8, r9
-        mov.b r9, 21(r12)
-        ;; y4 = x14>>3 ^ x2
-        rrl3.b r8
-        xor.b r6, r8
-        mov.b r8, 20(r12)
+        add #8, r12
+        call #_multiply_M
+        call #_multiply_M
 
         ;; lane p=3 = TK[24..31] ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-        mov.b 24(r12), r4       ; x0
-        mov.b 25(r12), r5       ; x1
-        mov.b 26(r12), r6       ; x2
-        mov.b 27(r12), r7       ; x3
-        mov.b 28(r12), r8       ; x4
-        mov.b 29(r12), r9       ; x5
-        mov.b 30(r12), r10      ; x6
-        mov.b 31(r12), r11      ; x7
+        add #8, r12
+        call #_multiply_M
+        call #_multiply_M
+        call #_multiply_M
 
-        ;; First, store every yj which depends on a single xi.
-        mov.b r10, 25(r12)      ; x6 -> y1
-        mov.b r9, 24(r12)       ; x5 -> y0
-
-        ;; x5 is only needed for y3 (<<2) and x15 (<<3).
-        ;; y3 = x5<<2 ^ x0
-        rll2.b r9
-        xor.b r9, r4
-        mov.b r4, 27(r12)
-
-        ;; Clobber x5 with x15 = x5<<3 ^ x4
-        rla.b r9
-        xor.b r8, r9
-        ;; y7 = x15
-        mov.b r9, 31(r12)
-
-        ;; x15 is only needed for y2 (<<2) and x25 (<<3).
-        ;; y2 = x15<<2 ^ x7
-        rll2.b r9
-        xor.b r9, r11
-        mov.b r11, 26(r12)
-
-        ;; x15 is now only used for x25 = x15<<3 ^ x14.
-
-        ;; First, compute x14 = x4>>3 ^ x3. Since none of x3 and x4
-        ;; are used anywhere else, clobber x4 with x14.
-        rrl3.b r8
-        xor.b r7, r8
-
-        ;; Clobber x15 with x25 = x15<<3 ^ x14
-        rla.b r9
-        xor.b r8, r9
-
-        ;; y6 = x25
-        mov.b r9, 30(r12)
-
-        ;; Clobber x14 with x24 = x14>>3 ^ x2
-        rrl3.b r8
-        xor.b r6, r8
-
-        ;; y5 = x25<<3 ^ x24
-        rll3.b r9
-        xor.b r8, r9
-        mov.b r9, 29(r12)
-
-        ;; y4 = x24>>3 ^ x6<<2 ^ x1
-        rrl3.b r8
-        rll2.b r10
-        xor.b r10, r8
-        xor.b r5, r8
-        mov.b r8, 28(r12)
+        pop r12
 
 #if LANES_NB >= 5
         ;; lane p=4 = TK[32..39] ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
