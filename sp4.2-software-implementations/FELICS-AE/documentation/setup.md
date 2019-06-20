@@ -76,6 +76,31 @@ We use the J-Link software collection provided by SEGGER:
 
 <https://www.segger.com/downloads/jlink/#J-LinkSoftwareAndDocumentationPack>
 
+PC-specific
+-----------
+
+The distribution's GCC and GDB packages should be enough to run
+benchmarks on 64-bit PCs.
+
+CPU frequency scaling can cause jitter when measuring execution
+cycles. To counter that, FELICS-AE attempts to set the cpu-freq
+governor to "performance" when running benchmarks on PC, so that the
+frequency remains constant (and maximum) during measurements.
+
+To do so, FELICS-AE attempts to run the command cpufreq-set, which can
+be found in the cpufrequtils package. FELICS-AE will not fail and will
+merely warn if the command is not found.
+
+Setting the CPU governor requires root privileges, therefore FELICS-AE
+runs cpufreq-set with sudo. To allow the command to succeed without
+entering a password, create a new sudoers file,
+e.g. /etc/sudoers.d/cpu-governor:
+
+    USERNAME  ALL = NOPASSWD: /usr/bin/cpufreq-set -c [0-9] -g powersave,\
+                              /usr/bin/cpufreq-set -c [0-9] -g performance
+
+Replace `USERNAME` with your actual identifier.
+
 2 - Configuring FELICS-AE
 =========================
 
