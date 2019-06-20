@@ -176,6 +176,29 @@ compute-file-median ()
     done
 }
 
+try-cpufreq-set ()
+{
+    local governor=$1
+
+    if ! command -v cpufreq-set > /dev/null
+    then
+        return 1
+    fi
+
+    sudo cpufreq-set -c ${PC_EXECUTION_TIME_CPU} -g ${governor}
+}
+
+set-cpu-governor ()
+{
+    local governor=$1
+
+    if ! try-cpufreq-set ${governor} && [ ${governor} = performance ]
+    then
+        echo 'Cannot set CPU governor to "performance".'
+        echo 'Execution time measurements may suffer from increased jitter.'
+    fi
+}
+
 
 # Simulate the given binary file execution
 # Parameters:
@@ -195,10 +218,15 @@ function simulate()
 		$SCRIPT_ARCHITECTURE_PC)
             local samples=$output_file.samples
             > $samples
+
+            set-cpu-governor performance
+
             for i in {1..1000}
             do
                 taskset -c $PC_EXECUTION_TIME_CPU $target_file >> $samples
             done
+
+            set-cpu-governor powersave
 
             compute-file-median $samples $output_file
 			;;

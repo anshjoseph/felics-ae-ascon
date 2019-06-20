@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
 
 from argparse import ArgumentParser
-from contextlib import contextmanager
 from datetime import datetime
 from os import path
-import re
 from subprocess import run
 from sys import argv
 
@@ -62,25 +60,6 @@ def _parse_arguments():
     return parser.parse_args()
 
 
-def _cpufreq_set(cpu, governor):
-    run(('sudo', 'cpufreq-set', '-c', cpu, '-g', governor), check=True)
-
-
-@contextmanager
-def _cpu_performance():
-    constants_file = path.join(_SCRIPTS_DIR, 'constants', 'constants.sh')
-    cpu_pattern = r'PC_EXECUTION_TIME_CPU=(\d+)'
-
-    with open(constants_file) as constants:
-        cpu = re.search(cpu_pattern, constants.read()).group(1)
-
-    try:
-        _cpufreq_set(cpu, 'performance')
-        yield
-    finally:
-        _cpufreq_set(cpu, 'powersave')
-
-
 def _run_felics(ciphers, architectures, compiler_options, output):
     command = (
         path.join(_SCRIPTS_DIR, 'collect_ciphers_metrics.sh'),
@@ -90,8 +69,7 @@ def _run_felics(ciphers, architectures, compiler_options, output):
         '-j='+output
     )
 
-    with _cpu_performance():
-        run(command, check=True)
+    run(command, check=True)
 
 
 def _show_results(output):

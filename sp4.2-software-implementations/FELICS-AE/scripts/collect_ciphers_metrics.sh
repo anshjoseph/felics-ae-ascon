@@ -283,12 +283,6 @@ for architecture in ${architectures[@]}
 do
 	echo -e "\t\t\t ---> Architecture: $architecture"
 
-	if [ ${architecture} = PC ] && [ $(cat /sys/devices/system/cpu/cpu$PC_EXECUTION_TIME_CPU/cpufreq/scaling_governor) = powersave ]
-	then
-		echo '"powersave" CPU governor yields unreliable results.'
-		exit 1
-	fi
-
 		for directory in ${directories[@]}
 		do
 			if skip-setup ${directory}/source/implementation.info Platforms ${architecture}
