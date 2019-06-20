@@ -9,13 +9,15 @@ _METRICS = ('code_size', 'code_ram', 'code_time')
 _ARCHITECTURES = ('AVR', 'MSP', 'ARM', 'PC')
 
 
-def _group_setups(filename):
+def _group_setups(filename, options):
     with open(filename) as f:
         results = json.load(f)
 
     grouped = {a: defaultdict(dict) for a in _ARCHITECTURES}
 
     for setup in results['data']:
+        if options is not None and options != setup['compiler_options']:
+            continue
         grouped[setup['architecture']][setup['cipher_name']][setup['version']] = setup
 
     return OrderedDict((
@@ -90,12 +92,14 @@ def _parse_arguments():
     parser.add_argument('results')
     parser.add_argument('version1')
     parser.add_argument('version2')
+    parser.add_argument('-o', '--options', required=False)
+
     return parser.parse_args()
 
 
 def _main():
     arguments = _parse_arguments()
-    setups = _group_setups(arguments.results)
+    setups = _group_setups(arguments.results, arguments.options)
     print('{v2} / {v1}'.format(v2=arguments.version2, v1=arguments.version1))
     print(_format_setups(setups, arguments.version1, arguments.version2))
 
