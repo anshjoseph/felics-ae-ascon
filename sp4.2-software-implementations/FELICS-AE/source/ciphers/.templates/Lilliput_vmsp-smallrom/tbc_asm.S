@@ -60,6 +60,10 @@ nonlinear_and_linear:
         push r7                 ; x7
         push r8                 ; x15
         push r9                 ; xj / x{15-j}
+        push r10                ; decrement X (r12) ans end loop condition
+
+        mov r12,r10
+        add #12, r10            ;12 was chosen for end loop condition
 
         mov.b 7(r12), r7
 
@@ -67,56 +71,29 @@ nonlinear_and_linear:
         xor.b 0(r13), r8
         mov.b S(r8), r8
 
-        mov.b 1(r12), r9
-        xor.b r9, r8
-        xor.b 1(r13), r9
-        mov.b S(r9), r9
-        xor.b r7, r9
-        xor.b r9, 14(r12)
+        _loop_nonlinear_and_linear:
+        inc r12
+        inc r13
+        dec r10
 
-        mov.b 2(r12), r9
+        mov.b 0(r12), r9
         xor.b r9, r8
-        xor.b 2(r13), r9
+        xor.b 0(r13), r9
         mov.b S(r9), r9
         xor.b r7, r9
-        xor.b r9, 13(r12)
-
-        mov.b 3(r12), r9
-        xor.b r9, r8
-        xor.b 3(r13), r9
-        mov.b S(r9), r9
-        xor.b r7, r9
-        xor.b r9, 12(r12)
-
-        mov.b 4(r12), r9
-        xor.b r9, r8
-        xor.b 4(r13), r9
-        mov.b S(r9), r9
-        xor.b r7, r9
-        xor.b r9, 11(r12)
-
-        mov.b 5(r12), r9
-        xor.b r9, r8
-        xor.b 5(r13), r9
-        mov.b S(r9), r9
-        xor.b r7, r9
-        xor.b r9, 10(r12)
-
-        mov.b 6(r12), r9
-        xor.b r9, r8
-        xor.b 6(r13), r9
-        mov.b S(r9), r9
-        xor.b r7, r9
-        xor.b r9, 9(r12)
+        xor.b r9, 3(r10)
+        cmp r10,r12
+        jl _loop_nonlinear_and_linear
 
         mov.b r7, r9
         xor.b r9, r8
-        xor.b 7(r13), r9
+        xor.b 1(r13), r9
         mov.b S(r9), r9
-        xor.b r9, 8(r12)
+        xor.b r9, 2(r12)
 
-        xor.b r8, 15(r12)
+        xor.b r8, 9(r12)
 
+        pop r10
         pop r9
         pop r8
         pop r7
