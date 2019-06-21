@@ -39,12 +39,13 @@ tweakey_state_extract:
         push r7                 ; RTK[6..7]
         push r8                 ; TK end pointer
 
-        clr r4
-        clr r5
-        clr r6
-        clr r7
         mov r12, r8
         add #(TWEAKEY_BYTES), r8
+        ;; Set RTK^r to lane 1.
+        mov @r12+,r4
+        mov @r12+,r5
+        mov @r12+,r6
+        mov @r12+,r7
 
         ;; XOR all lanes.
 _extract_loop:
@@ -79,36 +80,36 @@ _multiply_M:
         ;; Assume r4 to r11 are pushed and popped by
         ;; tweakey_state_update.
 
-        mov.b 0(r12), r4        ; x0
-        mov.b 1(r12), r5        ; x1
-        mov.b 2(r12), r6        ; x2
-        mov.b 3(r12), r7        ; x3
-        mov.b 4(r12), r8        ; x4
-        mov.b 5(r12), r9        ; x5
-        mov.b 6(r12), r10       ; x6
-        mov.b 7(r12), r11       ; x7
+        mov.b 1(r12), r4        ; x1
+        mov.b 3(r12), r5        ; x3
+        mov.b 4(r12), r6        ; x4
+        mov.b 5(r12), r7        ; x5
+        mov.b 6(r12), r8        ; x6
 
-        ;; First, store every yj which depends on a single xi.
-        mov.b r10, 7(r12)       ; x6 -> y7
-        mov.b r9, 6(r12)        ; x5 -> y6
-        mov.b r6, 3(r12)        ; x2 -> y3
-        mov.b r4, 1(r12)        ; x0 -> y1
-        mov.b r11, 0(r12)       ; x7 -> y0
+        ;; First, store every yj which depends on a single xi 
+        ;; and not used in others yi.
+        mov.b 2(r12), 3(r12)    ; x2 -> y3
+        mov.b 0(r12), 1(r12)    ; x0 -> y1
+        mov.b 7(r12), 0(r12)    ; x7 -> y0
+
+        ;; Second, store every yj which depends on a single xi.
+        mov.b r8, 7(r12)        ; x6 -> y7
+        mov.b r7, 6(r12)        ; x5 -> y6
 
         ;; y5 = x5<<3 ^ x4
-        rll3.b r9
-        xor.b r8, r9
-        mov.b r9, 5(r12)
+        rll3.b r7
+        xor.b r6, r7
+        mov.b r7, 5(r12)
 
         ;; y4 = x4>>3 ^ x3
-        rrl3.b r8
-        xor.b r7, r8
-        mov.b r8, 4(r12)
+        rrl3.b r6
+        xor.b r5, r6
+        mov.b r6, 4(r12)
 
         ;; y2 = x6<<2 ^ x1
-        rll2.b r10
-        xor.b r5, r10
-        mov.b r10, 2(r12)
+        rll2.b r8
+        xor.b r4, r8
+        mov.b r8, 2(r12)
 
         ret
 
@@ -119,36 +120,39 @@ _multiply_MR:
         ;; Assume r4 to r11 are pushed and popped by
         ;; tweakey_state_update.
 
-        mov.b 0(r12), r4        ; x0
-        mov.b 1(r12), r5        ; x1
-        mov.b 2(r12), r6        ; x2
-        mov.b 3(r12), r7        ; x3
-        mov.b 4(r12), r8        ; x4
-        mov.b 5(r12), r9        ; x5
-        mov.b 6(r12), r10       ; x6
-        mov.b 7(r12), r11       ; x7
+        
+        mov.b 1(r12), r4        ; x1
+        mov.b 3(r12), r5        ; x3
+        mov.b 4(r12), r6        ; x4
+        mov.b 5(r12), r7        ; x5
+        mov.b 6(r12), r8        ; x6
+        
 
-        ;; First, store every yj which depends on a single xi.
-        mov.b r5, 0(r12)        ; x1 -> y0
-        mov.b r6, 1(r12)        ; x2 -> y1
-        mov.b r8, 3(r12)        ; x4 -> y3
-        mov.b r11, 6(r12)       ; x7 -> y6
-        mov.b r4, 7(r12)        ; x0 -> y7
+        ;; First, store every yj which depends on a single xi 
+        ;; and not used in others yi.
+        mov.b 7(r12), 6(r12)    ; x7 -> y6
+        mov.b 0(r12), 7(r12)    ; x0 -> y7
+        mov.b 2(r12), 1(r12)    ; x2 -> y1
+
+
+        ;; Second, store every yj which depends on a single xi.
+        mov.b r4, 0(r12)        ; x1 -> y0
+        mov.b r6, 3(r12)        ; x4 -> y3
 
         ;; y2 = x3 ^ x4>>3
-        rrl3.b r8
-        xor.b r7, r8
-        mov.b r8, 2(r12)
+        rrl3.b r6
+        xor.b r5, r6
+        mov.b r6, 2(r12)
 
         ;; y5 = x3<<2 ^ x6
-        rll2.b r7
-        xor.b r10, r7
-        mov.b r7, 5(r12)
+        rll2.b r5
+        xor.b r8, r5
+        mov.b r5, 5(r12)
 
         ;; y4 = x5 ^ x6<<3
-        rll3.b r10
-        xor.b r9, r10
-        mov.b r10, 4(r12)
+        rll3.b r8
+        xor.b r7, r8
+        mov.b r8, 4(r12)
 
         ret
 #endif
@@ -162,10 +166,6 @@ tweakey_state_update:
         push r6
         push r7
         push r8
-        push r9
-        push r10
-        push r11
-        push r12
 
         ;; lane p=0 = TK[0..7] ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
         ;; Skip this lane, as it is multiplied by the identity matrix.
@@ -207,10 +207,6 @@ tweakey_state_update:
 #endif
 #endif
 
-        pop r12
-        pop r11
-        pop r10
-        pop r9
         pop r8
         pop r7
         pop r6
