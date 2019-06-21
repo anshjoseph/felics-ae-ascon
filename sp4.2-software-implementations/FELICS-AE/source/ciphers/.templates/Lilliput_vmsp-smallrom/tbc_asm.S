@@ -60,38 +60,36 @@ nonlinear_and_linear:
         push r7                 ; x7
         push r8                 ; x15
         push r9                 ; xj / x{15-j}
-        push r10                ; decrement X (r12) ans end loop condition
+        push r10                ; decrement X (r12) and end loop condition
 
         mov r12,r10
-        add #12, r10            ;12 was chosen for end loop condition
+        add #13, r10            ; 13 was chosen for end loop condition
 
         mov.b 7(r12), r7
 
-        mov.b 0(r12), r8
-        xor.b 0(r13), r8
+        mov.b @r12+, r8
+        xor.b @r13+, r8
         mov.b S(r8), r8
 
-        _loop_nonlinear_and_linear:
-        inc r12
-        inc r13
+_loop_nonlinear_and_linear:
         dec r10
 
-        mov.b 0(r12), r9
+        mov.b @r12+, r9
         xor.b r9, r8
-        xor.b 0(r13), r9
+        xor.b @r13+, r9
         mov.b S(r9), r9
         xor.b r7, r9
-        xor.b r9, 3(r10)
+        xor.b r9, 2(r10)
         cmp r10,r12
         jl _loop_nonlinear_and_linear
 
         mov.b r7, r9
         xor.b r9, r8
-        xor.b 1(r13), r9
+        xor.b 0(r13), r9
         mov.b S(r9), r9
-        xor.b r9, 2(r12)
+        xor.b r9, 1(r12)
 
-        xor.b r8, 9(r12)
+        xor.b r8, 8(r12)
 
         pop r10
         pop r9
@@ -121,7 +119,7 @@ permutation_enc:
         push r9
         push r10
 
-        mov 8(r12), r4
+        mov   8(r12), r4
         mov.b 10(r12), r5
         mov.b 11(r12), r6
         mov.b 12(r12), r7
@@ -133,11 +131,11 @@ permutation_enc:
         mov.b 1(r12), 9(r12)
         mov.b 2(r12), 14(r12)
         mov.b 3(r12), 8(r12)
-        mov 4(r12), 10(r12)
+        mov   4(r12), 10(r12)
         mov.b 6(r12), 12(r12)
         mov.b 7(r12), 15(r12)
 
-        mov r4, 4(r12)
+        mov   r4, 4(r12)
         mov.b r5, 3(r12)
         mov.b r6, 1(r12)
         mov.b r7, 2(r12)
