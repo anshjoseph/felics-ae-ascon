@@ -47,4 +47,12 @@ mkdir -p resources
     run-bg get-jlink &
 
     wait
+
+    # Put everything into a tarball, so that Docker's ADD command
+    # extracts its content.
+    tar czf dependencies.tar.gz                 \
+        simavr-1.6                              \
+        msp430-gcc-7.3.2.154_linux64            \
+        avrora                                  \
+        JLink_Linux_x86_64.deb
 )
