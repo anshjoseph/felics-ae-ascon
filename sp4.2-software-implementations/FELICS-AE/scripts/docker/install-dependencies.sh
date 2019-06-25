@@ -7,7 +7,7 @@ deps_dir="$1"
 (
     cd "${deps_dir}/simavr-1.6"
     make build-simavr RELEASE=1
-    make install-simavr DESTDIR=/opt/felics RELEASE=1
+    make install-simavr DESTDIR=/opt/felics/simavr RELEASE=1
 )
 
 cp -r "${deps_dir}/msp430-gcc-7.3.2.154_linux64" /opt/felics/msp430-gcc
