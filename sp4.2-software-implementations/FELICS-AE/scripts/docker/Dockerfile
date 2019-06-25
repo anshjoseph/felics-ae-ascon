@@ -17,3 +17,5 @@ RUN mkdir /opt/felics
 ADD --chown=felics:felics .resources/dependencies.tar.gz /home/felics/dependencies
 ADD ./install-dependencies.sh /home/felics
 RUN /home/felics/install-dependencies.sh /home/felics/dependencies
+
+RUN mkdir /home/felics/FELICS-AE
