@@ -4,7 +4,7 @@ RUN apt-get update
 
 RUN apt-get install --assume-yes                                                   \
     make libelf-dev                                                                \
-    gcc-avr avr-libc gdb-avr default-jre default-jdk                               \
+    gcc-avr avr-libc gdb-avr openjdk-8-jre openjdk-8-jdk                           \
     libusb-dev                                                                     \
     binutils-arm-none-eabi bossa-cli gcc-arm-none-eabi gdb-multiarch python-serial \
     gcc gdb

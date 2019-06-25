@@ -40,7 +40,14 @@ get-avrora ()
 
 get-jlink ()
 {
-    wget https://www.segger.com/downloads/jlink/JLink_Linux_x86_64.deb
+    local url="https://www.segger.com/downloads/jlink/JLink_Linux_x86_64.deb"
+
+    curl "${url}"                               \
+         -X POST                                \
+         -F "accept_license_agreement=accepted" \
+         -F "non_emb_ctr=confirmed"             \
+         -F "submit=Download+software"          \
+         -o JLink_Linux_x86_64.deb
 }
 
 mkdir -p resources
@@ -62,9 +69,13 @@ mkdir -p resources
     # Plain "wait" sometimes proceeds without waiting for the
     # background commands to start.
 
-    for ((i=0; i<${#downloads[@]}; i++))
+    for dl in ${downloads[@]}
     do
-        wait -n
+        if ! wait -n
+        then
+            tail *.log
+            exit 1
+        fi
     done
 
     # Put everything into a tarball, so that Docker's ADD command
