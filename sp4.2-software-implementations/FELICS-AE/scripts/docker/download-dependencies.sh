@@ -50,9 +50,9 @@ get-jlink ()
          -o JLink_Linux_x86_64.deb
 }
 
-mkdir -p resources
+mkdir -p .resources
 (
-    cd resources
+    cd .resources
 
     downloads=(
         get-simavr

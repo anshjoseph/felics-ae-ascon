@@ -14,6 +14,6 @@ RUN useradd felics --gid felics --create-home
 
 RUN mkdir /opt/felics
 
-ADD --chown=felics:felics resources/dependencies.tar.gz /home/felics/dependencies
+ADD --chown=felics:felics .resources/dependencies.tar.gz /home/felics/dependencies
 ADD ./install-dependencies.sh /home/felics
 RUN /home/felics/install-dependencies.sh /home/felics/dependencies
