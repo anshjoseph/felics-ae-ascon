@@ -45,7 +45,7 @@ do
            ${ciphers_dir}/${new_dir}/build
         (
             cd ${ciphers_dir}/${new_dir}/source
-            ln -s ../../${ref_dir}/{test_vectors.c,_parameters.h} .
+            ln -s ../../${ref_dir}/source/{test_vectors.c,_parameters.h,Makefile} .
             ln -s ../../.templates/Lilliput_v${new}/*.[chS] .
             ln -s ../../.templates/Lilliput_v${new}/${mode}/* .
         )
