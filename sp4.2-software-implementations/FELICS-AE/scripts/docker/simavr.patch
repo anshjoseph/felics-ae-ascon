@@ -1,0 +1,86 @@
+diff --git a/Makefile b/Makefile
+index 3591318..34b7190 100644
+--- a/Makefile
++++ b/Makefile
+@@ -7,6 +7,9 @@
+ # For package building, you will need to pass RELEASE=1 to make
+ RELEASE	?= 0
+ 
++DESTDIR = /usr/local
++PREFIX = ${DESTDIR}
++
+ .PHONY: doc
+ 
+ all:	build-simavr build-tests build-examples build-parts
+@@ -23,15 +26,17 @@ build-examples: build-simavr
+ build-parts: build-examples
+ 	$(MAKE) -C examples/parts RELEASE=$(RELEASE)
+ 
+-install:
+-	$(MAKE) -C simavr install RELEASE=$(RELEASE)
++install: install-simavr install-parts
++
++install-simavr:
++	$(MAKE) -C simavr install RELEASE=$(RELEASE) DESTDIR=$(DESTDIR) PREFIX=$(PREFIX)
++
++install-parts:
++	$(MAKE) -C examples/parts install RELEASE=$(RELEASE) DESTDIR=$(DESTDIR) PREFIX=$(PREFIX)
+ 
+ doc:
+ 	$(MAKE) -C doc RELEASE=$(RELEASE)
+ 
+-install:
+-	$(MAKE) -C simavr install
+-
+ clean:
+ 	$(MAKE) -C simavr clean
+ 	$(MAKE) -C tests clean
+diff --git a/Makefile.common b/Makefile.common
+index 9b56e27..618e350 100644
+--- a/Makefile.common
++++ b/Makefile.common
+@@ -124,7 +124,7 @@ ifeq (${shell uname}, Linux)
+ ifeq ($(RELEASE),1)
+ # allow the shared library to be found in the build directory
+ # only for linking, the install time location is used at runtime
+-LFLAGS		+= -Wl,-rpath-link,${LIBDIR}
++LFLAGS		+= -Wl,-rpath-link,${LIBDIR} -Wl,-rpath,${PREFIX}/lib
+ else
+ # allow the shared library to be found in the build directory
+ LFLAGS		+= -Wl,-rpath,${LIBDIR}
+diff --git a/simavr/Makefile b/simavr/Makefile
+index f7eccca..a754467 100644
+--- a/simavr/Makefile
++++ b/simavr/Makefile
+@@ -74,31 +74,21 @@ clean: clean-${OBJ}
+ 	rm -rf ${target} *.a *.so *.exe
+ 	rm -f sim_core_*.h
+ 
+-DESTDIR = /usr/local
+-PREFIX = ${DESTDIR}
+-
+ install : all
+ 	$(MKDIR) $(DESTDIR)/include/simavr/avr
+-	$(MKDIR) $(DESTDIR)/include/simavr/parts
+ 	$(INSTALL) -m644 sim/*.h $(DESTDIR)/include/simavr/
+ 	$(INSTALL) -m644 sim_core_*.h $(DESTDIR)/include/simavr/
+ 	$(INSTALL) -m644 sim/avr/*.h $(DESTDIR)/include/simavr/avr/
+-	$(INSTALL) -m644 ../examples/parts/*.h $(DESTDIR)/include/simavr/parts/
+ 	$(MKDIR) $(DESTDIR)/lib
+ 	$(INSTALL) ${OBJ}/libsimavr.a $(DESTDIR)/lib/
+-	$(INSTALL) ../examples/parts/${OBJ}/libsimavrparts.a $(DESTDIR)/lib/
+ 	$(MKDIR) $(DESTDIR)/lib/pkgconfig/
+ 	sed -e "s|PREFIX|${PREFIX}|g" -e "s|VERSION|${SIMAVR_VERSION}|g" \
+ 		simavr-avr.pc >$(DESTDIR)/lib/pkgconfig/simavr-avr.pc
+ 	sed -e "s|PREFIX|${PREFIX}|g" -e "s|VERSION|${SIMAVR_VERSION}|g" \
+ 		simavr.pc >$(DESTDIR)/lib/pkgconfig/simavr.pc
+-	sed -e "s|PREFIX|${PREFIX}|g" -e "s|VERSION|${SIMAVR_VERSION}|g" \
+-		simavrparts.pc >$(DESTDIR)/lib/pkgconfig/simavrparts.pc
+ ifeq (${shell uname}, Linux)
+ 	$(INSTALL) ${OBJ}/libsimavr.so.1 $(DESTDIR)/lib/
+-	$(INSTALL) ../examples/parts/${OBJ}/libsimavrparts.so.1 $(DESTDIR)/lib/
+ 	ln -sf libsimavr.so.1 $(DESTDIR)/lib/libsimavr.so
+-	ln -sf libsimavrparts.so.1 $(DESTDIR)/lib/libsimavrparts.so
+ endif
+ 	$(MKDIR) $(DESTDIR)/bin
+ 	$(INSTALL) ${OBJ}/${target}.elf $(DESTDIR)/bin/simavr

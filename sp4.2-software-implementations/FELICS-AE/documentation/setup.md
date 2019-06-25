@@ -17,7 +17,7 @@ AVR-specific
 The following dependencies have been installed using the
 distribution's package manager:
 
-- avr-gcc
+- gcc-avr
 - avr-libc
 - default-jdk
 - default-jre

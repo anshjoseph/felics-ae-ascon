@@ -18,6 +18,11 @@ get-simavr ()
          -O simavr-v1.6.tar.gz
 
     tar xf simavr-v1.6.tar.gz
+
+    (
+        cd simavr-1.6
+        patch -p1 < ../../simavr.patch
+    )
 }
 
 get-msp430-gcc ()
@@ -41,12 +46,26 @@ get-jlink ()
 mkdir -p resources
 (
     cd resources
-    run-bg get-simavr &
-    run-bg get-msp430-gcc &
-    run-bg get-avrora &
-    run-bg get-jlink &
 
-    wait
+    downloads=(
+        get-simavr
+        get-msp430-gcc
+        get-avrora
+        get-jlink
+    )
+
+    for dl in ${downloads[@]}
+    do
+        run-bg ${dl} &
+    done
+
+    # Plain "wait" sometimes proceeds without waiting for the
+    # background commands to start.
+
+    for ((i=0; i<${#downloads[@]}; i++))
+    do
+        wait -n
+    done
 
     # Put everything into a tarball, so that Docker's ADD command
     # extracts its content.
