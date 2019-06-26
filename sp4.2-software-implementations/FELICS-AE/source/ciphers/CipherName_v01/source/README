@@ -8,7 +8,6 @@ Initial file structure
     ├── decrypt.c					-> Cipher decryption
     ├── encrypt.c					-> Cipher encryption
     ├── implementation.info			-> Cipher implementation information
-    ├── Makefile					-> Makefile
     └── test_vectors.c				-> Cipher test vectors
 
 
@@ -141,73 +140,6 @@ in which case is indicated to use "// ...".
 4. The framework is designed with several debug and test cases, so you should 
 not add "printf" or other function calls in your code, at least not in the final 
 version.
-
-
-
-Using the makefile
-==================
-
-The makefile can build the cipher in different scenarios and test cases, 
-either in debug or in release mode. To see a list of the makefile options, just 
-type "make" or "make help" in the cipher "source" directory. You can also type 
-"make -f ./../source/Makefile" or "make -f ./../source/Makefile help" from 
-either cipher "source" directory or cipher "build" directory. For simplicity we 
-assume that you call the makefile from the cipher "source" directory.
-
-
-Debug mode
-	Build  & test cipher in debug mode for PC
-		make clean
-		make cipher
-		make test-cipher
-
-	Build & test scenario 1 in debug mode for PC
-		make clean
-		make scenario1
-		make test-scenario1
-
-
-Release mode
-	Build cipher in release mode for PC
-		make clean
-		make pc
-
-	Build cipher in release mode for AVR
-		make clean
-		make avr
-
-	Build cipher in release mode for MSP
-		make clean
-		make msp
-
-	Build cipher in release mode for ARM
-		make clean
-		make arm
-
-	Build scenario 1 in release mode for PC
-		make clean
-		make pc-scenario1
-
-	Build scenario 1 in release mode for AVR
-		make clean
-		make avr-scenario1
-
-	Build scenario 1 in release mode for MSP
-		make clean
-		make msp-scenario1
-
-	Build scenario 1 in release mode for ARM
-		make clean
-		make arm-scenario1
-
-
-If your cipher builds without errors or warnings and the three tests
-(test-cipher, and test-scenario1) run as expected the cipher implementation is
-correctly integrated into the framework.
-
-Note: If you encounter warnings during the build, you should fix the code such 
-that they do not appear.
-
 
 
 Constraints
