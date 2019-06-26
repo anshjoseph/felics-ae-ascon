@@ -31,7 +31,7 @@
 #
 
 
-DEPENDENCIES_DIR=/opt/paclido
+DEPENDENCIES_DIR=/opt/felics
 
 PC_SIZE=size
 AVR_SIZE=avr-size

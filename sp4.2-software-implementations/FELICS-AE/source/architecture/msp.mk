@@ -32,7 +32,7 @@
 
 # Linker printf library path
 PRINTF_DIR := ../../../architecture/msp
-MSPGCC_DIR = /opt/paclido/msp430-gcc
+MSPGCC_DIR = /opt/felics/msp430-gcc
 MSPGCC_BIN_DIR = $(MSPGCC_DIR)/bin
 MSPGCC_SUPPORT_DIR = $(MSPGCC_DIR)/support-files/include/
 
