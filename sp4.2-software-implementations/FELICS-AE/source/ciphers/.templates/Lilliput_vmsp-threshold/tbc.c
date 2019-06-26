@@ -93,7 +93,7 @@ static void _compute_round_tweakeys(
 }
 
 
-static void _nonlinear_layer(
+static void _nonlinear_linear_layer(
     uint8_t X[BLOCK_BYTES],
     uint8_t Y[BLOCK_BYTES],
     uint8_t Z[BLOCK_BYTES],
@@ -167,11 +167,7 @@ static void _nonlinear_layer(
         Y[dest_j] ^= TMP_Y[j];
         Z[dest_j] ^= TMP_Z[j];
     }
-}
 
-static void _linear_layer(uint8_t X[BLOCK_BYTES])
-{
-    
     X[15] ^= X[1];
     X[15] ^= X[2];
     X[15] ^= X[3];
@@ -186,8 +182,37 @@ static void _linear_layer(uint8_t X[BLOCK_BYTES])
     X[11] ^= X[7];
     X[10] ^= X[7];
     X[9]  ^= X[7];
-}
 
+    Y[15] ^= Y[1];
+    Y[15] ^= Y[2];
+    Y[15] ^= Y[3];
+    Y[15] ^= Y[4];
+    Y[15] ^= Y[5];
+    Y[15] ^= Y[6];
+    Y[15] ^= Y[7];
+
+    Y[14] ^= Y[7];
+    Y[13] ^= Y[7];
+    Y[12] ^= Y[7];
+    Y[11] ^= Y[7];
+    Y[10] ^= Y[7];
+    Y[9]  ^= Y[7];
+
+    Z[15] ^= Z[1];
+    Z[15] ^= Z[2];
+    Z[15] ^= Z[3];
+    Z[15] ^= Z[4];
+    Z[15] ^= Z[5];
+    Z[15] ^= Z[6];
+    Z[15] ^= Z[7];
+
+    Z[14] ^= Z[7];
+    Z[13] ^= Z[7];
+    Z[12] ^= Z[7];
+    Z[11] ^= Z[7];
+    Z[10] ^= Z[7];
+    Z[9]  ^= Z[7];
+}
 
 /* Assembly routines. */
 
@@ -217,10 +242,7 @@ void lilliput_tbc_encrypt(
         tweakey_X_state_extract(TK_X, i, RTK_X);
         tweakey_Y_state_extract(TK_Y, i, RTK_Y);
 
-        _nonlinear_layer(X, Y, Z, RTK_X, RTK_Y);
-        _linear_layer(X);
-        _linear_layer(Y);
-        _linear_layer(Z);
+        _nonlinear_linear_layer(X, Y, Z, RTK_X, RTK_Y);
         permutation_enc(X);
         permutation_enc(Y);
         permutation_enc(Z);
@@ -230,10 +252,7 @@ void lilliput_tbc_encrypt(
     tweakey_X_state_extract(TK_X, ROUNDS-1, RTK_X);
     tweakey_Y_state_extract(TK_Y, ROUNDS-1, RTK_Y);
 
-    _nonlinear_layer(X, Y, Z, RTK_X, RTK_Y);
-    _linear_layer(X);
-    _linear_layer(Y);
-    _linear_layer(Z);
+    _nonlinear_linear_layer(X, Y, Z, RTK_X, RTK_Y);
 
     for (unsigned i=0; i<BLOCK_BYTES; i++)
     {
@@ -259,19 +278,13 @@ void lilliput_tbc_decrypt(
 
     for (unsigned i=0; i<ROUNDS-1; i++)
     {
-        _nonlinear_layer(X, Y, Z, RTK_X[ROUNDS-1-i], RTK_Y[ROUNDS-1-i]);
-        _linear_layer(X);
-        _linear_layer(Y);
-        _linear_layer(Z);
+        _nonlinear_linear_layer(X, Y, Z, RTK_X[ROUNDS-1-i], RTK_Y[ROUNDS-1-i]);
         permutation_dec(X);
         permutation_dec(Y);
         permutation_dec(Z);
     }
 
-    _nonlinear_layer(X, Y, Z, RTK_X[0], RTK_Y[0]);
-    _linear_layer(X);
-    _linear_layer(Y);
-    _linear_layer(Z);
+    _nonlinear_linear_layer(X, Y, Z, RTK_X[0], RTK_Y[0]);
 
     for (size_t i=0; i<BLOCK_BYTES; i++)
     {
