@@ -31,40 +31,22 @@ get_code_time ()
     cut -d' ' -f1 ${results}
 }
 
-describe-revision ()
+felics-version ()
 {
-    if ! git symbolic-ref --short HEAD 2>/dev/null
-    then
-        git branch --contains HEAD |
-            grep -v '^*' |
-            tr -d ' ' |
-            paste -sd , |
-            sed -r 's/(.*)/DETACHED:\1/'
-    fi
-}
+    formats_dir=$(dirname ${BASH_SOURCE})
+    scripts_dir=${formats_dir}/..
 
-inside-repo ()
-{
-    git status &> /dev/null
+    PYTHONPATH=${scripts_dir} python3 -m felics.version "{$1}"
 }
 
 add_json_table_header ()
 {
     local output_file=$1
 
-    if ! inside-repo
-    then
-        local commit="unknown"
-        local branch="unknown"
-    else
-        local commit=$(git rev-parse --short HEAD)
-        local branch=$(describe-revision)
-    fi
-
     cat <<EOF > ${output_file}
 {
-    "commit": "${commit}",
-    "branch": "${branch}",
+    "commit": "$(felics-version commit)",
+    "branch": "$(felics-version branch)",
     "data": [
 EOF
 }

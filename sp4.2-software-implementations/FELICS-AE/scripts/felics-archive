@@ -2,12 +2,12 @@
 
 set -eux
 
-scripts_dir=$(dirname $0)
+scripts_dir=$(realpath $(dirname $0))
 felics_parent_dir=${scripts_dir}/../../
 
-git-version ()
+generate-version ()
 {
-    git describe --match "felics-ae-v*" --always | sed 's/^felics-ae-v//'
+    PYTHONPATH="${scripts_dir}" python3 -m felics.version
 }
 
 (
@@ -16,8 +16,8 @@ git-version ()
     output=FELICS-AE/results/FELICS-AE.tar
 
     git archive -o ${output} HEAD FELICS-AE
-    git-version > FELICS-AE/VERSION
+    generate-version > FELICS-AE/VERSION
 
     tar uf ${output} FELICS-AE/VERSION
-    gzip ${output}
+    gzip -f ${output}
 )

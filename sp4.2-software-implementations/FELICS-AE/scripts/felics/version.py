@@ -28,7 +28,7 @@ def version():
 
 def branch():
     if _REPO is None:
-        return None
+        return 'release'
 
     try:
         return _REPO.git.symbolic_ref('HEAD', short=True)
@@ -38,7 +38,7 @@ def branch():
 
 def commit():
     if _REPO is None:
-        return None
+        return version()
 
     return _REPO.git.show(format='format:%h', no_patch=True)
 
