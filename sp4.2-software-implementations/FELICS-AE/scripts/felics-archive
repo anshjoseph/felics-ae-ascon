@@ -5,13 +5,19 @@ set -eux
 scripts_dir=$(dirname $0)
 felics_parent_dir=${scripts_dir}/../../
 
+git-version ()
+{
+    git describe --match "felics-ae-v*" | sed 's/^felics-ae-v//'
+}
+
 (
     cd ${felics_parent_dir}
 
     output=FELICS-AE/results/FELICS-AE.tar
 
     git archive -o ${output} HEAD FELICS-AE
-    git describe --match "felics-ae-v*" > FELICS-AE/VERSION
+    git-version > FELICS-AE/VERSION
 
     tar uf ${output} FELICS-AE/VERSION
+    gzip ${output}
 )
