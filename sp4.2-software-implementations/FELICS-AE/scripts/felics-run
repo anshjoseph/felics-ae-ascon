@@ -6,7 +6,7 @@ from os import path
 from subprocess import run
 from sys import argv
 
-from felics import VERSION
+from felics import version
 
 
 _SCRIPTS_DIR = path.dirname(path.realpath(argv[0]))
@@ -18,10 +18,13 @@ _ARCHITECTURES = 'AVR MSP ARM PC'
 
 
 def _default_output_filename():
-    return '{date}-{v}.json'.format(
-        date=datetime.now().strftime('%Y.%m.%d-%H.%M.%S'),
-        v=VERSION
-    )
+    date = datetime.now().strftime('%Y.%m.%d-%H.%M.%S')
+    branch = version.branch()
+
+    if branch is None:
+        return '{d}.json'.format(d=date)
+
+    return '{d}-{b}.json'.format(d=date, b=branch)
 
 
 def _parse_arguments():
