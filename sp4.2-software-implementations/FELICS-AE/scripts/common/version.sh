@@ -50,20 +50,19 @@ function display_version()
 	line1_length=${#line1}
 	position1=$(($HORIZONTAL_LINE_LENGTH / 2 + $line1_length / 2))
 
-	script_dir=$(dirname $0)
+	script_dir=$(dirname ${BASH_SOURCE})
 	root_dir=${script_dir}/../..
 	version_file=${root_dir}/VERSION
 
 	if [ -f ${version_file} ]
 	then
 		framework_version=$(cat ${version_file})
-	elif [ -e ${root_dir}/.git ]
+	elif git status &> /dev/null
 	then
 		framework_version=$(git describe --always)
 	else
 		framework_version="unknown"
 	fi
-	
 	line2="version $framework_version"
 	line2_length=${#line2}
 	position2=$(($HORIZONTAL_LINE_LENGTH / 2 + $line2_length / 2))
