@@ -61,7 +61,6 @@ add_json_table_header ()
         local branch=$(describe-revision)
     fi
 
-
     cat <<EOF > ${output_file}
 {
     "commit": "${commit}",
