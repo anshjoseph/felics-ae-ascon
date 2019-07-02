@@ -111,7 +111,7 @@ endif
 pre-build-debug :
 ifdef DEBUG
 	@echo Building with DEBUG flag set to $(DEBUG) ...
-CFLAGS += -D DEBUG=$(DEBUG)
+$(eval CFLAGS += -D DEBUG=$(DEBUG))
 else
 	@echo Building with DEBUG flag NOT set ...
 endif
@@ -120,7 +120,7 @@ endif
 pre-build-scenario :
 ifdef SCENARIO
 	@echo Building with SCENARIO flag set to $(SCENARIO) ...
-CFLAGS += -D SCENARIO=$(SCENARIO)
+$(eval CFLAGS += -D SCENARIO=$(SCENARIO))
 else
 	@echo Building with SCENARIO flag NOT set ...
 endif
@@ -130,7 +130,7 @@ pre-build-measure_cycle_count :
 ifdef MEASURE_CYCLE_COUNT
 	@echo Building with MEASURE_CYCLE_COUNT flag set to $(MEASURE_CYCLE_COUNT) \
 		...
-CFLAGS += -D MEASURE_CYCLE_COUNT=$(MEASURE_CYCLE_COUNT)
+$(eval CFLAGS += -D MEASURE_CYCLE_COUNT=$(MEASURE_CYCLE_COUNT))
 else
 	@echo Building with MEASURE_CYCLE_COUNT flag NOT set ...
 endif
@@ -139,7 +139,7 @@ endif
 pre-build-compiler_options :
 ifdef COMPILER_OPTIONS
 	@echo Building with COMPILER_OPTIONS flag set to $(COMPILER_OPTIONS) ...
-CFLAGS += $(COMPILER_OPTIONS)
+$(eval CFLAGS += $(COMPILER_OPTIONS))
 else
 	@echo Building with COMPILER_OPTIONS flag NOT set ...
 endif
