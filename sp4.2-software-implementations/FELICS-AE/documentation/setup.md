@@ -119,10 +119,10 @@ Platform-specific makefiles
 The folder `source/architecture` contains architecture-specific
 makefile snippets:
 
-- `avr.mk`
-- `msp.mk`
-- `arm.mk`
-- `pc.mk`
+- `AVR.mk`
+- `MSP.mk`
+- `ARM.mk`
+- `PC.mk`
 
 These include files define several variables pointing to compilers,
 header files…

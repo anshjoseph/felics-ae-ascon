@@ -38,12 +38,6 @@
 #
 
 
-PCMAKEFILE = ./../../../architecture/pc.mk
-AVRMAKEFILE = ./../../../architecture/avr.mk
-MSPMAKEFILE = ./../../../architecture/msp.mk
-ARMMAKEFILE = ./../../../architecture/arm.mk
-
-
 SOURCEDIR = ./../source
 BUILDDIR = ./../build
 
@@ -101,7 +95,6 @@ main-build : \
 
 .PHONY : pre-build
 pre-build : \
-		pre-build-include \
 		pre-build-debug \
 		pre-build-scenario \
 		pre-build-helpers \
@@ -109,28 +102,9 @@ pre-build : \
 		pre-build-compiler_options
 	@echo $(DELIMITER) Start building $(CIPHERNAME) $(DELIMITER)
 
-.PHONY : pre-build-include
-pre-build-include :
-ifeq ($(ARCHITECTURE), AVR)
-	@echo Building for $(ARCHITECTURE) ...
-include $(AVRMAKEFILE)
+ifdef ARCHITECTURE
+include ../../../architecture/$(ARCHITECTURE).mk
 CFLAGS += -D $(ARCHITECTURE)
-else
-ifeq ($(ARCHITECTURE), MSP)
-	@echo Building for $(ARCHITECTURE) ...
-include $(MSPMAKEFILE)
-CFLAGS += -D $(ARCHITECTURE)
-else
-ifeq ($(ARCHITECTURE), ARM)
-	@echo Building for $(ARCHITECTURE) ...
-include $(ARMMAKEFILE)
-CFLAGS += -D $(ARCHITECTURE)
-else
-	@echo Building for PC ...
-include $(PCMAKEFILE)
-CFLAGS += -D PC
-endif
-endif
 endif
 
 .PHONY : pre-build-debug
