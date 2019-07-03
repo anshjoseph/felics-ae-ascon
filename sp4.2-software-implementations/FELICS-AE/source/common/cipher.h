@@ -41,21 +41,6 @@
 
 
 /*
- *
- * Optimization levels
- * ... OPTIMIZATION_LEVEL_0 - O0
- * ... OPTIMIZATION_LEVEL_1 - O1
- * ... OPTIMIZATION_LEVEL_2 - O2
- * ... OPTIMIZATION_LEVEL_3 - O3 = defualt
- *
- */
-#define OPTIMIZATION_LEVEL_0 __attribute__((optimize("O0")))
-#define OPTIMIZATION_LEVEL_1 __attribute__((optimize("O1")))
-#define OPTIMIZATION_LEVEL_2 __attribute__((optimize("O2")))
-#define OPTIMIZATION_LEVEL_3 __attribute__((optimize("O3")))
-
-
-/*
  * 
  * SCENARIO values:
  * ... SCENARIO_1 1 - scenario 1: full encryption of 128-bit PT with 128-bit AD
@@ -88,26 +73,23 @@
  * Align memory boundaries in bytes
  *
  */
-#define ALIGN_PC_BOUNDRY 8
-#define ALIGN_AVR_BOUNDRY 1
-#define ALIGN_MSP_BOUNDRY 2
-#define ALIGN_ARM_BOUNDRY 8
+#if defined(AVR)
+#define ALIGNMENT 1
 
-#if defined(PC) && !defined(ALIGNED) /* PC ALIGNED */
-#define ALIGNED __attribute__ ((aligned(ALIGN_PC_BOUNDRY)))
-#endif /* PC ALIGNED */
+#elif defined(MSP)
+#define ALIGNMENT 2
 
-#if defined(AVR) && !defined(ALIGNED) /* AVR ALIGNED */
-#define ALIGNED __attribute__ ((aligned(ALIGN_AVR_BOUNDRY)))
-#endif /* AVR ALIGNED */
+#elif defined(ARM)
+#define ALIGNMENT 8
 
-#if defined(MSP) && !defined(ALIGNED) /* MSP ALIGNED */
-#define ALIGNED __attribute__ ((aligned(ALIGN_MSP_BOUNDRY)))
-#endif /* MSP ALIGNED */
+#elif defined(PC)
+#define ALIGNMENT 8
 
-#if defined(ARM) && !defined(ALIGNED) /* ARM ALIGNED */
-#define ALIGNED __attribute__ ((aligned(ALIGN_ARM_BOUNDRY)))
-#endif /* ARM ALIGNED */
+#else
+#error "No architecture defined; expected one of AVR, MSP, ARM or PC."
+#endif
+
+#define ALIGNED __attribute__ ((aligned(ALIGNMENT)))
 
 
 /* 
@@ -152,11 +134,6 @@
 #define ROM_memcpy memcpy
 
 #endif /* AVR */
-
-
-#define READ_ROUND_KEY_BYTE(x) READ_RAM_DATA_BYTE(x)
-#define READ_ROUND_KEY_WORD(x) READ_RAM_DATA_WORD(x)
-#define READ_ROUND_KEY_DOUBLE_WORD(x) READ_RAM_DATA_DOUBLE_WORD(x)
 
 
 /*

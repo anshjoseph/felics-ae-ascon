@@ -18,3 +18,7 @@ Advantages over Bash:
 
 So that hypothetical Python scripts can simply `json.load()` them into
 native types instead of parsing them manually.
+
+# Use `crypto_aead` API as entry point
+
+Instead of the `Encrypt`/`Decrypt` functions.
