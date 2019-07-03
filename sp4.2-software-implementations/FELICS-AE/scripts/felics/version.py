@@ -1,25 +1,47 @@
 from os import path
 from sys import argv
+from warnings import warn
+
+
+_REPO = None
+_VERSION = 'unknown'
+_VERSION_FILE = path.join(
+    path.dirname(path.realpath(__file__)),
+    path.pardir,
+    path.pardir,
+    'VERSION'
+)
+
+
+class UnknownVersionWarning(Warning):
+    def __str__(self):
+        return '''\
+Cannot determine version.
+
+If you are using the Git repository, perhaps install python3-git
+(Ubuntu) or GitPython (PyPI)?
+
+Otherwise, your distribution of FELICS-AE should include a top-level
+VERSION file.
+'''
 
 
 try:
     import git
     _REPO = git.Repo(path=__file__, search_parent_directories=True)
+
 except:
-    _REPO = None
+    if not path.exists(_VERSION_FILE):
+        warn(UnknownVersionWarning())
+
+    else:
+        with open(_VERSION_FILE) as v:
+            _VERSION = v.read()
 
 
 def version():
     if _REPO is None:
-        version_file = path.join(
-            path.dirname(path.realpath(__file__)),
-            path.pardir,
-            path.pardir,
-            'VERSION'
-        )
-
-        with open(version_file) as v:
-            return v.read()
+        return _VERSION
 
     prefix = 'felics-ae-v'
     version = _REPO.git.describe(match=prefix+'*', always=True)
@@ -44,7 +66,7 @@ def commit():
 
 
 def _main(arguments):
-    template = '{version}' 
+    template = '{version}'
     if arguments:
        template = arguments[0]
 
@@ -53,7 +75,7 @@ def _main(arguments):
         'branch': branch(),
         'version': version()
     }
-    
+
     print(template.format_map(info))
 
 
