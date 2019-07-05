@@ -59,7 +59,7 @@ static void _compute_round_tweakeys(
     tweakey_state_init(TK, key, tweak);
     tweakey_state_extract(TK, 0, RTK[0]);
 
-    for (uint8_t i=1; i<ROUNDS; i++)
+    for (size_t i=1; i<ROUNDS; i++)
     {
         tweakey_state_update(TK);
         tweakey_state_extract(TK, i, RTK[i]);
@@ -67,7 +67,7 @@ static void _compute_round_tweakeys(
 }
 
 
-static uint8_t _Fj(uint8_t Xj, const uint8_t RTKj)
+static uint8_t _Fj(uint8_t Xj, uint8_t RTKj)
 {
     return READ_ROM_DATA_BYTE(S[Xj ^ RTKj]);
 }
@@ -132,7 +132,7 @@ void lilliput_tbc_encrypt(
     RAM_DATA_BYTE RTK[ROUND_TWEAKEY_BYTES];
     tweakey_state_init(TK, key, tweak);
 
-    for (unsigned i=0; i<ROUNDS-1; i++)
+    for (size_t i=0; i<ROUNDS-1; i++)
     {
         tweakey_state_extract(TK, i, RTK);
         _one_round_egfn(ciphertext, RTK, PERMUTATION_ENCRYPTION);

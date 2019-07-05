@@ -7,36 +7,42 @@
 
 static void _init_msg_tweak(const uint8_t tag[TAG_BYTES], uint8_t tweak[TWEAK_BYTES])
 {
-    /* With an s-bit block index, the t-bit tweak is filled as follows:
+    /* The t-bit tweak is filled as follows:
      *
-     * - bits [  1, t-1]: tag + block index
-     *        [  1,   s]: tag[1..s] XOR block index
-     *        [s+1, t-1]: tag[s+1..t-1]
-     * - bit t: 1
+     *   1    2                      t
+     * [ 1 || tag[2,t] XOR block index  ]
      *
-     * This function sets bits s+1 to t once and for all.
+     * The s-bit block index is XORed to the tag as follows:
+     *
+     *   2       t-s    t-s+1                                  t
+     * [ tag[2, t-s] || tag[t-s+1, t] XOR block index, MSB first ]
+     *
+     * This function sets bits 1 to t-s once and for all.
      */
 
-    memcpy(tweak+sizeof(size_t), tag+sizeof(size_t), TAG_BYTES-sizeof(size_t));
-    tweak[TWEAK_BYTES-1] |= 0x80;
+    memcpy(tweak, tag, TAG_BYTES-sizeof(size_t));
+    tweak[0] |= 0x80;
 }
 
 static void _fill_msg_tweak(const uint8_t tag[TAG_BYTES], size_t block_index, uint8_t tweak[TWEAK_BYTES])
 {
-    /* With an s-bit block index, the t-bit tweak is filled as follows:
+    /* The t-bit tweak is filled as follows:
      *
-     * - bits [  1, t-1]: tag + block index
-     *        [  1,   s]: tag[1..s] XOR block index
-     *        [s+1, t-1]: tag[s+1..t-1]
-     * - bit t: 1
+     *   1    2                      t
+     * [ 1 || tag[2,t] XOR block index  ]
      *
-     * This function assumes bits s+1 to t have already been set, and
-     * only sets bits 1 to s.
+     * The s-bit block index is XORed to the tag as follows:
+     *
+     *   2       t-s    t-s+1                                  t
+     * [ tag[2, t-s] || tag[t-s+1, t] XOR block index, MSB first ]
+     *
+     * This function assumes bits 1 to t-s have already been set, and
+     * only sets bits t-s+1 to t.
      */
 
     copy_block_index(block_index, tweak);
 
-    for (size_t i=0; i<sizeof(block_index); i++)
+    for (size_t i=TWEAK_BYTES-sizeof(size_t); i<TWEAK_BYTES; i++)
     {
         tweak[i] ^= tag[i];
     }
@@ -46,12 +52,12 @@ static void _fill_tag_tweak(const uint8_t N[NONCE_BYTES], uint8_t tweak[TWEAK_BY
 {
     /* The t-bit tweak is filled as follows:
      *
-     * - bits [  1, t-7]: N
-     * - bits [t-7,   t]: 0001||0^4
+     *   1  4    5   8    t-|N|+1     t
+     * [ 0001 ||  0^4  ||        nonce  ]
      */
 
-    memcpy(tweak, N, TWEAK_BYTES-1);
-    tweak[TWEAK_BYTES-1] = 0x10;
+    tweak[0] = 0x10;
+    memcpy(&tweak[1], N, TWEAK_BYTES-1);
 }
 
 static void _generate_tag(
@@ -108,8 +114,8 @@ static void _encrypt_message(
     _init_msg_tweak(tag, tweak);
 
     RAM_DATA_BYTE padded_N[BLOCK_BYTES];
-    memcpy(padded_N, N, NONCE_BYTES);
-    padded_N[BLOCK_BYTES-1] = 0;
+    padded_N[0] = 0;
+    memcpy(&padded_N[1], N, NONCE_BYTES);
 
     size_t l = M_len / BLOCK_BYTES;
     size_t rest = M_len % BLOCK_BYTES;
@@ -128,7 +134,5 @@ static void _encrypt_message(
         xor_arrays(rest, &C[l*BLOCK_BYTES], &M[l*BLOCK_BYTES], Ek_N);
     }
 }
-
-
 
 #endif /* LILLIPUT_AE_II_H */

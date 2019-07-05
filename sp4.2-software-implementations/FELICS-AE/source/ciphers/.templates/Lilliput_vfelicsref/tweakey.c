@@ -8,7 +8,7 @@
 #include "tweakey.h"
 
 
-#define LANES_NB   (TWEAKEY_BYTES/LANE_BYTES)
+#define LANES_NB (TWEAKEY_BYTES/LANE_BYTES)
 
 
 void tweakey_state_init(
@@ -55,11 +55,10 @@ static void _multiply(uint8_t TKj[LANE_BYTES], matrix_multiplication alpha)
 
 void tweakey_state_update(uint8_t TK[TWEAKEY_BYTES])
 {
-    /* Skip lane 0, as it is multiplied by the identity matrix. */
-
-    _multiply(TK + 1*LANE_BYTES, _multiply_M);
-    _multiply(TK + 2*LANE_BYTES, _multiply_M2);
-    _multiply(TK + 3*LANE_BYTES, _multiply_M3);
+    _multiply(TK + 0*LANE_BYTES, _multiply_M);
+    _multiply(TK + 1*LANE_BYTES, _multiply_M2);
+    _multiply(TK + 2*LANE_BYTES, _multiply_M3);
+    _multiply(TK + 3*LANE_BYTES, _multiply_M4);
 
 #if LANES_NB >= 5
     _multiply(TK + 4*LANE_BYTES, _multiply_MR);

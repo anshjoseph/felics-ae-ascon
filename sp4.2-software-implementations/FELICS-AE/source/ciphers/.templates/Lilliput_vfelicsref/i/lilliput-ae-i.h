@@ -10,59 +10,72 @@ static const uint8_t _0n[BLOCK_BYTES] = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
+
+static inline uint8_t _upper_nibble(uint8_t i)
+{
+    return i >> 4;
+}
+
+static inline uint8_t _lower_nibble(uint8_t i)
+{
+    return i & 0x0f;
+}
+
 static void _init_msg_tweak(const uint8_t N[NONCE_BYTES], uint8_t tweak[TWEAK_BYTES])
 {
-    /* With an s-bit block index, the t-bit tweak is filled as follows:
+    /* The t-bit tweak is filled as follows:
      *
-     * - bits [      1, t-|N|-4]: block index
-     *        [      1,       s]: actual block index
-     *        [    s+1, t-|N|-4]: 0-padding
-     * - bits [t-|N|-3,     t-4]: nonce
-     * - bits [    t-3,       t]: 4-bit prefix
+     *   1    4    5     |N|+4    |N|+5     t
+     * [ prefix ||  nonce      || block index ]
      *
-     * This function sets bits s+1 to t-4 once and for all.
+     * The s-bit block index is encoded as follows:
+     *
+     *   |N|+5    t-s    t-s+1                t
+     * [ zero padding || block index, MSB first ]
+     *
+     * This function sets bits 5 to t-s once and for all.
      */
 
-    size_t N_start = TWEAK_BYTES - NONCE_BYTES - 1;
-
-    for (size_t i=sizeof(size_t); i<N_start; i++)
-    {
-        tweak[i] = 0;
-    }
-
-    tweak[N_start] = lower_nibble(N[0]) << 4;
+    tweak[0] = _upper_nibble(N[0]);
 
     for (size_t i=1; i<NONCE_BYTES; i++)
     {
-        tweak[N_start+i] = lower_nibble(N[i]) << 4 ^ upper_nibble(N[i-1]);
+        tweak[i] = _lower_nibble(N[i-1]) << 4 ^ _upper_nibble(N[i]);
     }
 
-    tweak[TWEAK_BYTES-1] = upper_nibble(N[NONCE_BYTES-1]);
+    tweak[NONCE_BYTES] = _lower_nibble(N[NONCE_BYTES-1]) << 4;
+
+    /* The number of bits we need to zero out is:
+     *     t - |N| - s - 4        - 4
+     *                   (prefix)   (zeroed out by previous assignment)
+     */
+    memset(&tweak[NONCE_BYTES+1], 0, TWEAK_BYTES-NONCE_BYTES-sizeof(size_t)-1);
 }
 
 static void _fill_msg_tweak(
-    uint8_t       prefix,
-    size_t        block_index,
-    uint8_t       tweak[TWEAK_BYTES]
+    uint8_t prefix,
+    size_t  block_index,
+    uint8_t tweak[TWEAK_BYTES]
 )
 {
-    /* With an s-bit block index, the t-bit tweak is filled as follows:
+    /* The t-bit tweak is filled as follows:
      *
-     * - bits [      1, t-|N|-4]: block index
-     *        [      1,       s]: actual block index
-     *        [    s+1, t-|N|-4]: 0-padding
-     * - bits [t-|N|-3,     t-4]: nonce
-     * - bits [    t-3,       t]: 4-bit prefix
+     *   1    4    5     |N|+4    |N|+5     t
+     * [ prefix ||  nonce      || block index ]
      *
-     * This function assumes bits s+1 to t-3 have already been set,
-     * and only sets bits 1 to s and t-3 to t.
+     * The s-bit block index is encoded as follows:
+     *
+     *   |N|+5    t-s    t-s+1                t
+     * [ zero padding || block index, MSB first ]
+     *
+     * This function assumes bits 5 to t-s have already been set, and
+     * only sets bits 1 to 4 and t-s+1 to t.
      */
 
+    uint8_t *msb = &tweak[0];
+    *msb = prefix<<4 ^ _lower_nibble(*msb);
+
     copy_block_index(block_index, tweak);
-
-    uint8_t *msb = &tweak[TWEAK_BYTES-1];
-    *msb = prefix<<4 ^ lower_nibble(*msb);
-
 }
 
 static void _generate_tag(
