@@ -9,9 +9,9 @@
 #include "tweakey.h"
 
 
-#define LANE_BITS  64
-#define LANE_BYTES (LANE_BITS/8)
-#define LANES_NB   (TWEAKEY_BYTES/LANE_BYTES)
+#define LANES_NB       (TWEAKEY_BYTES/LANE_BYTES)
+#define TWEAK_LANES_NB (TWEAK_BYTES/LANE_BYTES)
+#define KEY_LANES_NB   (KEY_BYTES/LANE_BYTES)
 
 
 void tweakey_state_init(
@@ -54,8 +54,7 @@ void tweakey_state_extract(
         }
     }
 
-
-    for (size_t j=0; j<(KEY_BYTES / LANE_BYTES); j++)
+    for (size_t j=0; j<KEY_LANES_NB; j++)
     {
         const uint8_t *TKj_Y = TK_Y + j*LANE_BYTES;
 
@@ -78,48 +77,44 @@ static void _multiply(uint8_t TKj[LANE_BYTES], matrix_multiplication alpha)
     alpha(TKj_old, TKj);
 }
 
-#define TWEAK_LANES (TWEAK_BYTES/LANE_BYTES)
-#define KEY_LANES   (KEY_BYTES/LANE_BYTES)
-
 void tweakey_state_update(uint8_t TK_X[TWEAKEY_BYTES], uint8_t TK_Y[KEY_BYTES])
 {
-    /* Skip lane 0, as it is multiplied by the identity matrix. */
+    _multiply(TK_X + 0*LANE_BYTES, _multiply_M);
+    _multiply(TK_X + 1*LANE_BYTES, _multiply_M2);
 
-    _multiply(TK_X + 1*LANE_BYTES, _multiply_M);
+#if TWEAK_LANES_NB == 2         /* t=128 => Lilliput-II */
+    _multiply(TK_X + (0+TWEAK_LANES_NB)*LANE_BYTES, _multiply_M3);
+    _multiply(TK_Y + 0*LANE_BYTES, _multiply_M3);
 
-#if TWEAK_LANES == 2            /* t=128 => Lilliput-II */
-    _multiply(TK_X + (0+TWEAK_LANES)*LANE_BYTES, _multiply_M2);
-    _multiply(TK_Y + 0*LANE_BYTES, _multiply_M2);
-
-    _multiply(TK_X + (1+TWEAK_LANES)*LANE_BYTES, _multiply_M3);
-    _multiply(TK_Y + 1*LANE_BYTES, _multiply_M3);
+    _multiply(TK_X + (1+TWEAK_LANES_NB)*LANE_BYTES, _multiply_M4);
+    _multiply(TK_Y + 1*LANE_BYTES, _multiply_M4);
 
   #if LANES_NB >= 5
-    _multiply(TK_X + (2+TWEAK_LANES)*LANE_BYTES, _multiply_MR);
+    _multiply(TK_X + (2+TWEAK_LANES_NB)*LANE_BYTES, _multiply_MR);
     _multiply(TK_Y + 2*LANE_BYTES, _multiply_MR);
 
   #if LANES_NB >= 6
-    _multiply(TK_X + (3+TWEAK_LANES)*LANE_BYTES, _multiply_MR2);
+    _multiply(TK_X + (3+TWEAK_LANES_NB)*LANE_BYTES, _multiply_MR2);
     _multiply(TK_Y + 3*LANE_BYTES, _multiply_MR2);
   #endif
   #endif
 
-#else  /* TWEAK_LANES == 3      t=192 => Lilliput-I */
-    _multiply(TK_X + 2*LANE_BYTES, _multiply_M2);
+#else  /* TWEAK_LANES_NB == 3      t=192 => Lilliput-I */
+    _multiply(TK_X + 2*LANE_BYTES, _multiply_M3);
 
-    _multiply(TK_X + (0+TWEAK_LANES)*LANE_BYTES, _multiply_M3);
-    _multiply(TK_Y + 0*LANE_BYTES, _multiply_M3);
+    _multiply(TK_X + (0+TWEAK_LANES_NB)*LANE_BYTES, _multiply_M4);
+    _multiply(TK_Y + 0*LANE_BYTES, _multiply_M4);
 
   #if LANES_NB >= 5
-    _multiply(TK_X + (1+TWEAK_LANES)*LANE_BYTES, _multiply_MR);
+    _multiply(TK_X + (1+TWEAK_LANES_NB)*LANE_BYTES, _multiply_MR);
     _multiply(TK_Y + 1*LANE_BYTES, _multiply_MR);
 
   #if LANES_NB >= 6
-    _multiply(TK_X + (2+TWEAK_LANES)*LANE_BYTES, _multiply_MR2);
+    _multiply(TK_X + (2+TWEAK_LANES_NB)*LANE_BYTES, _multiply_MR2);
     _multiply(TK_Y + 2*LANE_BYTES, _multiply_MR2);
 
   #if LANES_NB >= 7
-    _multiply(TK_X + (3+TWEAK_LANES)*LANE_BYTES, _multiply_MR3);
+    _multiply(TK_X + (3+TWEAK_LANES_NB)*LANE_BYTES, _multiply_MR3);
     _multiply(TK_Y + 3*LANE_BYTES, _multiply_MR3);
   #endif
   #endif

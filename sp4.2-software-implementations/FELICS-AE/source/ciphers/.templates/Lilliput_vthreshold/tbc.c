@@ -79,7 +79,7 @@ static void _state_init(
 
     memcpy(X, SHARES_0, BLOCK_BYTES);
     memcpy(Y, SHARES_1, BLOCK_BYTES);
-    for (uint8_t i=0; i<BLOCK_BYTES; i++)
+    for (size_t i=0; i<BLOCK_BYTES; i++)
     {
         Z[i] = message[i] ^ SHARES_0[i] ^ SHARES_1[i];
     }
@@ -98,7 +98,7 @@ static void _compute_round_tweakeys(
     tweakey_state_init(TK_X, TK_Y, key, tweak);
     tweakey_state_extract(TK_X, TK_Y, 0, RTK_X[0], RTK_Y[0]);
 
-    for (uint8_t i=1; i<ROUNDS; i++)
+    for (size_t i=1; i<ROUNDS; i++)
     {
         tweakey_state_update(TK_X, TK_Y);
         tweakey_state_extract(TK_X, TK_Y, i, RTK_X[i], RTK_Y[i]);
@@ -247,7 +247,7 @@ void lilliput_tbc_encrypt(
     RAM_DATA_BYTE RTK_Y[ROUND_TWEAKEY_BYTES];
     tweakey_state_init(TK_X, TK_Y, key, tweak);
 
-    for (unsigned i=0; i<ROUNDS-1; i++)
+    for (size_t i=0; i<ROUNDS-1; i++)
     {
         tweakey_state_extract(TK_X, TK_Y, i, RTK_X, RTK_Y);
         _one_round_egfn(X, Y, Z, RTK_X, RTK_Y, PERMUTATION_ENCRYPTION);
@@ -257,7 +257,7 @@ void lilliput_tbc_encrypt(
     tweakey_state_extract(TK_X, TK_Y, ROUNDS-1, RTK_X, RTK_Y);
     _one_round_egfn(X, Y, Z, RTK_X, RTK_Y, PERMUTATION_NONE);
 
-    for (unsigned i=0; i<BLOCK_BYTES; i++)
+    for (size_t i=0; i<BLOCK_BYTES; i++)
     {
         ciphertext[i] = X[i] ^ Y[i] ^ Z[i];
     }
@@ -279,7 +279,7 @@ void lilliput_tbc_decrypt(
     RAM_DATA_BYTE RTK_Y[ROUNDS][ROUND_TWEAKEY_BYTES];
     _compute_round_tweakeys(key, tweak, RTK_X, RTK_Y);
 
-    for (unsigned i=0; i<ROUNDS-1; i++)
+    for (size_t i=0; i<ROUNDS-1; i++)
     {
         _one_round_egfn(X, Y, Z, RTK_X[ROUNDS-1-i], RTK_Y[ROUNDS-1-i], PERMUTATION_DECRYPTION);
     }
