@@ -1,510 +1,168 @@
 {
-    "commit": "f89d590",
+    "commit": "6831039",
     "branch": "master",
     "data": [
         {
-            "cipher_name": "Lilliput-I-128",
-            "architecture": "PC",
-            "version": "felicsref",
-            "compiler_options": "-O3",
-            "code_size": 8414,
-            "code_ram": 896,
-            "code_time": 10538
-        },
-        {
-            "cipher_name": "Lilliput-I-128",
-            "architecture": "PC",
-            "version": "felicsref",
-            "compiler_options": "-Os",
-            "code_size": 2822,
-            "code_ram": 704,
-            "code_time": 18126
-        },
-        {
-            "cipher_name": "Lilliput-I-192",
-            "architecture": "PC",
-            "version": "felicsref",
-            "compiler_options": "-O3",
-            "code_size": 8607,
-            "code_ram": 952,
-            "code_time": 13071
-        },
-        {
-            "cipher_name": "Lilliput-I-192",
-            "architecture": "PC",
-            "version": "felicsref",
-            "compiler_options": "-Os",
-            "code_size": 2967,
-            "code_ram": 760,
-            "code_time": 20548
-        },
-        {
-            "cipher_name": "Lilliput-I-256",
-            "architecture": "PC",
-            "version": "felicsref",
-            "compiler_options": "-O3",
-            "code_size": 8831,
-            "code_ram": 1008,
-            "code_time": 16776
-        },
-        {
-            "cipher_name": "Lilliput-I-256",
-            "architecture": "PC",
-            "version": "felicsref",
-            "compiler_options": "-Os",
-            "code_size": 3118,
-            "code_ram": 816,
-            "code_time": 26418
-        },
-        {
-            "cipher_name": "Lilliput-II-128",
-            "architecture": "PC",
-            "version": "felicsref",
-            "compiler_options": "-O3",
-            "code_size": 7340,
-            "code_ram": 880,
-            "code_time": 12002
-        },
-        {
-            "cipher_name": "Lilliput-II-128",
-            "architecture": "PC",
-            "version": "felicsref",
-            "compiler_options": "-Os",
-            "code_size": 2783,
-            "code_ram": 688,
-            "code_time": 22073
-        },
-        {
-            "cipher_name": "Lilliput-II-192",
-            "architecture": "PC",
-            "version": "felicsref",
-            "compiler_options": "-O3",
-            "code_size": 7504,
-            "code_ram": 920,
-            "code_time": 15105
-        },
-        {
-            "cipher_name": "Lilliput-II-192",
-            "architecture": "PC",
-            "version": "felicsref",
-            "compiler_options": "-Os",
-            "code_size": 2882,
-            "code_ram": 728,
-            "code_time": 26151
-        },
-        {
-            "cipher_name": "Lilliput-II-256",
-            "architecture": "PC",
-            "version": "felicsref",
-            "compiler_options": "-O3",
-            "code_size": 7697,
-            "code_ram": 992,
-            "code_time": 19694
-        },
-        {
-            "cipher_name": "Lilliput-II-256",
-            "architecture": "PC",
-            "version": "felicsref",
-            "compiler_options": "-Os",
-            "code_size": 3018,
-            "code_ram": 800,
-            "code_time": 33894
-        },
-        {
             "cipher_name": "Ascon-128a",
-            "architecture": "PC",
-            "version": "opt64",
-            "compiler_options": "-O3",
-            "code_size": 11562,
-            "code_ram": 200,
-            "code_time": 1169
-        },
-        {
-            "cipher_name": "Ascon-128a",
-            "architecture": "PC",
-            "version": "opt64",
-            "compiler_options": "-Os",
-            "code_size": 10430,
-            "code_ram": 180,
-            "code_time": 1316
-        },
-        {
-            "cipher_name": "Ascon-128a",
-            "architecture": "PC",
+            "architecture": "AVR",
             "version": "ref",
             "compiler_options": "-O3",
-            "code_size": 2102,
-            "code_ram": 1984,
-            "code_time": 6421
+            "code_size": 6832,
+            "code_ram": 300,
+            "code_time": 163315
         },
         {
             "cipher_name": "Ascon-128a",
-            "architecture": "PC",
+            "architecture": "AVR",
             "version": "ref",
             "compiler_options": "-Os",
-            "code_size": 1466,
-            "code_ram": 448,
-            "code_time": 3686
+            "code_size": 4340,
+            "code_ram": 339,
+            "code_time": 216080
         },
         {
             "cipher_name": "Ascon-128",
-            "architecture": "PC",
-            "version": "opt64",
-            "compiler_options": "-O3",
-            "code_size": 9616,
-            "code_ram": 192,
-            "code_time": 1372
-        },
-        {
-            "cipher_name": "Ascon-128",
-            "architecture": "PC",
-            "version": "opt64",
-            "compiler_options": "-Os",
-            "code_size": 9074,
-            "code_ram": 184,
-            "code_time": 1389
-        },
-        {
-            "cipher_name": "Ascon-128",
-            "architecture": "PC",
+            "architecture": "AVR",
             "version": "ref",
             "compiler_options": "-O3",
-            "code_size": 2236,
-            "code_ram": 1984,
-            "code_time": 6775
-        },
-        {
-            "cipher_name": "Ascon-128",
-            "architecture": "PC",
-            "version": "ref",
-            "compiler_options": "-Os",
-            "code_size": 1486,
-            "code_ram": 448,
-            "code_time": 4046
-        },
-        {
-            "cipher_name": "ACORN-128",
-            "architecture": "PC",
-            "version": "opt1",
-            "compiler_options": "-O3",
-            "code_size": 6122,
-            "code_ram": 448,
-            "code_time": 3045
-        },
-        {
-            "cipher_name": "ACORN-128",
-            "architecture": "PC",
-            "version": "opt1",
-            "compiler_options": "-Os",
-            "code_size": 2564,
-            "code_ram": 392,
-            "code_time": 3816
-        },
-        {
-            "cipher_name": "Lilliput-I-128",
-            "architecture": "ARM",
-            "version": "felicsref",
-            "compiler_options": "-O3",
-            "code_size": 6316,
-            "code_ram": 748,
-            "code_time": 87002
-        },
-        {
-            "cipher_name": "Lilliput-I-128",
-            "architecture": "ARM",
-            "version": "felicsref",
-            "compiler_options": "-Os",
-            "code_size": 1744,
-            "code_ram": 584,
-            "code_time": 184296
-        },
-        {
-            "cipher_name": "Lilliput-I-192",
-            "architecture": "ARM",
-            "version": "felicsref",
-            "compiler_options": "-O3",
-            "code_size": 6420,
-            "code_ram": 796,
-            "code_time": 108311
-        },
-        {
-            "cipher_name": "Lilliput-I-192",
-            "architecture": "ARM",
-            "version": "felicsref",
-            "compiler_options": "-Os",
-            "code_size": 1836,
-            "code_ram": 632,
-            "code_time": 248497
-        },
-        {
-            "cipher_name": "Lilliput-I-256",
-            "architecture": "ARM",
-            "version": "felicsref",
-            "compiler_options": "-O3",
-            "code_size": 6544,
-            "code_ram": 868,
-            "code_time": 143406
-        },
-        {
-            "cipher_name": "Lilliput-I-256",
-            "architecture": "ARM",
-            "version": "felicsref",
-            "compiler_options": "-Os",
-            "code_size": 1940,
-            "code_ram": 696,
-            "code_time": 295961
-        },
-        {
-            "cipher_name": "Lilliput-II-128",
-            "architecture": "ARM",
-            "version": "felicsref",
-            "compiler_options": "-O3",
-            "code_size": 5256,
-            "code_ram": 724,
-            "code_time": 93825
-        },
-        {
-            "cipher_name": "Lilliput-II-128",
-            "architecture": "ARM",
-            "version": "felicsref",
-            "compiler_options": "-Os",
-            "code_size": 1774,
-            "code_ram": 552,
-            "code_time": 218396
-        },
-        {
-            "cipher_name": "Lilliput-II-192",
-            "architecture": "ARM",
-            "version": "felicsref",
-            "compiler_options": "-O3",
-            "code_size": 5172,
-            "code_ram": 772,
-            "code_time": 129692
-        },
-        {
-            "cipher_name": "Lilliput-II-192",
-            "architecture": "ARM",
-            "version": "felicsref",
-            "compiler_options": "-Os",
-            "code_size": 1852,
-            "code_ram": 600,
-            "code_time": 299974
-        },
-        {
-            "cipher_name": "Lilliput-II-256",
-            "architecture": "ARM",
-            "version": "felicsref",
-            "compiler_options": "-O3",
-            "code_size": 5276,
-            "code_ram": 836,
-            "code_time": 168361
-        },
-        {
-            "cipher_name": "Lilliput-II-256",
-            "architecture": "ARM",
-            "version": "felicsref",
-            "compiler_options": "-Os",
-            "code_size": 1942,
-            "code_ram": 664,
-            "code_time": 358764
-        },
-        {
-            "cipher_name": "Ascon-128a",
-            "architecture": "ARM",
-            "version": "opt32",
-            "compiler_options": "-O3",
-            "code_size": 23764,
-            "code_ram": 272,
-            "code_time": 11714
-        },
-        {
-            "cipher_name": "Ascon-128a",
-            "architecture": "ARM",
-            "version": "opt32",
-            "compiler_options": "-Os",
-            "code_size": 18996,
-            "code_ram": 256,
-            "code_time": 9297
-        },
-        {
-            "cipher_name": "Ascon-128a",
-            "architecture": "ARM",
-            "version": "ref",
-            "compiler_options": "-O3",
-            "code_size": 4424,
-            "code_ram": 608,
-            "code_time": 27683
-        },
-        {
-            "cipher_name": "Ascon-128a",
-            "architecture": "ARM",
-            "version": "ref",
-            "compiler_options": "-Os",
-            "code_size": 1408,
-            "code_ram": 480,
-            "code_time": 41113
-        },
-        {
-            "cipher_name": "Ascon-128",
-            "architecture": "ARM",
-            "version": "opt32",
-            "compiler_options": "-O3",
-            "code_size": 18912,
+            "code_size": 6140,
             "code_ram": 268,
-            "code_time": 12790
+            "code_time": 191049
         },
         {
             "cipher_name": "Ascon-128",
-            "architecture": "ARM",
-            "version": "opt32",
+            "architecture": "AVR",
+            "version": "ref",
             "compiler_options": "-Os",
-            "code_size": 16072,
+            "code_size": 4322,
+            "code_ram": 323,
+            "code_time": 254913
+        },
+        {
+            "cipher_name": "ACORN-128",
+            "architecture": "AVR",
+            "version": "8bitfast",
+            "compiler_options": "-O3",
+            "code_size": 3700,
+            "code_ram": 263,
+            "code_time": 287991
+        },
+        {
+            "cipher_name": "ACORN-128",
+            "architecture": "AVR",
+            "version": "8bitfast",
+            "compiler_options": "-Os",
+            "code_size": 2850,
             "code_ram": 240,
-            "code_time": 10221
-        },
-        {
-            "cipher_name": "Ascon-128",
-            "architecture": "ARM",
-            "version": "ref",
-            "compiler_options": "-O3",
-            "code_size": 4080,
-            "code_ram": 600,
-            "code_time": 32350
-        },
-        {
-            "cipher_name": "Ascon-128",
-            "architecture": "ARM",
-            "version": "ref",
-            "compiler_options": "-Os",
-            "code_size": 1426,
-            "code_ram": 472,
-            "code_time": 49636
-        },
-        {
-            "cipher_name": "ACORN-128",
-            "architecture": "ARM",
-            "version": "opt1",
-            "compiler_options": "-O3",
-            "code_size": 7608,
-            "code_ram": 808,
-            "code_time": 56275
-        },
-        {
-            "cipher_name": "ACORN-128",
-            "architecture": "ARM",
-            "version": "opt1",
-            "compiler_options": "-Os",
-            "code_size": 2364,
-            "code_ram": 344,
-            "code_time": 44901
+            "code_time": 335934
         },
         {
             "cipher_name": "Lilliput-I-128",
-            "architecture": "MSP",
+            "architecture": "AVR",
             "version": "felicsref",
             "compiler_options": "-O3",
-            "code_size": 8194,
-            "code_ram": 618,
-            "code_time": 126129
+            "code_size": 6100,
+            "code_ram": 266,
+            "code_time": 129093
         },
         {
             "cipher_name": "Lilliput-I-128",
-            "architecture": "MSP",
+            "architecture": "AVR",
             "version": "felicsref",
             "compiler_options": "-Os",
-            "code_size": 2530,
-            "code_ram": 538,
-            "code_time": 208848
+            "code_size": 2780,
+            "code_ram": 261,
+            "code_time": 250657
         },
         {
             "cipher_name": "Lilliput-I-192",
-            "architecture": "MSP",
+            "architecture": "AVR",
             "version": "felicsref",
             "compiler_options": "-O3",
-            "code_size": 8380,
-            "code_ram": 666,
-            "code_time": 159828
+            "code_size": 6190,
+            "code_ram": 282,
+            "code_time": 161775
         },
         {
             "cipher_name": "Lilliput-I-192",
-            "architecture": "MSP",
+            "architecture": "AVR",
             "version": "felicsref",
             "compiler_options": "-Os",
-            "code_size": 2652,
-            "code_ram": 586,
-            "code_time": 254871
+            "code_size": 2926,
+            "code_ram": 277,
+            "code_time": 314893
         },
         {
             "cipher_name": "Lilliput-I-256",
-            "architecture": "MSP",
+            "architecture": "AVR",
             "version": "felicsref",
             "compiler_options": "-O3",
-            "code_size": 8612,
-            "code_ram": 732,
-            "code_time": 212328
+            "code_size": 6322,
+            "code_ram": 298,
+            "code_time": 211347
         },
         {
             "cipher_name": "Lilliput-I-256",
-            "architecture": "MSP",
+            "architecture": "AVR",
             "version": "felicsref",
             "compiler_options": "-Os",
-            "code_size": 2820,
-            "code_ram": 652,
-            "code_time": 325317
+            "code_size": 3112,
+            "code_ram": 293,
+            "code_time": 408907
         },
         {
             "cipher_name": "Lilliput-II-128",
-            "architecture": "MSP",
+            "architecture": "AVR",
             "version": "felicsref",
             "compiler_options": "-O3",
-            "code_size": 6162,
-            "code_ram": 592,
-            "code_time": 149366
+            "code_size": 6062,
+            "code_ram": 243,
+            "code_time": 132650
         },
         {
             "cipher_name": "Lilliput-II-128",
-            "architecture": "MSP",
+            "architecture": "AVR",
             "version": "felicsref",
             "compiler_options": "-Os",
-            "code_size": 2524,
-            "code_ram": 508,
-            "code_time": 247450
+            "code_size": 2768,
+            "code_ram": 229,
+            "code_time": 297992
         },
         {
             "cipher_name": "Lilliput-II-192",
-            "architecture": "MSP",
+            "architecture": "AVR",
             "version": "felicsref",
             "compiler_options": "-O3",
-            "code_size": 6312,
-            "code_ram": 640,
-            "code_time": 187066
+            "code_size": 6004,
+            "code_ram": 260,
+            "code_time": 192982
         },
         {
             "cipher_name": "Lilliput-II-192",
-            "architecture": "MSP",
+            "architecture": "AVR",
             "version": "felicsref",
             "compiler_options": "-Os",
-            "code_size": 2610,
-            "code_ram": 556,
-            "code_time": 301102
+            "code_size": 2880,
+            "code_ram": 245,
+            "code_time": 376124
         },
         {
             "cipher_name": "Lilliput-II-256",
-            "architecture": "MSP",
+            "architecture": "AVR",
             "version": "felicsref",
             "compiler_options": "-O3",
-            "code_size": 6498,
-            "code_ram": 704,
-            "code_time": 246254
+            "code_size": 6088,
+            "code_ram": 276,
+            "code_time": 251050
         },
         {
             "cipher_name": "Lilliput-II-256",
-            "architecture": "MSP",
+            "architecture": "AVR",
             "version": "felicsref",
             "compiler_options": "-Os",
-            "code_size": 2732,
-            "code_ram": 620,
-            "code_time": 383498
+            "code_size": 3024,
+            "code_ram": 261,
+            "code_time": 490172
         },
         {
             "cipher_name": "Ascon-128a",
@@ -562,165 +220,507 @@
         },
         {
             "cipher_name": "Lilliput-I-128",
-            "architecture": "AVR",
+            "architecture": "MSP",
             "version": "felicsref",
             "compiler_options": "-O3",
-            "code_size": 7144,
-            "code_ram": 519,
-            "code_time": 130702
+            "code_size": 5760,
+            "code_ram": 300,
+            "code_time": 121646
         },
         {
             "cipher_name": "Lilliput-I-128",
-            "architecture": "AVR",
+            "architecture": "MSP",
             "version": "felicsref",
             "compiler_options": "-Os",
-            "code_size": 3166,
-            "code_ram": 514,
-            "code_time": 189818
+            "code_size": 2304,
+            "code_ram": 260,
+            "code_time": 201075
         },
         {
             "cipher_name": "Lilliput-I-192",
-            "architecture": "AVR",
+            "architecture": "MSP",
             "version": "felicsref",
             "compiler_options": "-O3",
-            "code_size": 7236,
-            "code_ram": 567,
-            "code_time": 163531
+            "code_size": 5950,
+            "code_ram": 316,
+            "code_time": 155267
         },
         {
             "cipher_name": "Lilliput-I-192",
-            "architecture": "AVR",
+            "architecture": "MSP",
             "version": "felicsref",
             "compiler_options": "-Os",
-            "code_size": 3268,
-            "code_ram": 562,
-            "code_time": 230309
+            "code_size": 2524,
+            "code_ram": 288,
+            "code_time": 354297
         },
         {
             "cipher_name": "Lilliput-I-256",
-            "architecture": "AVR",
+            "architecture": "MSP",
             "version": "felicsref",
             "compiler_options": "-O3",
-            "code_size": 7348,
-            "code_ram": 631,
-            "code_time": 211705
+            "code_size": 6186,
+            "code_ram": 334,
+            "code_time": 207617
         },
         {
             "cipher_name": "Lilliput-I-256",
-            "architecture": "AVR",
+            "architecture": "MSP",
             "version": "felicsref",
             "compiler_options": "-Os",
-            "code_size": 3392,
-            "code_ram": 626,
-            "code_time": 290363
+            "code_size": 2696,
+            "code_ram": 304,
+            "code_time": 465474
         },
         {
             "cipher_name": "Lilliput-II-128",
-            "architecture": "AVR",
+            "architecture": "MSP",
             "version": "felicsref",
             "compiler_options": "-O3",
-            "code_size": 6476,
-            "code_ram": 496,
-            "code_time": 134645
+            "code_size": 4932,
+            "code_ram": 272,
+            "code_time": 144399
         },
         {
             "cipher_name": "Lilliput-II-128",
-            "architecture": "AVR",
+            "architecture": "MSP",
             "version": "felicsref",
             "compiler_options": "-Os",
-            "code_size": 3096,
-            "code_ram": 478,
-            "code_time": 231733
+            "code_size": 2234,
+            "code_ram": 232,
+            "code_time": 246193
         },
         {
             "cipher_name": "Lilliput-II-192",
-            "architecture": "AVR",
+            "architecture": "MSP",
             "version": "felicsref",
             "compiler_options": "-O3",
-            "code_size": 6420,
-            "code_ram": 548,
-            "code_time": 195029
+            "code_size": 5082,
+            "code_ram": 288,
+            "code_time": 181715
         },
         {
             "cipher_name": "Lilliput-II-192",
-            "architecture": "AVR",
+            "architecture": "MSP",
             "version": "felicsref",
             "compiler_options": "-Os",
-            "code_size": 3168,
-            "code_ram": 526,
-            "code_time": 281037
+            "code_size": 2320,
+            "code_ram": 248,
+            "code_time": 300677
         },
         {
             "cipher_name": "Lilliput-II-256",
-            "architecture": "AVR",
+            "architecture": "MSP",
             "version": "felicsref",
             "compiler_options": "-O3",
-            "code_size": 6504,
-            "code_ram": 612,
-            "code_time": 253369
+            "code_size": 5272,
+            "code_ram": 304,
+            "code_time": 240655
         },
         {
             "cipher_name": "Lilliput-II-256",
-            "architecture": "AVR",
+            "architecture": "MSP",
             "version": "felicsref",
             "compiler_options": "-Os",
-            "code_size": 3260,
-            "code_ram": 590,
-            "code_time": 354293
+            "code_size": 2540,
+            "code_ram": 276,
+            "code_time": 550781
         },
         {
             "cipher_name": "Ascon-128a",
-            "architecture": "AVR",
+            "architecture": "ARM",
+            "version": "opt32",
+            "compiler_options": "-O3",
+            "code_size": 23764,
+            "code_ram": 272,
+            "code_time": 11719
+        },
+        {
+            "cipher_name": "Ascon-128a",
+            "architecture": "ARM",
+            "version": "opt32",
+            "compiler_options": "-Os",
+            "code_size": 18996,
+            "code_ram": 256,
+            "code_time": 9298
+        },
+        {
+            "cipher_name": "Ascon-128a",
+            "architecture": "ARM",
             "version": "ref",
             "compiler_options": "-O3",
-            "code_size": 6832,
-            "code_ram": 300,
-            "code_time": 163320
+            "code_size": 4424,
+            "code_ram": 608,
+            "code_time": 27688
         },
         {
             "cipher_name": "Ascon-128a",
-            "architecture": "AVR",
+            "architecture": "ARM",
             "version": "ref",
             "compiler_options": "-Os",
-            "code_size": 4340,
-            "code_ram": 339,
-            "code_time": 216080
+            "code_size": 1408,
+            "code_ram": 480,
+            "code_time": 42114
         },
         {
             "cipher_name": "Ascon-128",
-            "architecture": "AVR",
-            "version": "ref",
+            "architecture": "ARM",
+            "version": "opt32",
             "compiler_options": "-O3",
-            "code_size": 6140,
+            "code_size": 18912,
             "code_ram": 268,
-            "code_time": 191049
+            "code_time": 12791
         },
         {
             "cipher_name": "Ascon-128",
-            "architecture": "AVR",
+            "architecture": "ARM",
+            "version": "opt32",
+            "compiler_options": "-Os",
+            "code_size": 16072,
+            "code_ram": 240,
+            "code_time": 10221
+        },
+        {
+            "cipher_name": "Ascon-128",
+            "architecture": "ARM",
+            "version": "ref",
+            "compiler_options": "-O3",
+            "code_size": 4080,
+            "code_ram": 600,
+            "code_time": 32363
+        },
+        {
+            "cipher_name": "Ascon-128",
+            "architecture": "ARM",
             "version": "ref",
             "compiler_options": "-Os",
-            "code_size": 4322,
-            "code_ram": 323,
-            "code_time": 254913
+            "code_size": 1426,
+            "code_ram": 472,
+            "code_time": 51036
         },
         {
             "cipher_name": "ACORN-128",
-            "architecture": "AVR",
-            "version": "8bitfast",
+            "architecture": "ARM",
+            "version": "opt1",
             "compiler_options": "-O3",
-            "code_size": 3700,
-            "code_ram": 263,
-            "code_time": 287991
+            "code_size": 7608,
+            "code_ram": 808,
+            "code_time": 56288
         },
         {
             "cipher_name": "ACORN-128",
-            "architecture": "AVR",
-            "version": "8bitfast",
+            "architecture": "ARM",
+            "version": "opt1",
             "compiler_options": "-Os",
-            "code_size": 2850,
-            "code_ram": 240,
-            "code_time": 335934
+            "code_size": 2364,
+            "code_ram": 344,
+            "code_time": 44902
+        },
+        {
+            "cipher_name": "Lilliput-I-128",
+            "architecture": "ARM",
+            "version": "felicsref",
+            "compiler_options": "-O3",
+            "code_size": 4656,
+            "code_ram": 444,
+            "code_time": 86293
+        },
+        {
+            "cipher_name": "Lilliput-I-128",
+            "architecture": "ARM",
+            "version": "felicsref",
+            "compiler_options": "-Os",
+            "code_size": 1746,
+            "code_ram": 304,
+            "code_time": 185796
+        },
+        {
+            "cipher_name": "Lilliput-I-192",
+            "architecture": "ARM",
+            "version": "felicsref",
+            "compiler_options": "-O3",
+            "code_size": 4756,
+            "code_ram": 460,
+            "code_time": 107526
+        },
+        {
+            "cipher_name": "Lilliput-I-192",
+            "architecture": "ARM",
+            "version": "felicsref",
+            "compiler_options": "-Os",
+            "code_size": 1830,
+            "code_ram": 320,
+            "code_time": 273022
+        },
+        {
+            "cipher_name": "Lilliput-I-256",
+            "architecture": "ARM",
+            "version": "felicsref",
+            "compiler_options": "-O3",
+            "code_size": 4876,
+            "code_ram": 476,
+            "code_time": 140480
+        },
+        {
+            "cipher_name": "Lilliput-I-256",
+            "architecture": "ARM",
+            "version": "felicsref",
+            "compiler_options": "-Os",
+            "code_size": 1930,
+            "code_ram": 336,
+            "code_time": 378989
+        },
+        {
+            "cipher_name": "Lilliput-II-128",
+            "architecture": "ARM",
+            "version": "felicsref",
+            "compiler_options": "-O3",
+            "code_size": 4684,
+            "code_ram": 420,
+            "code_time": 89390
+        },
+        {
+            "cipher_name": "Lilliput-II-128",
+            "architecture": "ARM",
+            "version": "felicsref",
+            "compiler_options": "-Os",
+            "code_size": 1768,
+            "code_ram": 272,
+            "code_time": 266409
+        },
+        {
+            "cipher_name": "Lilliput-II-192",
+            "architecture": "ARM",
+            "version": "felicsref",
+            "compiler_options": "-O3",
+            "code_size": 4592,
+            "code_ram": 436,
+            "code_time": 129354
+        },
+        {
+            "cipher_name": "Lilliput-II-192",
+            "architecture": "ARM",
+            "version": "felicsref",
+            "compiler_options": "-Os",
+            "code_size": 1836,
+            "code_ram": 288,
+            "code_time": 293416
+        },
+        {
+            "cipher_name": "Lilliput-II-256",
+            "architecture": "ARM",
+            "version": "felicsref",
+            "compiler_options": "-O3",
+            "code_size": 4692,
+            "code_ram": 452,
+            "code_time": 167175
+        },
+        {
+            "cipher_name": "Lilliput-II-256",
+            "architecture": "ARM",
+            "version": "felicsref",
+            "compiler_options": "-Os",
+            "code_size": 1920,
+            "code_ram": 304,
+            "code_time": 413374
+        },
+        {
+            "cipher_name": "Ascon-128a",
+            "architecture": "PC",
+            "version": "opt64",
+            "compiler_options": "-O3",
+            "code_size": 11562,
+            "code_ram": 200,
+            "code_time": 1111
+        },
+        {
+            "cipher_name": "Ascon-128a",
+            "architecture": "PC",
+            "version": "opt64",
+            "compiler_options": "-Os",
+            "code_size": 10430,
+            "code_ram": 180,
+            "code_time": 1164
+        },
+        {
+            "cipher_name": "Ascon-128a",
+            "architecture": "PC",
+            "version": "ref",
+            "compiler_options": "-O3",
+            "code_size": 2102,
+            "code_ram": 1984,
+            "code_time": 6308
+        },
+        {
+            "cipher_name": "Ascon-128a",
+            "architecture": "PC",
+            "version": "ref",
+            "compiler_options": "-Os",
+            "code_size": 1466,
+            "code_ram": 448,
+            "code_time": 3598
+        },
+        {
+            "cipher_name": "Ascon-128",
+            "architecture": "PC",
+            "version": "opt64",
+            "compiler_options": "-O3",
+            "code_size": 9616,
+            "code_ram": 192,
+            "code_time": 1221
+        },
+        {
+            "cipher_name": "Ascon-128",
+            "architecture": "PC",
+            "version": "opt64",
+            "compiler_options": "-Os",
+            "code_size": 9074,
+            "code_ram": 184,
+            "code_time": 1257
+        },
+        {
+            "cipher_name": "Ascon-128",
+            "architecture": "PC",
+            "version": "ref",
+            "compiler_options": "-O3",
+            "code_size": 2236,
+            "code_ram": 1984,
+            "code_time": 6641
+        },
+        {
+            "cipher_name": "Ascon-128",
+            "architecture": "PC",
+            "version": "ref",
+            "compiler_options": "-Os",
+            "code_size": 1486,
+            "code_ram": 448,
+            "code_time": 3718
+        },
+        {
+            "cipher_name": "ACORN-128",
+            "architecture": "PC",
+            "version": "opt1",
+            "compiler_options": "-O3",
+            "code_size": 6122,
+            "code_ram": 448,
+            "code_time": 2966
+        },
+        {
+            "cipher_name": "ACORN-128",
+            "architecture": "PC",
+            "version": "opt1",
+            "compiler_options": "-Os",
+            "code_size": 2564,
+            "code_ram": 392,
+            "code_time": 3701
+        },
+        {
+            "cipher_name": "Lilliput-I-128",
+            "architecture": "PC",
+            "version": "felicsref",
+            "compiler_options": "-O3",
+            "code_size": 6880,
+            "code_ram": 528,
+            "code_time": 10030
+        },
+        {
+            "cipher_name": "Lilliput-I-128",
+            "architecture": "PC",
+            "version": "felicsref",
+            "compiler_options": "-Os",
+            "code_size": 2906,
+            "code_ram": 416,
+            "code_time": 21345
+        },
+        {
+            "cipher_name": "Lilliput-I-192",
+            "architecture": "PC",
+            "version": "felicsref",
+            "compiler_options": "-O3",
+            "code_size": 7073,
+            "code_ram": 552,
+            "code_time": 12658
+        },
+        {
+            "cipher_name": "Lilliput-I-192",
+            "architecture": "PC",
+            "version": "felicsref",
+            "compiler_options": "-Os",
+            "code_size": 3049,
+            "code_ram": 440,
+            "code_time": 31047
+        },
+        {
+            "cipher_name": "Lilliput-I-256",
+            "architecture": "PC",
+            "version": "felicsref",
+            "compiler_options": "-O3",
+            "code_size": 7295,
+            "code_ram": 560,
+            "code_time": 16476
+        },
+        {
+            "cipher_name": "Lilliput-I-256",
+            "architecture": "PC",
+            "version": "felicsref",
+            "compiler_options": "-Os",
+            "code_size": 3210,
+            "code_ram": 464,
+            "code_time": 37369
+        },
+        {
+            "cipher_name": "Lilliput-II-128",
+            "architecture": "PC",
+            "version": "felicsref",
+            "compiler_options": "-O3",
+            "code_size": 6783,
+            "code_ram": 528,
+            "code_time": 11816
+        },
+        {
+            "cipher_name": "Lilliput-II-128",
+            "architecture": "PC",
+            "version": "felicsref",
+            "compiler_options": "-Os",
+            "code_size": 2867,
+            "code_ram": 400,
+            "code_time": 24864
+        },
+        {
+            "cipher_name": "Lilliput-II-192",
+            "architecture": "PC",
+            "version": "felicsref",
+            "compiler_options": "-O3",
+            "code_size": 6946,
+            "code_ram": 536,
+            "code_time": 14888
+        },
+        {
+            "cipher_name": "Lilliput-II-192",
+            "architecture": "PC",
+            "version": "felicsref",
+            "compiler_options": "-Os",
+            "code_size": 2979,
+            "code_ram": 424,
+            "code_time": 30962
+        },
+        {
+            "cipher_name": "Lilliput-II-256",
+            "architecture": "PC",
+            "version": "felicsref",
+            "compiler_options": "-O3",
+            "code_size": 7139,
+            "code_ram": 560,
+            "code_time": 19527
+        },
+        {
+            "cipher_name": "Lilliput-II-256",
+            "architecture": "PC",
+            "version": "felicsref",
+            "compiler_options": "-Os",
+            "code_size": 3113,
+            "code_ram": 448,
+            "code_time": 44951
         }
     ]
 }
