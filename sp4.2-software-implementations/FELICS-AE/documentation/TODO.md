@@ -22,3 +22,13 @@ native types instead of parsing them manually.
 # Use `crypto_aead` API as entry point
 
 Instead of the `Encrypt`/`Decrypt` functions.
+
+# Add support for multiple revisions of an algorithm
+
+Possible solutions:
+
+1. Put the version number in the algorithm's folder name,
+   e.g. `Lilliput-I-128-v1_vfelicsref`.
+
+2. Have subfolders under the algorithm's folder,
+   e.g. `Lilliput-I-128_vfelicsref/v1`.
