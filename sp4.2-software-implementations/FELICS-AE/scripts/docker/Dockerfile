@@ -18,4 +18,4 @@ ADD --chown=felics:felics .resources/dependencies.tar.gz /home/felics/dependenci
 ADD ./install-dependencies.sh /home/felics
 RUN /home/felics/install-dependencies.sh /home/felics/dependencies
 
-RUN mkdir /home/felics/FELICS-AE
+ADD --chown=felics:felics .resources/FELICS-AE.tar.gz /home/felics/FELICS-AE

@@ -5,6 +5,13 @@ set -eux
 scripts_dir=$(realpath $(dirname $0))
 felics_parent_dir=${scripts_dir}/../../
 
+if (($# < 1))
+then
+    output_dir=$(realpath ${felics_parent_dir}/FELICS-AE/results)
+else
+    output_dir=$(realpath $1)
+fi
+
 generate-version ()
 {
     PYTHONPATH="${scripts_dir}" python3 -m felics.version
@@ -13,7 +20,7 @@ generate-version ()
 (
     cd ${felics_parent_dir}
 
-    output=FELICS-AE/results/FELICS-AE.tar
+    output=${output_dir}/FELICS-AE.tar
 
     git archive -o ${output} HEAD FELICS-AE
     generate-version > FELICS-AE/VERSION

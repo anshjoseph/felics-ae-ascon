@@ -21,6 +21,7 @@ dst=/home/felics/FELICS-AE
 EOF
 )
 
+${felics_dir}/scripts/felics-archive .resources
 docker build "${options[@]}"
 docker create --mount="${mount}" --name felics-ae -it felics-ae
 docker start felics-ae
