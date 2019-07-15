@@ -3,6 +3,7 @@ FROM ubuntu:18.04
 RUN apt-get update
 
 RUN apt-get install --assume-yes                                                   \
+    python3                                                                        \
     make libelf-dev                                                                \
     gcc-avr avr-libc gdb-avr openjdk-8-jre openjdk-8-jdk                           \
     libusb-dev                                                                     \
