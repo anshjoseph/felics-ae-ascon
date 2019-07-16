@@ -10,7 +10,7 @@ deps_dir="$1"
     make install-simavr DESTDIR=/opt/felics/simavr RELEASE=1
 )
 
-cp -r "${deps_dir}/msp430-gcc-7.3.2.154_linux64" /opt/felics/msp430-gcc
+cp -r "${deps_dir}/msp430-gcc-8.2.0.52_linux64" /opt/felics/msp430-gcc
 
 (
     cd "${deps_dir}/avrora"
