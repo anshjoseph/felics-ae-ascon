@@ -13,6 +13,12 @@ deps_dir="$1"
 cp -r "${deps_dir}/msp430-gcc-8.2.0.52_linux64" /opt/felics/msp430-gcc
 
 (
+    cd "${deps_dir}/mspdebug-0.25"
+    make
+    make install DESTDIR=/opt/felics/mspdebug
+)
+
+(
     cd "${deps_dir}/avrora"
     make
     ./makejar.bash beta-1.7.117-patched

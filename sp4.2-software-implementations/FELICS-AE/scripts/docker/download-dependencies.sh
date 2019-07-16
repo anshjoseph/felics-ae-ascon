@@ -34,6 +34,12 @@ get-msp430-gcc ()
     cp -r msp430-gcc-support-files msp430-gcc-8.2.0.52_linux64/support-files
 }
 
+get-mspdebug ()
+{
+    wget "https://github.com/dlbeer/mspdebug/archive/v0.25.tar.gz" -O mspdebug.tar.gz
+    tar xf mspdebug.tar.gz
+}
+
 get-avrora ()
 {
     cvs -d:pserver:anonymous@a.cvs.sourceforge.net:/cvsroot/avrora co -P avrora
@@ -60,6 +66,7 @@ mkdir -p .resources
     downloads=(
         get-simavr
         get-msp430-gcc
+        get-mspdebug
         get-avrora
         get-jlink
     )
@@ -86,6 +93,7 @@ mkdir -p .resources
     tar czf dependencies.tar.gz                 \
         simavr-1.6                              \
         msp430-gcc-8.2.0.52_linux64             \
+        mspdebug-0.25                           \
         avrora                                  \
         JLink_Linux_x86_64.deb
 )
