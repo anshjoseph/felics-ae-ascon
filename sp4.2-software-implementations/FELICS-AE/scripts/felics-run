@@ -14,7 +14,7 @@ _ROOT_DIR = path.join(_SCRIPTS_DIR, path.pardir)
 _CIPHERS_DIR = path.join(_ROOT_DIR, 'source', 'ciphers')
 _RESULTS_DIR = path.join(_ROOT_DIR, 'results')
 
-_ARCHITECTURES = 'AVR MSP ARM PC'
+_ARCHITECTURES = 'AVR MSP ARM PC NRF52840'
 
 
 def _default_output_filename():
@@ -24,7 +24,7 @@ def _default_output_filename():
     if branch is None:
         return '{d}.json'.format(d=date)
 
-    return '{d}-{b}.json'.format(d=date, b=branch)
+    return '{d}-{b}.json'.format(d=date, b=branch).replace('/','-')
 
 
 def _parse_arguments():

@@ -49,6 +49,7 @@
 #				AVR - binary files are build for AVR device
 #				MSP - binary file are build for MSP device
 #				ARM - binary files are build for ARM device
+#               NRF52840 - binary files are build for NRF52840 device
 #				Default: PC
 #		-co,--compiler_options
 #			Specifies the compiler options

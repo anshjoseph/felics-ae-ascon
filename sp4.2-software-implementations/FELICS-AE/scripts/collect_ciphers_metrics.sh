@@ -254,8 +254,8 @@ run-benchmark ()
     timeout 120 ${script_path}/cipher/cipher_ram.sh \
             "-a=$architecture" -o=$code_ram_output
 
-    # Re-build scenario with cycle count instrumentation for ARM and PC.
-    if [ ${architecture} = ARM -o ${architecture} = PC ]
+    # Re-build scenario with cycle count instrumentation for ARM, NRF52840 and PC.
+    if [ ${architecture} = ARM -o ${architecture} = PC -o ${architecture} = NRF52840 ]
     then
         local cipher_mk=${script_path}/../source/common/cipher.mk
         local make_log_file=${output_base}_code_time_make.log

@@ -53,6 +53,7 @@ function display_help()
 	echo "				AVR - binary files are build for AVR device"
 	echo "				MSP - binary file are build for MSP device"
 	echo "				ARM - binary files are build for ARM device"
+	echo "				NRF52840 - binary files are build for NRF52840 device"
 	echo "				Default: PC"
 	echo "		-t, --target"
 	echo "			Specifies which is the target path. The relative path is computed from the directory where script was called"

@@ -85,11 +85,18 @@
 #elif defined(PC)
 #define ALIGNMENT 8
 
+#elif defined(NRF52840)
+#define ALIGNMENT 8
+
 #else
 #error "No architecture defined; expected one of AVR, MSP, ARM or PC."
 #endif
 
 #define ALIGNED __attribute__ ((aligned(ALIGNMENT)))
+
+#if defined(NRF52840) && !defined(ALIGNED) /* NRF52840 ALIGNED */
+#define ALIGNED __attribute__ ((aligned(ALIGN_NRF52840_BOUNDRY)))
+#endif /* NRF52840 ALIGNED */
 
 
 /* 

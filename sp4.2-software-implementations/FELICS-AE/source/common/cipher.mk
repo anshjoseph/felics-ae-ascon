@@ -179,6 +179,12 @@ cipher.bin : $(BUILDDIR)/cipher.elf
 scenario1.bin : $(BUILDDIR)/scenario1.elf
 	$(OBJCOPY) -O binary $< $@
 
+cipher.hex : $(BUILDDIR)/cipher.elf
+	$(OBJCOPY) -O ihex $< $@
+
+scenario1.hex : $(BUILDDIR)/scenario1.elf
+	$(OBJCOPY) -O ihex $< $@
+
 %.o : \
 		%.c \
 		$(COMMONSOURCEDIR)/cipher.h \
@@ -239,10 +245,12 @@ clean :
 	rm -f $(BUILDDIR)/cipher.elf
 	rm -f $(BUILDDIR)/cipher.bin
 	rm -f $(BUILDDIR)/cipher.lst
+	rm -f $(BUILDDIR)/cipher.hex
 
 	rm -f $(BUILDDIR)/scenario1.elf
 	rm -f $(BUILDDIR)/scenario1.bin
 	rm -f $(BUILDDIR)/scenario1.lst
+	rm -f $(BUILDDIR)/scenario1.hex
 
 	rm -f $(BUILDDIR)/main.o 
 	rm -f $(BUILDDIR)/common.o
@@ -273,7 +281,7 @@ help:
 	@echo -n "Call this makefile from a cipher source directory or build "
 	@echo 		"directory to build the given cipher:"
 	@echo -n "	make -f ./../../../common/cipher.mk "
-	@echo -n		"[ARCHITECTURE=[AVR|MSP|ARM|PC]] [DEBUG=[0|1|3|7]] "
+	@echo -n		"[ARCHITECTURE=[AVR|MSP|ARM|PC|NRF52840]] [DEBUG=[0|1|3|7]] "
 	@echo -n		"[MEASURE_CYCLE_COUNT=[0|1]] [SCENARIO=[0|1]] "
 	@echo -n		"[COMPILER_OPTIONS='...'] [all|clean|cleanall|help]"
 	@echo ""

@@ -30,7 +30,7 @@ set -e
 
 #
 # Call this script to check if the cipher implementation is compliant with the framework
-#     ./check_cipher.sh [{-h|--help}] [--version] [{-a|--architecture}=[PC|AVR|MSP|ARM]] [{-co|--compiler_options}='...']
+#     ./check_cipher.sh [{-h|--help}] [--version] [{-a|--architecture}=[PC|AVR|MSP|ARM|NRF52840]] [{-co|--compiler_options}='...']
 #
 #    To call from a cipher build folder use:
 #        ./../../../../scripts/cipher/check_cipher.sh [options]
@@ -46,7 +46,8 @@ set -e
 #                AVR - binary files are build for AVR device
 #                MSP - binary file are build for MSP device
 #                ARM - binary files are build for ARM device
-#                Default: PC
+#                NRF52840 - binary files are build for NRF52840 device
+#		 Default: PC
 #        -co,--compiler_options
 #            Specifies the compiler options
 #                List of values: '-O3 --param max-unroll-times=5 --param max-unrolled-insns=100 ...'
@@ -178,6 +179,14 @@ case $SCRIPT_ARCHITECTURE in
 
         # Run the program stored in the flash memory of the board
         $ARM_SERIAL_TERMINAL > $RESULT_FILE
+        ;;
+
+    $SCRIPT_ARCHITECTURE_NRF52840)
+        # Upload the program to the board
+        make -f $CIPHER_MAKEFILE ARCHITECTURE=$SCRIPT_ARCHITECTURE upload-cipher &>> $MAKE_FILE_LOG
+
+        # Run the program stored in the flash memory of the board
+        make -f $CIPHER_MAKEFILE ARCHITECTURE=$SCRIPT_ARCHITECTURE run > $RESULT_FILE
         ;;
 esac
 

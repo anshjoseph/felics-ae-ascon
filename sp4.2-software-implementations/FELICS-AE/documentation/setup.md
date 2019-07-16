@@ -76,6 +76,18 @@ We use the J-Link software collection provided by SEGGER:
 
 <https://www.segger.com/downloads/jlink/#J-LinkSoftwareAndDocumentationPack>
 
+NRF52840-specific
+------------
+
+The following dependencies are required :
+
+- GNU Embedded Toolchain available [here](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads).
+- J-Link Software and Documentation Pack available [here](https://www.segger.com/downloads/jlink/#J-LinkSoftwareAndDocumentationPack).
+- nRF Command Line Tools available [here](https://www.nordicsemi.com/Software-and-Tools/Development-Tools/nRF-Command-Line-Tools/Download#infotabs).
+- [python-serial](https://pythonhosted.org/pyserial/). You can get it via distribution's package manager or using `pip` for Python 3.
+
+You can add `bin` directories from all this requirements to your PATH env variable for more convenience.
+
 PC-specific
 -----------
 

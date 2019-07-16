@@ -54,6 +54,9 @@ MSP_SCENARIO1_GDB_STACK_SECTIONS_COMMANDS_FILE=./../../../../scripts/cipher/stac
 ARM_SCENARIO1_GDB_STACK_COMMANDS_FILE=./../../../../scripts/cipher/stack/arm_scenario1_stack.gdb
 ARM_SCENARIO1_GDB_STACK_SECTIONS_COMMANDS_FILE=./../../../../scripts/cipher/stack/arm_scenario1_stack_sections.gdb
 
+NRF52840_SCENARIO1_GDB_STACK_COMMANDS_FILE=./../../../../scripts/cipher/stack/nrf52840_scenario1_stack.gdb
+NRF52840_SCENARIO1_GDB_STACK_SECTIONS_COMMANDS_FILE=./../../../../scripts/cipher/stack/nrf52840_scenario1_stack_sections.gdb
+
 
 GDB_STACK_LOG_FILE=gdb_stack.log
 GDB_STACK_SECTIONS_LOG_FILE=gdb_stack_sections.log
