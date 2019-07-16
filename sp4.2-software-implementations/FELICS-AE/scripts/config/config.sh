@@ -43,7 +43,7 @@ NRF52840_SIZE=arm-none-eabi-size
 PC_GDB=gdb
 AVR_GDB=avr-gdb
 MSP_GDB=${DEPENDENCIES_DIR}/msp430-gcc/bin/msp430-elf-gdb
-ARM_GDB=arm-none-eabi-gdb
+ARM_GDB=gdb-multiarch
 NRF52840_GDB=arm-none-eabi-gdb
 
 SIMAVR_SIMULATOR=${DEPENDENCIES_DIR}/simavr/bin/simavr
