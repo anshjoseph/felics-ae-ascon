@@ -1,5 +1,9 @@
 # Remove `constants.c` files
 
+They are relics of FELICS's previous code-size measuring logic, and
+they add noise when diff'ing a cipher's reference implementation
+vs. its FELICS integration.
+
 Done for Lilliput-AE.
 
 # Remove `upload-*` target from Makefiles
@@ -11,7 +15,7 @@ Use dedicated script; no use cluttering makefiles. Used by
 
 Advantages over Bash:
 
-- better error-reporting (fast, loud and precise failures)
+- better error-reporting (immediate, loud and precise failures)
 - automatic script usage documentation
 
 # Convert `implementation.info` to JSON
@@ -32,3 +36,12 @@ Possible solutions:
 
 2. Have subfolders under the algorithm's folder,
    e.g. `Lilliput-I-128_vfelicsref/v1`.
+
+# Update copyright statements
+
+From University of Luxembourg, 2015, to PACLIDO consortium, 2019.
+
+# Move some constants away from constants.sh
+
+Constants that are used in a single script belong in that script;
+keeping them anywhere else complicates inspection and maintenance.
