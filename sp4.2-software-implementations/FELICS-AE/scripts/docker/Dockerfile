@@ -11,7 +11,7 @@ RUN apt-get install --assume-yes                                                
     gcc gdb
 
 RUN groupadd felics
-RUN useradd felics --gid felics --create-home
+RUN useradd felics --gid felics --groups dialout --create-home
 
 RUN mkdir /opt/felics
 
