@@ -56,17 +56,8 @@ class ArmBoard(object):
 	def drain(self):
 		if None == self.port:
 			self.open()
-			wasOpen = False
 		else:
 			self.close()
-			self.open()
-			wasOpen = True
-		while True:
-			c = self.port.read(1024)
-			if 1024 != len(c):
-				break
-		self.close()
-		if wasOpen:
 			self.open()
 
 	def readAll(self):
@@ -76,6 +67,9 @@ class ArmBoard(object):
 			msg += c
 			if len(c) < 1024:
 				break
+		if msg.count("Done") > 1:
+			msg = msg.split("\nDone\n")
+			msg = msg[1]+"\nDone\n"
 		return msg
 
 if '__main__' == __name__:

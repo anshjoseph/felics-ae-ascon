@@ -121,8 +121,6 @@ int main()
 
 	BEGIN_ENCRYPTION();
 	Encrypt(state, MAXTEST_BYTES_M, key, npub, ad, MAXTEST_BYTES_AD, c);
-	// uint32_t i;
-	// while(i<123456) i++;
 	END_ENCRYPTION();
 
 #if defined(DEBUG) && (DEBUG_LOW == (DEBUG_LOW & DEBUG))

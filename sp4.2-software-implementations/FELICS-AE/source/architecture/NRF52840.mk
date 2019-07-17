@@ -38,7 +38,7 @@ OBJDUMP := arm-none-eabi-objdump
 OBJCOPY := arm-none-eabi-objcopy
 NRFJPROG := nrfjprog
 
-NRF52840_SERIAL_TERMINAL := $(SYSTEM_DIR)/arm_serial_terminal.py
+NRF52840_SERIAL_TERMINAL := $(SYSTEM_DIR)/nrf52840_serial_terminal.py
 
 PORT := ttyACM0
 DEVICE := /dev/$(PORT)
@@ -100,6 +100,6 @@ upload-scenario1 : scenario1.hex
 # Note that the binary should be uploaded first.
 .PHONY : run
 run :
-	@(sleep 0.5 && $(NRFJPROG) -f NRF52 -p > /dev/null &); ./$(NRF52840_SERIAL_TERMINAL) $(DEVICE)
+	@($(NRFJPROG) -f NRF52 -p > /dev/null &); ./$(NRF52840_SERIAL_TERMINAL) $(DEVICE)
 
 pre-build-helpers:

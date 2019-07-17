@@ -38,29 +38,6 @@
 #ifndef __CYCLE_COUNT_H__
 #define __CYCLE_COUNT_H__
 
-
-// extern uint32_t __cycleCountStart;
-// extern uint32_t __cycleCountStop;
-
-// #define CYCLE_COUNT_START \
-// 	DWT->CYCCNT = 0x00000000; \
-// 	__asm__("nop"); \
-// 	__cycleCountStart = DWT->CYCCNT
-
-// #define CYCLE_COUNT_STOP \
-// 	__cycleCountStop =  DWT->CYCCNT
-
-// #define CYCLE_COUNT_ELAPSED  (__cycleCountStop - __cycleCountStart)		// -19 ?
-
-// #define CYCLE_COUNT_INIT \
-// 	CoreDebug->DEMCR |= 0x01000000; \
-// 	DWT->CTRL |= 0x1; \
-// 	DWT->CYCCNT = 0x00000000; \
-// 	__asm__("nop"); \
-//     __cycleCountStart = 0x00000000; \
-//     __cycleCountStop = 0x00000000;
-// 	//printf("CYCLE_COUNT initialized\r\n");
-
 void cycleCountInit();
 void cycleCountStart();
 void cycleCountStop();

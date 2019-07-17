@@ -178,8 +178,7 @@ void VerifyData(uint8_t *data, const char *name)
 void BeginEncryption()
 {
 #if defined(DEBUG) && (DEBUG_LOW == (DEBUG_LOW & DEBUG))
-	printf("->Encryption begin\n");uint32_t __cycleCountStart;
-uint32_t __cycleCountStop;
+	printf("->Encryption begin\n");
 #endif
 }
 
