@@ -86,7 +86,7 @@ The following dependencies are required :
 - nRF Command Line Tools available [here](https://www.nordicsemi.com/Software-and-Tools/Development-Tools/nRF-Command-Line-Tools/Download#infotabs).
 - [python-serial](https://pythonhosted.org/pyserial/). You can get it via distribution's package manager or using `pip` for Python 3.
 
-You can add `bin` directories from all this requirements to your PATH env variable for more convenience.
+You can add `bin` directories from all these requirements to your PATH environment variable for more convenience.
 
 PC-specific
 -----------

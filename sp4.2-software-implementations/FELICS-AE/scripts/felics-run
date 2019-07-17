@@ -24,7 +24,7 @@ def _default_output_filename():
     if branch is None:
         return '{d}.json'.format(d=date)
 
-    return '{d}-{b}.json'.format(d=date, b=branch).replace('/','-')
+    return '{d}-{b}.json'.format(d=date, b=branch.replace('/','-'))
 
 
 def _parse_arguments():

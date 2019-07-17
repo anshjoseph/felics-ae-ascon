@@ -47,7 +47,7 @@ set -e
 #                MSP - binary file are build for MSP device
 #                ARM - binary files are build for ARM device
 #                NRF52840 - binary files are build for NRF52840 device
-#		 Default: PC
+#                Default: PC
 #        -co,--compiler_options
 #            Specifies the compiler options
 #                List of values: '-O3 --param max-unroll-times=5 --param max-unrolled-insns=100 ...'
