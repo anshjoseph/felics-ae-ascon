@@ -12,18 +12,13 @@ else
     output_dir=$(realpath $1)
 fi
 
-generate-version ()
-{
-    PYTHONPATH="${scripts_dir}" python3 -m felics.version
-}
-
 (
     cd ${felics_parent_dir}
 
     output=${output_dir}/FELICS-AE.tar
 
     git archive -o ${output} HEAD FELICS-AE
-    generate-version > FELICS-AE/VERSION
+    ${scripts_dir}/version.sh > FELICS-AE/VERSION
 
     tar uf ${output} FELICS-AE/VERSION
     gzip -f ${output}
