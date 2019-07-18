@@ -46,6 +46,7 @@ set -e
 #				AVR - binary files are build for AVR device
 #				MSP - binary file are build for MSP device
 #				ARM - binary files are build for ARM device
+#				NRF52840 - binary files are build for NRF52840 device
 #				Default: PC
 #		-o, --output
 #			Specifies where to output the results. The relative path is computed from the directory where script was called
@@ -160,7 +161,20 @@ function simulate()
 			make -f ./../../../common/cipher.mk ARCHITECTURE=$SCRIPT_ARCHITECTURE $target_file &> $make_log_file
 
 			$JLINK_GDB_SERVER -USB -device cortex-m3 &> $simulator_output_file &
-			$ARM_GDB -x $command_file &> $gdb_output_file
+			$NRF52840_GDB -x $command_file &> $gdb_output_file
+
+			jlink_gdb_server_pid=$(ps aux | grep "JLinkGDBServer" | grep -v "grep" | tr -s ' ' | cut -d ' ' -f 2)
+			for pid in $jlink_gdb_server_pid
+			do
+				kill -PIPE $pid
+			done
+			;;
+		$SCRIPT_ARCHITECTURE_NRF52840)
+			# Upload the program to the board
+			make -f ./../../../common/cipher.mk ARCHITECTURE=$SCRIPT_ARCHITECTURE $target_file &> $make_log_file
+
+			$JLINK_GDB_SERVER -device NRF52840_XXAA -if SWD -speed 4000 &> $simulator_output_file &
+			$NRF52840_GDB -x $command_file &> $gdb_output_file
 
 			jlink_gdb_server_pid=$(ps aux | grep "JLinkGDBServer" | grep -v "grep" | tr -s ' ' | cut -d ' ' -f 2)
 			for pid in $jlink_gdb_server_pid
@@ -263,6 +277,10 @@ case $SCRIPT_ARCHITECTURE in
 
 	$SCRIPT_ARCHITECTURE_ARM)
 		script_size=$ARM_SIZE
+		;;
+
+	$SCRIPT_ARCHITECTURE_NRF52840)
+		script_size=$NRF52840_SIZE
 		;;
 esac
 
@@ -417,6 +435,16 @@ case $SCRIPT_ARCHITECTURE in
 
 		simulate $ARM_SCENARIO1_GDB_STACK_COMMANDS_FILE $UPLOAD_SCENARIO1 $gdb_stack_log_file $jlink_gdb_server_stack_log_file $make_log_file
 		simulate $ARM_SCENARIO1_GDB_STACK_SECTIONS_COMMANDS_FILE $UPLOAD_SCENARIO1 $gdb_stack_sections_log_file $jlink_gdb_server_stack_sections_log_file $make_log_file
+		;;
+
+	$SCRIPT_ARCHITECTURE_NRF52840)
+
+		make_log_file=$SCRIPT_ARCHITECTURE$SCENARIO_NAME_PART$SCRIPT_SCENARIO$FILE_NAME_SEPARATOR$MAKE_LOG_FILE
+		jlink_gdb_server_stack_log_file=$SCRIPT_ARCHITECTURE$SCENARIO_NAME_PART$SCRIPT_SCENARIO$FILE_NAME_SEPARATOR$JLINK_GDB_SERVER_STACK_LOG_FILE
+		jlink_gdb_server_stack_sections_log_file=$SCRIPT_ARCHITECTURE$SCENARIO_NAME_PART$SCRIPT_SCENARIO$FILE_NAME_SEPARATOR$JLINK_GDB_SERVER_STACK_SECTIONS_LOG_FILE
+
+		simulate $NRF52840_SCENARIO1_GDB_STACK_COMMANDS_FILE $UPLOAD_SCENARIO1 $gdb_stack_log_file $jlink_gdb_server_stack_log_file $make_log_file
+		simulate $NRF52840_SCENARIO1_GDB_STACK_SECTIONS_COMMANDS_FILE $UPLOAD_SCENARIO1 $gdb_stack_sections_log_file $jlink_gdb_server_stack_sections_log_file $make_log_file
 		;;
 esac
 

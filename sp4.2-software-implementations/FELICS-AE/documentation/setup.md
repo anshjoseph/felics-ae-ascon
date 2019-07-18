@@ -76,6 +76,26 @@ We use the J-Link software collection provided by SEGGER:
 
 <https://www.segger.com/downloads/jlink/#J-LinkSoftwareAndDocumentationPack>
 
+NRF52840-specific
+------------
+
+The following dependencies are required :
+
+- GNU Embedded Toolchain available [here](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads).
+- J-Link Software and Documentation Pack available [here](https://www.segger.com/downloads/jlink/#J-LinkSoftwareAndDocumentationPack).
+- nRF Command Line Tools available [here](https://www.nordicsemi.com/Software-and-Tools/Development-Tools/nRF-Command-Line-Tools/Download#infotabs).
+- [python-serial](https://pythonhosted.org/pyserial/). You can get it via distribution's package manager or using `pip` for Python 3.
+
+You can add `bin` directories from all these requirements to your PATH environment variable for more convenience.
+
+### Build `libnrf52840.a`
+
+If you ever need to regenerate the library `libnrf52840.a` that is bundled with FELICS-AE, follow these instructions:
+
+1. Download the Nordic SDK `v14.2.0` available [here](https://developer.nordicsemi.com/nRF5_SDK/nRF5_SDK_v14.x.x/nRF5_SDK_14.2.0_17b948a.zip) and open the `peripheral/uart` example project. This project uses `printf` required by FELICS framework.
+2. Build the project using the GNU toolchain. In the build folder, remove the object files (`.o`) specific to the project (e.g. `main.o`) and keep those related to the platform core and drivers.
+3. Archive the object files into `libnrf52840.a` using `arm-none-eabi-ar` command.
+
 PC-specific
 -----------
 

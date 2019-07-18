@@ -50,7 +50,9 @@ UPLOAD_SCENARIO1=upload-scenario1
 MAKE_LOG_FILE=cipher_execution_time_make.log
 
 ARM_SERIAL_TERMINAL=../../../architecture/arm/arm_serial_terminal.py
-
 ARM_SERIAL_TERMINAL_OUTPUT_FILE=serial.out
+
+NRF52840_SERIAL_TERMINAL=../../../architecture/nrf52840/arm_serial_terminal.py
+NRF52840_SERIAL_TERMINAL_OUTPUT_FILE=serial.out
 
 CIPHER_MAKEFILE=./../../../common/cipher.mk

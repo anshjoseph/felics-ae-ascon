@@ -46,6 +46,7 @@ set -e
 #				AVR - binary files are build for AVR device
 #				MSP - binary file are build for MSP device
 #				ARM - binary files are build for ARM device
+#				NRF52840 - binary files are build for NRF52840 device
 #				Default: PC
 #		-o, --output
 #			Specifies where to output the results. The relative path is computed from the directory where script was called
@@ -159,6 +160,10 @@ case $SCRIPT_ARCHITECTURE in
 
 	$SCRIPT_ARCHITECTURE_ARM)
 		script_size=$ARM_SIZE
+		;;
+
+	$SCRIPT_ARCHITECTURE_NRF52840)
+		script_size=$NRF52840_SIZE
 		;;
 esac
 

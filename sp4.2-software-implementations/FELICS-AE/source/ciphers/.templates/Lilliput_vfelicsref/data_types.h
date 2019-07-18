@@ -134,4 +134,28 @@
 #endif /* ARM */
 
 
+
+#if defined(NRF52840) /* NRF52840 */
+
+/* Architecture = NRF52840 ; Scenario = 0 (cipher operation) */
+#if defined(SCENARIO) && (SCENARIO_0 == SCENARIO)
+
+/* Replace with your custom data types and read macros for this architecture and scenario */
+#define SBOX_BYTE ROM_DATA_BYTE
+#define READ_SBOX_BYTE READ_ROM_DATA_BYTE
+
+#endif
+
+/* Architecture = NRF52840 ; Scenario = 1 */
+#if defined(SCENARIO) && (SCENARIO_1 == SCENARIO)
+
+/* Replace with your custom data types and read macros for this architecture and scenario */
+#define SBOX_BYTE ROM_DATA_BYTE
+#define READ_SBOX_BYTE READ_ROM_DATA_BYTE
+
+#endif
+
+#endif /* NRF52840 */
+
+
 #endif /* DATA_TYPES_H */

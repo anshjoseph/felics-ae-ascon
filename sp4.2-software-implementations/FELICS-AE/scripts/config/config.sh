@@ -37,12 +37,14 @@ PC_SIZE=size
 AVR_SIZE=avr-size
 MSP_SIZE=${DEPENDENCIES_DIR}/msp430-gcc/bin/msp430-elf-size
 ARM_SIZE=arm-none-eabi-size
+NRF52840_SIZE=arm-none-eabi-size
 
 
 PC_GDB=gdb
 AVR_GDB=avr-gdb
 MSP_GDB=${DEPENDENCIES_DIR}/msp430-gcc/bin/msp430-elf-gdb
 ARM_GDB=arm-none-eabi-gdb
+NRF52840_GDB=arm-none-eabi-gdb
 
 SIMAVR_SIMULATOR=${DEPENDENCIES_DIR}/simavr/bin/simavr
 MSPDEBUG_SIMULATOR=${DEPENDENCIES_DIR}/mspdebug/usr/local/bin/mspdebug

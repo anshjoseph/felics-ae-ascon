@@ -11,7 +11,7 @@ from git.exc import InvalidGitRepositoryError
 Results = namedtuple('Results', ('commit', 'branch', 'data', 'filename'))
 
 
-ARCHITECTURES = {'AVR': 8, 'MSP': 16, 'ARM': 32, 'PC': 64}
+ARCHITECTURES = {'AVR': 8, 'MSP': 16, 'ARM': 32, 'PC': 64, 'NRF52840': 32}
 
 METRICS = ('code_size', 'code_ram', 'code_time')
 

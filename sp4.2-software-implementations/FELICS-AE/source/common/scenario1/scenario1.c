@@ -52,6 +52,28 @@
 #include <stdio.h>
 #endif /* ARM & DEBUG */
 
+#if defined(NRF52840) && defined(MEASURE_CYCLE_COUNT) && \
+	(MEASURE_CYCLE_COUNT_ENABLED == MEASURE_CYCLE_COUNT)
+#include <stdio.h>
+#include <stdint.h>
+#include "app_uart.h"
+#include "app_error.h"
+#include "nrf.h"
+#include "bsp.h"
+#include "nrf_uart.h"
+#include "cycleCount.h"
+#endif /* NRF52840 & MEASURE_CYCLE_COUNT */
+
+#if defined(NRF52840) && defined(DEBUG) && (DEBUG_LOW == (DEBUG_LOW & DEBUG))
+#include <stdio.h>
+#include <stdint.h>
+#include "app_uart.h"
+#include "app_error.h"
+#include "nrf.h"
+#include "bsp.h"
+#include "nrf_uart.h"
+#endif /* NRF52840 & DEBUG */
+
 
 /*
  *

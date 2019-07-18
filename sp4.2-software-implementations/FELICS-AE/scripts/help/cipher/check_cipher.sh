@@ -32,7 +32,7 @@ function display_help()
 {
 	echo ""
 	echo "Call this script to check if the cipher implementation is compliant with the framework"
-	echo "	./check_cipher.sh [{-h|--help}] [--version] [{-m|--mode}=[0|1]] [{-a|--architecture}=[PC|AVR|MSP|ARM]] [{-t|--target}=[...]] [{-o|--output}=[...]] [{-co|--compiler_options}='...']"
+	echo "	./check_cipher.sh [{-h|--help}] [--version] [{-m|--mode}=[0|1]] [{-a|--architecture}=[PC|AVR|MSP|ARM|NRF52840]] [{-t|--target}=[...]] [{-o|--output}=[...]] [{-co|--compiler_options}='...']"
 
 	echo "	To call from a cipher build folder use:"
 	echo "		./../../../../scripts/cipher/check_cipher.sh [options]"
@@ -53,6 +53,7 @@ function display_help()
 	echo "				AVR - binary files are build for AVR device"
 	echo "				MSP - binary file are build for MSP device"
 	echo "				ARM - binary files are build for ARM device"
+	echo "				NRF52840 - binary files are build for NRF52840 device"
 	echo "				Default: PC"
 	echo "		-t, --target"
 	echo "			Specifies which is the target path. The relative path is computed from the directory where script was called"

@@ -133,6 +133,41 @@ void VerifyTag(uint8_t tag_check);
 
 #else /* ARM */
 
+#ifdef NRF52840 /* NRF52840 */
+
+#if defined(MEASURE_CYCLE_COUNT) && \
+	(MEASURE_CYCLE_COUNT_ENABLED == MEASURE_CYCLE_COUNT) /* MEASURE_CYCLE_COUNT */
+
+#define BEGIN_ENCRYPTION() cycleCountStart()
+#define END_ENCRYPTION() \
+	cycleCountStop(); \
+	printf("EncryptCycleCount: %u\n", cycleCountElapsed())
+
+#define BEGIN_DECRYPTION() cycleCountStart()
+#define END_DECRYPTION() \
+	cycleCountStop(); \
+	printf("DecryptCycleCount: %u\n", cycleCountElapsed())
+
+#define DONE() printf("Done\n")
+
+#else /* MEASURE_CYCLE_COUNT */
+
+#define BEGIN_ENCRYPTION() BeginEncryption()
+#define END_ENCRYPTION() EndEncryption()
+
+#define BEGIN_DECRYPTION() BeginDecryption()
+#define END_DECRYPTION() EndDecryption()
+
+#if defined(DEBUG) && (DEBUG_LOW == (DEBUG_LOW & DEBUG))
+#define DONE() printf("Done\n");
+#else
+#define DONE()
+#endif
+
+#endif /* MEASURE_CYCLE_COUNT */
+
+#else /* NRF52840 */
+
 #ifdef PC /* PC */
 
 #if defined(MEASURE_CYCLE_COUNT) && \
@@ -173,6 +208,8 @@ void VerifyTag(uint8_t tag_check);
 #define DONE()
 
 #endif /* PC */
+
+#endif /* NRF52840 */
 
 #endif /* ARM */
 

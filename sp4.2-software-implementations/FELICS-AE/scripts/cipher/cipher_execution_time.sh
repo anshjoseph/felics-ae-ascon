@@ -46,6 +46,7 @@ set -e
 #				AVR - binary files are build for AVR device
 #				MSP - binary file are build for MSP device
 #				ARM - binary files are build for ARM device
+#				NRF52840 - binary files are build for NRF52840 device
 #				Default: PC
 #		-o, --output
 #			Specifies where to output the results. The relative path is computed from the directory where script was called
@@ -241,6 +242,11 @@ function simulate()
 			# Run the program stored in the flash memory of the board
 			$ARM_SERIAL_TERMINAL > $output_file
 			;;
+		$SCRIPT_ARCHITECTURE_NRF52840)
+			make -f $CIPHER_MAKEFILE ARCHITECTURE=$SCRIPT_ARCHITECTURE $make_target &> $make_log_file
+			# Run the program stored in the flash memory of the board
+			make -f $CIPHER_MAKEFILE ARCHITECTURE=$SCRIPT_ARCHITECTURE run > $output_file
+			;;
 	esac
 }
 
@@ -288,6 +294,10 @@ function compute_execution_time()
 			;;
 		$SCRIPT_ARCHITECTURE_ARM)
 			local cycle_count=$(cat $output_file | grep $first_row_identifier | tr -d '\r' | cut -d ':' -f 2)
+			echo $cycle_count
+			;;
+		$SCRIPT_ARCHITECTURE_NRF52840)
+			local cycle_count=$(cat $output_file | grep -a $first_row_identifier | tr -d '\r' | cut -d ':' -f 2)
 			echo $cycle_count
 			;;
 	esac
@@ -379,6 +389,19 @@ case $SCRIPT_ARCHITECTURE in
 		if [ -f $arm_serial_terminal_output_file ] ; then
 			e_execution_time=$(compute_execution_time $arm_serial_terminal_output_file 'EncryptCycleCount')
 			d_execution_time=$(compute_execution_time $arm_serial_terminal_output_file 'DecryptCycleCount')
+		fi
+		;;
+
+	$SCRIPT_ARCHITECTURE_NRF52840)
+
+		make_log_file=$SCRIPT_ARCHITECTURE$SCENARIO_NAME_PART$SCRIPT_SCENARIO$FILE_NAME_SEPARATOR$MAKE_LOG_FILE
+		nrf52840_serial_terminal_output_file=$SCRIPT_ARCHITECTURE$SCENARIO_NAME_PART$SCRIPT_SCENARIO$FILE_NAME_SEPARATOR$NRF52840_SERIAL_TERMINAL_OUTPUT_FILE
+
+		simulate $file $nrf52840_serial_terminal_output_file $make_log_file $UPLOAD_SCENARIO1
+
+		if [ -f $nrf52840_serial_terminal_output_file ] ; then
+			e_execution_time=$(compute_execution_time $nrf52840_serial_terminal_output_file 'EncryptCycleCount')
+			d_execution_time=$(compute_execution_time $nrf52840_serial_terminal_output_file 'DecryptCycleCount')
 		fi
 		;;
 esac
