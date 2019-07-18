@@ -2,6 +2,9 @@
 
 set -eux
 
+docker_dir=$(dirname $(realpath $0))
+resources_dir=$1
+
 run-bg ()
 {
     local logfile="$@".log
@@ -21,7 +24,7 @@ get-simavr ()
 
     (
         cd simavr-1.6
-        patch -p1 < ../../simavr.patch
+        patch -p1 < "${docker_dir}"/simavr.patch
     )
 }
 
@@ -59,9 +62,8 @@ get-jlink ()
          -o JLink_Linux_x86_64.deb
 }
 
-mkdir -p .resources
 (
-    cd .resources
+    cd "${resources_dir}"
 
     downloads=(
         get-simavr
