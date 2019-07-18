@@ -88,6 +88,11 @@ The following dependencies are required :
 
 You can add `bin` directories from all these requirements to your PATH environment variable for more convenience.
 
+### Build `libnrf52840.a`
+1. Download the Nordic SDK `v14.2.0` available [here](https://developer.nordicsemi.com/nRF5_SDK/nRF5_SDK_v14.x.x/nRF5_SDK_14.2.0_17b948a.zip) and open the `peripheral/uart` example project. This project uses `printf` required by FELICS framework.
+2. Build the project using the GNU toolchain. In the build folder, remove the object files (`.o`) specific to the project (e.g. `main.o`) and keep those related to the platform core and drivers.
+3. Archive the object files into `libnrf52840.a` using `arm-none-eabi-ar` command.
+
 PC-specific
 -----------
 
