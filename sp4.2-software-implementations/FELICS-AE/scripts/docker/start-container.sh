@@ -17,5 +17,10 @@ options=(
     -it
 )
 
-docker create "${options[@]}" felics-ae:$("${scripts_dir}"/version.sh)
+version=$(
+    docker images felics-ae --format "{{.Tag}}" |
+    sort -r                                     |
+    head -n1
+)
+docker create "${options[@]}" felics-ae:${version}
 docker start felics-ae
