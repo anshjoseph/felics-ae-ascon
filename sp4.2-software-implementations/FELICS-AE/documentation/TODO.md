@@ -1,4 +1,10 @@
-# Remove `constants.c` files
+# Cipher implementations
+
+## Use `crypto_aead` API as entry point
+
+Instead of the `Encrypt`/`Decrypt` functions.
+
+## Remove `constants.c` files
 
 They are relics of FELICS's previous code-size measuring logic, and
 they add noise when diff'ing a cipher's reference implementation
@@ -6,23 +12,7 @@ vs. its FELICS integration.
 
 Done for Lilliput-AE.
 
-# Port more scripts to Python
-
-Advantages over Bash:
-
-- better error-reporting (immediate, loud and precise failures)
-- automatic script usage documentation
-
-# Convert `implementation.info` to JSON
-
-So that hypothetical Python scripts can simply `json.load()` them into
-native types instead of parsing them manually.
-
-# Use `crypto_aead` API as entry point
-
-Instead of the `Encrypt`/`Decrypt` functions.
-
-# Add support for multiple revisions of an algorithm
+## Add support for multiple revisions of an algorithm
 
 Possible solutions:
 
@@ -32,11 +22,27 @@ Possible solutions:
 2. Have subfolders under the algorithm's folder,
    e.g. `Lilliput-I-128_vfelicsref/v1`.
 
-# Update copyright statements
+# Scripts & tooling
 
-From University of Luxembourg, 2015, to PACLIDO consortium, 2019.
+## Port more scripts to Python
 
-# Move some constants away from constants.sh
+Advantages over Bash:
+
+- better error-reporting (immediate, loud and precise failures)
+- automatic script usage documentation
+
+## Convert `implementation.info` to JSON
+
+So that hypothetical Python scripts can simply `json.load()` them into
+native types instead of parsing them manually.
+
+## Move some constants away from constants.sh
 
 Constants that are used in a single script belong in that script;
 keeping them anywhere else complicates inspection and maintenance.
+
+# Miscellaneous
+
+## Update copyright statements
+
+From University of Luxembourg, 2015, to PACLIDO consortium, 2019.
