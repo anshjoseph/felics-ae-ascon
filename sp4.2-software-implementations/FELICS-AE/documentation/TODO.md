@@ -12,6 +12,18 @@ vs. its FELICS integration.
 
 Done for Lilliput-AE.
 
+## Remove `encrypt.c` and `decrypt.c` files
+
+They force the integrator to make gratuitious changes to the reference
+implementation.
+
+`cipher.mk` makes no assumption on how C files are named; it just
+compiles all `.c` and `.S` files it finds in the `source` folder.
+
+`cipher_code_size.sh` includes some special-casing to measure the ROM
+of `encrypt.o` and `decrypt.o`; removing the assumption that these
+files exist should simplify the code.
+
 ## Add support for multiple revisions of an algorithm
 
 Possible solutions:

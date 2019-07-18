@@ -233,19 +233,12 @@ do
 done
 
 
-# Cipher
+# Display results
 cipher_e=$(($encrypt_rom + $shared_code_e))
 cipher_d=$(($decrypt_rom + $shared_code_d))
 cipher_total=$(($encrypt_rom + $decrypt_rom + $shared_code_total))
 
-# Scenario 1
-scenario1_e=$(($cipher_e))
-scenario1_d=$(($cipher_d))
-scenario1_total=$(($cipher_total))
-
-
-# Display results
-printf "%s %s %s" $scenario1_e $scenario1_d $scenario1_total > $SCRIPT_OUTPUT
+printf "%s %s %s" $cipher_e $cipher_d $cipher_total > $SCRIPT_OUTPUT
 
 
 echo ""

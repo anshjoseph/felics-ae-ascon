@@ -13,7 +13,6 @@ To add a new cipher implementation:
 2. Add the following files, using the templates provided in
    `source/ciphers/CipherName_v01`:
     - `data_types.h`: platform-specific declarations for integer types
-    - `constants.[ch]`: static byte arrays
     - `encrypt.c`, `decrypt.c`: entry points defining the functions
       `Encrypt()` and `Decrypt()`, which will be called by the
       framework
