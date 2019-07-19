@@ -33,124 +33,57 @@
 #include "common.h"
 #include "constants.h"
 
-#if defined(PC) && defined(MEASURE_CYCLE_COUNT) && \
-	(MEASURE_CYCLE_COUNT_ENABLED == MEASURE_CYCLE_COUNT)
-#include <stdio.h>
+#if defined(PC)
 #include <inttypes.h>
 #include "cycleCount.h"
-#endif /* PC & MEASURE_CYCLE_COUNT */
+#endif /* PC */
 
-#if defined(ARM) && defined(MEASURE_CYCLE_COUNT) && \
-	(MEASURE_CYCLE_COUNT_ENABLED == MEASURE_CYCLE_COUNT)
+#if defined(ARM)
 #include <sam3x8e.h>
-#include <stdio.h>
-#include <unistd.h>
 #include "cycleCount.h"
-#endif /* ARM & MEASURE_CYCLE_COUNT */
+#endif /* ARM */
 
-#if defined(ARM) && defined(DEBUG) && (DEBUG_LOW == (DEBUG_LOW & DEBUG))
-#include <stdio.h>
-#endif /* ARM & DEBUG */
-
-#if defined(NRF52840) && defined(MEASURE_CYCLE_COUNT) && \
-	(MEASURE_CYCLE_COUNT_ENABLED == MEASURE_CYCLE_COUNT)
-#include <stdio.h>
-#include <stdint.h>
+#if defined(NRF52840)
 #include "app_uart.h"
 #include "app_error.h"
 #include "nrf.h"
 #include "bsp.h"
 #include "nrf_uart.h"
 #include "cycleCount.h"
-#endif /* NRF52840 & MEASURE_CYCLE_COUNT */
-
-#if defined(NRF52840) && defined(DEBUG) && (DEBUG_LOW == (DEBUG_LOW & DEBUG))
-#include <stdio.h>
-#include <stdint.h>
-#include "app_uart.h"
-#include "app_error.h"
-#include "nrf.h"
-#include "bsp.h"
-#include "nrf_uart.h"
-#endif /* NRF52840 & DEBUG */
+#endif /* NRF52840 */
 
 
-/*
- *
- * Entry point into program
- *
- */
+/* Performance-measurement program. */
 int main()
 {
-	RAM_DATA_BYTE data[DATA_SIZE];
+        RAM_DATA_BYTE data[DATA_SIZE];
 
-	RAM_DATA_BYTE key[KEY_SIZE];
-	
-/* ----------------------------------------- */	
-	RAM_DATA_BYTE c[DATA_SIZE  + CRYPTO_ABYTES]; // contains the cipher text THEN the tag value
-	
-	RAM_DATA_BYTE ad[ASSOCIATED_DATA_SIZE];
-	
-	RAM_DATA_BYTE npub[CRYPTO_NPUBBYTES];
-/* ----------------------------------------- */		
-	
+        RAM_DATA_BYTE key[KEY_SIZE];
 
+        /* Contains the ciphertext, followed by the tag. */
+        RAM_DATA_BYTE c[DATA_SIZE+CRYPTO_ABYTES];
 
-	InitializeDevice();
+        RAM_DATA_BYTE ad[ASSOCIATED_DATA_SIZE];
 
+        RAM_DATA_BYTE npub[CRYPTO_NPUBBYTES];
 
-	InitializeData(data, DATA_SIZE);
+        InitializeDevice();
 
-#if defined(DEBUG) && (DEBUG_LOW == (DEBUG_LOW & DEBUG))
-	DisplayData(data, DATA_SIZE, PLAINTEXT_NAME);
-#endif
+        InitializeData(data, DATA_SIZE);
+        InitializeKey(key);
+        InitializeAd(ad, ASSOCIATED_DATA_SIZE);
+        InitializeNpub(npub);
 
+        BEGIN_ENCRYPTION();
+        Encrypt(data, DATA_SIZE, key, npub, ad, ASSOCIATED_DATA_SIZE, c);
+        END_ENCRYPTION();
 
-	InitializeKey(key);
+        BEGIN_DECRYPTION();
+        int valid = Decrypt(data, DATA_SIZE, key, npub, ad, ASSOCIATED_DATA_SIZE, c);
+        END_DECRYPTION();
 
-#if defined(DEBUG) && (DEBUG_MEDIUM == (DEBUG_MEDIUM & DEBUG))
-	DisplayData(key, KEY_SIZE, KEY_NAME);
-#endif
+        DONE();
+        StopDevice();
 
-
-/* ----------------------------------------- */	
-	InitializeAd(ad, ASSOCIATED_DATA_SIZE);
-#if defined(DEBUG) && (DEBUG_LOW == (DEBUG_LOW & DEBUG))
-	DisplayVerifyData(ad, ASSOCIATED_DATA_SIZE, ASSOCIATED_NAME);
-#endif
-	
-	InitializeNpub(npub);
-/* ----------------------------------------- */	
-
-
-
-#if defined(DEBUG) && (DEBUG_LOW == (DEBUG_LOW & DEBUG))
-	DisplayData(data, DATA_SIZE, PLAINTEXT_NAME);
-#endif
-
-	
-	BEGIN_ENCRYPTION();
-	Encrypt(data, DATA_SIZE, key, npub, ad, ASSOCIATED_DATA_SIZE, c);
-	END_ENCRYPTION();
-
-#if defined(DEBUG) && (DEBUG_LOW == (DEBUG_LOW & DEBUG))
-	DisplayData(data, DATA_SIZE, CIPHERTEXT_NAME);
-#endif
-	
-	
-	BEGIN_DECRYPTION();
-	int valid = Decrypt(data, DATA_SIZE, key, npub, ad, ASSOCIATED_DATA_SIZE, c);
-	END_DECRYPTION();
-
-#if defined(DEBUG) && (DEBUG_LOW == (DEBUG_LOW & DEBUG))
-	DisplayData(data, DATA_SIZE, PLAINTEXT_NAME);
-#endif
-	
-	
-	DONE();
-
-	
-	StopDevice();
-	
-	return valid;
+        return valid;
 }

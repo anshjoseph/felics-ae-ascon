@@ -32,115 +32,56 @@
 #include "cipher.h"
 #include "common.h"
 
-
-#if defined(PC) && defined(MEASURE_CYCLE_COUNT) && \
-	(MEASURE_CYCLE_COUNT_ENABLED == MEASURE_CYCLE_COUNT)
-#include <stdio.h>
-#include <inttypes.h>
-#include "cycleCount.h"
-#endif /* PC & MEASURE_CYCLE_COUNT */
-
-#if defined(ARM) && defined(MEASURE_CYCLE_COUNT) && \
-	(MEASURE_CYCLE_COUNT_ENABLED == MEASURE_CYCLE_COUNT)
-#include <sam3x8e.h>
-#include <stdio.h>
-#include <unistd.h>
-#include "cycleCount.h"
-#endif /* ARM & MEASURE_CYCLE_COUNT */
-
-#if defined(ARM) && defined(DEBUG) && (DEBUG_LOW == (DEBUG_LOW & DEBUG))
-#include <stdio.h>
-#endif /* ARM & DEBUG */
-
-#if defined(NRF52840) && defined(MEASURE_CYCLE_COUNT) && \
-	(MEASURE_CYCLE_COUNT_ENABLED == MEASURE_CYCLE_COUNT)
-#include <stdio.h>
-#include <stdint.h>
+#if defined(NRF52840)
 #include "app_uart.h"
 #include "app_error.h"
 #include "nrf.h"
 #include "bsp.h"
 #include "nrf_uart.h"
-#include "cycleCount.h"
-#endif /* NRF52840 & MEASURE_CYCLE_COUNT */
-
-#if defined(NRF52840) && defined(DEBUG) && (DEBUG_LOW == (DEBUG_LOW & DEBUG))
-#include <stdio.h>
-#include <stdint.h>
-#include "app_uart.h"
-#include "app_error.h"
-#include "nrf.h"
-#include "bsp.h"
-#include "nrf_uart.h"
-#endif /* NRF52840 & DEBUG */
+#endif /* NRF52840 */
 
 
-/*
- *
- * Entry point into program
- *
- */
+/* Implementation-checking program. */
 int main()
 {
-	RAM_DATA_BYTE state[MAXTEST_BYTES_M];
+        RAM_DATA_BYTE state[MAXTEST_BYTES_M];
 
-	RAM_DATA_BYTE key[KEY_SIZE];
-	
-/* ----------------------------------------- */	
-	RAM_DATA_BYTE c[MAXTEST_BYTES_M  + CRYPTO_ABYTES]; // contains the cipher text THEN the tag value
-	
-	RAM_DATA_BYTE ad[MAXTEST_BYTES_AD];
-	
-	RAM_DATA_BYTE npub[CRYPTO_NPUBBYTES];
-/* ----------------------------------------- */		
+        RAM_DATA_BYTE key[KEY_SIZE];
 
+        /* Contains the ciphertext, followed by the tag. */
+        RAM_DATA_BYTE c[MAXTEST_BYTES_M+CRYPTO_ABYTES];
 
-	InitializeDevice();	
-	
-		
-	InitializeState(state);
+        RAM_DATA_BYTE ad[MAXTEST_BYTES_AD];
 
-#if defined(DEBUG) && (DEBUG_LOW == (DEBUG_LOW & DEBUG))
-	DisplayVerifyData(state, MAXTEST_BYTES_M, PLAINTEXT_NAME);
-#endif
-	
-	InitializeKey(key);
+        RAM_DATA_BYTE npub[CRYPTO_NPUBBYTES];
 
-#if defined(DEBUG) && (DEBUG_MEDIUM == (DEBUG_MEDIUM & DEBUG))
-	DisplayVerifyData(key, KEY_SIZE, KEY_NAME);
-#endif
+        InitializeDevice();
 
-/* ----------------------------------------- */	
-	InitializeAd(ad, MAXTEST_BYTES_AD);
-#if defined(DEBUG) && (DEBUG_LOW == (DEBUG_LOW & DEBUG))
-	DisplayVerifyData(ad, MAXTEST_BYTES_AD, ASSOCIATED_NAME);
-#endif
-	
-	InitializeNpub(npub);
-/* ----------------------------------------- */	
+        InitializeState(state);
+        DisplayVerifyData(state, MAXTEST_BYTES_M, PLAINTEXT_NAME);
 
-	BEGIN_ENCRYPTION();
-	Encrypt(state, MAXTEST_BYTES_M, key, npub, ad, MAXTEST_BYTES_AD, c);
-	END_ENCRYPTION();
+        InitializeKey(key);
+        DisplayVerifyData(key, KEY_SIZE, KEY_NAME);
 
-#if defined(DEBUG) && (DEBUG_LOW == (DEBUG_LOW & DEBUG))
-	DisplayVerifyData(c, MAXTEST_BYTES_M  + CRYPTO_ABYTES, CIPHERTEXT_NAME);
-#endif
-	
-	BEGIN_DECRYPTION();
-	int valid = Decrypt(state, MAXTEST_BYTES_M, key, npub, ad, MAXTEST_BYTES_AD, c);
-	END_DECRYPTION();
+        InitializeAd(ad, MAXTEST_BYTES_AD);
+        DisplayVerifyData(ad, MAXTEST_BYTES_AD, ASSOCIATED_NAME);
 
-#if defined(DEBUG) && (DEBUG_LOW == (DEBUG_LOW & DEBUG))
-	DisplayVerifyData(state, MAXTEST_BYTES_M, PLAINTEXT_NAME);
-#endif
-	
-	
-	DONE();
+        InitializeNpub(npub);
 
+        BEGIN_ENCRYPTION();
+        Encrypt(state, MAXTEST_BYTES_M, key, npub, ad, MAXTEST_BYTES_AD, c);
+        END_ENCRYPTION();
 
-	StopDevice();
-	
-	
-	return valid;
+        DisplayVerifyData(c, MAXTEST_BYTES_M + CRYPTO_ABYTES, CIPHERTEXT_NAME);
+
+        BEGIN_DECRYPTION();
+        int valid = Decrypt(state, MAXTEST_BYTES_M, key, npub, ad, MAXTEST_BYTES_AD, c);
+        END_DECRYPTION();
+
+        DisplayVerifyData(state, MAXTEST_BYTES_M, PLAINTEXT_NAME);
+
+        DONE();
+        StopDevice();
+
+        return valid;
 }
