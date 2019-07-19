@@ -1,1 +1,0 @@
-../../.templates/DeoxysI/encrypt.c

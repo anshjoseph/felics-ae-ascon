@@ -1,5 +1,0 @@
-ImplementationDescription: AEAD AEGIS128
-ImplementationAuthors: Jean-Baptiste Serrou Soares (adapted from supercop)
-
-EncryptCode: aegis_utils, aegis_common, TE_constants
-DecryptCode: aegis_utils, aegis_common, TE_constants

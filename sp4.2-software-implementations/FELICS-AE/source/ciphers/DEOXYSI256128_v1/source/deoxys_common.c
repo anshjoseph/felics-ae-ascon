@@ -1,1 +1,0 @@
-../../.templates/DeoxysI/deoxys_common.c

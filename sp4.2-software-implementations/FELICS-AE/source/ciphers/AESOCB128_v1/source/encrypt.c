@@ -1,1 +1,0 @@
-../../.templates/AES-OCB/encrypt.c

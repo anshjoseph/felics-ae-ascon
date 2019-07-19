@@ -1,1 +1,0 @@
-../../.templates/DeoxysI/lfsr_constants.c

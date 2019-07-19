@@ -1,5 +1,0 @@
-ImplementationDescription: AEAD AES-OCB (OCB: supercop; AES: FELICS block ciphers AES_128_128_v01)
-ImplementationAuthors: Kévin Le Gouguec
-
-EncryptCode: aes_encrypt, aes_common, ocb_common, aes_constants sbox
-DecryptCode: aes_decrypt, aes_common, ocb_common, aes_constants sbox_inv

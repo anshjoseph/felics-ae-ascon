@@ -1,1 +1,0 @@
-../../.templates/AES-OCB/sbox_inv.c
