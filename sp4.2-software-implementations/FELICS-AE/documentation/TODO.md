@@ -24,6 +24,11 @@ compiles all `.c` and `.S` files it finds in the `source` folder.
 of `encrypt.o` and `decrypt.o`; removing the assumption that these
 files exist should simplify the code.
 
+## Add `felics-` prefix to headers required by FELICS-AE
+
+So that the integrator does not have to rename files that happen to be
+named "cipher.h" or "constants.h" in the reference implementation.
+
 ## Add support for multiple revisions of an algorithm
 
 Possible solutions:
@@ -52,6 +57,10 @@ native types instead of parsing them manually.
 
 Constants that are used in a single script belong in that script;
 keeping them anywhere else complicates inspection and maintenance.
+
+## Simplify AVR cycle measurements
+
+Stop using the "second identifier; use the `<-(RET )` line.
 
 # Miscellaneous
 
