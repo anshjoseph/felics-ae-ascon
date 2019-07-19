@@ -1,3 +1,5 @@
+Cf. https://csrc.nist.gov/events/2019/lightweight-cryptography-workshop-2019
+
 * FELICS reminder
 * Changes to get to FELICS-AE
 * Usage (setup, APIs, user guide)
