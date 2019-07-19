@@ -67,9 +67,6 @@ source $script_path/help/collect_ciphers_metrics.sh
 # Include validation functions
 source $script_path/common/validate.sh
 
-# Include check status function
-source $script_path/common/check_status.sh
-
 # Include version file
 source $script_path/common/version.sh
 

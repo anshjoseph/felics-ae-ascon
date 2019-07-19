@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 #
 # University of Luxembourg
 # Laboratory of Algorithmics, Cryptology and Security (LACS)
@@ -76,9 +78,6 @@ source $script_path/../help/common/build.sh
 # Include validation functions
 source $script_path/validate.sh
 
-# Include check status function
-source $script_path/check_status.sh
-
 # Include version file
 source $script_path/../common/version.sh
 
@@ -129,12 +128,16 @@ echo -e "\t SCRIPT_COMPILER_OPTIONS \t = $SCRIPT_COMPILER_OPTIONS"
 validate_architecture $SCRIPT_ARCHITECTURE
 
 
+run-make ()
+{
+    if ! make -f ${CIPHER_MAKEFILE} "$@" &> ${make_log_file}
+    then
+        cat ${make_log_file}
+        return 1
+    fi
+}
+
 make_log_file=$SCRIPT_ARCHITECTURE$SCENARIO_NAME_PART$SCRIPT_SCENARIO$FILE_NAME_SEPARATOR$SCRIPT_MAKE_LOG
 
-# Clean
-make -f $CIPHER_MAKEFILE clean &> $make_log_file
-check_status $? $(pwd)/$make_log_file
-
-# Build
-make -f $CIPHER_MAKEFILE ARCHITECTURE=$SCRIPT_ARCHITECTURE SCENARIO=$SCRIPT_SCENARIO COMPILER_OPTIONS="$SCRIPT_COMPILER_OPTIONS" &> $make_log_file
-check_status $? $(pwd)/$make_log_file
+run-make clean &> $make_log_file
+run-make ARCHITECTURE=$SCRIPT_ARCHITECTURE SCENARIO=$SCRIPT_SCENARIO COMPILER_OPTIONS="$SCRIPT_COMPILER_OPTIONS"
