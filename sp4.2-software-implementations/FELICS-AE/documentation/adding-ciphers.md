@@ -14,8 +14,8 @@ To add a new cipher implementation:
    `source/ciphers/CipherName_v01`:
     - `data_types.h`: platform-specific declarations for integer types
     - `encrypt.c`, `decrypt.c`: entry points defining the functions
-      `Encrypt()` and `Decrypt()`, which will be called by the
-      framework
+      `crypto_aead_encrypt()` and `crypto_aead_decrypt()`, which will
+      be called by the framework
     - `implementation.info`: metadata used by the framework's scripts
     - `test_vectors.c`: contains static byte arrays for plaintext,
       associated data, key and ciphertext (the nonce is set to

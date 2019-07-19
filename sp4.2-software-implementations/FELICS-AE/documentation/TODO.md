@@ -1,9 +1,5 @@
 # Cipher implementations
 
-## Use `crypto_aead` API as entry point
-
-Instead of the `Encrypt`/`Decrypt` functions.
-
 ## Remove `constants.c` files
 
 They are relics of FELICS's previous code-size measuring logic, and

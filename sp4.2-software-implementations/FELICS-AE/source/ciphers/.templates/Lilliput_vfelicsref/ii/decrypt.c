@@ -28,9 +28,24 @@ static bool _lilliput_ae_decrypt(
     return memcmp(tag, effective_tag, TAG_BYTES) == 0;
 }
 
-int Decrypt(uint8_t *block, size_t mlen, uint8_t *key, uint8_t *npub,
-            uint8_t *ad, size_t adlen, uint8_t *c)
+int crypto_aead_decrypt(
+	uint8_t *m, size_t *mlen,
+	const uint8_t *c, size_t clen,
+	const uint8_t *ad, size_t adlen,
+	const uint8_t *npub,
+	const uint8_t *k
+)
 {
-    return _lilliput_ae_decrypt(mlen, c, adlen, ad, key, npub, c+mlen, block)
-        ? 0 : -1;
+    size_t tagless_len = clen-TAG_BYTES;
+
+    bool valid = _lilliput_ae_decrypt(
+        tagless_len, c, adlen, ad, k, npub, c+tagless_len, m
+    );
+
+    if (!valid)
+        return -1;
+
+    *mlen = tagless_len;
+
+    return 0;
 }

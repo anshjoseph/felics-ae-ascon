@@ -25,8 +25,16 @@ static void _lilliput_ae_encrypt(
     _encrypt_message(key, message_len, message, nonce, tag, ciphertext);
 }
 
-void Encrypt(uint8_t *block, size_t mlen, uint8_t *key, uint8_t *npub,
-             uint8_t *ad, size_t adlen, uint8_t *c)
+int crypto_aead_encrypt(
+	uint8_t *c, size_t *clen,
+	const uint8_t *m, size_t mlen,
+	const uint8_t *ad, size_t adlen,
+	const uint8_t *npub,
+	const uint8_t *k
+)
 {
-    _lilliput_ae_encrypt(mlen, block, adlen, ad, key, npub, c, c+mlen);
+    _lilliput_ae_encrypt(mlen, m, adlen, ad, k, npub, c, c+mlen);
+    *clen = mlen + TAG_BYTES;
+
+    return 0;
 }

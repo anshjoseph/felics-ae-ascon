@@ -27,10 +27,13 @@
  *
  */
 
+#include <stddef.h>
 #include <stdint.h>
+
 #include "constants.h"
 #include "cipher.h"
 #include "common.h"
+#include "crypto_aead.h"
 
 #if defined(NRF52840)
 #include "app_uart.h"
@@ -45,11 +48,13 @@
 int main()
 {
         RAM_DATA_BYTE state[MAXTEST_BYTES_M];
+        size_t mlen;
 
         RAM_DATA_BYTE key[KEY_SIZE];
 
         /* Contains the ciphertext, followed by the tag. */
         RAM_DATA_BYTE c[MAXTEST_BYTES_M+CRYPTO_ABYTES];
+        size_t clen;
 
         RAM_DATA_BYTE ad[MAXTEST_BYTES_AD];
 
@@ -69,13 +74,13 @@ int main()
         InitializeNpub(npub);
 
         BEGIN_ENCRYPTION();
-        Encrypt(state, MAXTEST_BYTES_M, key, npub, ad, MAXTEST_BYTES_AD, c);
+        crypto_aead_encrypt(c, &clen, state, sizeof(state), ad, sizeof(ad), npub, key);
         END_ENCRYPTION();
 
         DisplayVerifyData(c, MAXTEST_BYTES_M + CRYPTO_ABYTES, CIPHERTEXT_NAME);
 
         BEGIN_DECRYPTION();
-        int valid = Decrypt(state, MAXTEST_BYTES_M, key, npub, ad, MAXTEST_BYTES_AD, c);
+        int valid = crypto_aead_decrypt(state, &mlen, c, clen, ad, sizeof(ad), npub, key);
         END_DECRYPTION();
 
         DisplayVerifyData(state, MAXTEST_BYTES_M, PLAINTEXT_NAME);

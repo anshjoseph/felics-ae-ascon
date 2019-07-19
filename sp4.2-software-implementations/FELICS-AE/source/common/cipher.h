@@ -139,22 +139,4 @@
 #endif /* AVR */
 
 
-/*
- *
- * Encrypt the given block using the given round keys
- * ... block - the block to encrypt
- *
- */
-void Encrypt(uint8_t *block, size_t mlen, uint8_t *key, uint8_t *npub,
- uint8_t *ad, size_t adlen, uint8_t *c);
-
-/*
- *
- * Decrypt the given block using the given round keys
- * ... block - the block to decrypt
- *
- */
-int Decrypt(uint8_t *block, size_t mlen, uint8_t *key, uint8_t *npub,
- uint8_t *ad, size_t adlen, uint8_t *c);
-
 #endif /* CIPHER_H */

@@ -31,10 +31,10 @@ prog scenario1.elf
 #
 # Set the breakpoints
 #
-setbreak Encrypt
+setbreak crypto_aead_encrypt
 setbreak EndEncryption
 
-setbreak Decrypt
+setbreak crypto_aead_decrypt
 setbreak EndDecryption
 
 

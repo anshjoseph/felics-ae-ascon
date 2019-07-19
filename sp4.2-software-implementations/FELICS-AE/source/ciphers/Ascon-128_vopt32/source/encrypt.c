@@ -35,7 +35,7 @@
 #include "utils.h"
 
 
-static void crypto_aead_encrypt(
+void crypto_aead_encrypt(
     uint8_t *c, size_t *clen,
     const uint8_t *m, size_t mlen,
     const uint8_t *ad, size_t adlen,
@@ -179,11 +179,4 @@ static void crypto_aead_encrypt(
   EXPAND_U32(t1_e,x4_o,x4_e);
   ((uint32_t*)c)[3] = U32BIG(t1_e);
   *clen = mlen + CRYPTO_KEYBYTES;
-}
-
-void Encrypt(uint8_t *block, size_t  mlen, uint8_t *key, uint8_t *npub,
- uint8_t *ad, size_t  adlen, uint8_t *c)
-{
-    size_t clen;
-    crypto_aead_encrypt(c, &clen, block, mlen, ad, adlen, npub, key);
 }

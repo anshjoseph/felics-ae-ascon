@@ -417,7 +417,7 @@ static void acorn128_fixed_padding_256(uint8_t *state, uint8_t cb)
 }
 
 // encrypt a message
-static int crypto_aead_decrypt(
+int crypto_aead_decrypt(
 	uint8_t *m,size_t *mlen,
 	const uint8_t *c,size_t clen,
 	const uint8_t *ad,size_t adlen,
@@ -473,10 +473,4 @@ static int crypto_aead_decrypt(
     for (i = 0; i  < 16; i++) check |= (tag[i] ^ c[clen - 16 + i]);
     if (check == 0) return 0;
     else return -1;
-}
-
-int Decrypt(uint8_t *block, size_t mlen, uint8_t *key, uint8_t *npub,
- uint8_t *ad, size_t adlen, uint8_t *c)
-{
-    return crypto_aead_decrypt(block, &mlen, c, mlen+CRYPTO_ABYTES, ad, adlen, npub, key);
 }

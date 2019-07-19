@@ -32,9 +32,8 @@ cipher directory name suffix "_v02", "_v03", etc.
 		
 		b. Declare & define the cipher test vectors in "test_vectors.c".
 
-		c. Implement the encryption in "encrypt.c" using the following function 
-signature:
-				void Encrypt(uint8_t *block, uint8_t *roundKeys);
+		c. Implement the encryption in "encrypt.c" using the "crypto_aead.h" API.
+
 			Note: To read the value of the round  key use the "READ_ROUND_KEY_*"
 ("READ_ROUND_KEY_BYTE", "READ_ROUND_KEY_WORD", "READ_ROUND_KEY_DOUBLE_WORD") 
 macro. It allows to read the round keys from RAM or Flash/ROM depending on the
@@ -52,9 +51,8 @@ associated macros.
 				uint16_t SBox2Value = READ_SBOX2_DATA_WORD(SBox2[0]);
 				uint32_t SBoxValue = READ_RAM_DATA_WORD(SBox[0]);
 
-		d. Implement the decryption in "decrypt.c" using the following function 
-signature:
-				void Decrypt(uint8_t *block, uint8_t *roundKeys);
+		d. Implement the decryption in "decrypt.c" using the "crypto_aead.h" API.
+
 			Note: To read the value of the round key use the "READ_ROUND_KEY_*"
 ("READ_ROUND_KEY_BYTE", "READ_ROUND_KEY_WORD", "READ_ROUND_KEY_DOUBLE_WORD") 
 macro. It allows to read the round keys from RAM or Flash/ROM depending on the 

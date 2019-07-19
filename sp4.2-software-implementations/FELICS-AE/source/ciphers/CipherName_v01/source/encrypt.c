@@ -32,8 +32,13 @@
 #include "constants.h"
 
 
-void Encrypt(uint8_t *block, size_t mlen, uint8_t *key, uint8_t *npub,
-             uint8_t *ad, size_t adlen, uint8_t *c)
+int crypto_aead_encrypt(
+	uint8_t *c, size_t *clen,
+	const uint8_t *m, size_t mlen,
+	const uint8_t *ad, size_t adlen,
+	const uint8_t *npub,
+	const uint8_t *k
+)
 {
 	/* Add here the cipher encryption implementation */
 }

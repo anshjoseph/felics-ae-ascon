@@ -101,7 +101,7 @@ static void decrypt_8bits(uint64_t *state, uint32_t *plaintextword, uint32_t cip
 
 
 //decrypt a message
-static int crypto_aead_decrypt(
+int crypto_aead_decrypt(
 	uint8_t *m,size_t *mlen,
 	const uint8_t *c,size_t clen,
 	const uint8_t *ad,size_t adlen,
@@ -162,11 +162,4 @@ static int crypto_aead_decrypt(
     for (i = 0; i  < 16; i++) check |= (tag[i] ^ c[clen - 16 + i]);
     if (check == 0) return 0;
     else return -1;
-}
-
-
-int Decrypt(uint8_t *block, size_t mlen, uint8_t *key, uint8_t *npub,
- uint8_t *ad, size_t adlen, uint8_t *c)
-{
-    return crypto_aead_decrypt(block, &mlen, c, mlen+CRYPTO_ABYTES, ad, adlen, npub, key);
 }

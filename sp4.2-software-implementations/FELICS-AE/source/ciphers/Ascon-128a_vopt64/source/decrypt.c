@@ -35,7 +35,7 @@
 #include "utils.h"
 
 
-static int crypto_aead_decrypt(
+int crypto_aead_decrypt(
     uint8_t *m, size_t *mlen,
     const uint8_t *c, size_t clen,
     const uint8_t *ad, size_t adlen,
@@ -131,10 +131,4 @@ static int crypto_aead_decrypt(
   // return plaintext
   *mlen = clen - CRYPTO_KEYBYTES;
   return 0;
-}
-
-int Decrypt(uint8_t *block, size_t  mlen, uint8_t *key, uint8_t *npub,
- uint8_t *ad, size_t  adlen, uint8_t *c)
-{
-    return crypto_aead_decrypt(block, &mlen, c, mlen+CRYPTO_ABYTES, ad, adlen, npub, key);
 }

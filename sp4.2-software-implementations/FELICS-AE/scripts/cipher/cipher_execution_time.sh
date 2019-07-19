@@ -352,8 +352,8 @@ case $SCRIPT_ARCHITECTURE in
 		simulate $file $avr_execution_time_log_file
 
 		if [ -f $avr_execution_time_log_file ] ; then
-			e_execution_time=$(compute_execution_time $avr_execution_time_log_file 'Encrypt' 'EndEncryption')
-			d_execution_time=$(compute_execution_time $avr_execution_time_log_file 'Decrypt' 'EndDecryption')
+			e_execution_time=$(compute_execution_time $avr_execution_time_log_file 'crypto_aead_encrypt' 'EndEncryption')
+			d_execution_time=$(compute_execution_time $avr_execution_time_log_file 'crypto_aead_decrypt' 'EndDecryption')
 		fi
 	
 		if [ -f $avr_execution_time_log_file ] ; then

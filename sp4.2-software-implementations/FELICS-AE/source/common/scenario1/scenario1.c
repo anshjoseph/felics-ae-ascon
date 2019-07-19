@@ -26,12 +26,14 @@
  *
  */
 
+#include <stddef.h>
 #include <stdint.h>
 
 #include "scenario1.h"
 #include "cipher.h"
 #include "common.h"
 #include "constants.h"
+#include "crypto_aead.h"
 
 #if defined(PC)
 #include <inttypes.h>
@@ -57,11 +59,13 @@
 int main()
 {
         RAM_DATA_BYTE data[DATA_SIZE];
+        size_t mlen;
 
         RAM_DATA_BYTE key[KEY_SIZE];
 
         /* Contains the ciphertext, followed by the tag. */
         RAM_DATA_BYTE c[DATA_SIZE+CRYPTO_ABYTES];
+        size_t clen;
 
         RAM_DATA_BYTE ad[ASSOCIATED_DATA_SIZE];
 
@@ -75,11 +79,11 @@ int main()
         InitializeNpub(npub);
 
         BEGIN_ENCRYPTION();
-        Encrypt(data, DATA_SIZE, key, npub, ad, ASSOCIATED_DATA_SIZE, c);
+        crypto_aead_encrypt(c, &clen, data, sizeof(data), ad, sizeof(ad), npub, key);
         END_ENCRYPTION();
 
         BEGIN_DECRYPTION();
-        int valid = Decrypt(data, DATA_SIZE, key, npub, ad, ASSOCIATED_DATA_SIZE, c);
+        int valid = crypto_aead_decrypt(data, &mlen, c, clen, ad, sizeof(ad), npub, key);
         END_DECRYPTION();
 
         DONE();
