@@ -1,0 +1,4 @@
+* FELICS reminder
+* Changes to get to FELICS-AE
+* Usage (setup, APIs, user guide)
+* Results with Lilliput-AE, Ascon, ACORN
