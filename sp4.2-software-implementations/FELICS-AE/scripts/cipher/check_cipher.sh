@@ -183,7 +183,21 @@ case $SCRIPT_ARCHITECTURE in
 
     $SCRIPT_ARCHITECTURE_NRF52840)
         # Upload the program to the board
-        make -f $CIPHER_MAKEFILE ARCHITECTURE=$SCRIPT_ARCHITECTURE upload-cipher &>> $MAKE_FILE_LOG
+        if ! make -f $CIPHER_MAKEFILE ARCHITECTURE=$SCRIPT_ARCHITECTURE upload-cipher &>> $MAKE_FILE_LOG
+        then
+            fail ${MAKE_FILE_LOG}
+        fi
+
+        # Run the program stored in the flash memory of the board
+        make -f $CIPHER_MAKEFILE ARCHITECTURE=$SCRIPT_ARCHITECTURE run > $RESULT_FILE
+        ;;
+
+    $SCRIPT_ARCHITECTURE_STM32L053)
+        # Upload the program to the board
+        if ! make -f $CIPHER_MAKEFILE ARCHITECTURE=$SCRIPT_ARCHITECTURE upload-cipher &>> $MAKE_FILE_LOG
+        then
+            fail ${MAKE_FILE_LOG}
+        fi
 
         # Run the program stored in the flash memory of the board
         make -f $CIPHER_MAKEFILE ARCHITECTURE=$SCRIPT_ARCHITECTURE run > $RESULT_FILE

@@ -158,4 +158,27 @@
 #endif /* NRF52840 */
 
 
+#if defined(STM32L053) /* STM32L053 */
+
+/* Architecture = STM32L053 ; Scenario = 0 (cipher operation) */
+#if defined(SCENARIO) && (SCENARIO_0 == SCENARIO)
+
+/* Replace with your custom data types and read macros for this architecture and scenario */
+#define SBOX_BYTE ROM_DATA_BYTE
+#define READ_SBOX_BYTE READ_ROM_DATA_BYTE
+
+#endif
+
+/* Architecture = STM32L053 ; Scenario = 1 */
+#if defined(SCENARIO) && (SCENARIO_1 == SCENARIO)
+
+/* Replace with your custom data types and read macros for this architecture and scenario */
+#define SBOX_BYTE ROM_DATA_BYTE
+#define READ_SBOX_BYTE READ_ROM_DATA_BYTE
+
+#endif
+
+#endif /* STM32L053 */
+
+
 #endif /* DATA_TYPES_H */

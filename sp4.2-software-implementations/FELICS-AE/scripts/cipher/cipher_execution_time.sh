@@ -247,6 +247,14 @@ function simulate()
 			# Run the program stored in the flash memory of the board
 			make -f $CIPHER_MAKEFILE ARCHITECTURE=$SCRIPT_ARCHITECTURE run > $output_file
 			;;
+		$SCRIPT_ARCHITECTURE_STM32L053)
+			# Erase to fix no output problem for Lilliput-I-192_vstm32l053
+			make -f $CIPHER_MAKEFILE ARCHITECTURE=$SCRIPT_ARCHITECTURE erase
+
+			make -f $CIPHER_MAKEFILE ARCHITECTURE=$SCRIPT_ARCHITECTURE $make_target &> $make_log_file
+			# Run the program stored in the flash memory of the board
+			make -f $CIPHER_MAKEFILE ARCHITECTURE=$SCRIPT_ARCHITECTURE run > $output_file
+			;;
 	esac
 }
 
@@ -297,6 +305,10 @@ function compute_execution_time()
 			echo $cycle_count
 			;;
 		$SCRIPT_ARCHITECTURE_NRF52840)
+			local cycle_count=$(cat $output_file | grep -a $first_row_identifier | tr -d '\r' | cut -d ':' -f 2)
+			echo $cycle_count
+			;;
+		$SCRIPT_ARCHITECTURE_STM32L053)
 			local cycle_count=$(cat $output_file | grep -a $first_row_identifier | tr -d '\r' | cut -d ':' -f 2)
 			echo $cycle_count
 			;;
@@ -402,6 +414,19 @@ case $SCRIPT_ARCHITECTURE in
 		if [ -f $nrf52840_serial_terminal_output_file ] ; then
 			e_execution_time=$(compute_execution_time $nrf52840_serial_terminal_output_file 'EncryptCycleCount')
 			d_execution_time=$(compute_execution_time $nrf52840_serial_terminal_output_file 'DecryptCycleCount')
+		fi
+		;;
+
+	$SCRIPT_ARCHITECTURE_STM32L053)
+
+		make_log_file=$SCRIPT_ARCHITECTURE$SCENARIO_NAME_PART$SCRIPT_SCENARIO$FILE_NAME_SEPARATOR$MAKE_LOG_FILE
+		stm32l053_serial_terminal_output_file=$SCRIPT_ARCHITECTURE$SCENARIO_NAME_PART$SCRIPT_SCENARIO$FILE_NAME_SEPARATOR$STM32L053_SERIAL_TERMINAL_OUTPUT_FILE
+
+		simulate $file $stm32l053_serial_terminal_output_file $make_log_file $UPLOAD_SCENARIO1
+
+		if [ -f $stm32l053_serial_terminal_output_file ] ; then
+			e_execution_time=$(compute_execution_time $stm32l053_serial_terminal_output_file 'EncryptCycleCount')
+			d_execution_time=$(compute_execution_time $stm32l053_serial_terminal_output_file 'DecryptCycleCount')
 		fi
 		;;
 esac

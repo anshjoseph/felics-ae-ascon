@@ -45,5 +45,6 @@ EXPECTED_CORRECT_COUNT=5
 
 ARM_SERIAL_TERMINAL=${SOURCE_DIR}/architecture/arm/arm_serial_terminal.py
 NRF52840_SERIAL_TERMINAL=${SOURCE_DIR}/architecture/nrf52840/arm_serial_terminal.py
+STM32L053_SERIAL_TERMINAL=${SOURCE_DIR}/architecture/stm32l053/stm32l053_serial_terminal.py
 
 MSPDEBUG_CHECK_CIPHER_COMMANDS_FILE=${SOURCE_DIR}/architecture/msp/check_cipher.cmd

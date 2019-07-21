@@ -6,7 +6,7 @@ import json
 
 
 _METRICS = ('code_size', 'code_ram', 'code_time')
-_ARCHITECTURES = ('AVR', 'MSP', 'ARM', 'PC', 'NRF52840')
+_ARCHITECTURES = ('AVR', 'MSP', 'ARM', 'PC', 'NRF52840', 'STM32L053')
 
 
 def _group_setups(filename, options):
