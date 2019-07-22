@@ -1,1 +1,1 @@
-../../.templates/Lilliput_vthreshold/tweakey.c
+../../.templates/Lilliput_vmsp-threshold/tweakey.c

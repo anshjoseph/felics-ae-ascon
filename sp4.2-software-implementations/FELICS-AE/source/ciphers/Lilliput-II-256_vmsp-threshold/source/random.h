@@ -1,1 +1,1 @@
-../../.templates/Lilliput_vthreshold/random.h
+../../.templates/Lilliput_vmsp-threshold/random.h

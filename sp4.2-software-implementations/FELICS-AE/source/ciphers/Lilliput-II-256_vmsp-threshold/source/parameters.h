@@ -1,1 +1,1 @@
-../../.templates/Lilliput_vthreshold/parameters.h
+../../.templates/Lilliput_vfelicsref/parameters.h

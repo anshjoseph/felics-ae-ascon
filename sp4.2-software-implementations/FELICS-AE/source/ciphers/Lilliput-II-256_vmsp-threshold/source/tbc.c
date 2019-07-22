@@ -1,1 +1,1 @@
-../../.templates/Lilliput_vthreshold/tbc.c
+../../.templates/Lilliput_vmsp-threshold/tbc.c
