@@ -1,6 +1,43 @@
 Cf. https://csrc.nist.gov/events/2019/lightweight-cryptography-workshop-2019
 
 * FELICS reminder
+** platforms
+- AVR, MSP: simulated
+- ARM, PC: measured
+** metrics
+- code size
+- RAM
+- execution time
+** distribution
+- code + setup
+- VM
+** cipher integration
+- encryption/decryption split
+- type annotations to indicate memory placement
+
+
 * Changes to get to FELICS-AE
+** crypto_aead API
+with changes:
+- remove unused nsec
+- unsigned long long ⇒ size_t
+** PC cycle jitter mitigation
+** scenario simplification
+** Python scripts
+** Docker image
+
+
 * Usage (setup, APIs, user guide)
+
+
 * Results with Lilliput-AE, Ascon, ACORN
+
+
+* Future work
+** add other LWC candidates
+** simplify platform addition
+right now, changes are needed all over the place:
+- measurements shell scripts
+- makefile
+- headers
+** add scenarios back
