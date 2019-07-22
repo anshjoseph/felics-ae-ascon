@@ -1,10 +1,6 @@
 #ifndef AE_COMMON_H
 #define AE_COMMON_H
 
-#if __BYTE_ORDER__ != __ORDER_LITTLE_ENDIAN__
-#error "tweak-formatting functions assume little-endian byte order."
-#endif
-
 #include <stddef.h>
 #include <stdint.h>
 #include <string.h>
@@ -14,16 +10,6 @@
 #include "tbc.h"
 #include "parameters.h"
 
-
-static inline uint8_t upper_nibble(uint8_t i)
-{
-    return i >> 4;
-}
-
-static inline uint8_t lower_nibble(uint8_t i)
-{
-    return i & 0x0f;
-}
 
 static inline void encrypt(const uint8_t K[KEY_BYTES],
                            const uint8_t T[TWEAK_BYTES],
@@ -43,11 +29,8 @@ static inline void decrypt(const uint8_t K[KEY_BYTES],
 
 static inline void xor_into(uint8_t dest[BLOCK_BYTES], const uint8_t src[BLOCK_BYTES])
 {
-    uint16_t *dest16 = (uint16_t*)dest;
-    uint16_t *src16 = (uint16_t*)src;
-
-    for (size_t i=0; i<BLOCK_BYTES/2; i++)
-        dest16[i] ^= src16[i];
+    for (size_t i=0; i<BLOCK_BYTES; i++)
+        dest[i] ^= src[i];
 }
 
 static inline void xor_arrays(size_t len, uint8_t out[len], const uint8_t a[len], const uint8_t b[len])
@@ -58,36 +41,42 @@ static inline void xor_arrays(size_t len, uint8_t out[len], const uint8_t a[len]
 
 static inline void pad10(size_t X_len, const uint8_t X[X_len], uint8_t padded[BLOCK_BYTES])
 {
-    /* pad10*(X) = X || 1 || 0^{n-|X|-1} */
-
-    /* For example, with uint8_t X[3] = { [0]=0x01, [1]=0x02, [2]=0x03 }
+    /* Assuming 0 < |X| < n:
+     *
+     * pad10*(X) = X || 1 || 0^{n-|X|-1}
+     *
+     * For example, with uint8_t X[3] = { [0]=0x01, [1]=0x02, [2]=0x03 }
      *
      * pad10*(X) =
-     *       X[2]     X[1]     X[0]   1 0*
-     *     00000011 00000010 00000001 1 0000000 00000000...
+     *       X[0]     X[1]     X[2]   1 0*
+     *     00000001 00000010 00000011 1 0000000 00000000...
      *
-     * - padded[0, 11]:  zeroes
-     * - padded[12]:     10000000
-     * - padded[13, 15]: X[0, 2]
+     * - padded[0, 2]:  X[0, 2]
+     * - padded[3]:     10000000
+     * - padded[4, 15]: zeroes
      */
 
-    /* Assume that X_len<BLOCK_BYTES. */
+    memcpy(padded, X, X_len);
+    padded[X_len] = 0x80;
 
-    size_t pad_len = BLOCK_BYTES-X_len;
+    /* memset(&padded[BLOCK_BYTES], 0, 0) may or may not constitute
+     * undefined behaviour; use a straight loop instead. */
 
-    memset(padded, 0, pad_len-1);
-    padded[pad_len-1] = 0x80;
-    memcpy(padded+pad_len, X, X_len);
+    for (size_t i=X_len+1; i<BLOCK_BYTES; i++)
+    {
+        padded[i] = 0;
+    }
 }
 
 static inline void copy_block_index(size_t index, uint8_t tweak[TWEAK_BYTES])
 {
-    __asm__ volatile (
-        "mov %[index], @%[tweak]" "\n\t"
-        :
-        : [index] "r" (index), [tweak] "p" (tweak)
-        : "memory"
-    );
+    size_t s = sizeof(index);
+    RAM_DATA_BYTE *dest = &tweak[TWEAK_BYTES-s];
+
+    for (size_t i=0; i<s; i++)
+    {
+        dest[i] = index >> 8*(s-1-i);
+    }
 }
 
 static inline void fill_index_tweak(
@@ -96,19 +85,22 @@ static inline void fill_index_tweak(
     uint8_t tweak[TWEAK_BYTES]
 )
 {
-    /* With an s-bit block index, the t-bit tweak is filled as follows:
+    /* The t-bit tweak is filled as follows:
      *
-     * - bits [  1, t-4]: block index
-     *        [  1,   s]: actual block index
-     *        [s+1, t-4]: 0-padding
-     * - bits [t-3,   t]: 4-bit prefix
+     *   1    4    5         t
+     * [ prefix || block index ]
+     *
+     * The s-bit block index is encoded as follows:
+     *
+     *   5        t-s    t-s+1                t
+     * [ zero padding || block index, MSB first ]
      */
 
-    copy_block_index(block_index, tweak);
+    tweak[0] = prefix<<4;
 
     /* Assume padding bytes have already been set to 0. */
 
-    tweak[TWEAK_BYTES-1] |= prefix << 4;
+    copy_block_index(block_index, tweak);
 }
 
 static void process_associated_data(
@@ -143,7 +135,6 @@ static void process_associated_data(
         xor_into(Auth, Ek_Ai);
     }
 }
-
 
 
 #endif /* AE_COMMON_H */
