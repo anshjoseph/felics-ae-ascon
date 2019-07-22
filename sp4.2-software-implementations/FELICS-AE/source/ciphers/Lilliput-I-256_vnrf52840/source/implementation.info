@@ -1,7 +1,7 @@
 ImplementationDescription: Implementation of Lilliput-I for NRF52840
 ImplementationAuthors: Kévin Le Gouguec, Alexis Duque
 
-EncryptCode: tbc, tweakey
-DecryptCode: tbc, tweakey
+EncryptCode: encrypt, tbc, tweakey
+DecryptCode: decrypt, tbc, tweakey
 
 Platforms: NRF52840

@@ -1,8 +1,8 @@
 ImplementationDescription: AEAD ACORN128 (adapted from supercop's opt1 version)
 ImplementationAuthors: Kévin Le Gouguec
 
-EncryptCode: utils
-DecryptCode: utils
+EncryptCode: encrypt, utils
+DecryptCode: decrypt, utils
 
 # AVR and MSP simulators freeze for this particular implementation.
 Platforms: ARM PC

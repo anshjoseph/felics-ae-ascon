@@ -1,24 +1,10 @@
 # Cipher implementations
 
-## Remove `constants.c` files
+## Remove `constants.c`, `encrypt.c` and `decrypt.c` files
 
 They are relics of FELICS's previous code-size measuring logic, and
 they add noise when diff'ing a cipher's reference implementation
 vs. its FELICS integration.
-
-Done for Lilliput-AE.
-
-## Remove `encrypt.c` and `decrypt.c` files
-
-They force the integrator to make gratuitious changes to the reference
-implementation.
-
-`cipher.mk` makes no assumption on how C files are named; it just
-compiles all `.c` and `.S` files it finds in the `source` folder.
-
-`cipher_code_size.sh` includes some special-casing to measure the ROM
-of `encrypt.o` and `decrypt.o`; removing the assumption that these
-files exist should simplify the code.
 
 ## Add `felics-` prefix to headers required by FELICS-AE
 

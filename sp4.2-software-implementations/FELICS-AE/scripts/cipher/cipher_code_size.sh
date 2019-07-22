@@ -187,9 +187,9 @@ do
 done
 
 
-shared_code_e=0
-shared_code_d=0
-shared_code_total=0
+cipher_e=0
+cipher_d=0
+cipher_total=0
 
 # Read and process code implementation information
 declare -a shared_parts
@@ -221,27 +221,22 @@ do
 	
 	# Add the shared file ROM to total
 	if [ $FALSE -eq $used_part ]; then
-	    shared_code_total=$(($shared_code_total + $shared_value))
+	    cipher_total=$(($cipher_total + $shared_value))
 	    shared_parts+=($shared_file) 
 	fi
 	
 	
 	case $code_section in
 	    $CODE_SECTION_E)
-		shared_code_e=$(($shared_code_e + $shared_value))
+		cipher_e=$(($cipher_e + $shared_value))
 		;;
 	    $CODE_SECTION_D)
-		shared_code_d=$(($shared_code_d + $shared_value))
+		cipher_d=$(($cipher_d + $shared_value))
 		;;
 	esac
     done
 done
 
-
-# Display results
-cipher_e=$(($encrypt_rom + $shared_code_e))
-cipher_d=$(($decrypt_rom + $shared_code_d))
-cipher_total=$(($encrypt_rom + $decrypt_rom + $shared_code_total))
 
 printf "%s %s %s" $cipher_e $cipher_d $cipher_total > $SCRIPT_OUTPUT
 

@@ -1,7 +1,7 @@
 ImplementationDescription: AEAD ACORN128 (adapted from supercop's 8bitfast version)
 ImplementationAuthors: Kévin Le Gouguec
 
-EncryptCode:
-DecryptCode:
+EncryptCode: encrypt
+DecryptCode: decrypt
 
 Platforms: AVR MSP

@@ -1,8 +1,8 @@
 ImplementationDescription: Implementation of Lilliput-I optimized for ROM size on MSP430
 ImplementationAuthors: Kévin Le Gouguec, Gaëtan Leplus
 
-EncryptCode: tbc, tbc_asm, tweakey, tweakey_asm
-DecryptCode: tbc, tbc_asm, tweakey, tweakey_asm
+EncryptCode: encrypt, tbc, tbc_asm, tweakey, tweakey_asm
+DecryptCode: decrypt, tbc, tbc_asm, tweakey, tweakey_asm
 
 Platforms: MSP
 Options: -Os

@@ -1,5 +1,5 @@
 ImplementationDescription: Cipher implementation example
 ImplementationAuthors: 
 
-EncryptCode: 
-DecryptCode:
+EncryptCode: encrypt
+DecryptCode: decrypt

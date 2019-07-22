@@ -88,8 +88,6 @@ files:
 				"common"
 				"constants"
 				"test_vectors"
-				"encrypt" 
-				"decrypt"
 
 			* Add the "*.c" name withouth the "." separator and extension in
  "implementation.info" file, in the corresponding section(s) ("EncryptCode:",
