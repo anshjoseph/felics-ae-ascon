@@ -168,19 +168,22 @@ tweakey_state_update:
         push r8
 
         ;; lane p=0 = TK[0..7] ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-        ;; Skip this lane, as it is multiplied by the identity matrix.
+        call #_multiply_M
 
         ;; lane p=1 = TK[8..15] ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
         add #8, r12
+        call #_multiply_M
         call #_multiply_M
 
         ;; lane p=2 = TK[16..23] ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
         add #8, r12
         call #_multiply_M
         call #_multiply_M
+        call #_multiply_M
 
         ;; lane p=3 = TK[24..31] ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
         add #8, r12
+        call #_multiply_M
         call #_multiply_M
         call #_multiply_M
         call #_multiply_M
