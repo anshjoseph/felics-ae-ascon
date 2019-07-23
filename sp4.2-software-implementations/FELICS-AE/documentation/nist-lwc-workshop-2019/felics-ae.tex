@@ -65,21 +65,50 @@ we will mention possible improvements for FELICS-AE in
 section~\ref{sec:future}.
 
 \section{Background: the FELICS framework}
-\label{sec:background}
+\label{sec:felics}
 
 The FELICS framework\cite{FELICS:paper} includes a collection of
 implementations of encryption algorithms in C, as well as a set of
 shell scripts which measure the performance of these algorithms on
-various platforms.
+various microcontrollers representative of ``Internet of Things''
+(IoT) situations.
 
+\subsection{Supported devices}
+\label{sec:felics/devices}
 
+FELICS supports the following microcontrollers (\textbf{bolded} words
+denote the codenames used within the framework):
 
-The framework was initially developed to measure the performance of
-block ciphers and stream ciphers.  In the next section, we describe
-the changes we made to adapt it to AEAD algorithms.
+\begin{itemize}
+\item 8-bit \textbf{AVR} ATmega128,
+\item 16-bit \textbf{MSP}430F1611,
+\item 32-bit \textbf{ARM} Cortex-M3.
+\end{itemize}
+
+The AVR and MSP430 platforms are entirely simulated, which allows one
+to measure algorithm performance on these microcontrollers without
+physically owning them.  To measure performance on ARM, however,
+FELICS requires an Arduino Due board, as well as a J-Link probe.
+
+FELICS can also benchmark algorithms for x86 architectures (codenamed
+\textbf{PC}).
+
+\subsection{Metrics}
+\label{sec:felics/metrics}
+
+\subsection{Distribution}
+\label{sec:felics/dist}
+
+\subsection{Algorithm instrumentation}
+\label{sec:felics/adding-algos}
 
 \section{FELICS for Authenticated Encryption}
 \label{sec:felics-ae}
+
+FELICS was initially developed to measure the performance of block
+ciphers and stream ciphers.  In this section, we describe the changes
+we made to adapt the framework to AEAD algorithms; we then describe
+how it can be used and extended.
 
 \subsection{Changes from FELICS}
 \label{sec:felics-ae/diff-felics}
