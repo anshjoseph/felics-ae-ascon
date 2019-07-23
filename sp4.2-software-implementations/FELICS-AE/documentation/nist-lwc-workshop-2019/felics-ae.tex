@@ -49,11 +49,20 @@ leaves the target device more resources to perform its designed
 function should be preferred.
 
 Thus measuring the performance of these algorithms is an integral part
-of the selection process carried on in~\cite{NIST:LWC}.  In this
+of the selection process carried out in~\cite{NIST:LWC}.  In this
 paper, we present FELICS-AE, an adaptation of the FELICS
-framework~\cite{FELICS:paper} framework dedicated to authenticated
-encryption schemes, which we use to assess the performance of our
-candidate \textsc{Lilliput-AE}~\cite{NIST:Lilliput-AE}.
+framework~\cite{FELICS:paper} dedicated to authenticated encryption
+schemes, which we use to assess the performance of our candidate
+\textsc{Lilliput-AE}~\cite{NIST:Lilliput-AE}.
+
+First, in section~\ref{sec:background}, we will present the original
+FELICS framework.  We will then present FELICS-AE in
+section~\ref{sec:felics-ae}, going over our work to adapt the
+framework and explaining how to set it up, measure algorithm
+performance, and add new encryption schemes.  We will present the
+results we obtained so far in section~\ref{sec:results}.  To conclude,
+we will mention possible improvements for FELICS-AE in
+section~\ref{sec:future}.
 
 \section{Background: the FELICS framework}
 \label{sec:background}
