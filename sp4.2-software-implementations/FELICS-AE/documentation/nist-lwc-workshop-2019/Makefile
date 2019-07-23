@@ -1,4 +1,4 @@
 all: felics-ae.pdf
 
-%.pdf: %.tex %.bib
+%.pdf: %.tex references.bib
 	latexmk -pdf -interaction=nonstopmode $<
