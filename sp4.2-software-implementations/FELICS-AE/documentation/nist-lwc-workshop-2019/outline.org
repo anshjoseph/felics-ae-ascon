@@ -23,8 +23,10 @@ with changes:
 - unsigned long long ⇒ size_t
 ** PC cycle jitter mitigation
 ** scenario simplification
+** key schedule removal
 ** Python scripts
 ** Docker image
+** output format (JSON)
 
 
 * Usage (setup, APIs, user guide)

@@ -33,13 +33,13 @@
 
 The CAESAR competition~\cite{CAESAR:submissions} and the NIST
 Lightweight Cryptography Standardization Process~\cite{NIST:LWC} have
-brought to light several new authenticated encryption schemes
-dedicated to ``lightweight'' use-cases.  In these use-cases, target
-devices are strongly constrained in terms of computing resources: they
-have limited volatile memory (RAM) and non-volatile memory (ROM),
-their processors operate at low frequencies and feature few registers,
-they may only be able to draw power from a battery that can neither be
-recharged nor replaced, etc.
+brought to light several new Authenticated Encryption with Associated
+Data (AEAD) schemes dedicated to ``lightweight'' use-cases.  In these
+use-cases, target devices are strongly constrained in terms of
+computing resources: they have limited volatile memory (RAM) and
+non-volatile memory (ROM), their processors operate at low frequencies
+and feature few registers, they may only be able to draw power from a
+battery that can neither be recharged nor replaced, etc.
 
 These devices thus have very few resources to spare on security.  This
 implies that the aforementioned algorithms must be selected not only
@@ -67,7 +67,16 @@ section~\ref{sec:future}.
 \section{Background: the FELICS framework}
 \label{sec:background}
 
-See~\cite{FELICS:paper}.
+The FELICS framework\cite{FELICS:paper} includes a collection of
+implementations of encryption algorithms in C, as well as a set of
+shell scripts which measure the performance of these algorithms on
+various platforms.
+
+
+
+The framework was initially developed to measure the performance of
+block ciphers and stream ciphers.  In the next section, we describe
+the changes we made to adapt it to AEAD algorithms.
 
 \section{FELICS for Authenticated Encryption}
 \label{sec:felics-ae}
