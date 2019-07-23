@@ -1,6 +1,8 @@
 \documentclass{article}
 
+\usepackage[utf8]{inputenc}
 \usepackage{authblk}
+\usepackage[T1]{fontenc}
 \usepackage{hyperref}
 
 
@@ -38,6 +40,20 @@ have limited volatile memory (RAM) and non-volatile memory (ROM),
 their processors operate at low frequencies and feature few registers,
 they may only be able to draw power from a battery that can neither be
 recharged nor replaced, etc.
+
+These devices thus have very few resources to spare on security.  This
+implies that the aforementioned algorithms must be selected not only
+for their robustness, but also according to their efficiency.  Given
+two encryption schemes with equivalent security, the scheme which
+leaves the target device more resources to perform its designed
+function should be preferred.
+
+Thus measuring the performance of these algorithms is an integral part
+of the selection process carried on in~\cite{NIST:LWC}.  In this
+paper, we present FELICS-AE, an adaptation of the FELICS
+framework~\cite{FELICS:paper} framework dedicated to authenticated
+encryption schemes, which we use to assess the performance of our
+candidate \textsc{Lilliput-AE}~\cite{NIST:Lilliput-AE}.
 
 \section{Background: the FELICS framework}
 \label{sec:background}
