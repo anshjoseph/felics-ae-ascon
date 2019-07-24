@@ -133,6 +133,18 @@ Algorithm implementations must comply with a number of requirements in
 order to work with FELICS.  This section presents some of these
 constraints.
 
+\paragraph{Algorithm entry points must conform to a specific API.}
+FELICS features multiple \emph{scenarios}, which are implemented as C
+files which define the \texttt{main} function that will call the
+cipher implementation.  Each scenario calls the cipher with different
+parameter sizes, which allows observing the evolution of the
+algorithm's performance as its input grows.
+
+Each \texttt{main} function is generic with respect to the algorithm
+under test: it is expected that each implementation defines high-level
+encryption and decryption functions with specific signatures, so that
+scenarios can be applied to all algorithms included in FELICS.
+
 \paragraph{Encryption and decryption code must be split across
   distinct files.}  When measuring an algorithm's code size, FELICS
 outputs three distinct tallies: encryption code size, decryption code
@@ -179,6 +191,53 @@ how it can be used and extended.
 
 \subsection{Changes from FELICS}
 \label{sec:felics-ae/diff-felics}
+
+We began our work with release 1.1.10 of the FELICS framework.  Our
+goals were to support AEAD algorithms, simplify the algorithm
+integration process, and improve the feedback given to implementers
+while they optimize their code.
+
+\subsubsection{AEAD support}
+\label{sec:felics-ae/aead-support}
+
+Authenticated encryption primitives have specific signatures: their
+inputs include the associated data to authenticate, a nonce to achieve
+semantic security\cite{Rogaway:AEAD}; encryption produces an
+authentication tag which is consumed by decryption.
+
+The common C API we chose for cipher implementations is inspired by
+the API described in the call for submissions of the CAESAR
+competition\cite{CAESAR:call}, which has been re-used in the NIST
+standardization process\cite{NIST:LWC-requirements}.  Our API differs
+in minor ways:
+
+\begin{itemize}
+\item It does not include the \texttt{nsec} parameter, which is unused
+  in the context of the NIST standardization process.  Removing this
+  unused variable reduces the number of compiler warnings, which helps
+  implementers spot actual errors in their code.
+\item Arrays are passed as pointers to \texttt{uint8\_t} rather
+  \texttt{unsigned char}.  Array sizes are passed as \texttt{size\_t}
+  rather than \texttt{unsigned long long}.  The latter is
+  unnecessarily large on some platforms: e.g. on AVR, an
+  \texttt{unsigned long long} variable takes 8 bytes, while
+  \texttt{size\_t} is only 2 bytes.
+\end{itemize}
+
+\subsubsection{Tools for implementation optimization}
+\label{sec:felics-ae/tools-opt}
+
+TODO: \texttt{felics-*} suite
+
+\subsubsection{Distribution}
+\label{sec:felics-ae/distrib}
+
+TODO: dependencies download script, docker image, instantiation script
+
+\subsubsection{Miscellaneous}
+\label{sec:felics-ae/misc}
+
+TODO: key schedule, cycles jitter, scenarios
 
 \subsection{Usage}
 \label{sec:felics-ae/usage}
