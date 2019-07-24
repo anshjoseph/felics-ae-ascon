@@ -55,7 +55,7 @@ framework~\cite{FELICS:paper} dedicated to authenticated encryption
 schemes, which we use to assess the performance of our candidate
 \textsc{Lilliput-AE}~\cite{NIST:Lilliput-AE}.
 
-First, in section~\ref{sec:background}, we will present the original
+First, in section~\ref{sec:felics}, we will present the original
 FELICS framework.  We will then present FELICS-AE in
 section~\ref{sec:felics-ae}, going over our work to adapt the
 framework and explaining how to set it up, measure algorithm
@@ -96,26 +96,21 @@ FELICS can also benchmark algorithms for x86 architectures (codenamed
 \subsection{Metrics}
 \label{sec:felics/metrics}
 
-\paragraph{Code size}
+\paragraph{Code size:} FELICS adds up the \texttt{text} and
+\texttt{data} sections of an implementation's compiled object code, as
+reported by the GNU \texttt{size} program, to measure how much space
+the algorithm's footprint on non-volatile memory.
 
-FELICS adds up the \texttt{text} and \texttt{data} sections of an
-implementation's compiled object code, as reported by the GNU
-\texttt{size} program, to measure how much space the algorithm's
-footprint on non-volatile memory.
+\paragraph{RAM:} to measure the working memory needed by an algorithm,
+the framework runs the implementation through a debugger, spraying a
+known pattern on the stack before execution and counting how many
+bytes were modified after execution.  This figure is added to the
+object code's \texttt{data} section.
 
-\paragraph{RAM}
-
-To measure the working memory needed by an algorithm, the framework
-runs the implementation through a debugger, spraying a known pattern
-on the stack before execution and counting how many bytes were
-modified after execution.  This figure is added to the object code's
-\texttt{data} section.
-
-\paragraph{Execution time}
-
-For simulated devices, FELICS relies on the simulator to keep track of
-the number of clock cycles spent on encryption.  For other devices,
-FELICS uses specialized assembly instructions to get this information.
+\paragraph{Execution time:} for simulated devices, FELICS relies on
+the simulator to keep track of the number of clock cycles spent on
+encryption.  For other devices, FELICS uses specialized assembly
+instructions to get this information.
 
 \subsection{Distribution}
 \label{sec:felics/dist}
