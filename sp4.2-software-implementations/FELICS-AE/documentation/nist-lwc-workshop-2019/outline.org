@@ -12,6 +12,7 @@ Cf. https://csrc.nist.gov/events/2019/lightweight-cryptography-workshop-2019
 - code + setup
 - VM
 ** cipher integration
+- API
 - encryption/decryption split
 - type annotations to indicate memory placement
 
@@ -43,3 +44,6 @@ right now, changes are needed all over the place:
 - makefile
 - headers
 ** add scenarios back
+** simplify algorithm addition
+- stop requiring encryption/decryption split; add symbols whose code
+  size must be subtracted to metadata file

@@ -115,8 +115,59 @@ instructions to get this information.
 \subsection{Distribution}
 \label{sec:felics/dist}
 
+The CryptoLUX wiki\cite{FELICS:wiki} hosts an archive containing the
+FELICS's source code (algorithm implementations and benchmarking
+scripts).  The wiki also provides detailed instructions to install the
+dependencies FELICS needs to compile implementations and measure their
+performance on every platform.
+
+The wiki also hosts a virtual machine (32-bit Ubuntu 14.04) where all
+dependencies are pre-installed.  This makes it easier to use the
+framework since one then does not need to track down all of its
+dependencies.
+
 \subsection{Algorithm instrumentation}
 \label{sec:felics/adding-algos}
+
+Algorithm implementations must comply with a number of requirements in
+order to work with FELICS.  This section presents some of these
+constraints.
+
+\paragraph{Encryption and decryption code must be split across
+  distinct files.}  When measuring an algorithm's code size, FELICS
+outputs three distinct tallies: encryption code size, decryption code
+size, and total code size.  To achieve this, FELICS requires
+integrators to fill in metadata files, spelling out which object files
+are used for encryption, and which are used for decryption.
+
+This means that if an implementation originally had one file featuring
+both encryption and decryption functions, an integrator must split it
+into two files and tell FELICS which file serves which purpose.  If
+the original file contained code used by both encryption and
+decryption functions, the integrator must further create a third file
+to move the common code to.
+
+\paragraph{Array declarations must be annotated.}  FELICS defines a
+set of macros that annotate integer types for two purposes:
+
+\begin{itemize}
+\item They specify optimal memory alignment for ingeter arrays arrays:
+  this ensures that implementations aliasing byte arrays as
+  e.g. 32-bit integer arrays do not accidentally access an array
+  member at an address which is not aligned for a 32-bit variable,
+  which can degrade performance or cause undefined behaviour.
+
+\item They add the platform-dependent keywords necessary to tell the
+  compiler whether arrays should be stored in ROM or RAM: e.g. for AVR
+  \texttt{ROM\_DATA\_BYTE} expands to \texttt{const uint8\_t PROGMEM
+    aligned}, where \texttt{PROGMEM} instructs \texttt{gcc} to move
+  the variable to Program Memory; \texttt{READ\_ROM\_DATA\_BYTE}
+  expands to \texttt{pgm\_read\_byte}, which performs the operations
+  needed to read from this specific memory region.
+\end{itemize}
+
+An integrator must therefore go over an implementation's array
+declarations and change their type to the correct macro.
 
 \section{FELICS for Authenticated Encryption}
 \label{sec:felics-ae}
