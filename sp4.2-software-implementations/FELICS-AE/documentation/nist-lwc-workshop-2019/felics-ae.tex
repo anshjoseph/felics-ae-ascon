@@ -227,6 +227,46 @@ in minor ways:
 \subsubsection{Tools for implementation optimization}
 \label{sec:felics-ae/tools-opt}
 
+The original FELICS framework offers multiple entry points:
+
+\begin{itemize}
+\item one makefile for each implementation, which can compile a
+  scenario for any platform, or run a scenario on the development PC,
+\item one script for every metric, which run the relevant tools
+  (e.g. simulators, debbugers) for a given device and algorithm, and
+  either display the measurements in a human-readable table or
+  serialize them in an unspecified format,
+\item a more complex script which iterates over algorithms,
+  architectures, platforms, scenarios, and compiler options, and calls
+  on the aforementioned scripts and makefiles to run a comprehensive
+  measurement campaign.
+\end{itemize}
+
+While adapting FELICS to AEAD algorithms and integrating
+\textsc{Lilliput-AE}, \textsc{Ascon} and ACORN, we stumbled on several
+issues related to the poor error-reporting capabilities of shell
+scripts:
+
+\begin{itemize}
+\item None of the framework's scripts uses the \texttt{errexit} shell
+  option: command errors are only detected when they are followed by
+  ad-hoc checks.
+\item These checks do not necessarily stop the script, which means
+  that some failures cannot be detected unless the user either
+  carefully watches the framework's output, or surveys the results
+  closely enough to notice suspicious patterns (e.g. metrics set to
+  zero).
+\item Simply setting the \texttt{errexit} option only marginally
+  improves the situation, since it does not produce a backtrace when
+  an error happens: tracking down a failed command which produces no
+  output involves a certain amount of manual work.  The situation is
+  aggravated by the framework's error-checking convention, where
+  commands writing to the standard error stream are assumed to have
+  failed: naively setting the \texttt{xtrace} shell option in
+  sub-scripts then causes spurious failures in the parent scripts.
+\end{itemize}
+
+TODO: justify Python
 TODO: \texttt{felics-*} suite
 
 \subsubsection{Distribution}
