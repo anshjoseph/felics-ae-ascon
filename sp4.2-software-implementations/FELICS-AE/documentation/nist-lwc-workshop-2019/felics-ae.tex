@@ -1,9 +1,10 @@
 \documentclass{article}
 
-\usepackage[utf8]{inputenc}
 \usepackage{authblk}
 \usepackage[T1]{fontenc}
 \usepackage{hyperref}
+\usepackage[utf8]{inputenc}     % Needed before LaTeX 2018.
+\usepackage{lmodern}            % To get bold-teletype.
 
 
 \title{
@@ -89,9 +90,8 @@ The AVR and MSP430 platforms are entirely simulated, which allows one
 to measure algorithm performance on these microcontrollers without
 physically owning them.  To measure performance on ARM, however,
 FELICS requires an Arduino Due board, as well as a J-Link probe.
-
-FELICS can also benchmark algorithms for x86 architectures (codenamed
-\textbf{PC}).
+Algorithms can also be benchmarked on the implementer's x86 platform,
+codenamed \textbf{PC}.
 
 \subsection{Metrics}
 \label{sec:felics/metrics}
@@ -236,16 +236,36 @@ The original FELICS framework offers multiple entry points:
   (e.g. simulators, debbugers) for a given device and algorithm, and
   either display the measurements in a human-readable table or
   serialize them in an unspecified format,
-\item a more complex script which iterates over algorithms,
-  architectures, platforms, scenarios, and compiler options, and calls
-  on the aforementioned scripts and makefiles to run a comprehensive
-  measurement campaign.
+\item \texttt{collect\_ciphers\_metrics.sh}, a more complex script
+  which iterates over algorithms, architectures, platforms, scenarios,
+  and compiler options, and calls on the aforementioned scripts and
+  makefiles to run a comprehensive measurement campaign.
 \end{itemize}
 
+While developing optimized implementations of \textsc{Lilliput-AE}, we
+found that our main tasks were:
+
+\begin{itemize}
+\item running a full measurement campaign for a set of algorithms,
+\item comparing a set of results against a previous set,
+\item comparing two implementations of the same algorithm
+  (e.g. reference vs. threshold, reference vs. optimized for a
+  specific architecture),
+\item exporting a set or a subset of results into various formats.
+\end{itemize}
+
+We developed a new set of scripts to perform these tasks, which we
+present in section~\ref{sec:felics-ae/usage}.  We chose to implement
+these tools in Python, which we found more convenient than Bash for
+multiple reasons: e.g. a rich library ecosystem, reduced boilerplate
+(the \texttt{argparse} library, for example, produces detailed usage
+messages automatically, whereas the usage messages for the original
+shell scripts are maintained manually, and may become outdated).
+
 While adapting FELICS to AEAD algorithms and integrating
-\textsc{Lilliput-AE}, \textsc{Ascon} and ACORN, we stumbled on several
-issues related to the poor error-reporting capabilities of shell
-scripts:
+\textsc{Lilliput-AE}, \textsc{Ascon} and ACORN, we also stumbled on
+several issues related to the poor error-reporting capabilities of
+shell scripts:
 
 \begin{itemize}
 \item None of the framework's scripts uses the \texttt{errexit} shell
@@ -266,8 +286,10 @@ scripts:
   sub-scripts then causes spurious failures in the parent scripts.
 \end{itemize}
 
-TODO: justify Python
-TODO: \texttt{felics-*} suite
+The Python language includes exceptions, which makes error-handling
+more ergonomic and robust: failures interrupt the program flow
+immediately, include precise backtraces, and may be enriched with
+arbitrary information by the developer.
 
 \subsubsection{Distribution}
 \label{sec:felics-ae/distrib}
@@ -277,10 +299,13 @@ TODO: dependencies download script, docker image, instantiation script
 \subsubsection{Miscellaneous}
 \label{sec:felics-ae/misc}
 
-TODO: key schedule, cycles jitter, scenarios
+TODO: key schedule, 64-bit PC, cycles jitter, scenarios
 
 \subsection{Usage}
 \label{sec:felics-ae/usage}
+
+TODO: \texttt{felics-*} suite
+TODO: JSON
 
 \section{Results}
 \label{sec:results}
