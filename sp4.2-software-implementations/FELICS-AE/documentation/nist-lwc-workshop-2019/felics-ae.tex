@@ -178,8 +178,8 @@ set of macros that annotate integer types for two purposes:
   needed to read from this specific memory region.
 \end{itemize}
 
-An integrator must therefore go over an implementation's array
-declarations and change their type to the correct macro.
+An integrator must therefore go over each array declaration in an
+implementation and change its type to the correct macro.
 
 \section{FELICS for Authenticated Encryption}
 \label{sec:felics-ae}
@@ -294,12 +294,30 @@ arbitrary information by the developer.
 \subsubsection{Distribution}
 \label{sec:felics-ae/distrib}
 
-TODO: dependencies download script, docker image, instantiation script
+In order to make it easier to setup FELICS-AE, we wrote scripts to
+fetch and install the framework's dependencies.  We further wrote
+scripts to produce a ready-to-use Docker image bundling FELICS-AE with
+its dependencies.
 
 \subsubsection{Miscellaneous}
 \label{sec:felics-ae/misc}
 
-TODO: key schedule, 64-bit PC, cycles jitter, scenarios
+To add support for AEAD schemes, we made several changes that aimed at
+simplifying the framework, removing degrees of freedom which we did
+not need.  For example, we removed the ``scenario'' parameter;
+measurement campaigns now always begin by checking the implementation
+against a test vector, then measure the performance of encrypting 16
+bytes of plaintext with 16 bytes of associated data.
+
+Beyond encryption and decryption, FELICS further distinguished metrics
+for key schedule (for block ciphers) and setup phase (for stream
+ciphers).  In some AEAD algorithms (e.g. \textsc{Lilliput-AE}), the
+underlying block cipher and its key schedule are called repeatedly for
+every block of input; there was no obvious way to adapt the framework
+to preserve this distinction, so FELICS-AE only provides metrics for
+the whole encryption process.
+
+TODO: 64-bit PC, cycles jitter
 
 \subsection{Usage}
 \label{sec:felics-ae/usage}

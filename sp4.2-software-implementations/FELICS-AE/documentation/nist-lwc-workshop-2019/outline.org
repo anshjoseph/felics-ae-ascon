@@ -44,6 +44,10 @@ right now, changes are needed all over the place:
 - makefile
 - headers
 ** add scenarios back
+perhaps simply as a couple of parameters for plaintext/AD length?
+** allow multiple test vectors
+** add profiling
+e.g. to get some data on the key schedule's contribution
 ** simplify algorithm addition
 - stop requiring encryption/decryption split; add symbols whose code
   size must be subtracted to metadata file
