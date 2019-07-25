@@ -317,7 +317,28 @@ every block of input; there was no obvious way to adapt the framework
 to preserve this distinction, so FELICS-AE only provides metrics for
 the whole encryption process.
 
-TODO: 64-bit PC, cycles jitter
+While trying to fix the cycle-counting assembly code for x86\_64
+architectures, we noticed that on modern workstations, a number of
+factors led to jitter in the figures for execution time: out-of-order
+execution, frequency scaling, multi-core scheduling, context switch
+overhead, etc.  To mitigate this, we implemented the following
+countermeasures:
+
+\begin{itemize}
+\item adapt the assembly code to adhere to Intel's benchmarking
+  guidelines for IA-64 architectures\cite{Intel:64bit-ISA-bench},
+\item force the code under test to run on a single core using the
+  \texttt{taskset} command,
+\item if the user is privileged enough, set the CPU frequency scaling
+  governor for this core to ``performance'' to ensure a fixed
+  frequency,
+\item run the code 1000 times and take the median cycle count.
+\end{itemize}
+
+These countermeasures reduced the observed jitter , though we still
+cannot manage to get completely reproducible cycle counts.
+
+TODO: qualify?
 
 \subsection{Usage}
 \label{sec:felics-ae/usage}
