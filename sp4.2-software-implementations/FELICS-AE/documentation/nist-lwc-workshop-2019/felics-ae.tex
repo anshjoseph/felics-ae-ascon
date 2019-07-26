@@ -353,8 +353,66 @@ on IA-46 architectures\cite{Intel:64bit-ISA-bench}:
 \subsection{Usage}
 \label{sec:felics-ae/usage}
 
-TODO: \texttt{felics-*} suite
-TODO: JSON
+In this section, we will present some of the tools we developed while
+adding support for AEAD algorithms to FELICS.
+
+\subsubsection{\texttt{felics-run}}
+
+This script expects a list of algorithms (each element of the list can
+include wildcards to designate multiple algorithms), an optional set
+of architectures (all supported platforms are selected by default),
+and an optional list of compiler flags (only \texttt{-O3} is used by
+default).
+
+For every combination of the requested parameters, this script checks
+the implementation's test vector, then measures the implementation's
+code size, RAM usage and cycle count when encrypting 16 bytes of
+plaintext with 16 bytes of associated data.
+
+The metrics are serialized in a JSON file, along with some metadata to
+identify the framework revision.
+
+\subsubsection{\texttt{felics-publish}}
+
+This script either prints every setup (i.e. a given set of algorithm,
+architecture, and compiler options) from a results file to the user's
+console, or exports these setups into a new output format.  The
+supported formats are HTML table, \LaTeX table, OOXML spreadsheet or
+ODF spreadsheet.
+
+Several options allow the user to control the output:
+
+\begin{description}
+\item[\texttt{-{}-sort-by}:] how setups are ordered,
+\item[\texttt{-{}-filter}:] which setups are included,
+\item[\texttt{-{}-info}:] which metadata and metrics are displayed,
+\item[\texttt{-{}-table-label}, \texttt{-{}-table-caption}:]
+  informative text for HTML and \LaTeX tables.
+\end{description}
+
+Sample console output:
+
+\begin{verbatim}
+On AVR
+Lilliput-I-128 (felicsref, -O3):  6100 266 129093
+Lilliput-II-128 (felicsref, -O3): 6062 243 132650
+
+On MSP
+Lilliput-I-128 (felicsref, -O3):  5760 300 121646
+Lilliput-II-128 (felicsref, -O3): 4932 272 144399
+
+On ARM
+Lilliput-I-128 (felicsref, -O3):  4656 444 86293
+Lilliput-II-128 (felicsref, -O3): 4684 420 89390
+
+On PC
+Lilliput-I-128 (felicsref, -O3):  6880 528 10030
+Lilliput-II-128 (felicsref, -O3): 6783 528 11816
+\end{verbatim}
+
+\subsubsection{\texttt{felics-compare}}
+
+TODO
 
 \section{Results}
 \label{sec:results}

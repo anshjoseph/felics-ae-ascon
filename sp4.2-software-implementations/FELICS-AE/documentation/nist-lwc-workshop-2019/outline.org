@@ -51,3 +51,5 @@ e.g. to get some data on the key schedule's contribution
 ** simplify algorithm addition
 - stop requiring encryption/decryption split; add symbols whose code
   size must be subtracted to metadata file
+** add dependencies versions to JSON file
+for increased reproducibility
