@@ -317,28 +317,34 @@ every block of input; there was no obvious way to adapt the framework
 to preserve this distinction, so FELICS-AE only provides metrics for
 the whole encryption process.
 
-While trying to fix the cycle-counting assembly code for x86\_64
-architectures, we noticed that on modern workstations, a number of
-factors led to jitter in the figures for execution time: out-of-order
-execution, frequency scaling, multi-core scheduling, context switch
-overhead, etc.  To mitigate this, we implemented the following
-countermeasures:
+While adapting the cycle-counting assembly code for x86\_64
+architectures, we observed considerable variance in our figures for
+execution time.  A lot of CPU features of modern workstations
+contribute to this variance: to mitigate these factors, we implemented
+several countermeasures, following Intel's guidelines for benchmarking
+on IA-46 architectures\cite{Intel:64bit-ISA-bench}:
 
 \begin{itemize}
-\item adapt the assembly code to adhere to Intel's benchmarking
-  guidelines for IA-64 architectures\cite{Intel:64bit-ISA-bench},
-\item force the code under test to run on a single core using the
-  \texttt{taskset} command,
-\item if the user is privileged enough, set the CPU frequency scaling
+\item Use the \texttt{cpuid} instruction to ensure that all
+  instructions are serialized correctly, otherwise out-of-order
+  execution may move part of the code we want to benchmark out of the
+  scope of the timestamp-measuring instructions, or even move
+  unrelated code inside this scope.
+
+\item Use the \texttt{taskset} command to pin the benchmark program to
+  a single core, otherwise the code may be moved to other cores while
+  it runs, and their timestamp counters may not be synchronized.
+
+\item If the user is privileged enough, set the CPU frequency scaling
   governor for this core to ``performance'' to ensure a fixed
   frequency,
-\item run the code 1000 times and take the median cycle count.
+
+\item Run the scenario multiple times, and take the median cycle count.
 \end{itemize}
 
-These countermeasures reduced the observed jitter , though we still
-cannot manage to get completely reproducible cycle counts.
-
-TODO: qualify?
+Though these countermeasures did reduce the variance, they did not
+completely eliminate it, and we still cannot get completely
+reproducible cycle counts.
 
 \subsection{Usage}
 \label{sec:felics-ae/usage}
