@@ -309,6 +309,12 @@ measurement campaigns now always begin by checking the implementation
 against a test vector, then measure the performance of encrypting 16
 bytes of plaintext with 16 bytes of associated data.
 
+We also removed \texttt{collect\_ciphers\_metrics.sh}'s support for
+multiple output formats: we settled on JSON as a unique format for the
+results of a measurement campaign.  All tools presented in
+section\ref{sec:felics-ae/usage} use this format as their input, and a
+specific script is used to convert them to other formats.
+
 Beyond encryption and decryption, FELICS further distinguished metrics
 for key schedule (for block ciphers) and setup phase (for stream
 ciphers).  In some AEAD algorithms (e.g. \textsc{Lilliput-AE}), the
