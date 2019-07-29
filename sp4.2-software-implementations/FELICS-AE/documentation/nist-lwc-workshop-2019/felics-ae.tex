@@ -98,22 +98,23 @@ codenamed \textbf{PC}.
 \subsection{Metrics}
 \label{sec:felics/metrics}
 
-\paragraph{Code size:} FELICS adds up the \texttt{text} and
-\texttt{data} sections of an implementation's compiled object code, as
-reported by the GNU \texttt{size} program, to measure how much space
-the algorithm's footprint on non-volatile memory.
+\begin{description}
+\item[Code size:] FELICS adds up the \texttt{text} and \texttt{data}
+  sections of an implementation's compiled object code, as reported by
+  the GNU \texttt{size} program, to measure how much space the
+  algorithm's footprint on non-volatile memory.
 
-\paragraph{RAM:} to measure the working memory needed by an algorithm,
-the framework runs the implementation through a debugger, spraying a
-known pattern on the stack before execution and counting how many
-bytes were modified after execution.  This figure is added to the
-object code's \texttt{data} section.
+\item[RAM:] to measure the working memory needed by an algorithm, the
+  framework runs the implementation through a debugger, spraying a
+  known pattern on the stack before execution and counting how many
+  bytes were modified after execution.  This figure is added to the
+  object code's \texttt{data} section.
 
-\paragraph{Execution time:} for simulated devices, FELICS relies on
-the simulator to keep track of the number of clock cycles spent on
-encryption.  For other devices, FELICS uses specialized assembly
-instructions to get this information.
-
+\item[Execution time:] for simulated devices, FELICS relies on the
+  simulator to keep track of the number of clock cycles spent on
+  encryption.  For other devices, FELICS uses specialized assembly
+  instructions to get this information.
+\end{description}
 \subsection{Distribution}
 \label{sec:felics/dist}
 
@@ -136,6 +137,7 @@ order to work with FELICS.  This section presents some of these
 constraints.
 
 \paragraph{Algorithm entry points must conform to a specific API.}
+
 FELICS features multiple \emph{scenarios}, which are implemented as C
 files which define the \texttt{main} function that will call the
 cipher implementation.  Each scenario calls the cipher with different
@@ -148,11 +150,13 @@ encryption and decryption functions with specific signatures, so that
 scenarios can be applied to all algorithms included in FELICS.
 
 \paragraph{Encryption and decryption code must be split across
-  distinct files.}  When measuring an algorithm's code size, FELICS
-outputs three distinct tallies: encryption code size, decryption code
-size, and total code size.  To achieve this, FELICS requires
-integrators to fill in metadata files, spelling out which object files
-are used for encryption, and which are used for decryption.
+  distinct files.}
+
+When measuring an algorithm's code size, FELICS outputs three distinct
+tallies: encryption code size, decryption code size, and total code
+size.  To achieve this, FELICS requires integrators to fill in
+metadata files, spelling out which object files are used for
+encryption, and which are used for decryption.
 
 This means that if an implementation originally had one file featuring
 both encryption and decryption functions, an integrator must split it
@@ -161,8 +165,10 @@ the original file contained code used by both encryption and
 decryption functions, the integrator must further create a third file
 to move the common code to.
 
-\paragraph{Array declarations must be annotated.}  FELICS defines a
-set of macros that annotate integer types for two purposes:
+\paragraph{Array declarations must be annotated.}
+
+FELICS defines a set of macros that annotate integer types for two
+purposes:
 
 \begin{itemize}
 \item They specify optimal memory alignment for ingeter arrays arrays:
