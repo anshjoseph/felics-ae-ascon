@@ -1,10 +1,17 @@
 \documentclass{article}
 
 \usepackage{authblk}
+\usepackage{fancyvrb}
 \usepackage[T1]{fontenc}
 \usepackage{hyperref}
 \usepackage[utf8]{inputenc}     % Needed before LaTeX 2018.
+\usepackage{listings}
 \usepackage{lmodern}            % To get bold-teletype.
+\usepackage{xcolor}
+
+\lstset{
+  fancyvrb=true
+}
 
 
 \title{
@@ -414,7 +421,41 @@ Lilliput-II-128 (felicsref, -O3): 6783 528 11816
 
 \subsubsection{\texttt{felics-compare}}
 
-TODO
+This script iterates over every setup found in one results file,
+computes the performance ratio with respect to the same setups in a
+second results file, and highlights these ratios so that the
+implementer can judge at a glance whether a code change had a positive
+or negative impact on performance.
+
+Sample output:
+
+\begin{Verbatim}[
+  commandchars=\\\{\},
+  codes={\catcode36=3},
+  formatcom={\lstset{fancyvrb=false}}
+]
+Comparing
+	foo.json
+	(master) 1234567 Commit summary foo
+against
+	bar.json
+	(master) 89abcde Commit summary bar
+
+Lilliput-I-128 on AVR (vfelicsref with -Os)
+	code_size: \textcolor{green}{-12.19%} (3166 $\searrow$ 2780)
+	code_ram: \textcolor{green}{-49.22%} (514 $\searrow$ 261)
+	code_time: \textcolor{red}{+32.05%} (189818 $\nearrow$ 250657)
+
+Lilliput-I-192 on AVR (vfelicsref with -Os)
+	code_size: \textcolor{green}{-10.47%} (3268 $\searrow$ 2926)
+	code_ram: \textcolor{green}{-50.71%} (562 $\searrow$ 277)
+	code_time: \textcolor{red}{+36.73%} (230309 $\nearrow$ 314893)
+
+Lilliput-I-256 on AVR (vfelicsref with -Os)
+	code_size: \textcolor{green}{-8.25%} (3392 $\searrow$ 3112)
+	code_ram: \textcolor{green}{-53.19%} (626 $\searrow$ 293)
+	code_time: \textcolor{red}{+40.83%} (290363 $\nearrow$ 408907)
+\end{Verbatim}
 
 \section{Results}
 \label{sec:results}
