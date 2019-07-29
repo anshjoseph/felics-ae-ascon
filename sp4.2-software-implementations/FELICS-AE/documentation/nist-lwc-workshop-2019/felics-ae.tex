@@ -377,7 +377,7 @@ identify the framework revision.
 This script either prints every setup (i.e. a given set of algorithm,
 architecture, and compiler options) from a results file to the user's
 console, or exports these setups into a new output format.  The
-supported formats are HTML table, \LaTeX table, OOXML spreadsheet or
+supported formats are HTML table, \LaTeX{} table, OOXML spreadsheet or
 ODF spreadsheet.
 
 Several options allow the user to control the output:
@@ -386,8 +386,10 @@ Several options allow the user to control the output:
 \item[\texttt{-{}-sort-by}:] how setups are ordered,
 \item[\texttt{-{}-filter}:] which setups are included,
 \item[\texttt{-{}-info}:] which metadata and metrics are displayed,
-\item[\texttt{-{}-table-label}, \texttt{-{}-table-caption}:]
-  informative text for HTML and \LaTeX tables.
+\item[\texttt{-{}-table-label}:] anchor for tables to be included in
+  documents supporting cross-references,
+\item[\texttt{-{}-table-caption}:] additional text to describe the
+  dataset.
 \end{description}
 
 Sample console output:
