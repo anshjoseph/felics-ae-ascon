@@ -475,6 +475,56 @@ same results file, and compares their metrics.
 \section{Future work}
 \label{sec:future}
 
+In this section, we identify ways in which FELICS-AE could be
+improved: new benchmarking features, simplifications to make
+extensions easier, structural cleanups, etc.
+
+\paragraph{Simplify the addition of new devices.}
+
+The plumbing required to support a microcontroller architecture is
+scattered across several files: e.g. shell and debugger scripts to
+measure metrics, makefiles to handle compilation, C code to provide
+device-specific functions.  Adding a new platform is very much a
+trial-and-error process; re-organizing this infrastructure code would
+go a long way toward smoothing the steps out.
+
+\paragraph{Simplify the addition of new algorithms.}
+
+For example, no source file can contain encryption-specific and
+decryption-specific code: since FELICS-AE only measures the size of
+whole object files, the size of the decryption-specific code will be
+added to the tally for encryption, and vice-versa.
+
+To remove this restriction, user-supplied metadata could be enriched
+to specify symbols (functions or data) that are specific to one
+operation; the size of these symbols would be subtracted from the
+irrelevant tallies.  Alternatively, such symbols could be annotated
+with the compiler attribute \texttt{section}: code-size measurement
+scripts could then assume that symbols in a specific ELF section are
+only used for one operation.
+
+\paragraph{Allow multiple scenarios.}
+
+The original FELICS framework allowed metrics to be collected for
+various use-cases.  Adding this capability back could be as simple as
+adding \texttt{-{}-plaintext-size} and \texttt{-{}-adata-size}
+parameters to \texttt{felics-run}, and recording the value of these
+parameters in the results file.
+
+\paragraph{Allow multiple test vectors.}
+
+AEAD algorithms may feature branching code paths, e.g. to handle
+padding.  A single test vector cannot cover both sides of a branch;
+implementers may therefore have no way to realize that their
+optimizations break the code for some inputs.
+
+\paragraph{Add profiling}
+
+The original FELICS framework allowed the user to profile an algorithm
+in some limited way, by hooking into specific functions such as a
+block cipher's key schedule.  It may be possible to generalize this
+feature using traditional profiling tools such as \texttt{gprof}.
+
 \bibliographystyle{plain}
 \bibliography{references}
 
