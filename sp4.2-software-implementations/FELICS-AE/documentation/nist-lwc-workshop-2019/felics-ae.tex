@@ -451,6 +451,18 @@ Lilliput-I-256 on AVR (vfelicsref with -Os)
 	code_time: \textcolor{red}{+40.83%} (290363 $\nearrow$ 408907)
 \end{Verbatim}
 
+The user can choose to ignore minor differences by providing a
+\texttt{-{}-threshold} argument; ratios lower than this threshold will
+be hidden.
+
+Other scripts perform similar comparisons: if the FELICS-AE directory
+is version-controlled, \textbf{\texttt{felics-compare-revisions}}
+automatically checks out two arbitrary revisions, runs the requested
+benchmarks, and compares their results files.
+\textbf{\texttt{felics-compare-implementations}} pairs comparable
+setups (architecture, compiler options) for two implementations in the
+same results file, and compares their metrics.
+
 \section{Results}
 \label{sec:results}
 
