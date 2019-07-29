@@ -59,6 +59,11 @@ keeping them anywhere else complicates inspection and maintenance.
 
 Stop using the "second identifier; use the `<-(RET )` line.
 
+## Add a script to identify versions of dependencies
+
+Then add this information to the JSON results file, for better
+traceability.
+
 # Miscellaneous
 
 ## Update copyright statements
