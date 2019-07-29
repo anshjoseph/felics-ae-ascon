@@ -5,13 +5,8 @@
 \usepackage[T1]{fontenc}
 \usepackage{hyperref}
 \usepackage[utf8]{inputenc}     % Needed before LaTeX 2018.
-\usepackage{listings}
 \usepackage{lmodern}            % To get bold-teletype.
 \usepackage{xcolor}
-
-\lstset{
-  fancyvrb=true
-}
 
 
 \title{
@@ -431,8 +426,7 @@ Sample output:
 
 \begin{Verbatim}[
   commandchars=\\\{\},
-  codes={\catcode36=3},
-  formatcom={\lstset{fancyvrb=false}}
+  codes={\catcode`\$=3},
 ]
 Comparing
 	foo.json
