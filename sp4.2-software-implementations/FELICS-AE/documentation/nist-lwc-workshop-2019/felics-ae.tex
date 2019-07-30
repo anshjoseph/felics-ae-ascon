@@ -2,10 +2,13 @@
 
 \usepackage{authblk}
 \usepackage{fancyvrb}
+\usepackage{float}
 \usepackage[T1]{fontenc}
 \usepackage{hyperref}
 \usepackage[utf8]{inputenc}     % Needed before LaTeX 2018.
 \usepackage{lmodern}            % To get bold-teletype.
+\usepackage{multirow}
+\usepackage[binary-units]{siunitx}
 \usepackage{xcolor}
 
 
@@ -480,12 +483,78 @@ use-case\cite{CAESAR:submissions}, \textsc{Ascon} and ACORN.
 \subsection{Setup}
 \label{sec:results/setup}
 
-TODO: dependencies versions
+The measurements were performed on an Ubuntu 16.04 64-bit desktop with
+4 \SI{3.5}{\GHz} CPUs and \SI{8}{\giga \byte} RAM.  The software
+versions for platform-specific compilers, debuggers and other such
+utilities correspond to those distributed by Ubuntu, with the
+exception of software listed in table~\ref{table:results/setup}.
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{l|l|l|l}
+    \textbf{Platform} & \textbf{Software} & \textbf{Version}         & \textbf{Origin}                               \\
+    \hline
+    \multirow{2}{*}{AVR}
+                      & simavr            & \texttt{v1.6}            & Developer release~\cite{FELICS:simavr}        \\
+                      & Avrora            & \texttt{1.7.117-patched} & Cf. FELICS documentation~\cite{FELICS:avrora} \\
+    \hline
+    \multirow{2}{*}{MSP}
+                      & MSP430-GCC        & \texttt{7.3.2.154}       & Texas Instruments~\cite{FELICS:msp430-gcc}    \\
+                      & MSPDebug          & \texttt{v0.25}           & Developer release~\cite{FELICS:mspdebug}      \\
+    \hline
+    \multirow{1}{*}{ARM}
+                      & J-Link Software   & \texttt{V6.42f}          & SEGGER~\cite{FELICS:jlink-soft}               \\
+    \hline
+  \end{tabular}
+  \caption{Software versions for the FELICS-AE framework.}
+  \label{table:results/setup}
+\end{table}
+
+We considered two compilation options:
+
+\begin{itemize}
+\item \texttt{-03}, to minimize computation time and decrease power
+  consumption,
+\item \texttt{-Os}, to reduce code size and thus optimize for low
+  memory footprint.
+\end{itemize}
 
 \subsection{Implementations}
 \label{sec:results/implementations}
 
-TODO
+The source code for the CAESAR algorithms was adapted from the
+SUPERCOP~\cite{CAESAR:SUPERCOP} framework.  In order to provide a fair
+assessment of each algorithm's performance, we looked for
+implementations that performed well (i.e. better than the reference
+version) for each FELICS platform.  Table~\ref{table:results/implems}
+sums up which implementations were considered for each platform.
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{l|l|l}
+    \textbf{Algorithm} & \textbf{Platform} & \textbf{Implementations}     \\
+    \hline
+    \multirow{4}{*}{\textsc{Ascon}}
+                       & AVR               & \texttt{ref}                 \\
+                       & MSP               & \texttt{ref}                 \\
+                       & ARM               & \texttt{ref}, \texttt{opt32} \\
+                       & PC                & \texttt{ref}, \texttt{opt64} \\
+    \hline
+    \multirow{4}{*}{\textsc{ACORN}}
+                       & AVR               & \texttt{8bitfast}            \\
+                       & MSP               & \texttt{8bitfast}            \\
+                       & ARM               & \texttt{opt1}                \\
+                       & PC                & \texttt{opt1}                \\
+    \hline
+  \end{tabular}
+  \caption{Algorithm implementations for each platform}
+  \label{table:results/implems}
+\end{table}
+
+As for \textsc{Lilliput-AE}, we used the same implementation on all
+platforms.  This implementation, called \texttt{felicsref}, closely
+resembles the reference implementation, except for a few tweaks
+documented in each source file's header comments.
 
 \subsection{Results for 128-bit key ciphers}
 \label{sec:results/128}
