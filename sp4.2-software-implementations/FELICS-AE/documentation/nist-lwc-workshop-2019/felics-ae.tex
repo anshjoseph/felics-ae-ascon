@@ -81,7 +81,7 @@ various microcontrollers representative of ``Internet of Things''
 \subsection{Supported devices}
 \label{sec:felics/devices}
 
-FELICS supports the following microcontrollers (\textbf{bolded} words
+FELICS supports the following microcontrollers (\textbf{bold} words
 denote the codenames used within the framework):
 
 \begin{itemize}
@@ -173,11 +173,11 @@ FELICS defines a set of macros that annotate integer types for two
 purposes:
 
 \begin{itemize}
-\item They specify optimal memory alignment for ingeter arrays arrays:
-  this ensures that implementations aliasing byte arrays as
-  e.g. 32-bit integer arrays do not accidentally access an array
-  member at an address which is not aligned for a 32-bit variable,
-  which can degrade performance or cause undefined behaviour.
+\item They specify optimal memory alignment for integer arrays: this
+  ensures that implementations aliasing byte arrays as e.g. 32-bit
+  integer arrays do not accidentally access an array member at an
+  address which is not aligned for a 32-bit variable, which can
+  degrade performance or cause undefined behaviour.
 
 \item They add the platform-dependent keywords necessary to tell the
   compiler whether arrays should be stored in ROM or RAM: e.g. for AVR
@@ -243,7 +243,7 @@ The original FELICS framework offers multiple entry points:
 \item one makefile for each implementation, which can compile a
   scenario for any platform, or run a scenario on the development PC,
 \item one script per metric, which runs the relevant tools
-  (e.g. simulators, debbugers) for a given device and algorithm, and
+  (e.g. simulators, debuggers) for a given device and algorithm, and
   either displays the results in a human-readable table or serializes
   them in an unspecified format,
 \item \texttt{collect\_ciphers\_metrics.sh}, a more complex script
@@ -280,7 +280,7 @@ shell scripts:
 \begin{itemize}
 \item None of the framework's scripts uses the \texttt{errexit} shell
   option: command errors are only detected when they are followed by
-  ad-hoc checks.
+  ad hoc checks.
 \item These checks do not necessarily stop the script, which means
   that some failures cannot be detected unless the user either
   carefully watches the framework's output, or surveys the results
@@ -398,7 +398,7 @@ Several options allow the user to control the output:
 \item[\texttt{-{}-table-label}:] anchor for documents supporting
   cross-references,
 \item[\texttt{-{}-table-caption}:] additional text to describe the
-  dataset.
+  data set.
 \end{description}
 
 Sample console output:
@@ -607,7 +607,7 @@ go a long way toward smoothing the steps out.
 For example, no source file can contain encryption-specific and
 decryption-specific code: since FELICS-AE only measures the size of
 whole object files, the size of the decryption-specific code will be
-added to the tally for encryption, and vice-versa.
+added to the tally for encryption, and vice versa.
 
 To remove this restriction, user-supplied metadata could be enriched
 to specify symbols (functions or data) that are specific to one
