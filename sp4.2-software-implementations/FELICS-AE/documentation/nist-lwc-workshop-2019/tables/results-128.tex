@@ -1,0 +1,84 @@
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{l|l|l||r|r|r}
+      \textbf{}                & \textbf{Version}   & \textbf{\texttt{CFLAGS}} & \textbf{Code size (B)} & \textbf{RAM (B)} & \textbf{Execution time (cycles)} \\ \hline
+      \textsc{ACORN-128}       & \texttt{8bitfast}  & \texttt{-O3}             &                   3700 &              263 &                           287991 \\ \hline
+      \textsc{Ascon-128}       & \texttt{ref}       & \texttt{-O3}             &                   6140 &              268 &                           191049 \\ \hline
+      \textsc{Ascon-128a}      & \texttt{ref}       & \texttt{-O3}             &                   6832 &              300 &                           163315 \\ \hline
+      \textsc{Lilliput-I-128}  & \texttt{felicsref} & \texttt{-O3}             &                   6100 &              266 &                           129093 \\ \hline
+      \textsc{Lilliput-II-128} & \texttt{felicsref} & \texttt{-O3}             &                   6062 &              243 &                           132650 \\ \hline
+      \textsc{ACORN-128}       & \texttt{8bitfast}  & \texttt{-Os}             &                   2850 &              240 &                           335934 \\ \hline
+      \textsc{Ascon-128}       & \texttt{ref}       & \texttt{-Os}             &                   4322 &              323 &                           254913 \\ \hline
+      \textsc{Ascon-128a}      & \texttt{ref}       & \texttt{-Os}             &                   4340 &              339 &                           216080 \\ \hline
+      \textsc{Lilliput-I-128}  & \texttt{felicsref} & \texttt{-Os}             &                   2780 &              261 &                           250657 \\ \hline
+      \textsc{Lilliput-II-128} & \texttt{felicsref} & \texttt{-Os}             &                   2768 &              229 &                           297992 \\ \hline
+  \end{tabular}
+  \caption{Performance results for 128-bit key algorithms on AVR ATmega128.}
+  \label{table:results/128-avr}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{l|l|l||r|r|r}
+      \textbf{}                & \textbf{Version}   & \textbf{\texttt{CFLAGS}} & \textbf{Code size (B)} & \textbf{RAM (B)} & \textbf{Execution time (cycles)} \\ \hline
+      \textsc{ACORN-128}       & \texttt{8bitfast}  & \texttt{-O3}             &                   3276 &              274 &                           391983 \\ \hline
+      \textsc{Ascon-128}       & \texttt{ref}       & \texttt{-O3}             &                   8358 &              290 &                           544075 \\ \hline
+      \textsc{Ascon-128a}      & \texttt{ref}       & \texttt{-O3}             &                   8620 &              306 &                           457998 \\ \hline
+      \textsc{Lilliput-I-128}  & \texttt{felicsref} & \texttt{-O3}             &                   5760 &              300 &                           121646 \\ \hline
+      \textsc{Lilliput-II-128} & \texttt{felicsref} & \texttt{-O3}             &                   4932 &              272 &                           144399 \\ \hline
+      \textsc{ACORN-128}       & \texttt{8bitfast}  & \texttt{-Os}             &                   2326 &              218 &                           381698 \\ \hline
+      \textsc{Ascon-128}       & \texttt{ref}       & \texttt{-Os}             &                   3686 &              372 &                           567110 \\ \hline
+      \textsc{Ascon-128a}      & \texttt{ref}       & \texttt{-Os}             &                   3672 &              382 &                           475176 \\ \hline
+      \textsc{Lilliput-I-128}  & \texttt{felicsref} & \texttt{-Os}             &                   2304 &              260 &                           201075 \\ \hline
+      \textsc{Lilliput-II-128} & \texttt{felicsref} & \texttt{-Os}             &                   2234 &              232 &                           246193 \\ \hline
+  \end{tabular}
+  \caption{Performance results for 128-bit key algorithms on MSP430F1611.}
+  \label{table:results/128-msp}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{l|l|l||r|r|r}
+      \textbf{}                & \textbf{Version}   & \textbf{\texttt{CFLAGS}} & \textbf{Code size (B)} & \textbf{RAM (B)} & \textbf{Execution time (cycles)} \\ \hline
+      \textsc{ACORN-128}       & \texttt{opt1}      & \texttt{-O3}             &                   7608 &              808 &                            56288 \\ \hline
+      \textsc{Ascon-128}       & \texttt{opt32}     & \texttt{-O3}             &                  18912 &              268 &                            12791 \\ \hline
+      \textsc{Ascon-128}       & \texttt{ref}       & \texttt{-O3}             &                   4080 &              600 &                            32363 \\ \hline
+      \textsc{Ascon-128a}      & \texttt{opt32}     & \texttt{-O3}             &                  23764 &              272 &                            11719 \\ \hline
+      \textsc{Ascon-128a}      & \texttt{ref}       & \texttt{-O3}             &                   4424 &              608 &                            27688 \\ \hline
+      \textsc{Lilliput-I-128}  & \texttt{felicsref} & \texttt{-O3}             &                   4656 &              444 &                            86293 \\ \hline
+      \textsc{Lilliput-II-128} & \texttt{felicsref} & \texttt{-O3}             &                   4684 &              420 &                            89390 \\ \hline
+      \textsc{ACORN-128}       & \texttt{opt1}      & \texttt{-Os}             &                   2364 &              344 &                            44902 \\ \hline
+      \textsc{Ascon-128}       & \texttt{opt32}     & \texttt{-Os}             &                  16072 &              240 &                            10221 \\ \hline
+      \textsc{Ascon-128}       & \texttt{ref}       & \texttt{-Os}             &                   1426 &              472 &                            51036 \\ \hline
+      \textsc{Ascon-128a}      & \texttt{opt32}     & \texttt{-Os}             &                  18996 &              256 &                             9298 \\ \hline
+      \textsc{Ascon-128a}      & \texttt{ref}       & \texttt{-Os}             &                   1408 &              480 &                            42114 \\ \hline
+      \textsc{Lilliput-I-128}  & \texttt{felicsref} & \texttt{-Os}             &                   1746 &              304 &                           185796 \\ \hline
+      \textsc{Lilliput-II-128} & \texttt{felicsref} & \texttt{-Os}             &                   1768 &              272 &                           266409 \\ \hline
+  \end{tabular}
+  \caption{Performance results for 128-bit key algorithms on ARM Cortex-M3.}
+  \label{table:results/128-arm}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \begin{tabular}{l|l|l||r|r|r}
+      \textbf{}                & \textbf{Version}   & \textbf{\texttt{CFLAGS}} & \textbf{Code size (B)} & \textbf{RAM (B)} & \textbf{Execution time (cycles)} \\ \hline
+      \textsc{ACORN-128}       & \texttt{opt1}      & \texttt{-O3}             &                   6122 &              448 &                             2966 \\ \hline
+      \textsc{Ascon-128}       & \texttt{opt64}     & \texttt{-O3}             &                   9616 &              192 &                             1221 \\ \hline
+      \textsc{Ascon-128}       & \texttt{ref}       & \texttt{-O3}             &                   2236 &             1984 &                             6641 \\ \hline
+      \textsc{Ascon-128a}      & \texttt{opt64}     & \texttt{-O3}             &                  11562 &              200 &                             1111 \\ \hline
+      \textsc{Ascon-128a}      & \texttt{ref}       & \texttt{-O3}             &                   2102 &             1984 &                             6308 \\ \hline
+      \textsc{Lilliput-I-128}  & \texttt{felicsref} & \texttt{-O3}             &                   6880 &              528 &                            10030 \\ \hline
+      \textsc{Lilliput-II-128} & \texttt{felicsref} & \texttt{-O3}             &                   6783 &              528 &                            11816 \\ \hline
+      \textsc{ACORN-128}       & \texttt{opt1}      & \texttt{-Os}             &                   2564 &              392 &                             3701 \\ \hline
+      \textsc{Ascon-128}       & \texttt{opt64}     & \texttt{-Os}             &                   9074 &              184 &                             1257 \\ \hline
+      \textsc{Ascon-128}       & \texttt{ref}       & \texttt{-Os}             &                   1486 &              448 &                             3718 \\ \hline
+      \textsc{Ascon-128a}      & \texttt{opt64}     & \texttt{-Os}             &                  10430 &              180 &                             1164 \\ \hline
+      \textsc{Ascon-128a}      & \texttt{ref}       & \texttt{-Os}             &                   1466 &              448 &                             3598 \\ \hline
+      \textsc{Lilliput-I-128}  & \texttt{felicsref} & \texttt{-Os}             &                   2906 &              416 &                            21345 \\ \hline
+      \textsc{Lilliput-II-128} & \texttt{felicsref} & \texttt{-Os}             &                   2867 &              400 &                            24864 \\ \hline
+  \end{tabular}
+  \caption{Performance results for 128-bit key algorithms on PC.}
+  \label{table:results/128-pc}
+\end{table}
