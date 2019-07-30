@@ -43,6 +43,8 @@
 extern const uint8_t expectedPlaintext[MAXTEST_BYTES_M];
 extern const uint8_t expectedAssociated[MAXTEST_BYTES_AD];
 extern const uint8_t expectedKey[KEY_SIZE];
+extern const uint8_t expectedNonce[CRYPTO_NPUBBYTES];
+
 extern const uint8_t expectedCiphertext[MAXTEST_BYTES_M  + CRYPTO_ABYTES];
 
 #endif /* TEST_VECTORS_H */

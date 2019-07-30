@@ -376,8 +376,5 @@ void InitializeAd(uint8_t *ad, size_t adlen)
 
 void InitializeNpub(uint8_t *npub)
 {
-	for(size_t i=0; i<CRYPTO_NPUBBYTES; i++)
-	{
-		npub[i] = 0x00;
-	}
+    memcpy(npub, expectedNonce, CRYPTO_NPUBBYTES);
 }
