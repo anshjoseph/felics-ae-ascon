@@ -283,7 +283,7 @@ void InitializeState(uint8_t *state);
  * ... length - the length of the data array to be initialized
  *
  */
-void InitializeData(uint8_t *data, int length);
+void InitializeData(uint8_t *data, size_t length);
 
 
 /*
@@ -313,14 +313,13 @@ void InitializeIV(uint8_t *iv);
 void InitializeCounter(uint8_t *counter);
 
 
-/* ----------------------- */
 /*
  *
  * Initialize the associated data
  * ... ad - the associated data
  *
  */
-void InitializeAd(uint8_t *ad, int adlen);
+void InitializeAd(uint8_t *ad, size_t adlen);
 
 
 /*

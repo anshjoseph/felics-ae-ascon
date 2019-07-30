@@ -349,60 +349,35 @@ void StopDevice()
 
 void InitializeKey(uint8_t *key)
 {
-	uint8_t i;
-	
-	for(i = 0; i < KEY_SIZE; i++)
-	{
-		key[i] = expectedKey[i];
-	}
+    memcpy(key, expectedKey, KEY_SIZE);
 }
 
 
 void InitializeState(uint8_t *state)
 {
-	uint32_t i;
-	
-	for(i = 0; i < MAXTEST_BYTES_M; i++)
-	{
-		state[i] = expectedPlaintext[i];
-	}
+    memcpy(state, expectedPlaintext, MAXTEST_BYTES_M);
 }
 
 
-void InitializeData(uint8_t *data, int length)
+void InitializeData(uint8_t *data, size_t length)
 {
-	int32_t i;
-	
-	for(i = 0; i < length; i++)
+	for (size_t i=0; i<length; i++)
 	{
 		data[i] = length - i;
 	}
 }
 
 
-
-/* ---------------------------- */
-void InitializeAd(uint8_t *ad, int adlen)
+void InitializeAd(uint8_t *ad, size_t adlen)
 {
-	int32_t i;
-	
-	for(i = 0; i < adlen; i++)
-	{
-		ad[i] = expectedAssociated[i];
-	}
+    memcpy(ad, expectedAssociated, adlen);
 }
 
 
 void InitializeNpub(uint8_t *npub)
 {
-	uint32_t i;
-	
-	for(i = 0; i < CRYPTO_NPUBBYTES; i++)
+	for(size_t i=0; i<CRYPTO_NPUBBYTES; i++)
 	{
 		npub[i] = 0x00;
 	}
 }
-
-
-
-
