@@ -586,6 +586,25 @@ First, we compare the performance of \textsc{Ascon} and ACORN to the
   version of \textsc{Ascon}.
 \end{description}
 
+Next, we study the impact of the choice of key length (128, 192 or
+256) and AE mode ($\Theta$CB3 for \textsc{Lilliput-I}, SCT-2 for
+\textsc{Lilliput-II}) on the performance of \textsc{Lilliput-AE}:
+
+\begin{itemize}
+\item Longer keys imply more tweakey \emph{lanes} (64-bit words).  The
+  key schedule updates each lane with a different matrix
+  multiplication, therefore longer keys lead to a higher memory
+  footprint, as well as more cycles.  This may explain why SCT-2
+  variants have the smallest memory footprint: they use 128-bit
+  tweaks, whereas $\Theta$CB3 variants use 192-bit tweaks.
+
+\item $\Theta$CB3 variants, on the other hand, are consistently faster
+  than SCT-2 variants.  This may be due to $\Theta$CB3 using fewer
+  calls to the underlying block cipher $E_K$: for an $l$-block
+  plaintext, $\Theta$CB3 calls $E_K$ $l$ times, while SCT-2 calls
+  $E_K$ $2l$ times.
+\end{itemize}
+
 \section{Future work}
 \label{sec:future}
 
