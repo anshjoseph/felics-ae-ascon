@@ -561,9 +561,30 @@ the LWC standardization process\cite{NIST:Lilliput-AE}.  We also
 published these figures on the \textsc{Lilliput-AE}
 website\cite{PACLIDO:Lilliput-AE}, where we intend to add results for
 optimized versions of \textsc{Lilliput-AE}, as well as for other
-candidates to the standardization proecss.
+candidates to the standardization process.
 
-TODO:comment
+First, we compare the performance of \textsc{Ascon} and ACORN to the
+128-bit key variants of \textsc{Lilliput-AE}:
+
+\begin{description}
+\item[On 8-bit AVR,] when compiled for speed, both variants of
+  \textsc{Lilliput-AE} compare favorably to \textsc{Ascon} and ACORN,
+  even in terms of code size and RAM usage: the only unfavorable
+  comparison is ACORN's lower code size.  When compiled with
+  \texttt{-Os}, \textsc{Lilliput-AE} variants achieve the lowest code
+  size, though \textsc{Ascon} and ACORN become faster.
+
+\item[On 16-bit MSP,] when compiled for speed, \textsc{Lilliput-AE}
+  variants come well ahead in terms of cycle count, though again ACORN
+  has a lower code size.  When compiled with \texttt{-Os},
+  \textsc{Lilliput-AE} variants are the lightest and the fastest,
+  though ACORN has a slightly smaller RAM footprint.
+
+\item[On 32-bit ARM and 64-bit PC,] whichever compilation option we
+  consider, \textsc{Lilliput-AE} variants are the slowest algorithms;
+  in terms of code size, they compare unfavorably to the reference
+  version of \textsc{Ascon}.
+\end{description}
 
 \section{Future work}
 \label{sec:future}
