@@ -556,27 +556,16 @@ platforms.  This implementation, called \texttt{felicsref}, closely
 resembles the reference implementation, except for a few tweaks
 documented in each source file's header comments.
 
-\subsection{Results for 128-bit key ciphers}
-\label{sec:results/128}
+\subsection{Discussion}
 
-\input{tables/results-128}
+We published our measurements in our submission to the first round of
+the LWC standardization process\cite{NIST:Lilliput-AE}.  We also
+published these figures on the \textsc{Lilliput-AE}
+website\cite{PACLIDO:Lilliput-AE}, where we intend to add results for
+optimized versions of \textsc{Lilliput-AE}, as well as for other
+candidates to the standardization proecss.
 
-Tables~\ref{table:results/128-avr}, \ref{table:results/128-msp},
-\ref{table:results/128-arm} and \ref{table:results/128-pc} give
-our results on AVR ATmega128, MSP430F1611, ARM Cortex-M3 and x86\_64
-PC respectively for \textsc{Lilliput-I-128}, \textsc{Lilliput-II-128},
-\textsc{Ascon-128}, \textsc{Ascon-128a} and ACORN.
-
-\subsection{Results for all \textsc{Lilliput-AE} variants}
-\label{sec:results/lilliputae}
-
-\input{tables/results-lilliput}
-
-Tables~\ref{table:results/lilliput-avr},
-\ref{table:results/lilliput-msp}, \ref{table:results/lilliput-arm} and
-\ref{table:results/lilliput-pc} give our results on AVR ATmega128,
-MSP430F1611, ARM Cortex-M3 and x86\_64 PC respectively for all
-variants of \textsc{Lilliput-AE}.
+TODO:comment
 
 \section{Future work}
 \label{sec:future}
