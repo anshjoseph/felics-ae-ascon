@@ -57,17 +57,16 @@ function should be preferred.
 Thus measuring the performance of these algorithms is an integral part
 of the selection process carried out in~\cite{NIST:LWC}.  In this
 paper, we present FELICS-AE, an adaptation of the FELICS
-framework~\cite{FELICS:paper} dedicated to authenticated encryption
-schemes, which we use to assess the performance of our candidate
+framework~\cite{FELICS:paper} dedicated to AEAD schemes, which we use
+to assess the performance of our candidate
 \textsc{Lilliput-AE}~\cite{NIST:Lilliput-AE}.
 
 First, in section~\ref{sec:felics}, we will present the original
 FELICS framework.  We will then present FELICS-AE in
 section~\ref{sec:felics-ae}, going over our work to adapt the
-framework and explaining how to set it up, measure algorithm
-performance, and add new encryption schemes.  We will present the
-results we obtained so far in section~\ref{sec:results}.  To conclude,
-we will mention possible improvements for FELICS-AE in
+framework and explaining how to use it.  We will present the results
+we obtained in section~\ref{sec:results}.  To conclude, we will
+mention possible improvements for FELICS-AE in
 section~\ref{sec:future}.
 
 \section{Background: the FELICS framework}
@@ -243,10 +242,10 @@ The original FELICS framework offers multiple entry points:
 \begin{itemize}
 \item one makefile for each implementation, which can compile a
   scenario for any platform, or run a scenario on the development PC,
-\item one script for every metric, which run the relevant tools
+\item one script per metric, which runs the relevant tools
   (e.g. simulators, debbugers) for a given device and algorithm, and
-  either display the measurements in a human-readable table or
-  serialize them in an unspecified format,
+  either displays the results in a human-readable table or serializes
+  them in an unspecified format,
 \item \texttt{collect\_ciphers\_metrics.sh}, a more complex script
   which iterates over algorithms, architectures, platforms, scenarios,
   and compiler options, and calls on the aforementioned scripts and
@@ -297,10 +296,10 @@ shell scripts:
   sub-scripts then causes spurious failures in the parent scripts.
 \end{itemize}
 
-The Python language includes exceptions, which makes error-handling
-more ergonomic and robust: failures interrupt the program flow
-immediately, include precise backtraces, and may be enriched with
-arbitrary information by the developer.
+Python exceptions interrupt the program flow immediately, include
+precise backtraces, and may be enriched with arbitrary information by
+the developer.  We found these properties to make error-handling more
+ergonomic.
 
 \subsubsection{Distribution}
 \label{sec:felics-ae/distrib}
@@ -354,11 +353,10 @@ on IA-46 architectures\cite{Intel:64bit-ISA-bench}:
 
 \item If the user is privileged enough, set the CPU frequency scaling
   governor for this core to ``performance'' to ensure a fixed
-  frequency,
+  frequency.
 
-\item Though these countermeasures do reduce the variance, they do not
-  completely eliminate it; thus we run the scenario multiple times,
-  and take the median cycle count.
+\item Run the scenario multiple times and take the median cycle count,
+  to account for the remaining variance.
 \end{itemize}
 
 \subsection{Usage}
@@ -397,8 +395,8 @@ Several options allow the user to control the output:
 \item[\texttt{-{}-sort-by}:] how setups are ordered,
 \item[\texttt{-{}-filter}:] which setups are included,
 \item[\texttt{-{}-info}:] which metadata and metrics are displayed,
-\item[\texttt{-{}-table-label}:] anchor for tables to be included in
-  documents supporting cross-references,
+\item[\texttt{-{}-table-label}:] anchor for documents supporting
+  cross-references,
 \item[\texttt{-{}-table-caption}:] additional text to describe the
   dataset.
 \end{description}
@@ -551,7 +549,7 @@ sums up which implementations were considered for each platform.
   \label{table:results/implems}
 \end{table}
 
-As for \textsc{Lilliput-AE}, we used the same implementation on all
+For \textsc{Lilliput-AE}, we used the same implementation on all
 platforms.  This implementation, called \texttt{felicsref}, closely
 resembles the reference implementation, except for a few tweaks
 documented in each source file's header comments.
