@@ -36,6 +36,10 @@ Possible solutions:
 2. Have subfolders under the algorithm's folder,
    e.g. `Lilliput-I-128_vfelicsref/v1`.
 
+## Support multiple test vectors
+
+With a single vector we have as many blind spots as code branches.
+
 # Scripts & tooling
 
 ## Port more scripts to Python
@@ -63,6 +67,15 @@ Stop using the "second identifier; use the `<-(RET )` line.
 
 Then add this information to the JSON results file, for better
 traceability.
+
+## Bring back scenarios
+
+E.g. add a couple of `--mlen=LIST` and `--alen=LIST` parameters to
+`felics-run` (and `collect_ciphers_metrics.sh`).
+
+## Implement profiling
+
+So that implementers can identify bottlenecks.
 
 # Miscellaneous
 
