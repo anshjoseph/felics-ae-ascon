@@ -40,8 +40,8 @@
 The CAESAR competition~\cite{CAESAR:submissions} and the NIST
 Lightweight Cryptography Standardization Process~\cite{NIST:LWC} have
 brought to light several new Authenticated Encryption with Associated
-Data (AEAD) schemes dedicated to ``lightweight'' use-cases.  In these
-use-cases, target devices are strongly constrained in terms of
+Data (AEAD) algorithms dedicated to ``lightweight'' use-cases.  In
+these use-cases, target devices are strongly constrained in terms of
 computing resources: they have limited volatile memory (RAM) and
 non-volatile memory (ROM), their processors operate at low frequencies
 and feature few registers, they may only be able to draw power from a
@@ -52,7 +52,7 @@ implies that the aforementioned algorithms must be selected not only
 for their robustness, but also according to their efficiency.  Given
 two encryption schemes with equivalent security, the scheme which
 leaves the target device more resources to perform its designed
-function should be preferred.
+function will be preferred.
 
 Thus measuring the performance of these algorithms is an integral part
 of the selection process carried out in~\cite{NIST:LWC}.  In this
@@ -72,11 +72,11 @@ section~\ref{sec:future}.
 \section{Background: the FELICS framework}
 \label{sec:felics}
 
-The FELICS framework\cite{FELICS:paper} includes a collection of
-implementations of encryption algorithms in C, as well as a set of
-shell scripts which measure the performance of these algorithms on
-various microcontrollers representative of ``Internet of Things''
-(IoT) situations.
+The FELICS framework~\cite{FELICS:paper} includes a collection of
+implementations of encryption algorithms in C and assembly, as well as
+a set of shell scripts which measure the performance of these
+algorithms on various microcontrollers representative of ``Internet of
+Things'' (IoT) devices.
 
 \subsection{Supported devices}
 \label{sec:felics/devices}
@@ -90,8 +90,8 @@ denote the codenames used within the framework):
 \item 32-bit \textbf{ARM} Cortex-M3.
 \end{itemize}
 
-The AVR and MSP430 platforms are entirely simulated, which allows one
-to measure algorithm performance on these microcontrollers without
+The AVR and MSP platforms are entirely simulated, which allows one to
+measure algorithm performance on these microcontrollers without
 physically owning them.  To measure performance on ARM, however,
 FELICS requires an Arduino Due board, as well as a J-Link probe.
 Algorithms can also be benchmarked on the implementer's x86 platform,
@@ -103,8 +103,8 @@ codenamed \textbf{PC}.
 \begin{description}
 \item[Code size:] FELICS adds up the \texttt{text} and \texttt{data}
   sections of an implementation's compiled object code, as reported by
-  the GNU \texttt{size} program, to measure how much space the
-  algorithm's footprint on non-volatile memory.
+  the GNU \texttt{size} program, to measure the algorithm's footprint
+  on non-volatile memory.
 
 \item[RAM:] to measure the working memory needed by an algorithm, the
   framework runs the implementation through a debugger, spraying a
@@ -120,7 +120,7 @@ codenamed \textbf{PC}.
 \subsection{Distribution}
 \label{sec:felics/dist}
 
-The CryptoLUX wiki\cite{FELICS:wiki} hosts an archive containing the
+The CryptoLUX wiki~\cite{FELICS:wiki} hosts an archive containing
 FELICS's source code (algorithm implementations and benchmarking
 scripts).  The wiki also provides detailed instructions to install the
 dependencies FELICS needs to compile implementations and measure their
@@ -140,9 +140,9 @@ constraints.
 
 \paragraph{Algorithm entry points must conform to a specific API.}
 
-FELICS features multiple \emph{scenarios}, which are implemented as C
-files which define the \texttt{main} function that will call the
-cipher implementation.  Each scenario calls the cipher with different
+FELICS features multiple \emph{scenarios}, implemented as C files
+which define the \texttt{main} function that will call the cipher
+implementation.  Each scenario calls the cipher with different
 parameter sizes, which allows observing the evolution of the
 algorithm's performance as its input grows.
 
@@ -179,17 +179,21 @@ purposes:
   address which is not aligned for a 32-bit variable, which can
   degrade performance or cause undefined behaviour.
 
-\item They add the platform-dependent keywords necessary to tell the
-  compiler whether arrays should be stored in ROM or RAM: e.g. for AVR
-  \texttt{ROM\_DATA\_BYTE} expands to \texttt{const uint8\_t PROGMEM
-    aligned}, where \texttt{PROGMEM} instructs \texttt{gcc} to move
-  the variable to Program Memory; \texttt{READ\_ROM\_DATA\_BYTE}
-  expands to \texttt{pgm\_read\_byte}, which performs the operations
-  needed to read from this specific memory region.
+\item
+  \begin{sloppypar}
+    They add the platform-dependent keywords necessary to tell the
+    compiler whether arrays should be stored in ROM or RAM: e.g. for
+    AVR \texttt{ROM\_DATA\_BYTE} expands to \texttt{const uint8\_t
+    PROGMEM aligned}, where \texttt{PROGMEM} instructs \texttt{gcc} to
+    move the variable to Program Memory;
+    \texttt{READ\_ROM\_DATA\_BYTE} expands to
+    \texttt{pgm\_read\_byte}, which performs the operations needed to
+    read from this specific memory region.
+  \end{sloppypar}
 \end{itemize}
 
 An integrator must therefore go over each array declaration in an
-implementation and change its type to the correct macro.
+implementation and change its type using the correct macro.
 
 \section{FELICS for Authenticated Encryption}
 \label{sec:felics-ae}
@@ -197,7 +201,7 @@ implementation and change its type to the correct macro.
 FELICS was initially developed to measure the performance of block
 ciphers and stream ciphers.  In this section, we describe the changes
 we made to adapt the framework to AEAD algorithms; we then describe
-how it can be used and extended.
+how we use it.
 
 \subsection{Changes from FELICS}
 \label{sec:felics-ae/diff-felics}
@@ -212,14 +216,14 @@ while they optimize their code.
 
 Authenticated encryption primitives have specific signatures: their
 inputs include the associated data to authenticate, a nonce to achieve
-semantic security\cite{Rogaway:AEAD}; encryption produces an
+semantic security~\cite{Rogaway:AEAD}; encryption produces an
 authentication tag which is consumed by decryption.
 
 The common C API we chose for cipher implementations is inspired by
-the API described in the call for submissions of the CAESAR
-competition\cite{CAESAR:call}, which has been re-used in the NIST
-standardization process\cite{NIST:LWC-requirements}.  Our API differs
-in minor ways:
+the \emph{crypto\_aead} API described in the call for submissions of
+the CAESAR competition~\cite{CAESAR:call}, which has been re-used in
+the NIST standardization process~\cite{NIST:LWC-requirements}.  Our
+API differs in minor ways:
 
 \begin{itemize}
 \item It does not include the \texttt{nsec} parameter, which is unused
@@ -240,8 +244,8 @@ in minor ways:
 The original FELICS framework offers multiple entry points:
 
 \begin{itemize}
-\item one makefile for each implementation, which can compile a
-  scenario for any platform, or run a scenario on the development PC,
+\item one makefile for each implementation, which compiles a scenario
+  for any platform, or runs a scenario on the development PC,
 \item one script per metric, which runs the relevant tools
   (e.g. simulators, debuggers) for a given device and algorithm, and
   either displays the results in a human-readable table or serializes
@@ -270,7 +274,7 @@ these tools in Python, which we found more convenient than Bash for
 multiple reasons: e.g. a rich library ecosystem, reduced boilerplate
 (the \texttt{argparse} library, for example, produces detailed usage
 messages automatically, whereas the usage messages for the original
-shell scripts are maintained manually, and may become outdated).
+shell scripts must be maintained manually).
 
 While adapting FELICS to AEAD algorithms and integrating
 \textsc{Lilliput-AE}, \textsc{Ascon} and ACORN, we also stumbled on
@@ -305,40 +309,39 @@ ergonomic.
 \label{sec:felics-ae/distrib}
 
 In order to make it easier to setup FELICS-AE, we wrote scripts to
-fetch and install the framework's dependencies.  We further wrote
-scripts to produce a ready-to-use Docker image bundling FELICS-AE with
-its dependencies.
+fetch and install the framework's dependencies.  Building on those
+scripts, we produced a ready-to-use Docker image bundling FELICS-AE
+with its dependencies.
 
 \subsubsection{Miscellaneous}
 \label{sec:felics-ae/misc}
 
-To add support for AEAD schemes, we made several changes that aimed at
-simplifying the framework, removing degrees of freedom which we did
-not need.  For example, we removed the ``scenario'' parameter;
-measurement campaigns now always begin by checking the implementation
-against a test vector, then measure the performance of encrypting 16
-bytes of plaintext with 16 bytes of associated data.
+We made several changes that aimed at simplifying the framework,
+removing degrees of freedom which we did not need.  For example, we
+removed the ``scenario'' parameter; measurement campaigns now always
+begin by checking the implementation against a test vector, then
+measure the performance of encrypting 16 bytes of plaintext with 16
+bytes of associated data.
 
 We also removed \texttt{collect\_ciphers\_metrics.sh}'s support for
 multiple output formats: we settled on JSON as a unique format for the
 results of a measurement campaign.  All tools presented in
-section\ref{sec:felics-ae/usage} use this format as their input, and a
-specific script is used to convert them to other formats.
+section~\ref{sec:felics-ae/usage} use this format as their input, and
+a specific script is used to convert them to other formats.
 
 Beyond encryption and decryption, FELICS further distinguished metrics
 for key schedule (for block ciphers) and setup phase (for stream
-ciphers).  In some AEAD algorithms (e.g. \textsc{Lilliput-AE}), the
-underlying block cipher and its key schedule are called repeatedly for
-every block of input; there was no obvious way to adapt the framework
-to preserve this distinction, so FELICS-AE only provides metrics for
-the whole encryption process.
+ciphers).  Some AEAD algorithms call the underlying block cipher and
+its key schedule repeatedly for every block of input; there was no
+obvious way to adapt the framework to preserve this distinction, so
+FELICS-AE only provides metrics for the whole encryption process.
 
 While adapting the cycle-counting assembly code for x86\_64
 architectures, we observed considerable variance in our figures for
 execution time.  A lot of CPU features of modern workstations
 contribute to this variance: to mitigate these factors, we implemented
 several countermeasures, following Intel's guidelines for benchmarking
-on IA-46 architectures\cite{Intel:64bit-ISA-bench}:
+on IA-64 architectures~\cite{Intel:64bit-ISA-bench}:
 
 \begin{itemize}
 \item Use the \texttt{cpuid} instruction to ensure that all
@@ -349,7 +352,8 @@ on IA-46 architectures\cite{Intel:64bit-ISA-bench}:
 
 \item Use the \texttt{taskset} command to pin the benchmark program to
   a single core, otherwise the code may be moved to other cores while
-  it runs, and their timestamp counters may not be synchronized.
+  it runs, and the timestamp counters of these cores may not be
+  synchronized.
 
 \item If the user is privileged enough, set the CPU frequency scaling
   governor for this core to ``performance'' to ensure a fixed
@@ -462,21 +466,24 @@ The user can choose to ignore minor differences by providing a
 \texttt{-{}-threshold} argument; ratios lower than this threshold will
 be hidden.
 
-Other scripts perform similar comparisons: if the FELICS-AE directory
-is version-controlled, \textbf{\texttt{felics-compare-revisions}}
-automatically checks out two arbitrary revisions, runs the requested
-benchmarks, and compares their results files.
-\textbf{\texttt{felics-compare-implementations}} pairs comparable
-setups (architecture, compiler options) for two implementations in the
-same results file, and compares their metrics.
+\begin{sloppypar}
+  Other scripts perform similar comparisons: if the FELICS-AE
+  directory is version-controlled,
+  \textbf{\texttt{felics-compare-revisions}} automatically checks out
+  two revisions, runs the requested benchmarks, and compares their
+  results files.  \textbf{\texttt{felics-compare-implementations}}
+  pairs comparable setups (architecture, compiler options) for two
+  implementations in the same results file, and compares their
+  metrics.
+\end{sloppypar}
 
 \section{Results}
 \label{sec:results}
 
-This section showcases our measurements of the performance of
+This section comments on our measurements of the performance of
 \textsc{Lilliput-AE} and the members of the final portfolio of the
 CAESAR competition for the ``lightweight''
-use-case\cite{CAESAR:submissions}, \textsc{Ascon} and ACORN.
+use-case~\cite{CAESAR:submissions}, \textsc{Ascon} and ACORN.
 
 \subsection{Setup}
 \label{sec:results/setup}
@@ -545,7 +552,7 @@ sums up which implementations were considered for each platform.
                        & PC                & \texttt{opt1}                \\
     \hline
   \end{tabular}
-  \caption{Algorithm implementations for each platform}
+  \caption{Algorithm implementations for each platform.}
   \label{table:results/implems}
 \end{table}
 
@@ -557,9 +564,9 @@ documented in each source file's header comments.
 \subsection{Discussion}
 
 We published our measurements in our submission to the first round of
-the LWC standardization process\cite{NIST:Lilliput-AE}.  We also
+the LWC standardization process~\cite{NIST:Lilliput-AE}.  We also
 published these figures on the \textsc{Lilliput-AE}
-website\cite{PACLIDO:Lilliput-AE}, where we intend to add results for
+website~\cite{PACLIDO:Lilliput-AE}, where we intend to add results for
 optimized versions of \textsc{Lilliput-AE}, as well as for other
 candidates to the standardization process.
 
@@ -599,7 +606,7 @@ Next, we study the impact of the choice of key length (128, 192 or
   tweaks, whereas $\Theta$CB3 variants use 192-bit tweaks.
 
 \item $\Theta$CB3 variants, on the other hand, are consistently faster
-  than SCT-2 variants.  This may be due to $\Theta$CB3 using fewer
+  than SCT-2 variants.  This may be due to $\Theta$CB3 making fewer
   calls to the underlying block cipher $E_K$: for an $l$-block
   plaintext, $\Theta$CB3 calls $E_K$ $l$ times, while SCT-2 calls
   $E_K$ $2l$ times.
@@ -623,7 +630,7 @@ go a long way toward smoothing the steps out.
 
 \paragraph{Simplify the addition of new algorithms.}
 
-For example, no source file can contain encryption-specific and
+For example, no source file can contain both encryption-specific and
 decryption-specific code: since FELICS-AE only measures the size of
 whole object files, the size of the decryption-specific code will be
 added to the tally for encryption, and vice versa.
@@ -646,7 +653,7 @@ parameters in the results file.
 
 \paragraph{Allow multiple test vectors.}
 
-AEAD algorithms may feature branching code paths, e.g. to handle
+AEAD algorithms may contain branching code paths, e.g. to handle
 padding.  A single test vector cannot cover both sides of a branch;
 implementers may therefore have no way to realize that their
 optimizations break the code for some inputs.
