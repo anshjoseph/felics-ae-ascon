@@ -97,13 +97,13 @@ If you ever need to regenerate the library `libnrf52840.a` that is bundled with 
 3. Archive the object files into `libnrf52840.a` using `arm-none-eabi-ar` command.
 
 STM32L053-specific
-------------
+------------------
 
 The following dependencies are required :
 
 - GNU Embedded Toolchain available [here](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads).
 - STLink Open source version available [here](https://github.com/texane/stlink).
-- [python-serial](https://pythonhosted.org/pyserial/). You can get it via distribution's package manager or using `pip` for Python 3.   
+- [python-serial](https://pythonhosted.org/pyserial/). You can get it via distribution's package manager or using `pip` for Python 3.
 
 ### Build `libstm32l053.a`
 
@@ -135,6 +135,7 @@ e.g. /etc/sudoers.d/cpu-governor:
 Replace `USERNAME` with your actual identifier.
 
 2 - Configuring FELICS-AE
+=========================
 
 Some configuration files must be edited so that FELICS-AE can find the
 newly-installed dependencies.
