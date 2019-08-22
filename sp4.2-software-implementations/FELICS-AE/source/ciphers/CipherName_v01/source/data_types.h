@@ -32,106 +32,61 @@
 #include "cipher.h"
 
 
-/*
- *
- * Implementation data types
- *
- */
-
-
-#if defined(PC) /* PC */
-
-/* Architecture = PC ; Scenario = 0 (cipher operation) */
-#if defined(SCENARIO) && (SCENARIO_0 == SCENARIO)
-
-/* Replace with your custom data types and read macros for this architecture and scenario */
 #define SBOX_BYTE ROM_DATA_BYTE
 #define READ_SBOX_BYTE READ_ROM_DATA_BYTE
 
-#endif
 
-/* Architecture = PC ; Scenario = 1 */
-#if defined(SCENARIO) && (SCENARIO_1 == SCENARIO)
+#if defined(PC)
+/* Definitions for PC, common to all scenarios. */
 
-/* Replace with your custom data types and read macros for this architecture and scenario */
-#define SBOX_BYTE ROM_DATA_BYTE
-#define READ_SBOX_BYTE READ_ROM_DATA_BYTE
+#if (SCENARIO == SCENARIO_0)
+/* Definitions for PC, during the vector-checking step. */
 
-#endif
+#elif (SCENARIO == SCENARIO_1)
+/* Definitions for PC, during the benchmark step. */
 
+#endif  /* SCENARIO */
 #endif /* PC */
 
 
+#if defined(ARM)
+/* Definitions for ARM, common to all scenarios. */
 
-#if defined(AVR) /* AVR */
+#if (SCENARIO == SCENARIO_0)
+/* Definitions for ARM, during the vector-checking step. */
 
-/* Architecture = AVR ; Scenario = 0 (cipher operation) */
-#if defined(SCENARIO) && (SCENARIO_0 == SCENARIO)
+#elif (SCENARIO == SCENARIO_1)
+/* Definitions for ARM, during the benchmark step. */
 
-/* Replace with your custom data types and read macros for this architecture and scenario */
-#define SBOX_BYTE ROM_DATA_BYTE
-#define READ_SBOX_BYTE READ_ROM_DATA_BYTE
-
-#endif
-
-/* Architecture = AVR ; Scenario = 1 */
-#if defined(SCENARIO) && (SCENARIO_1 == SCENARIO)
-
-/* Replace with your custom data types and read macros for this architecture and scenario */
-#define SBOX_BYTE ROM_DATA_BYTE
-#define READ_SBOX_BYTE READ_ROM_DATA_BYTE
-
-#endif
-
-#endif /* AVR */
+#endif  /* SCENARIO */
+#endif /* ARM */
 
 
+#if defined(MSP)
+/* Definitions for MSP, common to all scenarios. */
 
-#if defined(MSP) /* MSP */
+#if (SCENARIO == SCENARIO_0)
+/* Definitions for MSP, during the vector-checking step. */
 
-/* Architecture = MSP ; Scenario = 0 (cipher operation) */
-#if defined(SCENARIO) && (SCENARIO_0 == SCENARIO)
+#elif (SCENARIO == SCENARIO_1)
+/* Definitions for MSP, during the benchmark step. */
 
-/* Replace with your custom data types and read macros for this architecture and scenario */
-#define SBOX_BYTE ROM_DATA_BYTE
-#define READ_SBOX_BYTE READ_ROM_DATA_BYTE
-
-#endif
-
-/* Architecture = MSP ; Scenario = 1 */
-#if defined(SCENARIO) && (SCENARIO_1 == SCENARIO)
-
-/* Replace with your custom data types and read macros for this architecture and scenario */
-#define SBOX_BYTE ROM_DATA_BYTE
-#define READ_SBOX_BYTE READ_ROM_DATA_BYTE
-
-#endif
-
+#endif  /* SCENARIO */
 #endif /* MSP */
 
 
+#if defined(AVR)
+/* Definitions for AVR, common to all scenarios. */
 
-#if defined(ARM) /* ARM */
+#if (SCENARIO == SCENARIO_0)
+/* Definitions for AVR, during the vector-checking step. */
 
-/* Architecture = ARM ; Scenario = 0 (cipher operation) */
-#if defined(SCENARIO) && (SCENARIO_0 == SCENARIO)
+#elif (SCENARIO == SCENARIO_1)
+/* Definitions for AVR, during the benchmark step. */
 
-/* Replace with your custom data types and read macros for this architecture and scenario */
-#define SBOX_BYTE ROM_DATA_BYTE
-#define READ_SBOX_BYTE READ_ROM_DATA_BYTE
+#endif  /* SCENARIO */
+#endif /* AVR */
 
-#endif
-
-/* Architecture = ARM ; Scenario = 1 */
-#if defined(SCENARIO) && (SCENARIO_1 == SCENARIO)
-
-/* Replace with your custom data types and read macros for this architecture and scenario */
-#define SBOX_BYTE ROM_DATA_BYTE
-#define READ_SBOX_BYTE READ_ROM_DATA_BYTE
-
-#endif
-
-#endif /* ARM */
 
 
 #endif /* DATA_TYPES_H */
