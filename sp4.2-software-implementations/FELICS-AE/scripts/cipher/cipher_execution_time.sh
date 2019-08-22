@@ -41,12 +41,7 @@ set -e
 #		--version
 #			Display version information
 #		-a, --architecture
-#			Specifies which architecture is used
-#				PC - binary files are build for PC
-#				AVR - binary files are build for AVR device
-#				MSP - binary file are build for MSP device
-#				ARM - binary files are build for ARM device
-#				NRF52840 - binary files are build for NRF52840 device
+#			Specifies which architecture to build for
 #				Default: PC
 #		-o, --output
 #			Specifies where to output the results. The relative path is computed from the directory where script was called

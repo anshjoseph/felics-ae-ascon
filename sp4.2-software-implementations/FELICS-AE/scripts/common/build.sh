@@ -46,12 +46,7 @@ set -e
 #				1 - scenario 1
 #				Default: 0
 #		-a, --architecture
-#			Specifies which architecture is used
-#				PC - binary files are build for PC
-#				AVR - binary files are build for AVR device
-#				MSP - binary file are build for MSP device
-#				ARM - binary files are build for ARM device
-#				NRF52840 - binary files are build for NRF52840 device
+#			Specifies which architecture to build for
 #				Default: PC
 #		-co,--compiler_options
 #			Specifies the compiler options
