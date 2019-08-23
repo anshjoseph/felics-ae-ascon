@@ -107,7 +107,7 @@ The following dependencies are required :
 
 ### Build `libstm32l053.a`
 
-If you ever need to regenerate the library `libstm32l053.a` that is bundled with FELICS-AE, follow [these instructions](archi/stm32l053/setup.md).
+If you ever need to regenerate the library `libstm32l053.a` that is bundled with FELICS-AE, follow [these instructions](stm32l053.md).
 
 PC-specific
 -----------
