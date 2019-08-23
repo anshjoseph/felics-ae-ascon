@@ -262,7 +262,6 @@ run-benchmark ()
 
     if needs-cycle-count-instrumentation ${architecture}
     then
-        echo "rebuild for arch = ${architecture}" > /dev/tty
         local cipher_mk=${script_path}/../source/common/cipher.mk
         local make_log_file=${output_base}_code_time_make.log
 
