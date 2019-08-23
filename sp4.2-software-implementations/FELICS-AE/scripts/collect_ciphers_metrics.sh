@@ -220,6 +220,15 @@ skip-setup ()
 	! grep -q "^${key}:.*${value}" ${implem_info}
 }
 
+needs-cycle-count-instrumentation ()
+{
+    local arch=$1
+    test ${arch} = ARM -o                       \
+         ${arch} = PC -o                        \
+         ${arch} = NRF52840 -o                  \
+         ${arch} = STM32L053
+}
+
 run-benchmark ()
 {
     local cipher_name=$1
@@ -251,8 +260,7 @@ run-benchmark ()
     timeout 120 ${script_path}/cipher/cipher_ram.sh \
             "-a=$architecture" -o=$code_ram_output
 
-    # Re-build scenario with cycle count instrumentation for ARM, NRF52840 and PC.
-    if [ ${architecture} = ARM -o ${architecture} = PC -o ${architecture} = NRF52840 ]
+    if needs-cycle-count-instrumentation ${architecture}
     then
         local cipher_mk=${script_path}/../source/common/cipher.mk
         local make_log_file=${output_base}_code_time_make.log

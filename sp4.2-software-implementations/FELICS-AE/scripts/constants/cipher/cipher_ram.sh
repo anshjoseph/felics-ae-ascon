@@ -57,6 +57,8 @@ ARM_SCENARIO1_GDB_STACK_SECTIONS_COMMANDS_FILE=./../../../../scripts/cipher/stac
 NRF52840_SCENARIO1_GDB_STACK_COMMANDS_FILE=./../../../../scripts/cipher/stack/nrf52840_scenario1_stack.gdb
 NRF52840_SCENARIO1_GDB_STACK_SECTIONS_COMMANDS_FILE=./../../../../scripts/cipher/stack/nrf52840_scenario1_stack_sections.gdb
 
+STM32L053_SCENARIO1_GDB_STACK_COMMANDS_FILE=./../../../../scripts/cipher/stack/stm32l053_scenario1_stack.gdb
+STM32L053_SCENARIO1_GDB_STACK_SECTIONS_COMMANDS_FILE=./../../../../scripts/cipher/stack/stm32l053_scenario1_stack_sections.gdb
 
 GDB_STACK_LOG_FILE=gdb_stack.log
 GDB_STACK_SECTIONS_LOG_FILE=gdb_stack_sections.log
@@ -69,6 +71,9 @@ MSPDEBUG_STACK_SECTIONS_LOG_FILE=mspdebug_stack_sections.log
 
 JLINK_GDB_SERVER_STACK_LOG_FILE=jlink_gdb_server_stack.log
 JLINK_GDB_SERVER_STACK_SECTIONS_LOG_FILE=jlink_gdb_server_stack_sections.log
+
+STLINK_GDB_SERVER_STACK_LOG_FILE=stlink_gdb_server_stack.log
+STLINK_GDB_SERVER_STACK_SECTIONS_LOG_FILE=stlink_gdb_server_stack_sections.log
 
 UPLOAD_CIPHER=upload-cipher
 UPLOAD_SCENARIO1=upload-scenario1

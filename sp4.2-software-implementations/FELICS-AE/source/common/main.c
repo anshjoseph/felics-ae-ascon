@@ -43,6 +43,26 @@
 #include "nrf_uart.h"
 #endif /* NRF52840 */
 
+#if defined(STM32L053) && defined(MEASURE_CYCLE_COUNT) && \
+	(MEASURE_CYCLE_COUNT_ENABLED == MEASURE_CYCLE_COUNT)
+#include <stdio.h>
+#include <stdint.h>
+#include "usart.h"
+#include "gpio.h"
+#include "error_handler.h"
+#include "system_clock.h"
+#include "cycleCount.h"
+#endif /* STM32L053 & MEASURE_CYCLE_COUNT */
+
+#if defined(STM32L053) && defined(DEBUG) && (DEBUG_LOW == (DEBUG_LOW & DEBUG))
+#include <stdio.h>
+#include <stdint.h>
+#include "usart.h"
+#include "gpio.h"
+#include "error_handler.h"
+#include "system_clock.h"
+#endif /* STM32L053 & DEBUG */
+
 
 /* Implementation-checking program. */
 int main()

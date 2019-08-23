@@ -168,6 +168,43 @@ void VerifyTag(uint8_t tag_check);
 
 #else /* NRF52840 */
 
+
+#ifdef STM32L053 /* STM32L053 */
+
+#if defined(MEASURE_CYCLE_COUNT) && \
+	(MEASURE_CYCLE_COUNT_ENABLED == MEASURE_CYCLE_COUNT) /* MEASURE_CYCLE_COUNT */
+
+#define BEGIN_ENCRYPTION() CYCLE_COUNT_START
+#define END_ENCRYPTION() \
+	CYCLE_COUNT_STOP; \
+	printf("EncryptCycleCount: %u\n", CYCLE_COUNT_ELAPSED)
+
+#define BEGIN_DECRYPTION() CYCLE_COUNT_START
+#define END_DECRYPTION() \
+	CYCLE_COUNT_STOP; \
+	printf("DecryptCycleCount: %u\n", CYCLE_COUNT_ELAPSED)
+
+#define DONE() printf("Done\n")
+
+#else /* MEASURE_CYCLE_COUNT */
+
+#define BEGIN_ENCRYPTION() BeginEncryption()
+#define END_ENCRYPTION() EndEncryption()
+
+#define BEGIN_DECRYPTION() BeginDecryption()
+#define END_DECRYPTION() EndDecryption()
+
+#if defined(DEBUG) && (DEBUG_LOW == (DEBUG_LOW & DEBUG))
+#define DONE() printf("Done\n");
+#else
+#define DONE()
+#endif
+
+#endif /* MEASURE_CYCLE_COUNT */
+
+#else /* STM32L053 */
+
+
 #ifdef PC /* PC */
 
 #if defined(MEASURE_CYCLE_COUNT) && \
@@ -210,6 +247,8 @@ void VerifyTag(uint8_t tag_check);
 #endif /* PC */
 
 #endif /* NRF52840 */
+
+#endif /* STM32L053 */
 
 #endif /* ARM */
 

@@ -41,12 +41,7 @@ set -e
 #        --version
 #            Display version information
 #        -a, --architecture
-#            Specifies which architecture is used
-#                PC - binary files are build for PC
-#                AVR - binary files are build for AVR device
-#                MSP - binary file are build for MSP device
-#                ARM - binary files are build for ARM device
-#                NRF52840 - binary files are build for NRF52840 device
+#            Specifies which architecture to build for
 #                Default: PC
 #        -co,--compiler_options
 #            Specifies the compiler options
@@ -181,13 +176,17 @@ case $SCRIPT_ARCHITECTURE in
         $ARM_SERIAL_TERMINAL > $RESULT_FILE
         ;;
 
-    $SCRIPT_ARCHITECTURE_NRF52840)
+    $SCRIPT_ARCHITECTURE_NRF52840|$SCRIPT_ARCHITECTURE_STM32L053)
         # Upload the program to the board
-        make -f $CIPHER_MAKEFILE ARCHITECTURE=$SCRIPT_ARCHITECTURE upload-cipher &>> $MAKE_FILE_LOG
+        if ! make -f $CIPHER_MAKEFILE ARCHITECTURE=$SCRIPT_ARCHITECTURE upload-cipher &>> $MAKE_FILE_LOG
+        then
+            fail ${MAKE_FILE_LOG}
+        fi
 
         # Run the program stored in the flash memory of the board
         make -f $CIPHER_MAKEFILE ARCHITECTURE=$SCRIPT_ARCHITECTURE run > $RESULT_FILE
         ;;
+
 esac
 
 check-count ()

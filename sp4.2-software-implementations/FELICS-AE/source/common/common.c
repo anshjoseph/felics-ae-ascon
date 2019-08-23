@@ -66,6 +66,16 @@
 #endif
 #endif /* NRF52840 */
 
+#ifdef STM32L053 /* STM32L053 */
+#include "usart.h"
+#include "gpio.h"
+#include "error_handler.h"
+#include "system_clock.h"
+#if (MEASURE_CYCLE_COUNT == 1)
+#include "cycleCount.h"
+#endif
+#endif /* STM32L053 */
+
 
 #include "cipher.h"
 #include "common.h"
@@ -345,6 +355,27 @@ void StopDevice()
 }
 
 #endif /* NRF52840 */
+
+#ifdef STM32L053 /* STM32L053 */
+
+void InitializeDevice()
+{
+	HAL_Init();
+  	SystemClock_Config();
+  	MX_GPIO_Init();
+  	MX_USART2_UART_Init();
+
+#if (MEASURE_CYCLE_COUNT == 1)
+	CYCLE_COUNT_INIT;
+#endif
+}
+
+void StopDevice()
+{
+	__WFE();
+}
+
+#endif /* STM32L053 */
 
 
 void InitializeKey(uint8_t *key)

@@ -41,7 +41,7 @@ function display_help()
 	echo "			Display version information"
 	echo "		-a, --architectures"
 	echo "			Specifies for which archiectures to collect ciphers metrics"
-	echo "				List of values: 'PC AVR MSP ARM'"
+	echo "				List of values: 'PC AVR MSP ARM NRF52840 STM32L053'"
 	echo "				Default: all architectures"
 	echo "		-c, --ciphers"
 	echo "			Specifies for which ciphers to collect the metrics"

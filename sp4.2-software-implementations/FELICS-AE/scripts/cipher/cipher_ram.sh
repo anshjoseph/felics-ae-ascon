@@ -41,12 +41,7 @@ set -e
 #		--version
 #			Display version information
 #		-a, --architecture
-#			Specifies which architecture is used
-#				PC - binary files are build for PC
-#				AVR - binary files are build for AVR device
-#				MSP - binary file are build for MSP device
-#				ARM - binary files are build for ARM device
-#				NRF52840 - binary files are build for NRF52840 device
+#			Specifies which architecture to build for
 #				Default: PC
 #		-o, --output
 #			Specifies where to output the results. The relative path is computed from the directory where script was called
@@ -182,6 +177,19 @@ function simulate()
 				kill -PIPE $pid
 			done
 			;;
+		$SCRIPT_ARCHITECTURE_STM32L053)
+			# Upload the program to the board
+			make -f ./../../../common/cipher.mk ARCHITECTURE=$SCRIPT_ARCHITECTURE $target_file &> $make_log_file
+
+			$STLINK_GDB_SERVER &> $simulator_output_file &
+			$STM32L053_GDB -x $command_file &> $gdb_output_file
+
+			stlink_gdb_server_pid=$(ps aux | grep "st-util" | grep -v "grep" | tr -s ' ' | cut -d ' ' -f 2)
+			for pid in $stlink_gdb_server_pid
+			do
+				kill -PIPE $pid
+			done
+			;;
 	esac
 
 	# Wait for the debug session to finish
@@ -281,6 +289,10 @@ case $SCRIPT_ARCHITECTURE in
 
 	$SCRIPT_ARCHITECTURE_NRF52840)
 		script_size=$NRF52840_SIZE
+		;;
+
+	$SCRIPT_ARCHITECTURE_STM32L053)
+		script_size=$STM32L053_SIZE
 		;;
 esac
 
@@ -445,6 +457,16 @@ case $SCRIPT_ARCHITECTURE in
 
 		simulate $NRF52840_SCENARIO1_GDB_STACK_COMMANDS_FILE $UPLOAD_SCENARIO1 $gdb_stack_log_file $jlink_gdb_server_stack_log_file $make_log_file
 		simulate $NRF52840_SCENARIO1_GDB_STACK_SECTIONS_COMMANDS_FILE $UPLOAD_SCENARIO1 $gdb_stack_sections_log_file $jlink_gdb_server_stack_sections_log_file $make_log_file
+		;;
+
+	$SCRIPT_ARCHITECTURE_STM32L053)
+
+		make_log_file=$SCRIPT_ARCHITECTURE$SCENARIO_NAME_PART$SCRIPT_SCENARIO$FILE_NAME_SEPARATOR$MAKE_LOG_FILE
+		stlink_gdb_server_stack_log_file=$SCRIPT_ARCHITECTURE$SCENARIO_NAME_PART$SCRIPT_SCENARIO$FILE_NAME_SEPARATOR$STLINK_GDB_SERVER_STACK_LOG_FILE
+		stlink_gdb_server_stack_sections_log_file=$SCRIPT_ARCHITECTURE$SCENARIO_NAME_PART$SCRIPT_SCENARIO$FILE_NAME_SEPARATOR$STLINK_GDB_SERVER_STACK_SECTIONS_LOG_FILE
+
+		simulate $STM32L053_SCENARIO1_GDB_STACK_COMMANDS_FILE $UPLOAD_SCENARIO1 $gdb_stack_log_file $stlink_gdb_server_stack_log_file $make_log_file
+		simulate $STM32L053_SCENARIO1_GDB_STACK_SECTIONS_COMMANDS_FILE $UPLOAD_SCENARIO1 $gdb_stack_sections_log_file $stlink_gdb_server_stack_sections_log_file $make_log_file
 		;;
 esac
 

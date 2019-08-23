@@ -13,6 +13,7 @@ _ARCHITECTURES = OrderedDict((
     ('MSP', 'MSP430F1611'),
     ('ARM', 'ARM Cortex-M3'),
     ('NRF52840', 'NRF52840 Cortex-M4'),
+    ('STM32L053', 'STM32L053 Cortex-M0+'),
     ('PC', 'PC')
 ))
 

@@ -88,8 +88,11 @@
 #elif defined(NRF52840)
 #define ALIGNMENT 8
 
+#elif defined(STM32L053)
+#define ALIGNMENT 8
+
 #else
-#error "No architecture defined; expected one of AVR, MSP, ARM, NRF52840 or PC."
+#error "No architecture defined; expected one of AVR, MSP, ARM, NRF52840, STM32L053 or PC."
 #endif
 
 #define ALIGNED __attribute__ ((aligned(ALIGNMENT)))

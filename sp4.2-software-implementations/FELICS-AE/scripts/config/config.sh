@@ -38,6 +38,7 @@ AVR_SIZE=avr-size
 MSP_SIZE=${DEPENDENCIES_DIR}/msp430-gcc/bin/msp430-elf-size
 ARM_SIZE=arm-none-eabi-size
 NRF52840_SIZE=arm-none-eabi-size
+STM32L053_SIZE=arm-none-eabi-size
 
 
 PC_GDB=gdb
@@ -45,10 +46,12 @@ AVR_GDB=avr-gdb
 MSP_GDB=${DEPENDENCIES_DIR}/msp430-gcc/bin/msp430-elf-gdb
 ARM_GDB=gdb-multiarch
 NRF52840_GDB=arm-none-eabi-gdb
+STM32L053_GDB=arm-none-eabi-gdb
 
 SIMAVR_SIMULATOR=${DEPENDENCIES_DIR}/simavr/bin/simavr
 MSPDEBUG_SIMULATOR=${DEPENDENCIES_DIR}/mspdebug/usr/local/bin/mspdebug
 
 JLINK_GDB_SERVER=JLinkGDBServer
+STLINK_GDB_SERVER=st-util
 
 AVRORA_SIMULATOR="java -jar ${DEPENDENCIES_DIR}/avrora-beta-1.7.117-patched.jar"
