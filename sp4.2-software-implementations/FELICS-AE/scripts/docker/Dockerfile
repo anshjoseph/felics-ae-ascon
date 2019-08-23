@@ -6,7 +6,7 @@ RUN apt-get update && apt-get install --assume-yes                              
     gcc-avr avr-libc gdb-avr openjdk-8-jre openjdk-8-jdk                           \
     libusb-dev libreadline-dev                                                     \
     binutils-arm-none-eabi bossa-cli gcc-arm-none-eabi gdb-multiarch python-serial \
-    gcc gdb
+    gcc gdb cmake libusb-1.0 libusb-1.0-0-dev
 
 RUN groupadd felics
 RUN useradd felics --gid felics --groups dialout --create-home

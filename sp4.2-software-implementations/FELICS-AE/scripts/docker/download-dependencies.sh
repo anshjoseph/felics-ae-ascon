@@ -62,6 +62,22 @@ get-jlink ()
          -o JLink_Linux_x86_64.deb
 }
 
+get-nRF-tools ()
+{
+    local url="https://www.nordicsemi.com/-/media/Software-and-other-downloads/Desktop-software/nRF-command-line-tools/sw/Versions-10-x-x/nRFCommandLineTools1021Linuxamd64tar.gz"
+
+    wget "${url}"
+    tar -xzf nRFCommandLineTools1021Linuxamd64tar.gz ./nRF-Command-Line-Tools_10_2_1_Linux-amd64.deb
+}
+
+get-open-stlink ()
+{
+    local url="https://github.com/texane/stlink/archive/v1.5.1.tar.gz"
+    
+    wget "${url}"
+    tar -xzf v1.5.1.tar.gz
+}
+
 (
     cd "${resources_dir}"
 
@@ -71,6 +87,8 @@ get-jlink ()
         get-mspdebug
         get-avrora
         get-jlink
+        get-nRF-tools
+        get-open-stlink
     )
 
     for dl in ${downloads[@]}
@@ -97,5 +115,7 @@ get-jlink ()
         msp430-gcc-8.2.0.52_linux64             \
         mspdebug-0.25                           \
         avrora                                  \
-        JLink_Linux_x86_64.deb
+        JLink_Linux_x86_64.deb                  \
+        nRF-Command-Line-Tools_10_2_1_Linux-amd64.deb \
+        stlink-1.5.1
 )
