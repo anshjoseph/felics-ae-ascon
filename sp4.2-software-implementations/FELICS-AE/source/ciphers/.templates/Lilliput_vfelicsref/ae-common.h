@@ -5,7 +5,7 @@
 #include <stdint.h>
 #include <string.h>
 
-#include "cipher.h"
+#include "felics/cipher.h"
 
 #include "tbc.h"
 #include "parameters.h"

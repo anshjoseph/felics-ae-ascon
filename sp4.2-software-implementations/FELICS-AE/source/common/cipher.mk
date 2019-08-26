@@ -187,30 +187,30 @@ scenario1.hex : $(BUILDDIR)/scenario1.elf
 
 %.o : \
 		%.c \
-		$(COMMONSOURCEDIR)/cipher.h \
-		$(COMMONSOURCEDIR)/common.h \
+		$(COMMONSOURCEDIR)/felics/cipher.h \
+		$(COMMONSOURCEDIR)/felics/common.h \
 		$(SOURCEDIR)/constants.h
 	$(CC) -c $(CFLAGS) $< $(INCLUDES) -o $(BUILDDIR)/$@
 
 %.o : \
 		%.S \
-		$(COMMONSOURCEDIR)/cipher.h \
-		$(COMMONSOURCEDIR)/common.h \
+		$(COMMONSOURCEDIR)/felics/cipher.h \
+		$(COMMONSOURCEDIR)/felics/common.h \
 		$(SOURCEDIR)/constants.h
 	$(CC) -c $(CFLAGS) $< $(INCLUDES) -o $(BUILDDIR)/$@
 
 main.o : \
 		$(COMMONSOURCEDIR)/main.c \
-		$(COMMONSOURCEDIR)/cipher.h \
-		$(COMMONSOURCEDIR)/common.h \
+		$(COMMONSOURCEDIR)/felics/cipher.h \
+		$(COMMONSOURCEDIR)/felics/common.h \
 		$(SOURCEDIR)/constants.h
 	$(CC) -c $(CFLAGS) $< $(INCLUDES) -o $(BUILDDIR)/$@
 
 common.o : \
 		$(COMMONSOURCEDIR)/common.c \
-		$(COMMONSOURCEDIR)/common.h \
-		$(COMMONSOURCEDIR)/cipher.h \
-		$(COMMONSOURCEDIR)/test_vectors.h \
+		$(COMMONSOURCEDIR)/felics/common.h \
+		$(COMMONSOURCEDIR)/felics/cipher.h \
+		$(COMMONSOURCEDIR)/felics/test_vectors.h \
 		$(SOURCEDIR)/constants.h 
 	$(CC) -c $(CFLAGS) $< $(INCLUDES) -o $(BUILDDIR)/$@
 
@@ -218,8 +218,8 @@ common.o : \
 scenario1.o : \
 		$(SCENARIO1SOURCEDIR)/scenario1.c \
 		$(SCENARIO1SOURCEDIR)/scenario1.h \
-		$(COMMONSOURCEDIR)/cipher.h \
-		$(COMMONSOURCEDIR)/common.h \
+		$(COMMONSOURCEDIR)/felics/cipher.h \
+		$(COMMONSOURCEDIR)/felics/common.h \
 		$(SOURCEDIR)/constants.h
 	$(CC) -c $(CFLAGS) $< $(INCLUDES) -o $(BUILDDIR)/$@
 

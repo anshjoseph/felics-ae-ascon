@@ -29,7 +29,7 @@
 #ifndef DATA_TYPES_H
 #define DATA_TYPES_H
 
-#include "cipher.h"
+#include "felics/cipher.h"
 
 
 #define SBOX_BYTE ROM_DATA_BYTE

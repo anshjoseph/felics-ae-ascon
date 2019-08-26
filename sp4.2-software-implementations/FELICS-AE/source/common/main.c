@@ -31,8 +31,8 @@
 #include <stdint.h>
 
 #include "constants.h"
-#include "cipher.h"
-#include "common.h"
+#include "felics/cipher.h"
+#include "felics/common.h"
 #include "crypto_aead.h"
 
 #if defined(NRF52840)

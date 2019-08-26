@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "cipher.h"
+#include "felics/cipher.h"
 #include "constants.h"
 #include "utils.h"
 

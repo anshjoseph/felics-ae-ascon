@@ -77,10 +77,10 @@
 #endif /* STM32L053 */
 
 
-#include "cipher.h"
-#include "common.h"
 #include "constants.h"
-#include "test_vectors.h"
+#include "felics/cipher.h"
+#include "felics/common.h"
+#include "felics/test_vectors.h"
 
 
 

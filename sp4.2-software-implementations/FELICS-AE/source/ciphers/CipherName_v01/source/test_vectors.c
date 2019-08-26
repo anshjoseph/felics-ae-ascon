@@ -28,8 +28,8 @@
 
 #include <stdint.h>
 
+#include "felics/test_vectors.h"
 #include "constants.h"
-#include "test_vectors.h"
 
 
 /*

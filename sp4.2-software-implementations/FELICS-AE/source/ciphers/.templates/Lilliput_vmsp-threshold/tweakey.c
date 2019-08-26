@@ -1,7 +1,7 @@
 #include <stdint.h>
 #include <string.h>
 
-#include "cipher.h"
+#include "felics/cipher.h"
 
 #include "parameters.h"
 #include "random.h"

@@ -29,11 +29,11 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#include "scenario1.h"
-#include "cipher.h"
-#include "common.h"
-#include "constants.h"
+#include "felics/cipher.h"
+#include "felics/common.h"
 #include "crypto_aead.h"
+#include "constants.h"
+#include "scenario1.h"
 
 #if defined(PC)
 #include <inttypes.h>

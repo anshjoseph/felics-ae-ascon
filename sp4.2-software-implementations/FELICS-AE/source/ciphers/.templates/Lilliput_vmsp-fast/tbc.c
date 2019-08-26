@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 
-#include "cipher.h"
+#include "felics/cipher.h"
 
 #include "constants.h"
 #include "parameters.h"
