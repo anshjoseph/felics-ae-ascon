@@ -1,15 +1,10 @@
 FROM ubuntu:18.04
 
-RUN apt-get update && apt-get install --assume-yes                                 \
-    python3                                                                        \
-    make libelf-dev                                                                \
-    gcc-avr avr-libc gdb-avr openjdk-8-jre openjdk-8-jdk                           \
-    libusb-dev libreadline-dev                                                     \
-    binutils-arm-none-eabi bossa-cli gcc-arm-none-eabi gdb-multiarch python-serial \
-    gcc gdb cmake libusb-1.0 libusb-1.0-0-dev
-
 RUN groupadd felics
 RUN useradd felics --gid felics --groups dialout --create-home
+
+ADD ./install-distro-dependencies.sh /home/felics
+RUN /home/felics/install-distro-dependencies.sh
 
 RUN mkdir /opt/felics
 
