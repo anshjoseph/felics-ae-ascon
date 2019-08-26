@@ -3,7 +3,7 @@
 #include <string.h>
 
 #include "lilliput-ae-i.h"
-#include "tbc.h"
+#include "cipher.h"
 
 
 static void _encrypt_message(

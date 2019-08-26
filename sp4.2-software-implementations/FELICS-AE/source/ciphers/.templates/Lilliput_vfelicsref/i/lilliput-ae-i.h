@@ -2,7 +2,7 @@
 #define LILLIPUT_AE_I_H
 
 #include "ae-common.h"
-#include "tbc.h"
+#include "cipher.h"
 
 
 static const uint8_t _0n[BLOCK_BYTES] = {

@@ -2,7 +2,7 @@
 #define LILLIPUT_AE_II_H
 
 #include "ae-common.h"
-#include "tbc.h"
+#include "cipher.h"
 
 
 static void _init_msg_tweak(const uint8_t tag[TAG_BYTES], uint8_t tweak[TWEAK_BYTES])

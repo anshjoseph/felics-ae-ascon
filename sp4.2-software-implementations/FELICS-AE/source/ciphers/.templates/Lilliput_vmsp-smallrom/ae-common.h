@@ -7,7 +7,7 @@
 
 #include "felics/cipher.h"
 
-#include "tbc.h"
+#include "cipher.h"
 #include "parameters.h"
 
 

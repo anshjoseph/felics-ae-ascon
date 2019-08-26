@@ -1,7 +1,7 @@
 ImplementationDescription: Implementation of Lilliput-I optimized for speed on MSP430
 ImplementationAuthors: Kévin Le Gouguec, Gaëtan Leplus
 
-EncryptCode: encrypt, tbc, tbc_asm, tweakey, tweakey_asm
-DecryptCode: decrypt, tbc, tbc_asm, tweakey, tweakey_asm
+EncryptCode: encrypt, cipher, cipher_asm, tweakey, tweakey_asm
+DecryptCode: decrypt, cipher, cipher_asm, tweakey, tweakey_asm
 
 Platforms: MSP

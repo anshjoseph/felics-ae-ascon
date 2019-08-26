@@ -3,7 +3,7 @@
 #include <string.h>
 
 #include "lilliput-ae-ii.h"
-#include "tbc.h"
+#include "cipher.h"
 
 
 static bool _lilliput_ae_decrypt(
