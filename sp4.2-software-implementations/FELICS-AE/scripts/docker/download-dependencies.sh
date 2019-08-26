@@ -67,15 +67,15 @@ get-nRF-tools ()
     local url="https://www.nordicsemi.com/-/media/Software-and-other-downloads/Desktop-software/nRF-command-line-tools/sw/Versions-10-x-x/nRFCommandLineTools1021Linuxamd64tar.gz"
 
     wget "${url}"
-    tar -xzf nRFCommandLineTools1021Linuxamd64tar.gz ./nRF-Command-Line-Tools_10_2_1_Linux-amd64.deb
+    tar xf nRFCommandLineTools1021Linuxamd64tar.gz ./nRF-Command-Line-Tools_10_2_1_Linux-amd64.deb
 }
 
 get-open-stlink ()
 {
     local url="https://github.com/texane/stlink/archive/v1.5.1.tar.gz"
-    
+
     wget "${url}"
-    tar -xzf v1.5.1.tar.gz
+    tar xf v1.5.1.tar.gz
 }
 
 (
@@ -108,14 +108,21 @@ get-open-stlink ()
         fi
     done
 
+    dependencies=(
+        # AVR
+        avrora
+        simavr-1.6
+        # MSP
+        msp430-gcc-8.2.0.52_linux64
+        mspdebug-0.25
+        # ARM
+        JLink_Linux_x86_64.deb
+        # nRF
+        nRF-Command-Line-Tools_10_2_1_Linux-amd64.deb
+        stlink-1.5.1
+    )
+
     # Put everything into a tarball, so that Docker's ADD command
     # extracts its content.
-    tar czf dependencies.tar.gz                 \
-        simavr-1.6                              \
-        msp430-gcc-8.2.0.52_linux64             \
-        mspdebug-0.25                           \
-        avrora                                  \
-        JLink_Linux_x86_64.deb                  \
-        nRF-Command-Line-Tools_10_2_1_Linux-amd64.deb \
-        stlink-1.5.1
+    tar czf dependencies.tar.gz ${dependencies[@]}
 )
