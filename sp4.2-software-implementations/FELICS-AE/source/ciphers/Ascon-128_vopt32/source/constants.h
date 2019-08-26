@@ -29,8 +29,7 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-#include "data_types.h"
-
+#include "cipher.h"
 
 #define BLOCK_SIZE 16
 #define KEY_SIZE 16

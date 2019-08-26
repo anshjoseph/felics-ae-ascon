@@ -29,8 +29,7 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-#include "data_types.h"
-
+#include "cipher.h"
 
 #define BLOCK_SIZE 16
 #define KEY_SIZE 16
@@ -39,9 +38,7 @@
 #define CRYPTO_NPUBBYTES 16
 #define CRYPTO_ABYTES 16
 
-
 extern ROM_DATA_BYTE R_O[5][2];
 extern ROM_DATA_BYTE R_E[5][2];
-
 
 #endif /* CONSTANTS_H */

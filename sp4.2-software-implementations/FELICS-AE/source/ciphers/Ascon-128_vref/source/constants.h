@@ -29,23 +29,11 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-#include "data_types.h"
-
-
 #define BLOCK_SIZE 16
 #define KEY_SIZE 16
 
 #define CRYPTO_KEYBYTES KEY_SIZE
 #define CRYPTO_NPUBBYTES 16
 #define CRYPTO_ABYTES 16
-
-
-/*
- *
- * Cipher constants
- *
- */
-/* Replace with the cipher constants declaration */
-
 
 #endif /* CONSTANTS_H */

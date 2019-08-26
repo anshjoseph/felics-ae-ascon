@@ -29,9 +29,6 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-#include "data_types.h"
-
-
 #define BLOCK_SIZE 16
 #define KEY_SIZE 16
 
@@ -41,7 +38,5 @@
 
 #define maj(x,y,z)   ( ((x) & (y)) ^ ((x) & (z)) ^ ((y) & (z))  )
 #define ch(x,y,z)    ( ((x) & (y)) ^ ((~x) & (z)) )
-
-
 
 #endif /* CONSTANTS_H */

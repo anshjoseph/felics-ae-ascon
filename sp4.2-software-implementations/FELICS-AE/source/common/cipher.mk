@@ -189,16 +189,14 @@ scenario1.hex : $(BUILDDIR)/scenario1.elf
 		%.c \
 		$(COMMONSOURCEDIR)/cipher.h \
 		$(COMMONSOURCEDIR)/common.h \
-		$(SOURCEDIR)/constants.h \
-		$(SOURCEDIR)/data_types.h
+		$(SOURCEDIR)/constants.h
 	$(CC) -c $(CFLAGS) $< $(INCLUDES) -o $(BUILDDIR)/$@
 
 %.o : \
 		%.S \
 		$(COMMONSOURCEDIR)/cipher.h \
 		$(COMMONSOURCEDIR)/common.h \
-		$(SOURCEDIR)/constants.h \
-		$(SOURCEDIR)/data_types.h
+		$(SOURCEDIR)/constants.h
 	$(CC) -c $(CFLAGS) $< $(INCLUDES) -o $(BUILDDIR)/$@
 
 main.o : \
