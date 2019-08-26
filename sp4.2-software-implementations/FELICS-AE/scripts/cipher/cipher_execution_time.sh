@@ -243,9 +243,6 @@ function simulate()
 			make -f $CIPHER_MAKEFILE ARCHITECTURE=$SCRIPT_ARCHITECTURE run > $output_file
 			;;
 		$SCRIPT_ARCHITECTURE_STM32L053)
-			# Erase to fix no output problem for Lilliput-I-192_vstm32l053
-			make -f $CIPHER_MAKEFILE ARCHITECTURE=$SCRIPT_ARCHITECTURE erase
-
 			make -f $CIPHER_MAKEFILE ARCHITECTURE=$SCRIPT_ARCHITECTURE $make_target &> $make_log_file
 			# Run the program stored in the flash memory of the board
 			make -f $CIPHER_MAKEFILE ARCHITECTURE=$SCRIPT_ARCHITECTURE run > $output_file
