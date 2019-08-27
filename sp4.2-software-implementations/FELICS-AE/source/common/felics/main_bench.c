@@ -41,6 +41,12 @@
 
 #if defined(ARM)
 #include <sam3x8e.h>
+
+#if defined(MEASURE_CYCLE_COUNT) && \
+	(MEASURE_CYCLE_COUNT_ENABLED == MEASURE_CYCLE_COUNT)
+#include <stdio.h>
+#endif  /* ARM & MEASURE_CYCLE_COUNT */
+
 #include "cycleCount.h"
 #endif /* ARM */
 
