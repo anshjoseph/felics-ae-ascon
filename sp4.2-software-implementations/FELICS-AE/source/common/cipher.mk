@@ -29,7 +29,7 @@
 #	... the given cipher:
 #	make -f ./../../../common/cipher.mk [ARCHITECTURE=[AVR|MSP|ARM|PC]]
 #		[DEBUG=[0|1|3|7]] [MEASURE_CYCLE_COUNT=[0|1]]
-#		[COMPILER_OPTIONS='...'] [all|clean|cleanall|help]
+#		[COMPILER_OPTIONS='...'] [all|clean|help]
 #
 # 	Examples: 
 #		make -f ./../../../common/cipher.mk
@@ -78,7 +78,7 @@ CIPHERNAME = $(lastword $(subst $(LASTCURRENTPATHDIR), , $(CURRENTPATHDIRS)))
 DELIMITER = ----------
 
 
-.PHONY : all clean cleanall help
+.PHONY : all clean help
 
 
 all : post-build
@@ -201,33 +201,7 @@ felics_check.lst felics_bench.lst: %.lst: %.elf
 
 clean :
 	@echo $(DELIMITER) Begin cleaning: $(CIPHERNAME) $(DELIMITER)
-	rm -f *~
-	rm -f $(SOURCEDIR)/*~
-	rm -f $(COMMONSOURCEDIR)/*~
-
-	rm -f $(BUILDDIR)/felics_check.*
-	rm -f $(BUILDDIR)/felics_bench.*
-
-	rm -f $(BUILDDIR)/felics_main*.o
-	rm -f $(BUILDDIR)/felics_common.o
-
-	rm -f $(addprefix $(BUILDDIR)/, $(OBJS))
-	rm -f $(addprefix $(BUILDDIR)/, $(BENCH_OBJECTS))
-
-	rm -f $(addprefix $(BUILDDIR)/, $(LSTS))
-	rm -f $(addprefix $(BUILDDIR)/, $(BENCH_LISTINGS))
-
-	rm -f $(BUILDDIR)/*.su
-	rm -f $(BUILDDIR)/*.map
-	@echo $(DELIMITER) End cleaning: $(CIPHERNAME) $(DELIMITER)
-
-
-cleanall :
-	@echo $(DELIMITER) Begin cleaning: $(CIPHERNAME) $(DELIMITER)
-	rm -f *~
-	rm -f $(SOURCEDIR)/*~
-	rm -f $(COMMONSOURCEDIR)/*~
-	rm -f $(BUILDDIR)/*
+	rm -f $(filter-out %.log,$(wildcard $(BUILDDIR)/*))
 	@echo $(DELIMITER) End cleaning: $(CIPHERNAME) $(DELIMITER)
 
 
@@ -238,7 +212,7 @@ help:
 	@echo -n "	make -f ./../../../common/cipher.mk "
 	@echo -n		"[ARCHITECTURE=[AVR|MSP|ARM|PC|NRF52840|STM32L053]] [DEBUG=[0|1|3|7]] "
 	@echo -n		"[MEASURE_CYCLE_COUNT=[0|1]] [SCENARIO=[0|1]] "
-	@echo -n		"[COMPILER_OPTIONS='...'] [all|clean|cleanall|help]"
+	@echo -n		"[COMPILER_OPTIONS='...'] [all|clean|help]"
 	@echo ""
 	@echo ""
 	@echo " 	Examples: "

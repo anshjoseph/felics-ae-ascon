@@ -26,7 +26,7 @@
 
 #
 # Call this makefile to build all ciphers:
-#	make [ARCHITECTURE=[AVR|MSP|ARM|PC]] [DEBUG=[0|1|3|7]] [all|clean|cleanall]
+#	make [ARCHITECTURE=[AVR|MSP|ARM|PC]] [DEBUG=[0|1|3|7]] [all|clean]
 #
 #	Examples:
 #		make
@@ -48,7 +48,7 @@ CIPHERMAKEFILE = ./../../../common/cipher.mk
 DELIMITER = ==========
 
 
-.PHONY : all clean cleanall
+.PHONY : all clean
 
 
 all:
@@ -58,13 +58,6 @@ all:
 
 
 clean:
-	@echo $(DELIMITER) Begin cleaning all ciphers - $@ $(DELIMITER)
-	rm -f *~
-	$(foreach dir, $(DIRS), make -C $(dir) -f $(CIPHERMAKEFILE) $@ &&) true
-	@echo $(DELIMITER) End cleaning all ciphers - $@ $(DELIMITER)
-
-
-cleanall:
 	@echo $(DELIMITER) Begin cleaning all ciphers - $@ $(DELIMITER)
 	rm -f *~
 	$(foreach dir, $(DIRS), make -C $(dir) -f $(CIPHERMAKEFILE) $@ &&) true
