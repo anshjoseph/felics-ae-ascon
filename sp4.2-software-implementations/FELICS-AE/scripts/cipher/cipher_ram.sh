@@ -373,8 +373,15 @@ done
 data_ram_e=$shared_constants_e
 data_ram_d=$shared_constants_d
 
-data_size=$(cat $SCENARIO1_CONSTANTS_SOURCE_FILE | grep "$RAW_DATA_SIZE_DEFINE" | tr -d '\r' | cut -d ' ' -f 3)
-associated_data_size=$(cat $SCENARIO1_CONSTANTS_SOURCE_FILE | grep "$RAW_ASSOCIATED_DATA_SIZE_DEFINE" | tr -d '\r' | cut -d ' ' -f 3)
+grep-define ()
+{
+    local var=$1
+    local src=../../../common/scenario1.c
+    grep -E "^#define +${var} +[0-9]+$" ${src} | grep -Eo '[0-9]+'
+}
+
+data_size=$(grep-define DATA_SIZE)
+associated_data_size=$(grep-define ASSOCIATED_DATA_SIZE)
 data_ram_common=$(($key_size + $data_size + $associated_data_size))
 data_ram_total=$(($data_ram_common + $shared_constants_total))
 

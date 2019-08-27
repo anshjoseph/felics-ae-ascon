@@ -33,7 +33,6 @@
 #include "felics/common.h"
 #include "crypto_aead.h"
 #include "constants.h"
-#include "scenario1.h"
 
 #if defined(PC)
 #include <inttypes.h>
@@ -74,6 +73,9 @@
 #include "system_clock.h"
 #endif /* STM32L053 & DEBUG */
 
+
+#define DATA_SIZE 16
+#define ASSOCIATED_DATA_SIZE 16
 
 
 /* Performance-measurement program. */

@@ -42,7 +42,6 @@ SOURCEDIR = ./../source
 BUILDDIR = ./../build
 
 COMMONSOURCEDIR = ./../../../common
-SCENARIO1SOURCEDIR = $(COMMONSOURCEDIR)/scenario1
 
 INCLUDES = -I$(SOURCEDIR) -I$(COMMONSOURCEDIR)
 
@@ -53,8 +52,8 @@ SOURCES = $(wildcard $(SOURCEDIR)/*.c)
 SOURCES_ASM = $(wildcard $(SOURCEDIR)/*.S)
 OBJS = $(subst $(SOURCEDIR)/, , $(SOURCES:.c=.o) $(SOURCES_ASM:.S=.o))
 
-SCENARIO1SOURCES = $(wildcard $(SCENARIO1SOURCEDIR)/*.c)
-SCENARIO1ALLOBJS = $(subst $(SCENARIO1SOURCEDIR)/, , $(SCENARIO1SOURCES:.c=.o))
+SCENARIO1SOURCES = $(COMMONSOURCEDIR)/scenario1.c
+SCENARIO1ALLOBJS = $(subst $(COMMONSOURCEDIR)/, , $(SCENARIO1SOURCES:.c=.o))
 SCENARIO1OBJS = $(filter-out scenario1.o, $(SCENARIO1ALLOBJS))
 
 LSTS = $(OBJS:.o=.lst)
@@ -216,8 +215,7 @@ common.o : \
 
 
 scenario1.o : \
-		$(SCENARIO1SOURCEDIR)/scenario1.c \
-		$(SCENARIO1SOURCEDIR)/scenario1.h \
+		$(COMMONSOURCEDIR)/scenario1.c \
 		$(COMMONSOURCEDIR)/felics/cipher.h \
 		$(COMMONSOURCEDIR)/felics/common.h \
 		$(SOURCEDIR)/constants.h
@@ -269,7 +267,6 @@ cleanall :
 	rm -f *~
 	rm -f $(SOURCEDIR)/*~
 	rm -f $(COMMONSOURCEDIR)/*~
-	rm -f $(SCENARIO1SOURCEDIR)/*~
 	rm -f $(BUILDDIR)/*
 	@echo $(DELIMITER) End cleaning: $(CIPHERNAME) $(DELIMITER)
 
