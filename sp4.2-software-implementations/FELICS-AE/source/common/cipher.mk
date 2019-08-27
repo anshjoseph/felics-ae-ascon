@@ -157,17 +157,13 @@ cipher.elf : \
 		$(OBJS) \
 		main.o \
 		common.o
-	$(CC) $(LDFLAGS) $(addprefix $(BUILDDIR)/, $(OBJS)) \
-		$(addprefix $(BUILDDIR)/, main.o) $(addprefix $(BUILDDIR)/, common.o) \
-		$(LDLIBS) -o $(BUILDDIR)/$@
+	$(CC) $(LDFLAGS) $(addprefix $(BUILDDIR)/, $^) $(LDLIBS) -o $(BUILDDIR)/$@
 
 scenario1.elf : \
 		$(OBJS) \
 		scenario1.o \
 		common.o
-	$(CC) $(LDFLAGS) $(addprefix $(BUILDDIR)/, $(OBJS)) \
-		$(addprefix $(BUILDDIR)/, scenario1.o) \
-		$(addprefix $(BUILDDIR)/, common.o) $(LDLIBS) -o $(BUILDDIR)/$@
+	$(CC) $(LDFLAGS) $(addprefix $(BUILDDIR)/, $^) $(LDLIBS) -o $(BUILDDIR)/$@
 
 cipher.bin : $(BUILDDIR)/cipher.elf
 	$(OBJCOPY) -O binary $< $@
