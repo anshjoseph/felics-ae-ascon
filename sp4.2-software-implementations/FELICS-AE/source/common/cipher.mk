@@ -52,11 +52,11 @@ SOURCES = $(wildcard $(SOURCEDIR)/*.c)
 SOURCES_ASM = $(wildcard $(SOURCEDIR)/*.S)
 OBJS = $(subst $(SOURCEDIR)/, , $(SOURCES:.c=.o) $(SOURCES_ASM:.S=.o))
 
-SCENARIO1SOURCES = $(COMMONSOURCEDIR)/scenario1.c
-SCENARIO1OBJECTS = $(subst $(COMMONSOURCEDIR)/, , $(SCENARIO1SOURCES:.c=.o))
+SCENARIO1SOURCES = $(COMMONSOURCEDIR)/felics/scenario1.c
+SCENARIO1OBJECTS = $(subst $(COMMONSOURCEDIR)/felics/, felics_, $(SCENARIO1SOURCES:.c=.o))
 
 LSTS = $(OBJS:.o=.lst)
-CIPHERLSTS = cipher.lst main.lst common.lst
+CIPHERLSTS = cipher.lst felics_main.lst felics_common.lst
 SCENARIO1LSTS=$(SCENARIO1OBJECTS:.o=.lst)
 
 
@@ -155,14 +155,14 @@ target1 : \
 
 cipher.elf : \
 		$(OBJS) \
-		main.o \
-		common.o
+		felics_main.o \
+		felics_common.o
 	$(CC) $(LDFLAGS) $(addprefix $(BUILDDIR)/, $^) $(LDLIBS) -o $(BUILDDIR)/$@
 
 scenario1.elf : \
 		$(OBJS) \
-		scenario1.o \
-		common.o
+		felics_scenario1.o \
+		felics_common.o
 	$(CC) $(LDFLAGS) $(addprefix $(BUILDDIR)/, $^) $(LDLIBS) -o $(BUILDDIR)/$@
 
 cipher.bin : $(BUILDDIR)/cipher.elf
@@ -191,29 +191,11 @@ scenario1.hex : $(BUILDDIR)/scenario1.elf
 		$(SOURCEDIR)/constants.h
 	$(CC) -c $(CFLAGS) $< $(INCLUDES) -o $(BUILDDIR)/$@
 
-main.o : \
-		$(COMMONSOURCEDIR)/main.c \
-		$(COMMONSOURCEDIR)/felics/cipher.h \
-		$(COMMONSOURCEDIR)/felics/common.h \
-		$(SOURCEDIR)/constants.h
+felics_%.o: $(COMMONSOURCEDIR)/felics/%.c \
+            $(COMMONSOURCEDIR)/felics/cipher.h \
+            $(COMMONSOURCEDIR)/felics/common.h \
+            $(SOURCEDIR)/constants.h
 	$(CC) -c $(CFLAGS) $< $(INCLUDES) -o $(BUILDDIR)/$@
-
-common.o : \
-		$(COMMONSOURCEDIR)/common.c \
-		$(COMMONSOURCEDIR)/felics/common.h \
-		$(COMMONSOURCEDIR)/felics/cipher.h \
-		$(COMMONSOURCEDIR)/felics/test_vectors.h \
-		$(SOURCEDIR)/constants.h 
-	$(CC) -c $(CFLAGS) $< $(INCLUDES) -o $(BUILDDIR)/$@
-
-
-scenario1.o : \
-		$(COMMONSOURCEDIR)/scenario1.c \
-		$(COMMONSOURCEDIR)/felics/cipher.h \
-		$(COMMONSOURCEDIR)/felics/common.h \
-		$(SOURCEDIR)/constants.h
-	$(CC) -c $(CFLAGS) $< $(INCLUDES) -o $(BUILDDIR)/$@
-
 
 cipher.lst : cipher.elf
 	$(OBJDUMP) $(OBJDUMPFLAGS) $(BUILDDIR)/$< > $(BUILDDIR)/$@
@@ -241,8 +223,8 @@ clean :
 	rm -f $(BUILDDIR)/scenario1.lst
 	rm -f $(BUILDDIR)/scenario1.hex
 
-	rm -f $(BUILDDIR)/main.o 
-	rm -f $(BUILDDIR)/common.o
+	rm -f $(BUILDDIR)/felics_main.o
+	rm -f $(BUILDDIR)/felics_common.o
 
 	rm -f $(addprefix $(BUILDDIR)/, $(OBJS))
 	rm -f $(addprefix $(BUILDDIR)/, $(SCENARIO1OBJECTS))

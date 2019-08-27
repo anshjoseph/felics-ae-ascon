@@ -376,7 +376,7 @@ data_ram_d=$shared_constants_d
 grep-define ()
 {
     local var=$1
-    local src=../../../common/scenario1.c
+    local src=../../../common/felics/scenario1.c
     grep -E "^#define +${var} +[0-9]+$" ${src} | grep -Eo '[0-9]+'
 }
 
