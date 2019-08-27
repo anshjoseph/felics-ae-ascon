@@ -27,7 +27,7 @@
 # Connect to the mspdebug simulator
 target remote localhost:2000
 # Select the file to debug
-file scenario1.elf
+file felics_bench.elf
 
 
 # Set the maximum number fo elements of an array to be printed

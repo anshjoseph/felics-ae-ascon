@@ -25,7 +25,7 @@
 #
 
 # Select the file to debug
-prog scenario1.elf
+prog felics_bench.elf
 
 
 #

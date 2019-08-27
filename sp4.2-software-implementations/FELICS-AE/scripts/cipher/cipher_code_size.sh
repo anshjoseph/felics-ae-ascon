@@ -125,7 +125,7 @@ cipher_name=$(basename -- "$(dirname -- "$(pwd)")")
 
 
 # Set the searched files pattern
-pattern=$ALL_FILES$OBJECT_FILE_EXTENSION 
+pattern='*.o'
 
 # Get the number of files matching the pattern
 files_number=$(find . -maxdepth 1 -type f -name "$pattern" | wc -l)
@@ -179,7 +179,7 @@ do
 	rom=$(($text + $data))
 
 	# Get the component name (file name without the extension)
-	component=${file%$OBJECT_FILE_EXTENSION}
+	component=${file%.o}
 
 	# Set the component ROM requirement
 	declare $component"_rom"=$rom

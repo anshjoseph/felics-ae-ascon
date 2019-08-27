@@ -27,7 +27,7 @@
 # Connect to the simavr simulator
 target remote localhost:1234
 # Select the file to debug
-file scenario1.elf
+file felics_bench.elf
 
 
 # Set the maximum number fo elements of an array to be printed

@@ -80,17 +80,17 @@ OBJDUMPFLAGS := -dSt
 
 
 # Upload the program to the board. Should be invoked as: 
-#	make -f ./../../../common/cipher.mk ARCHITECTURE=NRF52840 upload-cipher
-.PHONY : upload-cipher
-upload-cipher : cipher.hex
+#	make -f ./../../../common/cipher.mk ARCHITECTURE=NRF52840 upload-check
+.PHONY : upload-check
+upload-check : felics_check.hex
 	@# Communicate with the board
 	@# Use nrfjprog to load program in flash
 	@$(NRFJPROG) -f NRF52 --program $< --chiperase -r
 
 # Upload the program to the board. Should be invoked as: 
-#	make -f ./../../../common/cipher.mk ARCHITECTURE=NRF52840 upload-scenario1
-.PHONY : upload-scenario1
-upload-scenario1 : scenario1.hex
+#	make -f ./../../../common/cipher.mk ARCHITECTURE=NRF52840 upload-bench
+.PHONY : upload-bench
+upload-bench : felics_bench.hex
 	@# Communicate with the board
 	@# Use nrfjprog to load program in flash
 	@$(NRFJPROG) -f NRF52 --program $< --chiperase -r

@@ -27,7 +27,7 @@
 # Connect to the J-Link GDB Server
 target remote localhost:2331
 # Select the file to debug
-file scenario1.elf
+file felics_bench.elf
 
 
 # Set the maximum number fo elements of an array to be printed

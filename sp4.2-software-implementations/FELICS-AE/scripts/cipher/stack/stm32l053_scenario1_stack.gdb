@@ -27,7 +27,7 @@
 # Connect to the ST-Link GDB Server
 target extended-remote :4242
 # Select the file to debug
-file scenario1.elf
+file felics_bench.elf
 
 
 # Set the maximum number fo elements of an array to be printed

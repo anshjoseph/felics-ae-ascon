@@ -31,9 +31,6 @@
 #
 
 
-PC_CIPHER_FILE=./cipher.elf
-PC_SCENARIO1_FILE=./scenario1.elf
-
 PC_OUTPUT_FILE=pc_execution_time.log
 
 AVR_EXECUTION_TIME_LOG_FILE=avr_execution_time.log
@@ -43,9 +40,6 @@ MSP_SCENARIO1_MSPDEBUG_EXECUTION_TIME_SECTIONS_COMMANDS_FILE=./../../../../scrip
 
 MSPDEBUG_EXECUTION_TIME_LOG_FILE=mspdebug_execution_time.log
 MSPDEBUG_EXECUTION_TIME_SECTIONS_LOG_FILE=mspdebug_execution_time_sections.log
-
-UPLOAD_CIPHER=upload-cipher
-UPLOAD_SCENARIO1=upload-scenario1
 
 MAKE_LOG_FILE=cipher_execution_time_make.log
 

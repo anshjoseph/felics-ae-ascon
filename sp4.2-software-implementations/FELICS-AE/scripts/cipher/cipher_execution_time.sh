@@ -315,16 +315,12 @@ echo "Begin cipher execution time - $(pwd)"
 cipher_name=$(basename -- "$(dirname -- "$(pwd)")")
 
 
-# Set the searched file pattern
-file=$SCENARIO1_FILE$ELF_FILE_EXTENSION
+file=./felics_bench.elf
 
-
-# Get the number of files matching the pattern
-files_number=$(find . -maxdepth 1 -type f -name "$file" | wc -l)
-
-if [ $files_number -eq 0 ] ; then
-	echo "There is no file matching the pattern: '$file' for cipher '$cipher_name'!"
-	exit 1
+if ! test -f ${file}
+then
+    echo "Cannot find ${file} for cipher '${cipher_name}."
+    exit 1
 fi
 
 
@@ -341,7 +337,7 @@ case $SCRIPT_ARCHITECTURE in
 		make_log_file=$SCRIPT_ARCHITECTURE$SCENARIO_NAME_PART$SCRIPT_SCENARIO$FILE_NAME_SEPARATOR$MAKE_LOG_FILE
 		pc_output_file=$SCRIPT_ARCHITECTURE$SCENARIO_NAME_PART$SCRIPT_SCENARIO$FILE_NAME_SEPARATOR$PC_OUTPUT_FILE
 
-		simulate $PC_SCENARIO1_FILE $pc_output_file $make_log_file
+		simulate $file $pc_output_file $make_log_file
 
 		if [ -f $pc_output_file ] ; then
 			e_execution_time=$(compute_execution_time $pc_output_file 'EncryptCycleCount')
@@ -388,7 +384,7 @@ case $SCRIPT_ARCHITECTURE in
 		make_log_file=$SCRIPT_ARCHITECTURE$SCENARIO_NAME_PART$SCRIPT_SCENARIO$FILE_NAME_SEPARATOR$MAKE_LOG_FILE
 		arm_serial_terminal_output_file=$SCRIPT_ARCHITECTURE$SCENARIO_NAME_PART$SCRIPT_SCENARIO$FILE_NAME_SEPARATOR$ARM_SERIAL_TERMINAL_OUTPUT_FILE
 
-		simulate $file $arm_serial_terminal_output_file $make_log_file $UPLOAD_SCENARIO1
+		simulate $file $arm_serial_terminal_output_file $make_log_file upload-bench
 
 		if [ -f $arm_serial_terminal_output_file ] ; then
 			e_execution_time=$(compute_execution_time $arm_serial_terminal_output_file 'EncryptCycleCount')
@@ -401,7 +397,7 @@ case $SCRIPT_ARCHITECTURE in
 		make_log_file=$SCRIPT_ARCHITECTURE$SCENARIO_NAME_PART$SCRIPT_SCENARIO$FILE_NAME_SEPARATOR$MAKE_LOG_FILE
 		nrf52840_serial_terminal_output_file=$SCRIPT_ARCHITECTURE$SCENARIO_NAME_PART$SCRIPT_SCENARIO$FILE_NAME_SEPARATOR$NRF52840_SERIAL_TERMINAL_OUTPUT_FILE
 
-		simulate $file $nrf52840_serial_terminal_output_file $make_log_file $UPLOAD_SCENARIO1
+		simulate $file $nrf52840_serial_terminal_output_file $make_log_file upload-bench
 
 		if [ -f $nrf52840_serial_terminal_output_file ] ; then
 			e_execution_time=$(compute_execution_time $nrf52840_serial_terminal_output_file 'EncryptCycleCount')
@@ -414,7 +410,7 @@ case $SCRIPT_ARCHITECTURE in
 		make_log_file=$SCRIPT_ARCHITECTURE$SCENARIO_NAME_PART$SCRIPT_SCENARIO$FILE_NAME_SEPARATOR$MAKE_LOG_FILE
 		stm32l053_serial_terminal_output_file=$SCRIPT_ARCHITECTURE$SCENARIO_NAME_PART$SCRIPT_SCENARIO$FILE_NAME_SEPARATOR$STM32L053_SERIAL_TERMINAL_OUTPUT_FILE
 
-		simulate $file $stm32l053_serial_terminal_output_file $make_log_file $UPLOAD_SCENARIO1
+		simulate $file $stm32l053_serial_terminal_output_file $make_log_file upload-bench
 
 		if [ -f $stm32l053_serial_terminal_output_file ] ; then
 			e_execution_time=$(compute_execution_time $stm32l053_serial_terminal_output_file 'EncryptCycleCount')

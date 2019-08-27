@@ -25,7 +25,7 @@
 #
 
 # Select the file to debug
-prog cipher.elf
+prog felics_check.elf
 
 
 # Add a console device to the IO's simulator's bus		

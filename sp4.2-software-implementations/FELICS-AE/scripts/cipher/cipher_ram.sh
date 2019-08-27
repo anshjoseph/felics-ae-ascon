@@ -252,7 +252,7 @@ block_size=$(solve-define BLOCK_SIZE)
 key_size=$(solve-define KEY_SIZE)
 
 # Set the searched files pattern
-pattern=$ALL_FILES$OBJECT_FILE_EXTENSION 
+pattern='*.o'
 
 # Get the number of files matching the pattern
 files_number=$(find . -maxdepth 1 -type f -name "$pattern" | wc -l)
@@ -266,7 +266,7 @@ fi
 files=$(ls $pattern)
 
 
-files="$SCENARIO1_FILE$ELF_FILE_EXTENSION $files"
+files="felics_bench.elf $files"
 
 
 # Set the size command depending on the architecture
@@ -310,10 +310,7 @@ do
 	data=$(echo $size | cut -d ' ' -f 2)
 	
 	# Get the component name (file name without the extension)
-	component=${file%$OBJECT_FILE_EXTENSION}
-	if [ "$component" == "$file" ] ; then
-		component=${file%$ELF_FILE_EXTENSION}
-	fi
+	component=${file%.*}
 
 	declare $component"_data"=$data
 done
@@ -376,7 +373,7 @@ data_ram_d=$shared_constants_d
 grep-define ()
 {
     local var=$1
-    local src=../../../common/felics/scenario1.c
+    local src=../../../common/felics/main_bench.c
     grep -E "^#define +${var} +[0-9]+$" ${src} | grep -Eo '[0-9]+'
 }
 
@@ -405,8 +402,7 @@ cipher_name=$(basename -- "$(dirname -- "$(pwd)")")
 
 
 # Set the searched file pattern
-file=$SCENARIO1_FILE$ELF_FILE_EXTENSION
-
+file=felics_bench.elf
 # Get the number of files matching the pattern
 files_number=$(find . -maxdepth 1 -type f -name "$file" | wc -l)
 
@@ -452,8 +448,8 @@ case $SCRIPT_ARCHITECTURE in
 		jlink_gdb_server_stack_log_file=$SCRIPT_ARCHITECTURE$SCENARIO_NAME_PART$SCRIPT_SCENARIO$FILE_NAME_SEPARATOR$JLINK_GDB_SERVER_STACK_LOG_FILE
 		jlink_gdb_server_stack_sections_log_file=$SCRIPT_ARCHITECTURE$SCENARIO_NAME_PART$SCRIPT_SCENARIO$FILE_NAME_SEPARATOR$JLINK_GDB_SERVER_STACK_SECTIONS_LOG_FILE
 
-		simulate $ARM_SCENARIO1_GDB_STACK_COMMANDS_FILE $UPLOAD_SCENARIO1 $gdb_stack_log_file $jlink_gdb_server_stack_log_file $make_log_file
-		simulate $ARM_SCENARIO1_GDB_STACK_SECTIONS_COMMANDS_FILE $UPLOAD_SCENARIO1 $gdb_stack_sections_log_file $jlink_gdb_server_stack_sections_log_file $make_log_file
+		simulate $ARM_SCENARIO1_GDB_STACK_COMMANDS_FILE upload-bench $gdb_stack_log_file $jlink_gdb_server_stack_log_file $make_log_file
+		simulate $ARM_SCENARIO1_GDB_STACK_SECTIONS_COMMANDS_FILE upload-bench $gdb_stack_sections_log_file $jlink_gdb_server_stack_sections_log_file $make_log_file
 		;;
 
 	$SCRIPT_ARCHITECTURE_NRF52840)
@@ -462,8 +458,8 @@ case $SCRIPT_ARCHITECTURE in
 		jlink_gdb_server_stack_log_file=$SCRIPT_ARCHITECTURE$SCENARIO_NAME_PART$SCRIPT_SCENARIO$FILE_NAME_SEPARATOR$JLINK_GDB_SERVER_STACK_LOG_FILE
 		jlink_gdb_server_stack_sections_log_file=$SCRIPT_ARCHITECTURE$SCENARIO_NAME_PART$SCRIPT_SCENARIO$FILE_NAME_SEPARATOR$JLINK_GDB_SERVER_STACK_SECTIONS_LOG_FILE
 
-		simulate $NRF52840_SCENARIO1_GDB_STACK_COMMANDS_FILE $UPLOAD_SCENARIO1 $gdb_stack_log_file $jlink_gdb_server_stack_log_file $make_log_file
-		simulate $NRF52840_SCENARIO1_GDB_STACK_SECTIONS_COMMANDS_FILE $UPLOAD_SCENARIO1 $gdb_stack_sections_log_file $jlink_gdb_server_stack_sections_log_file $make_log_file
+		simulate $NRF52840_SCENARIO1_GDB_STACK_COMMANDS_FILE upload-bench $gdb_stack_log_file $jlink_gdb_server_stack_log_file $make_log_file
+		simulate $NRF52840_SCENARIO1_GDB_STACK_SECTIONS_COMMANDS_FILE upload-bench $gdb_stack_sections_log_file $jlink_gdb_server_stack_sections_log_file $make_log_file
 		;;
 
 	$SCRIPT_ARCHITECTURE_STM32L053)
@@ -472,8 +468,8 @@ case $SCRIPT_ARCHITECTURE in
 		stlink_gdb_server_stack_log_file=$SCRIPT_ARCHITECTURE$SCENARIO_NAME_PART$SCRIPT_SCENARIO$FILE_NAME_SEPARATOR$STLINK_GDB_SERVER_STACK_LOG_FILE
 		stlink_gdb_server_stack_sections_log_file=$SCRIPT_ARCHITECTURE$SCENARIO_NAME_PART$SCRIPT_SCENARIO$FILE_NAME_SEPARATOR$STLINK_GDB_SERVER_STACK_SECTIONS_LOG_FILE
 
-		simulate $STM32L053_SCENARIO1_GDB_STACK_COMMANDS_FILE $UPLOAD_SCENARIO1 $gdb_stack_log_file $stlink_gdb_server_stack_log_file $make_log_file
-		simulate $STM32L053_SCENARIO1_GDB_STACK_SECTIONS_COMMANDS_FILE $UPLOAD_SCENARIO1 $gdb_stack_sections_log_file $stlink_gdb_server_stack_sections_log_file $make_log_file
+		simulate $STM32L053_SCENARIO1_GDB_STACK_COMMANDS_FILE upload-bench $gdb_stack_log_file $stlink_gdb_server_stack_log_file $make_log_file
+		simulate $STM32L053_SCENARIO1_GDB_STACK_SECTIONS_COMMANDS_FILE upload-bench $gdb_stack_sections_log_file $stlink_gdb_server_stack_sections_log_file $make_log_file
 		;;
 esac
 

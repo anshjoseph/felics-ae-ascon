@@ -142,32 +142,34 @@ then
     fail $MAKE_FILE_LOG
 fi
 
+program=felics_check.elf
+
 # Run
 case $SCRIPT_ARCHITECTURE in
     $SCRIPT_ARCHITECTURE_PC)
-        if ! ./$CIPHER_ELF_FILE > $RESULT_FILE
+        if ! ./${program} > $RESULT_FILE
         then
-            fail <(echo "Error! Run the executable to see the error: '$(pwd)/$CIPHER_ELF_FILE'")
+            fail <(echo "Error! Run the executable to see the error: '$(pwd)/${program}'")
         fi
         ;;
 
     $SCRIPT_ARCHITECTURE_AVR)
-        if ! $SIMAVR_SIMULATOR -m atmega128 $CIPHER_ELF_FILE &> $RESULT_FILE
+        if ! $SIMAVR_SIMULATOR -m atmega128 ${program} &> $RESULT_FILE
         then
-            fail <(echo "Error! Run the executable to see the error: '$(pwd)/$CIPHER_ELF_FILE'")
+            fail <(echo "Error! Run the executable to see the error: '$(pwd)/${program}'")
         fi
         ;;
 
     $SCRIPT_ARCHITECTURE_MSP)
         if ! $MSPDEBUG_SIMULATOR -n sim < $MSPDEBUG_CHECK_CIPHER_COMMANDS_FILE &> $RESULT_FILE
         then
-            fail <(echo "Error! Run the executable to see the error: '$(pwd)/$CIPHER_ELF_FILE'")
+            fail <(echo "Error! Run the executable to see the error: '$(pwd)/${program}'")
         fi
         ;;
 
     $SCRIPT_ARCHITECTURE_ARM)
         # Upload the program to the board
-        if ! make -f $CIPHER_MAKEFILE ARCHITECTURE=$SCRIPT_ARCHITECTURE upload-cipher &>> $MAKE_FILE_LOG
+        if ! make -f $CIPHER_MAKEFILE ARCHITECTURE=$SCRIPT_ARCHITECTURE upload-check &>> $MAKE_FILE_LOG
         then
             fail ${MAKE_FILE_LOG}
         fi
@@ -178,7 +180,7 @@ case $SCRIPT_ARCHITECTURE in
 
     $SCRIPT_ARCHITECTURE_NRF52840|$SCRIPT_ARCHITECTURE_STM32L053)
         # Upload the program to the board
-        if ! make -f $CIPHER_MAKEFILE ARCHITECTURE=$SCRIPT_ARCHITECTURE upload-cipher &>> $MAKE_FILE_LOG
+        if ! make -f $CIPHER_MAKEFILE ARCHITECTURE=$SCRIPT_ARCHITECTURE upload-check &>> $MAKE_FILE_LOG
         then
             fail ${MAKE_FILE_LOG}
         fi

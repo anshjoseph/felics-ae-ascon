@@ -69,7 +69,4 @@ JLINK_GDB_SERVER_STACK_SECTIONS_LOG_FILE=jlink_gdb_server_stack_sections.log
 STLINK_GDB_SERVER_STACK_LOG_FILE=stlink_gdb_server_stack.log
 STLINK_GDB_SERVER_STACK_SECTIONS_LOG_FILE=stlink_gdb_server_stack_sections.log
 
-UPLOAD_CIPHER=upload-cipher
-UPLOAD_SCENARIO1=upload-scenario1
-
 MAKE_LOG_FILE=cipher_ram_make.log

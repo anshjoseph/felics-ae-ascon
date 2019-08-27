@@ -52,20 +52,21 @@ SOURCES = $(wildcard $(SOURCEDIR)/*.c)
 SOURCES_ASM = $(wildcard $(SOURCEDIR)/*.S)
 OBJS = $(subst $(SOURCEDIR)/, , $(SOURCES:.c=.o) $(SOURCES_ASM:.S=.o))
 
-SCENARIO1SOURCES = $(COMMONSOURCEDIR)/felics/scenario1.c
-SCENARIO1OBJECTS = $(subst $(COMMONSOURCEDIR)/felics/, felics_, $(SCENARIO1SOURCES:.c=.o))
+BENCH_SOURCES = $(COMMONSOURCEDIR)/felics/main_bench.c
+BENCH_OBJECTS = $(subst $(COMMONSOURCEDIR)/felics/, felics_, $(BENCH_SOURCES:.c=.o))
 
 LSTS = $(OBJS:.o=.lst)
-CIPHERLSTS = cipher.lst felics_main.lst felics_common.lst
-SCENARIO1LSTS=$(SCENARIO1OBJECTS:.o=.lst)
+
+CHECK_LISTINGS = felics_check.lst felics_main_check.lst felics_common.lst
+BENCH_LISTINGS = felics_bench.lst felics_main_bench.lst felics_common.lst
 
 
 ifeq ($(SCENARIO), 1)
 TARGET=target1
-LSTS += $(SCENARIO1LSTS)
+LSTS += $(BENCH_LISTINGS)
 else
 TARGET=target
-LSTS += $(CIPHERLSTS)
+LSTS += $(CHECK_LISTINGS)
 endif
 
 
@@ -145,36 +146,30 @@ endif
 
 .PHONY : target
 target : \
-		cipher.elf \
+		felics_check.elf \
 		$(LSTS)
 
 .PHONY : target1
 target1 : \
-		scenario1.elf \
+		felics_bench.elf \
 		$(LSTS)
 
-cipher.elf : \
+felics_check.elf : \
 		$(OBJS) \
-		felics_main.o \
+		felics_main_check.o \
 		felics_common.o
 	$(CC) $(LDFLAGS) $(addprefix $(BUILDDIR)/, $^) $(LDLIBS) -o $(BUILDDIR)/$@
 
-scenario1.elf : \
+felics_bench.elf : \
 		$(OBJS) \
-		felics_scenario1.o \
+		felics_main_bench.o \
 		felics_common.o
 	$(CC) $(LDFLAGS) $(addprefix $(BUILDDIR)/, $^) $(LDLIBS) -o $(BUILDDIR)/$@
 
-cipher.bin : $(BUILDDIR)/cipher.elf
+%.bin: $(BUILDDIR)/%.elf
 	$(OBJCOPY) -O binary $< $@
 
-scenario1.bin : $(BUILDDIR)/scenario1.elf
-	$(OBJCOPY) -O binary $< $@
-
-cipher.hex : $(BUILDDIR)/cipher.elf
-	$(OBJCOPY) -O ihex $< $@
-
-scenario1.hex : $(BUILDDIR)/scenario1.elf
+%.hex: $(BUILDDIR)/%.elf
 	$(OBJCOPY) -O ihex $< $@
 
 %.o : \
@@ -197,10 +192,7 @@ felics_%.o: $(COMMONSOURCEDIR)/felics/%.c \
             $(SOURCEDIR)/constants.h
 	$(CC) -c $(CFLAGS) $< $(INCLUDES) -o $(BUILDDIR)/$@
 
-cipher.lst : cipher.elf
-	$(OBJDUMP) $(OBJDUMPFLAGS) $(BUILDDIR)/$< > $(BUILDDIR)/$@
-
-scenario1.lst : scenario1.elf
+felics_check.lst felics_bench.lst: %.lst: %.elf
 	$(OBJDUMP) $(OBJDUMPFLAGS) $(BUILDDIR)/$< > $(BUILDDIR)/$@
 
 %.lst : %.o
@@ -213,24 +205,17 @@ clean :
 	rm -f $(SOURCEDIR)/*~
 	rm -f $(COMMONSOURCEDIR)/*~
 
-	rm -f $(BUILDDIR)/cipher.elf
-	rm -f $(BUILDDIR)/cipher.bin
-	rm -f $(BUILDDIR)/cipher.lst
-	rm -f $(BUILDDIR)/cipher.hex
+	rm -f $(BUILDDIR)/felics_check.*
+	rm -f $(BUILDDIR)/felics_bench.*
 
-	rm -f $(BUILDDIR)/scenario1.elf
-	rm -f $(BUILDDIR)/scenario1.bin
-	rm -f $(BUILDDIR)/scenario1.lst
-	rm -f $(BUILDDIR)/scenario1.hex
-
-	rm -f $(BUILDDIR)/felics_main.o
+	rm -f $(BUILDDIR)/felics_main*.o
 	rm -f $(BUILDDIR)/felics_common.o
 
 	rm -f $(addprefix $(BUILDDIR)/, $(OBJS))
-	rm -f $(addprefix $(BUILDDIR)/, $(SCENARIO1OBJECTS))
+	rm -f $(addprefix $(BUILDDIR)/, $(BENCH_OBJECTS))
 
 	rm -f $(addprefix $(BUILDDIR)/, $(LSTS))
-	rm -f $(addprefix $(BUILDDIR)/, $(SCENARIO1LSTS))
+	rm -f $(addprefix $(BUILDDIR)/, $(BENCH_LISTINGS))
 
 	rm -f $(BUILDDIR)/*.su
 	rm -f $(BUILDDIR)/*.map

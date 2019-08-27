@@ -79,18 +79,18 @@ OBJDUMPFLAGS := -dSt
 
 
 # Upload the program to the board. Should be invoked as: 
-#	make -f ./../../../common/cipher.mk ARCHITECTURE=ARM upload-cipher
-.PHONY : upload-cipher
-upload-cipher : cipher.bin
+#	make -f ./../../../common/cipher.mk ARCHITECTURE=ARM upload-check
+.PHONY : upload-check
+upload-check : felics_check.bin
 	@# Communicate with the board @1200 Bd resets everything
 	@stty -F $(DEVICE) cs8 1200 hupcl
 	@# Use bossac to load program in flash
 	@$(BOSSAC) --port=$(PORT) -U false -e -w -b $< -R #-d -i -v
 
 # Upload the program to the board. Should be invoked as: 
-#	make -f ./../../../common/cipher.mk ARCHITECTURE=ARM upload-scenario1
-.PHONY : upload-scenario1
-upload-scenario1 : scenario1.bin
+#	make -f ./../../../common/cipher.mk ARCHITECTURE=ARM upload-bench
+.PHONY : upload-bench
+upload-bench : felics_bench.bin
 	@# Communicate with the board @1200 Bd resets everything
 	@stty -F $(DEVICE) cs8 1200 hupcl
 	@# Use bossac to load program in flash
