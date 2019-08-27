@@ -33,8 +33,4 @@ dpkg -i "${deps_dir}/nRF-Command-Line-Tools_10_2_1_Linux-amd64.deb"
     cd "${deps_dir}/stlink-1.5.1"
     make release
     cd build/Release; make install DESTDIR=/opt/felics/stlink
-    echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/felics/stlink/usr/local/lib/' >> /root/.bashrc
-    echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/felics/stlink/usr/local/lib/' >> /home/felics/.bashrc
-    echo 'export PATH=$PATH:/opt/felics/stlink/usr/local/bin/' >> /home/felics/.bashrc
-    echo 'export PATH=$PATH:/opt/felics/stlink/usr/local/bin/' >> /root/.bashrc
-)
+    )

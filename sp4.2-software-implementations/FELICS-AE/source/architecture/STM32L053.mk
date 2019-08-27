@@ -36,7 +36,7 @@ SYSTEM_DIR := ../../../architecture/stm32l053
 CC := arm-none-eabi-gcc
 OBJDUMP := arm-none-eabi-objdump
 OBJCOPY := arm-none-eabi-objcopy
-ST_FLASH := st-flash
+ST_FLASH := LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/felics/stlink/usr/local/lib/ /opt/felics/stlink/usr/local/bin/st-flash
 
 STM32L053_SERIAL_TERMINAL := $(SYSTEM_DIR)/stm32l053_serial_terminal.py
 
