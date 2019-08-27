@@ -4,4 +4,6 @@ ImplementationAuthors: Jean-Baptiste Serrou Soares (adapted from supercop)
 EncryptCode: encrypt, constants
 DecryptCode: decrypt, constants
 
+BlockSize: 16
+
 Platforms: ARM

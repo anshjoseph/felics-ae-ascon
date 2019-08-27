@@ -31,7 +31,6 @@
 
 #include "felics/cipher.h"
 
-#define BLOCK_SIZE 16
 #define KEY_SIZE 16
 
 #define CRYPTO_KEYBYTES KEY_SIZE

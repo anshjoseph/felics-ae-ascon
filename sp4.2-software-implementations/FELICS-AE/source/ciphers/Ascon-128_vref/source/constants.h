@@ -29,7 +29,6 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-#define BLOCK_SIZE 16
 #define KEY_SIZE 16
 
 #define CRYPTO_KEYBYTES KEY_SIZE

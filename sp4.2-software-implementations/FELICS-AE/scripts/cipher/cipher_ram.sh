@@ -248,7 +248,13 @@ EOF
     rm $prog
 )
 
-block_size=$(solve-define BLOCK_SIZE)
+get-implem-info ()
+{
+    local key=$1
+    grep "^${key}: " ${IMPLEMENTATION_INFO_FILE} | cut -d' ' -f2
+}
+
+block_size=$(get-implem-info BlockSize)
 key_size=$(solve-define KEY_SIZE)
 
 # Set the searched files pattern

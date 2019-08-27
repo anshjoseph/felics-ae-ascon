@@ -3,3 +3,5 @@ ImplementationAuthors: Jean-Baptiste Serrou Soares (adapted from supercop)
 
 EncryptCode: encrypt, utils
 DecryptCode: decrypt, utils
+
+BlockSize: 16

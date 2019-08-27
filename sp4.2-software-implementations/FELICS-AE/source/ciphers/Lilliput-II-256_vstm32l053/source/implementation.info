@@ -5,3 +5,4 @@ EncryptCode: encrypt, cipher, tweakey
 DecryptCode: decrypt, cipher, tweakey
 
 Platforms: STM32L053
+BlockSize: 16

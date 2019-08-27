@@ -32,14 +32,6 @@
 #include "data_types.h"
 
 
-/*
- *
- * Cipher characteristics:
- * 	BLOCK_SIZE - the cipher block size in bytes
- * 	KEY_SIZE - the cipher key size in bytes
- */
-#define BLOCK_SIZE 8 /* Replace with the cipher block size in bytes */
-
 #define KEY_SIZE 10 /* Replace with the cipher key size in bytes */
 
 
