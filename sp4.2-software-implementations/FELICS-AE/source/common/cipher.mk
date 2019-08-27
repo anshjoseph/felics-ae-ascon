@@ -53,12 +53,11 @@ SOURCES_ASM = $(wildcard $(SOURCEDIR)/*.S)
 OBJS = $(subst $(SOURCEDIR)/, , $(SOURCES:.c=.o) $(SOURCES_ASM:.S=.o))
 
 SCENARIO1SOURCES = $(COMMONSOURCEDIR)/scenario1.c
-SCENARIO1ALLOBJS = $(subst $(COMMONSOURCEDIR)/, , $(SCENARIO1SOURCES:.c=.o))
-SCENARIO1OBJS = $(filter-out scenario1.o, $(SCENARIO1ALLOBJS))
+SCENARIO1OBJECTS = $(subst $(COMMONSOURCEDIR)/, , $(SCENARIO1SOURCES:.c=.o))
 
 LSTS = $(OBJS:.o=.lst)
-CIPHERLSTS = main.lst common.lst
-SCENARIO1LSTS=$(SCENARIO1OBJS:.o=.lst)
+CIPHERLSTS = cipher.lst main.lst common.lst
+SCENARIO1LSTS=$(SCENARIO1OBJECTS:.o=.lst)
 
 
 ifeq ($(SCENARIO), 1)
@@ -147,13 +146,11 @@ endif
 .PHONY : target
 target : \
 		cipher.elf \
-		cipher.lst \
 		$(LSTS)
 
 .PHONY : target1
 target1 : \
 		scenario1.elf \
-		scenario1.lst \
 		$(LSTS)
 
 cipher.elf : \
@@ -252,7 +249,7 @@ clean :
 	rm -f $(BUILDDIR)/common.o
 
 	rm -f $(addprefix $(BUILDDIR)/, $(OBJS))
-	rm -f $(addprefix $(BUILDDIR)/, $(SCENARIO1ALLOBJS))
+	rm -f $(addprefix $(BUILDDIR)/, $(SCENARIO1OBJECTS))
 
 	rm -f $(addprefix $(BUILDDIR)/, $(LSTS))
 	rm -f $(addprefix $(BUILDDIR)/, $(SCENARIO1LSTS))
