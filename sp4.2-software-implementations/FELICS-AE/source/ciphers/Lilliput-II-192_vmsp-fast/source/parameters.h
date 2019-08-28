@@ -1,1 +1,1 @@
-../../.templates/Lilliput_vmsp-fast/parameters.h
+../../Lilliput-II-192_vfelicsref/source/parameters.h

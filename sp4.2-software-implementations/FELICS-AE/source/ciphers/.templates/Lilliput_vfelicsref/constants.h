@@ -1,40 +1,22 @@
-/*
- *
- * University of Luxembourg
- * Laboratory of Algorithmics, Cryptology and Security (LACS)
- *
- * FELICS - Fair Evaluation of Lightweight Cryptographic Systems
- *
- * Copyright (C) 2015 University of Luxembourg
- *
- * Written in 2015 by Daniel Dinu <dumitru-daniel.dinu@uni.lu>
- *
- * This file is part of FELICS.
- *
- * FELICS is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
- *
- * FELICS is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, see <http://www.gnu.org/licenses/>.
- *
- */
-
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-#include "data_types.h"
 #include "parameters.h"
 
-#define KEY_SIZE KEY_BYTES
+#define TWEAKEY_LENGTH_BITS       (TWEAK_LENGTH_BITS+KEY_LENGTH_BITS)
+#define LANE_BITS                 64
+#define ROUND_TWEAKEY_LENGTH_BITS 64
+#define BLOCK_LENGTH_BITS         128
+#define NONCE_LENGTH_BITS         120
+#define TAG_LENGTH_BITS           128
 
-#define CRYPTO_NPUBBYTES NONCE_BYTES
-#define CRYPTO_ABYTES TAG_BYTES
+#define TWEAK_BYTES         (TWEAK_LENGTH_BITS/8)
+#define KEY_BYTES           (KEY_LENGTH_BITS/8)
+#define TWEAKEY_BYTES       (TWEAKEY_LENGTH_BITS/8)
+#define LANE_BYTES          (LANE_BITS/8)
+#define ROUND_TWEAKEY_BYTES (ROUND_TWEAKEY_LENGTH_BITS/8)
+#define BLOCK_BYTES         (BLOCK_LENGTH_BITS/8)
+#define NONCE_BYTES         (NONCE_LENGTH_BITS/8)
+#define TAG_BYTES           (TAG_LENGTH_BITS/8)
 
-#endif /* CONSTANTS_H */
+#endif

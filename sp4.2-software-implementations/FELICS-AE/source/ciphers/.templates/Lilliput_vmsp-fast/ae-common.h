@@ -8,7 +8,7 @@
 #include "felics/cipher.h"
 
 #include "cipher.h"
-#include "parameters.h"
+#include "constants.h"
 
 
 static inline void encrypt(const uint8_t K[KEY_BYTES],

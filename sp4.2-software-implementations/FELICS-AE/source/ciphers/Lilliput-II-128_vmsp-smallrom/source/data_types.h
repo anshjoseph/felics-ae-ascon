@@ -1,1 +1,0 @@
-../../.templates/Lilliput_vmsp-smallrom/data_types.h

@@ -5,12 +5,12 @@
 
 #include "felics/cipher.h"
 
-#include "constants.h"
-#include "parameters.h"
 #include "cipher.h"
+#include "constants.h"
 #include "tweakey.h"
 
 
+#define SBOX_BYTE ROM_DATA_BYTE
 extern SBOX_BYTE S[256];
 
 

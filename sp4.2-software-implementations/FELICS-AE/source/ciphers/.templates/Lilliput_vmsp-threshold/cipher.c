@@ -3,10 +3,9 @@
 
 #include "felics/cipher.h"
 
-#include "constants.h"
-#include "parameters.h"
-#include "random.h"
 #include "cipher.h"
+#include "constants.h"
+#include "random.h"
 #include "tweakey.h"
 
 static ROM_DATA_BYTE F[16][16] = {

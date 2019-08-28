@@ -3,8 +3,8 @@
 
 #include "felics/cipher.h"
 
+#include "constants.h"
 #include "multiplications.h"
-#include "parameters.h"
 #include "tweakey.h"
 
 

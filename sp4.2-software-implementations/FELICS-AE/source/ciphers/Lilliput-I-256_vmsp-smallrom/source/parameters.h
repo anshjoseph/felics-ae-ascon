@@ -1,1 +1,1 @@
-../../.templates/Lilliput_vmsp-smallrom/parameters.h
+../../Lilliput-I-256_vfelicsref/source/parameters.h
