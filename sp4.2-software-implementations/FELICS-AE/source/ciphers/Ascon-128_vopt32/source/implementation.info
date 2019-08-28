@@ -1,8 +1,8 @@
 ImplementationDescription: AEAD ASCON128, opt32
 ImplementationAuthors: Jean-Baptiste Serrou Soares (adapted from supercop)
 
-EncryptCode: encrypt, constants
-DecryptCode: decrypt, constants
+EncryptCode: encrypt, utils
+DecryptCode: decrypt, utils
 
 BlockSize: 16
 
