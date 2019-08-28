@@ -3,3 +3,5 @@ ImplementationAuthors:
 
 EncryptCode: encrypt
 DecryptCode: decrypt
+
+BlockSize: 16

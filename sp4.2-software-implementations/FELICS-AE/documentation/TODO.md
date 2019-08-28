@@ -7,10 +7,6 @@ implementation (reference or optimized), the more work it represents
 for an integrator. It also complicates the job of an auditor checking
 for differences between the original code and the FELICS version.
 
-### Remove `constants.c`, `encrypt.c` and `decrypt.c` files
-
-They are relics of FELICS's previous code-size measuring logic.
-
 ### Add support for finer-grained code-size measurement
 
 As things stand, if some files in reference implementations happen to
@@ -20,11 +16,6 @@ contain both encryption and decryption code, they must be split.
 functions, so it should be possible to keep encryption and decryption
 functions together in a single file, and specify which to include (or
 remove) from the code-size tally in the implementation metadata file.
-
-### Add `felics-` prefix to headers required by FELICS-AE
-
-So that the integrator does not have to rename files that happen to be
-named "cipher.h" or "constants.h" in the reference implementation.
 
 ## Add support for multiple revisions of an algorithm
 

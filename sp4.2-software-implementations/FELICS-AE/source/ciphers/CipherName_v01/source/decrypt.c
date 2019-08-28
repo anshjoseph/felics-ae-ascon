@@ -29,7 +29,6 @@
 #include <stdint.h>
 
 #include "felics/cipher.h"
-#include "constants.h"
 
 
 int crypto_aead_decrypt(
