@@ -26,3 +26,11 @@ cp -r "${deps_dir}/msp430-gcc-8.2.0.52_linux64" /opt/felics/msp430-gcc
 )
 
 dpkg -i "${deps_dir}/JLink_Linux_x86_64.deb"
+
+dpkg -i "${deps_dir}/nRF-Command-Line-Tools_10_2_1_Linux-amd64.deb"
+
+(
+    cd "${deps_dir}/stlink-1.5.1"
+    make release
+    cd build/Release; make install DESTDIR=/opt/felics/stlink
+)
