@@ -31,7 +31,7 @@
 #include <string.h>
 
 #include "felics/cipher.h"
-#include "constants.h"
+#include "common.h"
 
 
 // 8 steps of ACORN

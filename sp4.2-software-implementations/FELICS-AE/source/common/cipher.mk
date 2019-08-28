@@ -176,20 +176,20 @@ felics_bench.elf : \
 		%.c \
 		$(COMMONSOURCEDIR)/felics/cipher.h \
 		$(COMMONSOURCEDIR)/felics/common.h \
-		$(SOURCEDIR)/constants.h
+		$(SOURCEDIR)/api.h
 	$(CC) -c $(CFLAGS) $< $(INCLUDES) -o $(BUILDDIR)/$@
 
 %.o : \
 		%.S \
 		$(COMMONSOURCEDIR)/felics/cipher.h \
 		$(COMMONSOURCEDIR)/felics/common.h \
-		$(SOURCEDIR)/constants.h
+		$(SOURCEDIR)/api.h
 	$(CC) -c $(CFLAGS) $< $(INCLUDES) -o $(BUILDDIR)/$@
 
 felics_%.o: $(COMMONSOURCEDIR)/felics/%.c \
             $(COMMONSOURCEDIR)/felics/cipher.h \
             $(COMMONSOURCEDIR)/felics/common.h \
-            $(SOURCEDIR)/constants.h
+            $(SOURCEDIR)/api.h
 	$(CC) -c $(CFLAGS) $< $(INCLUDES) -o $(BUILDDIR)/$@
 
 felics_check.lst felics_bench.lst: %.lst: %.elf

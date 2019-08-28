@@ -77,11 +77,10 @@
 #endif /* STM32L053 */
 
 
-#include "constants.h"
 #include "felics/cipher.h"
 #include "felics/common.h"
 #include "felics/test_vectors.h"
-
+#include "api.h"
 
 
 #if defined(DEBUG) && (DEBUG_LOW == (DEBUG_LOW & DEBUG))
@@ -145,7 +144,7 @@ void VerifyData(uint8_t *data, const char *name)
 	if(0 == strcmp(name, KEY_NAME))
 	{
 		expectedData = expectedKey;
-		length = KEY_SIZE;
+		length = CRYPTO_KEYBYTES;
 	}
 	
 	if(0 == strcmp(name, ASSOCIATED_NAME))
@@ -380,7 +379,7 @@ void StopDevice()
 
 void InitializeKey(uint8_t *key)
 {
-    memcpy(key, expectedKey, KEY_SIZE);
+    memcpy(key, expectedKey, CRYPTO_KEYBYTES);
 }
 
 

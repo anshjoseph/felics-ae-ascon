@@ -30,19 +30,14 @@
 #ifndef TEST_VECTORS_H
 #define TEST_VECTORS_H
 
-#include "constants.h"
+#include "api.h"
 
 #define MAXTEST_BYTES_M 16
 #define MAXTEST_BYTES_AD 16
 
-/*
- *
- * Test vectors
- *
- */
 extern const uint8_t expectedPlaintext[MAXTEST_BYTES_M];
 extern const uint8_t expectedAssociated[MAXTEST_BYTES_AD];
-extern const uint8_t expectedKey[KEY_SIZE];
+extern const uint8_t expectedKey[CRYPTO_KEYBYTES];
 extern const uint8_t expectedNonce[CRYPTO_NPUBBYTES];
 
 extern const uint8_t expectedCiphertext[MAXTEST_BYTES_M  + CRYPTO_ABYTES];
