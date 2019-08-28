@@ -33,4 +33,4 @@ dpkg -i "${deps_dir}/nRF-Command-Line-Tools_10_2_1_Linux-amd64.deb"
     cd "${deps_dir}/stlink-1.5.1"
     make release
     cd build/Release; make install DESTDIR=/opt/felics/stlink
-    )
+)
