@@ -3,7 +3,6 @@
 #include <string.h>
 
 #include "felics/cipher.h"
-#include "constants.h"
 #include "utils.h"
 
 
