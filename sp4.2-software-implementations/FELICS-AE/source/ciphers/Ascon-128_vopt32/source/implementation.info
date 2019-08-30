@@ -6,4 +6,4 @@ DecryptCode: decrypt, constants
 
 BlockSize: 16
 
-Platforms: ARM
+Platforms: ARM NRF52840
