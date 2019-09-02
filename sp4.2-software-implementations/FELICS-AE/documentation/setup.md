@@ -68,7 +68,7 @@ distribution's package manager:
 - bossa-cli
 - gcc-arm-none-eabi
 - gdb-multiarch
-- python-serial
+- python3-serial
 
 ### J-Link Software
 
