@@ -225,23 +225,23 @@ function compute_stack_usage()
 echo "Begin cipher RAM - $(pwd)"
 
 
-# Get the state, key, round keys size
-solve-define ()
+# Get the key and block sizes.
+
+get-api-constant ()
 (
-    prog=/tmp/felics-$1
-    gcc -I../../../common/ -I../source -x c -o $prog - <<EOF
+    # We can't just grep "#define $1", as this definition might refer
+    # to another macro.  Instead, let the preprocessor and the
+    # compiler compute the value for us.
+
+    local prog=$(mktemp)
+    gcc -I../source -x c -o $prog - <<EOF
 #include <stdio.h>
-#include <stdint.h>
+#include "api.h"
 
-#define PC 1
-#define SCENARIO 1
-#define SCENARIO_1 1
-
-#include "constants.h"
-
-int main()
+int main(void)
 {
-    printf("%d\n", $1);
+    printf("%d", $1);
+    return 0;
 }
 EOF
     $prog
@@ -255,7 +255,7 @@ get-implem-info ()
 }
 
 block_size=$(get-implem-info BlockSize)
-key_size=$(solve-define KEY_SIZE)
+key_size=$(get-api-constant CRYPTO_KEYBYTES)
 
 # Set the searched files pattern
 pattern='*.o'

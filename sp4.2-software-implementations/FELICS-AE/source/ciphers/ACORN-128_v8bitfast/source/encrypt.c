@@ -31,7 +31,7 @@
 #include <string.h>
 
 #include "felics/cipher.h"
-#include "constants.h"
+#include "common.h"
 
 // 32 steps of ACORN
 static void acorn128_32steps_enc(uint8_t *state, const uint8_t *plaintextbyte, uint8_t *ciphertextbyte, uint8_t cabyte, uint8_t cbbyte)

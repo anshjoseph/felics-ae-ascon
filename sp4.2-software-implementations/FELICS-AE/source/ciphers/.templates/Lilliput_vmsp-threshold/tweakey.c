@@ -3,7 +3,7 @@
 
 #include "felics/cipher.h"
 
-#include "parameters.h"
+#include "constants.h"
 #include "random.h"
 #include "tweakey.h"
 

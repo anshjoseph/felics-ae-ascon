@@ -31,8 +31,8 @@
 
 #include "felics/cipher.h"
 #include "felics/common.h"
+#include "api.h"
 #include "crypto_aead.h"
-#include "constants.h"
 
 #if defined(PC)
 #include <inttypes.h>
@@ -90,7 +90,7 @@ int main()
         RAM_DATA_BYTE data[DATA_SIZE];
         size_t mlen;
 
-        RAM_DATA_BYTE key[KEY_SIZE];
+        RAM_DATA_BYTE key[CRYPTO_KEYBYTES];
 
         /* Contains the ciphertext, followed by the tag. */
         RAM_DATA_BYTE c[DATA_SIZE+CRYPTO_ABYTES];

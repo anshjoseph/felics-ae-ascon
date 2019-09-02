@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#include "constants.h"
+#include "felics/cipher.h"
 
 #define RATE (128 / 8)
 #define PA_ROUNDS 12
@@ -90,5 +90,7 @@
   ROUND(0x5a);\
   ROUND(0x4b);\
 })
+
+extern ROM_DATA_BYTE R[5][2];
 
 #endif /* UTILS_H */

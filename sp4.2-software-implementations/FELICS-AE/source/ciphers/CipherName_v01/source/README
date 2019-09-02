@@ -1,14 +1,14 @@
 Initial file structure
 ======================
 
-.									-> CipherName_BlockSizeInBits_KeySizeInBits_v01
-├── build							-> Cipher build directory
-└── source							-> Cipher source directory
-    ├── data_types.h				-> Cipher data types
-    ├── decrypt.c					-> Cipher decryption
-    ├── encrypt.c					-> Cipher encryption
-    ├── implementation.info			-> Cipher implementation information
-    └── test_vectors.c				-> Cipher test vectors
+.                                    -> CipherName_v01
+├── build                            -> Cipher build directory
+└── source                           -> Cipher source directory
+    ├── api.h                        -> Cipher input and output sizes
+    ├── decrypt.c                    -> Cipher decryption
+    ├── encrypt.c                    -> Cipher encryption
+    ├── implementation.info          -> Cipher implementation information
+    └── test_vectors.c               -> Cipher test vectors
 
 
 
@@ -16,19 +16,18 @@ Add cipher implementation
 =========================
 
 Steps:
-	1. Make a copy of "CipherName_BlockSizeInBits_KeySizeInBits_v01" directory 
+	1. Make a copy of "CipherName_v01" directory 
 in "ciphers" directory.
 
 	2. Rename the copy of the directory to follow the pattern 
-"CipherName_BlockSizeInBits_KeySizeInBits_v01".
-			Example: "LBlock_64_80_v01"
+"CipherName_v01".
+			Example: "LBlock_v01"
 		Note: If you add several implementation for the same cipher (for example
- one optimized for RAM and one optimized for speed) you can increase the 
-cipher directory name suffix "_v02", "_v03", etc.
-			Example: LBlock_64_80_v02
+ one optimized for RAM and one optimized for speed) you can change the 
+cipher directory name suffix "_vram", "_vfast", etc.
 
 	3. Add cipher implementation:
-		a. Add cipher block size, key size and round keys size in "constants.h".
+		a. Define CRYPTO_KEYBYTES, CRYPTO_NPUBBYTES and CRYPTO_ABYTES in api.h.
 		
 		b. Declare & define the cipher test vectors in "test_vectors.c".
 
@@ -80,14 +79,9 @@ operations (encrypt, decrypt), you can add them in separate "*.c" and "*.h"
 files according with the following rules. The same rules apply when you just
 want to make the code cleaner by implementing some functions in separate files.
 
-			* Do not use the following names for the added "*.c" and/or "*.h" 
-files:
-				"main"
-				"cipher"
-				"scenario1"
-				"common"
-				"constants"
-				"test_vectors"
+			* Do not use the following names for the added "*.c" files:
+				"felics_*.c"
+				"test_vectors.c"
 
 			* Add the "*.c" name withouth the "." separator and extension in
  "implementation.info" file, in the corresponding section(s) ("EncryptCode:",
@@ -105,15 +99,9 @@ decryption
 					EncryptCode: f, g, h
 					DecryptCode: f
 
-		g. Indicate the implementation language for all supported platforms in 
-"implementation.info" file.
+		h. Specify the algorithm's block size in bytes:
 			Example:
-				ImplementationAVR: ASM
-				ImplementationMSP: C
-				ImplementationARM: ASM
-				ImplementationPC: 
-			Note: You don't have to set the implementation language to "C" 
-because this is the default value.
+				BlockSize: 16
 
 	4. Fill the cipher implementation authors in "implementation.info"
 		Example:
@@ -130,24 +118,9 @@ uint32_t, int64_t and uint64_t data types which are declared in "<stdint.h>".
 
 2. Try to keep the code clean and easy to read.
 
-3. Use the "/* ... */" comment style, unless you comment a set of test vectors, 
-in which case is indicated to use "// ...".
-
-4. The framework is designed with several debug and test cases, so you should 
+3. The framework is designed with several debug and test cases, so you should 
 not add "printf" or other function calls in your code, at least not in the final 
 version.
-
-
-Constraints
-===========
-
-1. The implemented cipher should have a block size "BLOCK_SIZE" that divides 
-the "DATA_SIZE" or is equal with the "DATA_SIZE" which is set to 128 bytes in 
-scenario 1.
-
-2. The values defined in "constants.h" for "BLOCK_SIZE", and "KEY_SIZE" must be
-in bytes.
-
 
 
 Getting the cipher metrics

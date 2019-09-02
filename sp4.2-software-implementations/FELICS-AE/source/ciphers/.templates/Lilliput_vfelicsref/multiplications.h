@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#include "parameters.h"
+#include "constants.h"
 
 
 static void _multiply_M(const uint8_t x[LANE_BYTES], uint8_t y[LANE_BYTES])

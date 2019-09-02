@@ -31,7 +31,7 @@
 #include <string.h>
 
 #include "felics/cipher.h"
-#include "constants.h"
+#include "api.h"
 #include "utils.h"
 
 

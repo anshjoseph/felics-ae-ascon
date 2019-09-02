@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#include "parameters.h"
+#include "constants.h"
 
 
 void tweakey_state_init(

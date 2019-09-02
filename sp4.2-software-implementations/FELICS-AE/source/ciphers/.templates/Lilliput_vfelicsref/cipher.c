@@ -3,10 +3,13 @@
 
 #include "felics/cipher.h"
 
-#include "constants.h"
-#include "parameters.h"
 #include "cipher.h"
+#include "constants.h"
 #include "tweakey.h"
+
+
+#define SBOX_BYTE ROM_DATA_BYTE
+#define READ_SBOX_BYTE READ_ROM_DATA_BYTE
 
 
 enum permutation

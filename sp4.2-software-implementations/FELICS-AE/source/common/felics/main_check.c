@@ -30,9 +30,9 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#include "constants.h"
 #include "felics/cipher.h"
 #include "felics/common.h"
+#include "api.h"
 #include "crypto_aead.h"
 
 #if defined(NRF52840)
@@ -70,7 +70,7 @@ int main()
         RAM_DATA_BYTE state[MAXTEST_BYTES_M];
         size_t mlen;
 
-        RAM_DATA_BYTE key[KEY_SIZE];
+        RAM_DATA_BYTE key[CRYPTO_KEYBYTES];
 
         /* Contains the ciphertext, followed by the tag. */
         RAM_DATA_BYTE c[MAXTEST_BYTES_M+CRYPTO_ABYTES];
@@ -86,7 +86,7 @@ int main()
         DisplayVerifyData(state, MAXTEST_BYTES_M, PLAINTEXT_NAME);
 
         InitializeKey(key);
-        DisplayVerifyData(key, KEY_SIZE, KEY_NAME);
+        DisplayVerifyData(key, CRYPTO_KEYBYTES, KEY_NAME);
 
         InitializeAd(ad, MAXTEST_BYTES_AD);
         DisplayVerifyData(ad, MAXTEST_BYTES_AD, ASSOCIATED_NAME);

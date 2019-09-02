@@ -1,4 +1,4 @@
-#include "parameters.h"
+#include "constants.h"
 
 #define LANE_BITS  64
 #define LANE_BYTES (LANE_BITS/8)
