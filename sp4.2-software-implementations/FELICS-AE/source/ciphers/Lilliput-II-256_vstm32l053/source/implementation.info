@@ -1,5 +1,5 @@
-ImplementationDescription: Implementation of Lilliput-I for STM32L053
-ImplementationAuthors: Kévin Le Gouguec, Gaëtan Leplus
+ImplementationDescription: Implementation of Lilliput-II for STM32L053
+ImplementationAuthors: Kévin Le Gouguec, Alexis Duque
 
 EncryptCode: encrypt, cipher, tweakey
 DecryptCode: decrypt, cipher, tweakey

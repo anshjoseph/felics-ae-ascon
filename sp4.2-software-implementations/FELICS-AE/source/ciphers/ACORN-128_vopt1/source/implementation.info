@@ -7,4 +7,4 @@ DecryptCode: decrypt, utils
 BlockSize: 16
 
 # AVR and MSP simulators freeze for this particular implementation.
-Platforms: ARM PC
+Platforms: ARM PC NRF52840 STM32L053

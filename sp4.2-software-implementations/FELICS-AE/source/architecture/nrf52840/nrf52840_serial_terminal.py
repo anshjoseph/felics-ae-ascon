@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 #
 # University of Luxembourg
@@ -64,7 +64,7 @@ class ArmBoard(object):
 		msg = ''
 		while True:
 			c = self.port.read(1024)
-			msg += c
+			msg += c.decode()
 			if len(c) < 1024:
 				break
 		if msg.count("Done") > 1:

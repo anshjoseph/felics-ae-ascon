@@ -21,7 +21,7 @@ dependencies=(
     bossa-cli
     gcc-arm-none-eabi
     gdb-multiarch
-    python-serial
+    python3-serial
     # nRF
     cmake
     libusb-1.0

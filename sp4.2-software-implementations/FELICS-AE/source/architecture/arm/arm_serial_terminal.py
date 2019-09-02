@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 #
 # University of Luxembourg
@@ -27,11 +27,10 @@
 # along with this program; if not, see <http://www.gnu.org/licenses/>.
 #
 
-from __future__ import print_function
 import sys
 import serial
 
-class ArmBoard(object):
+class ArmBoard:
 	def __init__(self, device = '/dev/ttyACM0', baudrate = 115200):
 		self.device = device
 		self.baudrate = baudrate
@@ -73,7 +72,7 @@ class ArmBoard(object):
 		msg = ''
 		while True:
 			c = self.port.read(1024)
-			msg += c
+			msg += c.decode()
 			if len(c) < 1024:
 				break
 		return msg
