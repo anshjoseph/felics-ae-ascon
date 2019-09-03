@@ -63,9 +63,6 @@ source $script_path/constants/constants.sh
 # Include help file
 source $script_path/help/collect_ciphers_metrics.sh
 
-# Include validation functions
-source $script_path/common/validate.sh
-
 # Include version file
 source $script_path/common/version.sh
 
@@ -188,13 +185,6 @@ if [ -n "$SCRIPT_USER_COMPILER_OPTIONS" ]; then
 else
 	compiler_options=("${SCRIPT_COMPILER_OPTIONS[@]}")
 fi
-
-
-# Validate architectures
-for architecture in $architectures
-do
-	validate_architecture $architecture
-done
 
 
 results_dir="${current_directory}/${SCRIPT_OUTPUT_PATH}"

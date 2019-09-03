@@ -65,9 +65,6 @@ source $script_path/../constants/constants.sh
 # Include help file
 source $script_path/../help/cipher/cipher_code_size.sh
 
-# Include validation functions
-source $script_path/../common/validate.sh
-
 # Include version file
 source $script_path/../common/version.sh
 
@@ -110,10 +107,6 @@ done
 echo "Script settings:"
 echo -e "\t SCRIPT_ARCHITECTURE \t\t = $SCRIPT_ARCHITECTURE"
 echo -e "\t SCRIPT_OUTPUT \t\t\t = $SCRIPT_OUTPUT"
-
-
-# Validate inputs
-validate_architecture $SCRIPT_ARCHITECTURE
 
 
 echo "Begin cipher code size - $(pwd)"

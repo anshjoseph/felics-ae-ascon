@@ -69,9 +69,6 @@ source $script_path/../constants/common/build.sh
 # Include help file
 source $script_path/../help/common/build.sh
 
-# Include validation functions
-source $script_path/validate.sh
-
 # Include version file
 source $script_path/../common/version.sh
 
@@ -116,10 +113,6 @@ done
 echo "Script settings:"
 echo -e "\t SCRIPT_ARCHITECTURE \t\t = $SCRIPT_ARCHITECTURE"
 echo -e "\t SCRIPT_COMPILER_OPTIONS \t = $SCRIPT_COMPILER_OPTIONS"
-
-
-# Validate inputs
-validate_architecture $SCRIPT_ARCHITECTURE
 
 
 run-make ()

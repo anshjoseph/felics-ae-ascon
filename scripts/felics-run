@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from argparse import ArgumentParser
+from argparse import ArgumentParser, ArgumentTypeError
 from datetime import datetime
 from os import path
 from subprocess import run
@@ -24,7 +24,18 @@ def _default_output_filename():
     if branch is None:
         return '{d}.json'.format(d=date)
 
-    return '{d}-{b}.json'.format(d=date, b=branch.replace('/','-'))
+    return '{d}-{b}.json'.format(d=date, b=branch.replace('/', '-'))
+
+
+def _validate_architectures(argument):
+    allowed = set(_ARCHITECTURES.split())
+    requested = set(argument.split())
+
+    unknown = requested-allowed
+    if unknown:
+        raise ArgumentTypeError('Unknown architectures: '+', '.join(unknown))
+
+    return argument
 
 
 def _parse_arguments():
@@ -35,6 +46,7 @@ def _parse_arguments():
     )
     parser.add_argument(
         '-a', '--architectures', default=_ARCHITECTURES,
+        type=_validate_architectures,
         help='Space-separated list of platforms; default: "{a}"'.format(a=_ARCHITECTURES)
     )
     parser.add_argument(
