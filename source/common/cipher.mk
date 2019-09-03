@@ -61,6 +61,8 @@ CHECK_LISTINGS = felics_check.lst felics_main_check.lst felics_common.lst
 BENCH_LISTINGS = felics_bench.lst felics_main_bench.lst felics_common.lst
 
 
+# TODO: remove this ifeq, use targets directly.
+
 ifeq ($(SCENARIO), 1)
 TARGET=target1
 LSTS += $(BENCH_LISTINGS)

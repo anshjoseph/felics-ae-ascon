@@ -134,9 +134,6 @@ else
 	architectures=(${SCRIPT_ARCHITECTURES[@]})
 fi
 
-# TODO: remove scenario management from other scripts
-scenario=1
-
 # If user ciphers are not set, use all ciphers
 if [ -n "$SCRIPT_USER_CIPHERS" ]; then
 	declare -a directories
@@ -244,7 +241,7 @@ run-benchmark ()
             -a=${architecture} -co="${options}"
 
     local options_part=${options// /_}
-    local output_base="${architecture}_scenario1_${options// /_}"
+    local output_base="${architecture}_bench_${options// /_}"
     local code_size_output=${output_base}_code_size.log
     local code_ram_output=${output_base}_code_ram.log
     local code_time_output=${output_base}_code_time.log

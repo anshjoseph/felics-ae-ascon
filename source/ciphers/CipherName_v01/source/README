@@ -149,11 +149,11 @@ use the cipher execution time script:
 
 4. Collect all metrics
 To get help about how to collect all metrics for a list of ciphers on a list of 
-architectures in a list of scenarios use:
+architectures use:
 	./../../../../scripts/collect_ciphers_metrics.sh -h
 	./../../../../scripts/collect_ciphers_metrics.sh -help
 
 To get all metrics for "LBlock_64_80_v01" and "LBlock_64_80_v03" on "PC" and 
-"ARM" in scenario "1" in raw format use:
-	./../../../../scripts/collect_ciphers_metrics.sh -a='PC ARM' -s='1'
--c='LBlock_64_80_v01 LBlock_64_80_v02' -f=1
+"ARM" in raw format use:
+	./../../../../scripts/collect_ciphers_metrics.sh -a='PC ARM'
+-c='LBlock_64_80_v01 LBlock_64_80_v02'
