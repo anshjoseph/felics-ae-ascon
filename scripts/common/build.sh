@@ -28,7 +28,7 @@
 
 #
 # Call this script to build the cipher with the given parameters
-# 	./build.sh [{-h|--help}] [--version] [{-a|--architecture}=[PC|AVR|MSP|ARM]] [{-s|--scenario}=[0|1]] [{-co|--compiler_options}='...']
+# 	./build.sh [{-h|--help}] [{-a|--architecture}=[PC|AVR|MSP|ARM]] [{-s|--scenario}=[0|1]] [{-co|--compiler_options}='...']
 #
 #	To call from a cipher build folder use:
 #		./../../../../scripts/common/build.sh [options]
@@ -36,8 +36,6 @@
 #	Options:
 #		-h, --help
 #			Display help information
-#		--version
-#			Display version information
 #		-s, --scenario
 #			Specifies which scenario is used
 #				0 - cipher scenario
@@ -69,9 +67,6 @@ source $script_path/../constants/common/build.sh
 # Include help file
 source $script_path/../help/common/build.sh
 
-# Include version file
-source $script_path/../common/version.sh
-
 
 # Default values
 SCRIPT_ARCHITECTURE=$SCRIPT_ARCHITECTURE_PC
@@ -85,10 +80,6 @@ do
 	case $i in
 		-h|--help)
 			display_help
-			shift
-			;;
-		--version)
-			display_version
 			shift
 			;;
 		-a=*|--architecture=*)

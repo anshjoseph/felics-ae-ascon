@@ -28,7 +28,7 @@
 
 #
 # Call this script to extract the cipher code size
-# 	./cipher_code_size.sh [{-h|--help}] [--version] [{-a|--architecture}=[PC|AVR|MSP|ARM]] [{-o|--output}=[...]]
+# 	./cipher_code_size.sh [{-h|--help}] [{-a|--architecture}=[PC|AVR|MSP|ARM]] [{-o|--output}=[...]]
 #
 #	To call from a cipher build folder use:
 #		./../../../../scripts/cipher/cipher_code_size.sh [options]
@@ -36,8 +36,6 @@
 #	Options:
 #		-h, --help
 #			Display help information
-#		--version
-#			Display version information
 #		-a, --architecture
 #			Specifies which architecture to build for
 #				Default: PC
@@ -65,9 +63,6 @@ source $script_path/../constants/constants.sh
 # Include help file
 source $script_path/../help/cipher/cipher_code_size.sh
 
-# Include version file
-source $script_path/../common/version.sh
-
 
 # Default values
 SCRIPT_SCENARIO=$SCRIPT_SCENARIO_1
@@ -81,10 +76,6 @@ do
 	case $i in
 		-h|--help)
 			display_help
-			shift
-			;;
-		--version)
-			display_version
 			shift
 			;;
 		-a=*|--architecture=*)
