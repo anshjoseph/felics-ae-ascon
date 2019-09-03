@@ -3,7 +3,7 @@
 set -eux
 
 CI_DIR=$(dirname $0)
-FELICS_AE_DIR=${CI_DIR}/../sp4.2-software-implementations/FELICS-AE
+FELICS_AE_DIR=${CI_DIR}/..
 FELICS_PUBLISH=${FELICS_AE_DIR}/scripts/felics-publish
 FELICS_RESULTS=${FELICS_AE_DIR}/results
 OUTPUT=${CI_DIR}/results/implementation.md
