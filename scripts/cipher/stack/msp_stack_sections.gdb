@@ -24,8 +24,8 @@
 # along with this program; if not, see <http://www.gnu.org/licenses/>.
 #
 
-# Connect to the ST-Link GDB Server
-target extended-remote :4242
+# Connect to the mspdebug simulator
+target remote localhost:2000
 # Select the file to debug
 file felics_bench.elf
 
@@ -40,10 +40,6 @@ set print repeats 3000
 set $analysed_stack_size=2000
 
 
-# Reset the remote monitor
-monitor reset
-
-
 break BeginEncryption
 # Continue the program execution
 continue
@@ -53,9 +49,9 @@ continue
 # BeginEncryption breakpoint
 #
 # Save the initial stack pointer in the convenience variable
-set $base = $r13
+set $base = $sp
 # Set the stack content
-restore STM32L053_scenario1_memory.mem binary $base-$analysed_stack_size
+restore MSP_memory.mem binary $base-$analysed_stack_size
 
 
 delete breakpoints 1
@@ -81,9 +77,9 @@ continue
 # BeginDecryption breakpoint
 #
 # Save the initial stack pointer in the convenience variable
-set $base = $r13
+set $base = $sp
 # Set the stack content
-restore STM32L053_scenario1_memory.mem binary $base-$analysed_stack_size
+restore MSP_memory.mem binary $base-$analysed_stack_size
 
 
 delete breakpoints 3

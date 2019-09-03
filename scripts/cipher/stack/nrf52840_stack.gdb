@@ -61,7 +61,7 @@ continue
 # Save the initial stack pointer in the convenience variable
 set $base = $r13
 # Set the stack content
-restore NRF52840_scenario1_memory.mem binary $base-$analysed_stack_size
+restore NRF52840_memory.mem binary $base-$analysed_stack_size
 
 
 # Continue the program execution

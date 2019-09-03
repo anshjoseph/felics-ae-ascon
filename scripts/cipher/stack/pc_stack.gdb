@@ -24,12 +24,6 @@
 # along with this program; if not, see <http://www.gnu.org/licenses/>.
 #
 
-# Connect to the ST-Link GDB Server
-target extended-remote :4242
-# Select the file to debug
-file felics_bench.elf
-
-
 # Set the maximum number fo elements of an array to be printed
 set print elements 2000
 # Set the threshold for suppressing display of repeated array elements
@@ -40,10 +34,6 @@ set print repeats 3000
 set $analysed_stack_size=2000
 
 
-# Reset the remote monitor
-monitor reset
-
-
 #
 # Set the breakpoints
 #
@@ -51,17 +41,17 @@ break main
 break EndDecryption
 
 
-# Continue the program execution
-continue
+# Start the program execution
+run
 
 
 #
 # main breakpoint
 #
 # Save the initial stack pointer in the convenience variable
-set $base = $r13
+set $base = $sp
 # Set the stack content
-restore STM32L053_scenario1_memory.mem binary $base-$analysed_stack_size
+restore PC_memory.mem binary $base-$analysed_stack_size
 
 
 # Continue the program execution

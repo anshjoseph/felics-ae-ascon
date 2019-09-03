@@ -24,8 +24,8 @@
 # along with this program; if not, see <http://www.gnu.org/licenses/>.
 #
 
-# Connect to the mspdebug simulator
-target remote localhost:2000
+# Connect to the J-Link GDB Server
+target remote localhost:2331
 # Select the file to debug
 file felics_bench.elf
 
@@ -40,50 +40,30 @@ set print repeats 3000
 set $analysed_stack_size=2000
 
 
-break BeginEncryption
-# Continue the program execution
-continue
-
-
-# 
-# BeginEncryption breakpoint
-#
-# Save the initial stack pointer in the convenience variable
-set $base = $sp
-# Set the stack content
-restore MSP_scenario1_memory.mem binary $base-$analysed_stack_size
-
-
-delete breakpoints 1
-break EndEncryption
-# Continue the program execution
-continue
+# Reset the remote monitor
+monitor reset
 
 
 #
-# EndEncryption breakpoint
+# Set the breakpoints
 #
-# Print the stack content in hexa using artificial arrays
-print/x *((unsigned char*)$base-$analysed_stack_size)@$analysed_stack_size
-
-
-delete breakpoints 2
-break BeginDecryption
-# Continue the program execution
-continue
-
-
-# 
-# BeginDecryption breakpoint
-#
-# Save the initial stack pointer in the convenience variable
-set $base = $sp
-# Set the stack content
-restore MSP_scenario1_memory.mem binary $base-$analysed_stack_size
-
-
-delete breakpoints 3
+break main
 break EndDecryption
+
+
+# Continue the program execution
+continue
+
+
+#
+# main breakpoint
+#
+# Save the initial stack pointer in the convenience variable
+set $base = $r13
+# Set the stack content
+restore ARM_memory.mem binary $base-$analysed_stack_size
+
+
 # Continue the program execution
 continue
 

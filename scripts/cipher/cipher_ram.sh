@@ -66,7 +66,6 @@ source $script_path/../help/cipher/cipher_ram.sh
 
 
 # Default values
-SCRIPT_SCENARIO=1
 SCRIPT_ARCHITECTURE=$SCRIPT_ARCHITECTURE_PC
 SCRIPT_OUTPUT=$DEFAULT_SCRIPT_OUTPUT
 
@@ -376,7 +375,7 @@ data_ram_total=$(($data_ram_common + $shared_constants_total))
 memory_patern_length=$((${#MEMORY_PATTERN[@]}))
 
 # Generate the memory file
-memory_file=$SCRIPT_ARCHITECTURE$SCENARIO_NAME_PART$SCRIPT_SCENARIO$FILE_NAME_SEPARATOR$MEMORY_FILE
+memory_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$MEMORY_FILE
 echo "Generate the memory file: '$memory_file'"
 echo -n "" > $memory_file
 
@@ -401,64 +400,64 @@ if [ 0 -eq $files_number ] ; then
 fi
 
 
-gdb_stack_log_file=$SCRIPT_ARCHITECTURE$SCENARIO_NAME_PART$SCRIPT_SCENARIO$FILE_NAME_SEPARATOR$GDB_STACK_LOG_FILE
-gdb_stack_sections_log_file=$SCRIPT_ARCHITECTURE$SCENARIO_NAME_PART$SCRIPT_SCENARIO$FILE_NAME_SEPARATOR$GDB_STACK_SECTIONS_LOG_FILE
+gdb_stack_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$GDB_STACK_LOG_FILE
+gdb_stack_sections_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$GDB_STACK_SECTIONS_LOG_FILE
 
 # Debug the executable
 case $SCRIPT_ARCHITECTURE in
 	$SCRIPT_ARCHITECTURE_PC)
 
-		simulate $PC_SCENARIO1_GDB_STACK_COMMANDS_FILE $file $gdb_stack_log_file
-		simulate $PC_SCENARIO1_GDB_STACK_SECTIONS_COMMANDS_FILE $file $gdb_stack_sections_log_file
+		simulate $PC_GDB_STACK_COMMANDS_FILE $file $gdb_stack_log_file
+		simulate $PC_GDB_STACK_SECTIONS_COMMANDS_FILE $file $gdb_stack_sections_log_file
 		;;
 
 	$SCRIPT_ARCHITECTURE_AVR)
 
-		simavr_stack_log_file=$SCRIPT_ARCHITECTURE$SCENARIO_NAME_PART$SCRIPT_SCENARIO$FILE_NAME_SEPARATOR$SIMAVR_STACK_LOG_FILE
-		simavr_stack_sections_log_file=$SCRIPT_ARCHITECTURE$SCENARIO_NAME_PART$SCRIPT_SCENARIO$FILE_NAME_SEPARATOR$SIMAVR_STACK_SECTIONS_LOG_FILE
+		simavr_stack_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$SIMAVR_STACK_LOG_FILE
+		simavr_stack_sections_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$SIMAVR_STACK_SECTIONS_LOG_FILE
 
-		simulate $AVR_SCENARIO1_GDB_STACK_COMMANDS_FILE $file $gdb_stack_log_file $simavr_stack_log_file
-		simulate $AVR_SCENARIO1_GDB_STACK_SECTIONS_COMMANDS_FILE $file $gdb_stack_sections_log_file $simavr_stack_sections_log_file
+		simulate $AVR_GDB_STACK_COMMANDS_FILE $file $gdb_stack_log_file $simavr_stack_log_file
+		simulate $AVR_GDB_STACK_SECTIONS_COMMANDS_FILE $file $gdb_stack_sections_log_file $simavr_stack_sections_log_file
 
 		;;
 	
 	$SCRIPT_ARCHITECTURE_MSP)
 
-		mspdebug_stack_log_file=$SCRIPT_ARCHITECTURE$SCENARIO_NAME_PART$SCRIPT_SCENARIO$FILE_NAME_SEPARATOR$MSPDEBUG_STACK_LOG_FILE
-		mspdebug_stack_sections_log_file=$SCRIPT_ARCHITECTURE$SCENARIO_NAME_PART$SCRIPT_SCENARIO$FILE_NAME_SEPARATOR$MSPDEBUG_STACK_SECTIONS_LOG_FILE
+		mspdebug_stack_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$MSPDEBUG_STACK_LOG_FILE
+		mspdebug_stack_sections_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$MSPDEBUG_STACK_SECTIONS_LOG_FILE
 
-		simulate $MSP_SCENARIO1_GDB_STACK_COMMANDS_FILE $file $gdb_stack_log_file $mspdebug_stack_log_file
-		simulate $MSP_SCENARIO1_GDB_STACK_SECTIONS_COMMANDS_FILE $file $gdb_stack_sections_log_file $mspdebug_stack_sections_log_file
+		simulate $MSP_GDB_STACK_COMMANDS_FILE $file $gdb_stack_log_file $mspdebug_stack_log_file
+		simulate $MSP_GDB_STACK_SECTIONS_COMMANDS_FILE $file $gdb_stack_sections_log_file $mspdebug_stack_sections_log_file
 		;;
 
 	$SCRIPT_ARCHITECTURE_ARM)
 
-		make_log_file=$SCRIPT_ARCHITECTURE$SCENARIO_NAME_PART$SCRIPT_SCENARIO$FILE_NAME_SEPARATOR$MAKE_LOG_FILE
-		jlink_gdb_server_stack_log_file=$SCRIPT_ARCHITECTURE$SCENARIO_NAME_PART$SCRIPT_SCENARIO$FILE_NAME_SEPARATOR$JLINK_GDB_SERVER_STACK_LOG_FILE
-		jlink_gdb_server_stack_sections_log_file=$SCRIPT_ARCHITECTURE$SCENARIO_NAME_PART$SCRIPT_SCENARIO$FILE_NAME_SEPARATOR$JLINK_GDB_SERVER_STACK_SECTIONS_LOG_FILE
+		make_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$MAKE_LOG_FILE
+		jlink_gdb_server_stack_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$JLINK_GDB_SERVER_STACK_LOG_FILE
+		jlink_gdb_server_stack_sections_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$JLINK_GDB_SERVER_STACK_SECTIONS_LOG_FILE
 
-		simulate $ARM_SCENARIO1_GDB_STACK_COMMANDS_FILE upload-bench $gdb_stack_log_file $jlink_gdb_server_stack_log_file $make_log_file
-		simulate $ARM_SCENARIO1_GDB_STACK_SECTIONS_COMMANDS_FILE upload-bench $gdb_stack_sections_log_file $jlink_gdb_server_stack_sections_log_file $make_log_file
+		simulate $ARM_GDB_STACK_COMMANDS_FILE upload-bench $gdb_stack_log_file $jlink_gdb_server_stack_log_file $make_log_file
+		simulate $ARM_GDB_STACK_SECTIONS_COMMANDS_FILE upload-bench $gdb_stack_sections_log_file $jlink_gdb_server_stack_sections_log_file $make_log_file
 		;;
 
 	$SCRIPT_ARCHITECTURE_NRF52840)
 
-		make_log_file=$SCRIPT_ARCHITECTURE$SCENARIO_NAME_PART$SCRIPT_SCENARIO$FILE_NAME_SEPARATOR$MAKE_LOG_FILE
-		jlink_gdb_server_stack_log_file=$SCRIPT_ARCHITECTURE$SCENARIO_NAME_PART$SCRIPT_SCENARIO$FILE_NAME_SEPARATOR$JLINK_GDB_SERVER_STACK_LOG_FILE
-		jlink_gdb_server_stack_sections_log_file=$SCRIPT_ARCHITECTURE$SCENARIO_NAME_PART$SCRIPT_SCENARIO$FILE_NAME_SEPARATOR$JLINK_GDB_SERVER_STACK_SECTIONS_LOG_FILE
+		make_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$MAKE_LOG_FILE
+		jlink_gdb_server_stack_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$JLINK_GDB_SERVER_STACK_LOG_FILE
+		jlink_gdb_server_stack_sections_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$JLINK_GDB_SERVER_STACK_SECTIONS_LOG_FILE
 
-		simulate $NRF52840_SCENARIO1_GDB_STACK_COMMANDS_FILE upload-bench $gdb_stack_log_file $jlink_gdb_server_stack_log_file $make_log_file
-		simulate $NRF52840_SCENARIO1_GDB_STACK_SECTIONS_COMMANDS_FILE upload-bench $gdb_stack_sections_log_file $jlink_gdb_server_stack_sections_log_file $make_log_file
+		simulate $NRF52840_GDB_STACK_COMMANDS_FILE upload-bench $gdb_stack_log_file $jlink_gdb_server_stack_log_file $make_log_file
+		simulate $NRF52840_GDB_STACK_SECTIONS_COMMANDS_FILE upload-bench $gdb_stack_sections_log_file $jlink_gdb_server_stack_sections_log_file $make_log_file
 		;;
 
 	$SCRIPT_ARCHITECTURE_STM32L053)
 
-		make_log_file=$SCRIPT_ARCHITECTURE$SCENARIO_NAME_PART$SCRIPT_SCENARIO$FILE_NAME_SEPARATOR$MAKE_LOG_FILE
-		stlink_gdb_server_stack_log_file=$SCRIPT_ARCHITECTURE$SCENARIO_NAME_PART$SCRIPT_SCENARIO$FILE_NAME_SEPARATOR$STLINK_GDB_SERVER_STACK_LOG_FILE
-		stlink_gdb_server_stack_sections_log_file=$SCRIPT_ARCHITECTURE$SCENARIO_NAME_PART$SCRIPT_SCENARIO$FILE_NAME_SEPARATOR$STLINK_GDB_SERVER_STACK_SECTIONS_LOG_FILE
+		make_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$MAKE_LOG_FILE
+		stlink_gdb_server_stack_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$STLINK_GDB_SERVER_STACK_LOG_FILE
+		stlink_gdb_server_stack_sections_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$STLINK_GDB_SERVER_STACK_SECTIONS_LOG_FILE
 
-		simulate $STM32L053_SCENARIO1_GDB_STACK_COMMANDS_FILE upload-bench $gdb_stack_log_file $stlink_gdb_server_stack_log_file $make_log_file
-		simulate $STM32L053_SCENARIO1_GDB_STACK_SECTIONS_COMMANDS_FILE upload-bench $gdb_stack_sections_log_file $stlink_gdb_server_stack_sections_log_file $make_log_file
+		simulate $STM32L053_GDB_STACK_COMMANDS_FILE upload-bench $gdb_stack_log_file $stlink_gdb_server_stack_log_file $make_log_file
+		simulate $STM32L053_GDB_STACK_SECTIONS_COMMANDS_FILE upload-bench $gdb_stack_sections_log_file $stlink_gdb_server_stack_sections_log_file $make_log_file
 		;;
 esac
 

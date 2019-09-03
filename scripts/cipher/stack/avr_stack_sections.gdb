@@ -24,6 +24,12 @@
 # along with this program; if not, see <http://www.gnu.org/licenses/>.
 #
 
+# Connect to the simavr simulator
+target remote localhost:1234
+# Select the file to debug
+file felics_bench.elf
+
+
 # Set the maximum number fo elements of an array to be printed
 set print elements 2000
 # Set the threshold for suppressing display of repeated array elements
@@ -37,21 +43,48 @@ set $analysed_stack_size=2000
 #
 # Set the breakpoints
 #
-break main
+break BeginEncryption
+break EndEncryption
+
+break BeginDecryption
 break EndDecryption
 
 
-# Start the program execution
-run
+# Continue the program execution
+continue
 
 
-#
-# main breakpoint
+# 
+# BeginEncryption breakpoint
 #
 # Save the initial stack pointer in the convenience variable
 set $base = $sp
 # Set the stack content
-restore PC_scenario1_memory.mem binary $base-$analysed_stack_size
+restore AVR_memory.mem binary $base-$analysed_stack_size
+
+
+# Continue the program execution
+continue
+
+
+#
+# EndEncryption breakpoint
+#
+# Print the stack content in hexa using artificial arrays
+print/x *((unsigned char*)$base-$analysed_stack_size)@$analysed_stack_size
+
+
+# Continue the program execution
+continue
+
+
+# 
+# BeginDecryption breakpoint
+#
+# Save the initial stack pointer in the convenience variable
+set $base = $sp
+# Set the stack content
+restore AVR_memory.mem binary $base-$analysed_stack_size
 
 
 # Continue the program execution

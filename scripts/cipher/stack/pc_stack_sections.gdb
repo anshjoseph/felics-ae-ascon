@@ -24,12 +24,6 @@
 # along with this program; if not, see <http://www.gnu.org/licenses/>.
 #
 
-# Connect to the J-Link GDB Server
-target remote localhost:2331
-# Select the file to debug
-file felics_bench.elf
-
-
 # Set the maximum number fo elements of an array to be printed
 set print elements 2000
 # Set the threshold for suppressing display of repeated array elements
@@ -40,15 +34,27 @@ set print repeats 3000
 set $analysed_stack_size=2000
 
 
-# Reset the remote monitor
-monitor reset
-
-
 #
 # Set the breakpoints
 #
-break main
+break BeginEncryption
+break EndEncryption
+
+break BeginDecryption
 break EndDecryption
+
+
+# Start the program execution
+run
+
+
+# 
+# BeginEncryption breakpoint
+#
+# Save the initial stack pointer in the convenience variable
+set $base = $sp
+# Set the stack content
+restore PC_memory.mem binary $base-$analysed_stack_size
 
 
 # Continue the program execution
@@ -56,12 +62,23 @@ continue
 
 
 #
-# main breakpoint
+# EndEncryption breakpoint
+#
+# Print the stack content in hexa using artificial arrays
+print/x *((unsigned char*)$base-$analysed_stack_size)@$analysed_stack_size
+
+
+# Continue the program execution
+continue
+
+
+# 
+# BeginDecryption breakpoint
 #
 # Save the initial stack pointer in the convenience variable
-set $base = $r13
+set $base = $sp
 # Set the stack content
-restore ARM_scenario1_memory.mem binary $base-$analysed_stack_size
+restore PC_memory.mem binary $base-$analysed_stack_size
 
 
 # Continue the program execution

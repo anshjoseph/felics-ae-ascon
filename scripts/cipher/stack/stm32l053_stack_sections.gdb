@@ -24,8 +24,8 @@
 # along with this program; if not, see <http://www.gnu.org/licenses/>.
 #
 
-# Connect to the simavr simulator
-target remote localhost:1234
+# Connect to the ST-Link GDB Server
+target extended-remote :4242
 # Select the file to debug
 file felics_bench.elf
 
@@ -40,26 +40,54 @@ set print repeats 3000
 set $analysed_stack_size=2000
 
 
-#
-# Set the breakpoints
-#
-break main
-break EndDecryption
+# Reset the remote monitor
+monitor reset
 
 
+break BeginEncryption
+# Continue the program execution
+continue
+
+
+# 
+# BeginEncryption breakpoint
+#
+# Save the initial stack pointer in the convenience variable
+set $base = $r13
+# Set the stack content
+restore STM32L053_memory.mem binary $base-$analysed_stack_size
+
+
+delete breakpoints 1
+break EndEncryption
 # Continue the program execution
 continue
 
 
 #
-# main breakpoint
+# EndEncryption breakpoint
+#
+# Print the stack content in hexa using artificial arrays
+print/x *((unsigned char*)$base-$analysed_stack_size)@$analysed_stack_size
+
+
+delete breakpoints 2
+break BeginDecryption
+# Continue the program execution
+continue
+
+
+# 
+# BeginDecryption breakpoint
 #
 # Save the initial stack pointer in the convenience variable
-set $base = $sp
+set $base = $r13
 # Set the stack content
-restore AVR_scenario1_memory.mem binary $base-$analysed_stack_size
+restore STM32L053_memory.mem binary $base-$analysed_stack_size
 
 
+delete breakpoints 3
+break EndDecryption
 # Continue the program execution
 continue
 
