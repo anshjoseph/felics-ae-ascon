@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -e
-
 #
 # University of Luxembourg
 # Laboratory of Algorithmics, Cryptology and Security (LACS)
@@ -54,6 +52,7 @@ set -e
 #          ./../../../../scripts/cipher/check_cipher.sh -o=results.txt
 #
 
+set -e
 
 # Get current script path
 script_path=$(dirname $0)

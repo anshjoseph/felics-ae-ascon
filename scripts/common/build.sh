@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -e
-
 #
 # University of Luxembourg
 # Laboratory of Algorithmics, Cryptology and Security (LACS)
@@ -59,6 +57,7 @@ set -e
 # 		./../../../../scripts/common/build.sh --scenario=1
 #
 
+set -e
 
 # Get current script path
 script_path=$(dirname $0)
