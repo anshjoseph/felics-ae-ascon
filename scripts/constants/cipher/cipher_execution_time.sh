@@ -35,8 +35,8 @@ PC_OUTPUT_FILE=pc_execution_time.log
 
 AVR_EXECUTION_TIME_LOG_FILE=avr_execution_time.log
 
-MSP_SCENARIO1_MSPDEBUG_EXECUTION_TIME_COMMANDS_FILE=./../../../../scripts/cipher/execution_time/msp_scenario1_execution_time.cmd
-MSP_SCENARIO1_MSPDEBUG_EXECUTION_TIME_SECTIONS_COMMANDS_FILE=./../../../../scripts/cipher/execution_time/msp_scenario1_execution_time_sections.cmd
+MSP_MSPDEBUG_EXECUTION_TIME_COMMANDS_FILE=./../../../../scripts/cipher/execution_time/msp_execution_time.cmd
+MSP_MSPDEBUG_EXECUTION_TIME_SECTIONS_COMMANDS_FILE=./../../../../scripts/cipher/execution_time/msp_execution_time_sections.cmd
 
 MSPDEBUG_EXECUTION_TIME_LOG_FILE=mspdebug_execution_time.log
 MSPDEBUG_EXECUTION_TIME_SECTIONS_LOG_FILE=mspdebug_execution_time_sections.log
