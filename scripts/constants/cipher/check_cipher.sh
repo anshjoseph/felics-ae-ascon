@@ -32,7 +32,6 @@
 
 
 SOURCE_DIR=../../..
-CIPHER_MAKEFILE=${SOURCE_DIR}/common/cipher.mk
 MAKE_FILE_LOG=make.log
 
 SUCCESS_EXIT_CODE=0

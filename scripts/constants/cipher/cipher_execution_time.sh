@@ -51,5 +51,3 @@ NRF52840_SERIAL_TERMINAL_OUTPUT_FILE=serial.out
 
 STM32L053_SERIAL_TERMINAL=../../../architecture/stm32l053/stm32l053_serial_terminal.py
 STM32L053_SERIAL_TERMINAL_OUTPUT_FILE=serial.out
-
-CIPHER_MAKEFILE=./../../../common/cipher.mk

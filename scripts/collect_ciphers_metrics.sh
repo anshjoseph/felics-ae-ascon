@@ -209,6 +209,24 @@ needs-cycle-count-instrumentation ()
          ${arch} = STM32L053
 }
 
+make-bench ()
+{
+    local log_file=$1
+    shift
+
+    if ! make -f ${CIPHER_MAKEFILE} clean &> ${log_file}
+    then
+        cat ${log_file}
+        return 1
+    fi
+
+    if ! make -f ${CIPHER_MAKEFILE} SCENARIO=1 "$@" &> ${log_file}
+    then
+        cat ${log_file}
+        return 1
+    fi
+}
+
 run-benchmark ()
 {
     local cipher_name=$1
@@ -231,8 +249,9 @@ run-benchmark ()
     local code_ram_output=${output_base}_code_ram.log
     local code_time_output=${output_base}_code_time.log
 
-    # TODO: use cipher.mk directly.
-    ${script_path}/common/build.sh -a=${architecture} -s=1 -co="${options}"
+    make-bench ${output_base}_make_bench.log    \
+               ARCHITECTURE=${architecture}     \
+               COMPILER_OPTIONS="${options}"
 
     timeout 120 ${script_path}/cipher/cipher_code_size.sh \
             "-a=$architecture" -o=$code_size_output
@@ -242,16 +261,10 @@ run-benchmark ()
 
     if needs-cycle-count-instrumentation ${architecture}
     then
-        local cipher_mk=${script_path}/../source/common/cipher.mk
-        local make_log_file=${output_base}_code_time_make.log
-
-        make -f ${cipher_mk} clean &> ${make_log_file}
-        make -f ${cipher_mk}                    \
-             ARCHITECTURE=${architecture}       \
-             SCENARIO=1                         \
-             MEASURE_CYCLE_COUNT=1              \
-             COMPILER_OPTIONS="${options}"      \
-            &> ${make_log_file}
+        make-bench ${output_base}_make_bench_time.log   \
+                   MEASURE_CYCLE_COUNT=1                \
+                   ARCHITECTURE=${architecture}         \
+                   COMPILER_OPTIONS="${options}" 
     fi
 
     timeout 120 ${script_path}/cipher/cipher_execution_time.sh \

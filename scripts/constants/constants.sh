@@ -82,6 +82,6 @@ SCRIPT_OUTPUT_PATH=./../results/
 INFO_OUTPUT_FILE_NAME=info
 
 CIPHERS_PATH=./../source/ciphers/
-
+CIPHER_MAKEFILE=../../../common/cipher.mk
 
 PC_EXECUTION_TIME_CPU=0
