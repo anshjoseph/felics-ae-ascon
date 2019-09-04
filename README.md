@@ -14,6 +14,16 @@ or later.
 Project Structure
 -----------------
 
+### `documentation`
+
+This folder contains instructions for
+
+- setting up the framework: `setup.md`,
+- running measurement campaigns and analyzing the results:
+  `running-benchmarks.md`,
+- adding new algorithms, or new implementations for these algorithms:
+  `adding-ciphers.md`.
+
 ### `source`
 
 This folder contains both support code (`architecture` and `common`

@@ -150,13 +150,7 @@ Platform-specific makefiles
 ---------------------------
 
 The folder `source/architecture` contains architecture-specific
-makefile snippets:
+makefile modules: `AVR.mk`, `MSP.mk`, `ARM.mk`, `PC.mk`, etc.
 
-- `AVR.mk`
-- `MSP.mk`
-- `ARM.mk`
-- `PC.mk`
-
-These include files define several variables pointing to compilers,
-header files…
-
+These files define several variables pointing to compilers, header
+files…

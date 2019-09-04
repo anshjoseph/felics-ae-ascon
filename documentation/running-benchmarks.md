@@ -22,8 +22,8 @@ files contain:
 - the actual benchmark data, organized as a list of "setups". Each
   setup is defined by:
     - the algorithm's name,
-    - the hardware platform,
     - the implementation version,
+    - the hardware platform,
     - compiler options,
     - the measurements (ROM size, RAM size, cycle count).
 
