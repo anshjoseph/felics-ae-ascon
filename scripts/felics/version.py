@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# SPDX-FileCopyrightText: 2019 Airbus Cybersecurity SAS
+
 from os import path
 from sys import argv
 from warnings import warn
