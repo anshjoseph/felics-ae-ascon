@@ -1,3 +1,30 @@
+/*
+Threshold Implementation of the Lilliput-AE tweakable block cipher.
+
+Authors, hereby denoted as "the implementer":
+    Alexandre Adomnicai,
+    Kévin Le Gouguec,
+    Léo Reynaud,
+    2019.
+
+For more information, feedback or questions, refer to our website:
+https://paclido.fr/lilliput-ae
+
+To the extent possible under law, the implementer has waived all copyright
+and related or neighboring rights to the source code in this file.
+http://creativecommons.org/publicdomain/zero/1.0/
+
+---
+
+This file provides a first-order threshold implementation of the Lilliput-AE
+tweakable block cipher. The input block is split into 3 shares while the key
+is split into 2 shares for the tweakey schedule. The S-box relies on look-up
+tables and saves some memory usage at the cost of additional operations as
+described in the specification. This implementation operates on 3 shares
+throughout the entire round function in order to avoid extra randomness
+generation to switch from 2 shares to 3 shares and vice versa.
+*/
+
 #include <stdint.h>
 #include <string.h>
 
