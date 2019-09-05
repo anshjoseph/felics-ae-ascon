@@ -6,16 +6,17 @@ from argparse import ArgumentParser
 from collections import defaultdict, OrderedDict
 import json
 
+from felics import ARCHITECTURES
+
 
 _METRICS = ('code_size', 'code_ram', 'code_time')
-_ARCHITECTURES = ('AVR', 'MSP', 'ARM', 'PC', 'NRF52840', 'STM32L053')
 
 
 def _group_setups(filename, options):
     with open(filename) as f:
         results = json.load(f)
 
-    grouped = {a: defaultdict(dict) for a in _ARCHITECTURES}
+    grouped = {a.codename: defaultdict(dict) for a in ARCHITECTURES}
 
     for setup in results['data']:
         if options is not None and options != setup['compiler_options']:
@@ -23,9 +24,9 @@ def _group_setups(filename, options):
         grouped[setup['architecture']][setup['cipher_name']][setup['version']] = setup
 
     return OrderedDict((
-        (a, grouped[a])
-        for a in sorted(grouped, key=_ARCHITECTURES.index)
-        if grouped[a]
+        (a.codename, grouped[a.codename])
+        for a in ARCHITECTURES
+        if grouped[a.codename]
     ))
 
 
