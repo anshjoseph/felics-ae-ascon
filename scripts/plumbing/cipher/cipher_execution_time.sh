@@ -28,14 +28,12 @@
 
 #
 # Call this script to extract the cipher execution time
-# 	./cipher_execution_time.sh [{-h|--help}] [{-a|--architecture}=[PC|AVR|MSP|ARM]] [{-o|--output}=[...]]
+# 	./cipher_execution_time.sh [{-a|--architecture}=[PC|AVR|MSP|ARM]] [{-o|--output}=[...]]
 #
 #	To call from a cipher build folder use:
 #		./../../../../scripts/cipher/cipher_execution_time.sh [options]
 #
 #	Options:
-#		-h, --help
-#			Display help information
 #		-a, --architecture
 #			Specifies which architecture to build for
 #				Default: PC
@@ -61,9 +59,6 @@ source $script_path/../config/config.sh
 source $script_path/../constants/constants.sh
 source $script_path/../constants/cipher/cipher_execution_time.sh
 
-# Include help file
-source $script_path/../help/cipher/cipher_execution_time.sh
-
 
 # Default values
 SCRIPT_ARCHITECTURE=$SCRIPT_ARCHITECTURE_PC
@@ -74,10 +69,6 @@ SCRIPT_OUTPUT=$DEFAULT_SCRIPT_OUTPUT
 for i in "$@"
 do
 	case $i in
-		-h|--help)
-			display_help
-			shift
-			;;
 		-a=*|--architecture=*)
 			SCRIPT_ARCHITECTURE="${i#*=}"
 			shift

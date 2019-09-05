@@ -28,14 +28,12 @@
 
 #
 # Call this script to check if the cipher implementation is compliant with the framework
-#     ./check_cipher.sh [{-h|--help}] [{-a|--architecture}=[PC|AVR|MSP|ARM|NRF52840]] [{-co|--compiler_options}='...']
+#     ./check_cipher.sh [{-a|--architecture}=[PC|AVR|MSP|ARM|NRF52840]] [{-co|--compiler_options}='...']
 #
 #    To call from a cipher build folder use:
 #        ./../../../../scripts/cipher/check_cipher.sh [options]
 #
 #    Options:
-#        -h, --help
-#            Display help information
 #        -a, --architecture
 #            Specifies which architecture to build for
 #                Default: PC
@@ -62,9 +60,6 @@ source $script_path/../config/config.sh
 source $script_path/../constants/constants.sh
 source $script_path/../constants/cipher/check_cipher.sh
 
-# Include help file
-source $script_path/../help/cipher/check_cipher.sh
-
 
 # Default values
 SCRIPT_ARCHITECTURE=$SCRIPT_ARCHITECTURE_PC
@@ -75,10 +70,6 @@ SCRIPT_COMPILER_OPTIONS=$SCRIPT_COMPILER_OPTION_OPTIMIZE_3
 for i in "$@"
 do
     case $i in
-        -h|--help)
-            display_help
-            shift
-            ;;
         -a=*|--architecture=*)
             SCRIPT_ARCHITECTURE="${i#*=}"
             shift

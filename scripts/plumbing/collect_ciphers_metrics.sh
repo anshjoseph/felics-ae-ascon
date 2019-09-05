@@ -28,11 +28,9 @@
 
 #
 # Call this script to collect the ciphers metrics
-# 	./collect_ciphers_metrics.sh [{-h|--help}] [{-a|--architectures}=['PC AVR MSP ARM']] [{-c|--ciphers}=['Cipher1 Cipher2 ...']] [{-co|--compiler_options}='...']
+# 	./collect_ciphers_metrics.sh [{-a|--architectures}=['PC AVR MSP ARM']] [{-c|--ciphers}=['Cipher1 Cipher2 ...']] [{-co|--compiler_options}='...']
 #
 #	Options:
-#		-h, --help
-#			Display help information
 #		-a, --architectures
 #			Specifies for which archiectures to collect ciphers metrics
 #				List of values: 'PC AVR MSP ARM'
@@ -58,18 +56,11 @@ script_path=$(dirname $0)
 # Include constants files
 source $script_path/constants/constants.sh
 
-# Include help file
-source $script_path/help/collect_ciphers_metrics.sh
-
 
 # Parse script arguments
 for i in "$@"
 do
 	case $i in
-		-h|--help)
-			display_help
-			shift
-			;;
 		-a=*|--architectures=*)
 			SCRIPT_USER_ARCHITECTURES="${i#*=}"
 			shift
