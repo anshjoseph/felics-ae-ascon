@@ -45,11 +45,7 @@ def _format_metrics(diffs):
 
 
 def _format_ratios(setups, v1, v2):
-    header = '{cipher:<{pad}}'
-    line = '{header}\n{metrics}'
-
-    ciphers = setups.keys()
-    pad = len(max(ciphers, key=len))
+    line = '{cipher}\n{metrics}'
 
     for cipher, values in sorted(setups.items()):
         diffs = _compute_differences(values[v1], values[v2])
@@ -58,8 +54,7 @@ def _format_ratios(setups, v1, v2):
             continue
 
         yield line.format(
-            header=header.format(cipher=cipher, pad=pad),
-            metrics=_format_metrics(diffs)
+            cipher=cipher, metrics=_format_metrics(diffs)
         )
 
 
