@@ -12,3 +12,5 @@ ARCHITECTURES = (
     Architecture('STM32L053', 'STM32L053 Cortex-M0+', 32),
     Architecture('PC', 'PC', 64)
 )
+
+METRICS = ('code_size', 'code_ram', 'code_time')

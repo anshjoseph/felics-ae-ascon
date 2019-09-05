@@ -6,11 +6,8 @@ from argparse import ArgumentParser
 from collections import defaultdict, OrderedDict
 import json
 
-from felics import ARCHITECTURES
+from felics import ARCHITECTURES, METRICS
 from felics.analysis import comparison
-
-
-_METRICS = ('code_size', 'code_ram', 'code_time')
 
 
 def _group_setups(filename, options):
@@ -32,15 +29,17 @@ def _group_setups(filename, options):
 
 
 def _compute_differences(data1, data2):
+    differences = comparison.compute_differences(data1, data2)
+
     return (
-        comparison.format((data2[m]-data1[m])/data1[m], data1[m], data2[m])
-        for m in _METRICS
+        comparison.format(differences[m], data1[m], data2[m])
+        for m in METRICS
     )
 
 
 def _format_metrics(diffs):
     return '\n'.join(
-        '    {m}: {d}'.format(m=m, d=d) for (m, d) in zip(_METRICS, diffs)
+        '    {m}: {d}'.format(m=m, d=d) for (m, d) in zip(METRICS, diffs)
     )
 
 

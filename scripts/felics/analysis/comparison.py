@@ -1,6 +1,8 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # SPDX-FileCopyrightText: 2019 Airbus Cybersecurity SAS
 
+from felics import METRICS
+
 
 def format(diff, value1, value2):
     red = '\N{ESCAPE}[01;31m'
@@ -18,3 +20,12 @@ def format(diff, value1, value2):
         arguments['arrow'] = '↗'
 
     return template.format_map(arguments)
+
+
+def compute_differences(data1, data2, threshold=0):
+    differences = (
+        (m, (data2[m]-data1[m]) / data1[m])
+        for m in METRICS
+    )
+
+    return {m: diff for m, diff in differences if abs(diff) > threshold}

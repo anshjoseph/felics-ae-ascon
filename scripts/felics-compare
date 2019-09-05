@@ -79,16 +79,6 @@ def _show_differences(differences, data1, data2):
         print('\t{metric}: {diff}'.format(metric=metric, diff=diff))
 
 
-def _compute_differences(threshold, data1, data2):
-    differences = ((m, (data2[m] - data1[m]) / data1[m]) for m in METRICS)
-
-    return {
-        m: relative_diff
-        for m, relative_diff in differences
-        if abs(relative_diff) > threshold
-    }
-
-
 def _format_revision(setup):
     try:
         repo = git.Repo(search_parent_directories=True)
@@ -140,7 +130,7 @@ def _main():
 
         data2 = file2.data[setup]
 
-        differences = _compute_differences(arguments.threshold, data1, data2)
+        differences = comparison.compute_differences(data1, data2, arguments.threshold)
 
         if not differences:
             continue
