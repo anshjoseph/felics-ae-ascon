@@ -10,6 +10,7 @@ import git
 from git.exc import InvalidGitRepositoryError
 
 from felics import ARCHITECTURES
+from felics.analysis import comparison
 
 
 Results = namedtuple('Results', ('commit', 'branch', 'data', 'filename'))
@@ -68,30 +69,12 @@ def _load_file(filename, architectures):
     return Results(results['commit'], results['branch'], data, filename)
 
 
-def _format_diff(diff, value1, value2):
-    red = '\N{ESCAPE}[01;31m'
-    green = '\N{ESCAPE}[01;32m'
-    reset = '\N{ESCAPE}[0m'
-
-    template = '{color}{diff:+.2%}{reset} ({v1} {arrow} {v2})'
-    arguments = {'diff': diff, 'v1': value1, 'v2': value2, 'reset': reset}
-
-    if diff < 0:
-        arguments['color'] = green
-        arguments['arrow'] = '↘'
-    else:
-        arguments['color'] = red
-        arguments['arrow'] = '↗'
-
-    return template.format_map(arguments)
-
-
 def _show_differences(differences, data1, data2):
     for metric in METRICS:      # Show them in the "canonical" order.
         if metric not in differences:
             continue
 
-        diff = _format_diff(differences[metric], data1[metric], data2[metric])
+        diff = comparison.format(differences[metric], data1[metric], data2[metric])
 
         print('\t{metric}: {diff}'.format(metric=metric, diff=diff))
 
