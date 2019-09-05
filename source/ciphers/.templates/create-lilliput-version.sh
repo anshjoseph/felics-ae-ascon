@@ -15,14 +15,13 @@ do
     esac
 done
 
-scripts_dir=$(dirname $(realpath $0))
-root_dir=${scripts_dir}/..
-ciphers_dir=${root_dir}/source/ciphers
+templates_dir=$(dirname $(realpath $0))
+ciphers_dir=${templates_dir}/..
 
-mkdir -p ${ciphers_dir}/.templates/Lilliput_v${new}/{i,ii}
+mkdir -p ${templates_dir}/Lilliput_v${new}/{i,ii}
 
 (
-    cd ${ciphers_dir}/.templates/Lilliput_v${new}
+    cd ${templates_dir}/Lilliput_v${new}
     ln -s ../Lilliput_v${ref}/*.[chS] .
     for mode in i ii
     do
@@ -54,8 +53,8 @@ do
     done
 done
 
-ref_dir=$(realpath --relative-to=. ${ciphers_dir}/.templates/Lilliput_v${ref})
-new_dir=$(realpath --relative-to=. ${ciphers_dir}/.templates/Lilliput_v${new})
+ref_dir=$(realpath --relative-to=. ${templates_dir}/Lilliput_v${ref})
+new_dir=$(realpath --relative-to=. ${templates_dir}/Lilliput_v${new})
 
 cat <<EOF
 Created ${new_dir}
