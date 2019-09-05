@@ -9,15 +9,8 @@ import json
 from os import path
 import re
 
+from felics import ARCHITECTURES
 
-_ARCHITECTURES = OrderedDict((
-    ('AVR', 'AVR ATmega128'),
-    ('MSP', 'MSP430F1611'),
-    ('ARM', 'ARM Cortex-M3'),
-    ('NRF52840', 'NRF52840 Cortex-M4'),
-    ('STM32L053', 'STM32L053 Cortex-M0+'),
-    ('PC', 'PC')
-))
 
 _CONTEXT = OrderedDict((
     ('cipher_name', ''),
@@ -111,13 +104,16 @@ def _sort_setups(setups, keys):
 def _group_setups(setups, sort_keys, predicate):
     setups_by_arch = defaultdict(list)
 
+    archs = {a.codename: a for a in ARCHITECTURES}
+
     for setup in setups:
         if predicate(setup):
-            setups_by_arch[setup['architecture']].append(setup)
+            arch = archs[setup['architecture']]
+            setups_by_arch[arch].append(setup)
 
     return OrderedDict(
         (arch, _sort_setups(setups_by_arch[arch], sort_keys))
-        for arch in _ARCHITECTURES
+        for arch in ARCHITECTURES
         if arch in setups_by_arch
     )
 
@@ -145,7 +141,7 @@ class SpreadsheetWriter:
         export_module = self._load_export_module()
 
         spreadsheet_data = OrderedDict(
-            (arch, self._make_rows(data))
+            (arch.name, self._make_rows(data))
             for arch, data in results.items()
         )
 
@@ -262,8 +258,8 @@ class TexWriter:
     def _make_table(self, architecture, data):
         return self._TABLE_TEMPLATE.format(
             rows=self._format_rows(data),
-            caption=self._caption.format(arch=_ARCHITECTURES[architecture]),
-            label=self._label.format(arch=architecture.lower()),
+            caption=self._caption.format(arch=architecture.name),
+            label=self._label.format(arch=architecture.codename.lower()),
             tablespec=self._make_tablespec()
         )
 
@@ -366,8 +362,8 @@ class HtmlWriter:
         return self._TABLE_TEMPLATE.format(
             header=self._format_header(),
             body=self._format_body(data),
-            caption=self._caption.format(arch=_ARCHITECTURES[architecture]),
-            label='table:bench-soft-{arch}'.format(arch=architecture.lower())
+            caption=self._caption.format(arch=architecture.name),
+            label='table:bench-soft-{arch}'.format(arch=architecture.codename.lower())
         )
 
     def dump(self, results):
@@ -415,7 +411,7 @@ class ConsoleWriter:
 
     def dump(self, results):
         for arch, data in results.items():
-            print('On {arch}'.format(arch=arch))
+            print('On {arch}'.format(arch=arch.codename))
             print('\n'.join(self._format_rows(data)))
             print()
 
