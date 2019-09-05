@@ -348,8 +348,10 @@ case $SCRIPT_ARCHITECTURE in
 		mspdebug_execution_time_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$MSPDEBUG_EXECUTION_TIME_LOG_FILE
 		mspdebug_execution_time_sections_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$MSPDEBUG_EXECUTION_TIME_SECTIONS_LOG_FILE
 
-		simulate $MSP_MSPDEBUG_EXECUTION_TIME_COMMANDS_FILE $mspdebug_execution_time_log_file
-		simulate $MSP_MSPDEBUG_EXECUTION_TIME_SECTIONS_COMMANDS_FILE $mspdebug_execution_time_sections_log_file
+		commands_dir=../../../../scripts/plumbing/cipher/execution_time
+
+		simulate ${commands_dir}/msp_execution_time.cmd $mspdebug_execution_time_log_file
+		simulate ${commands_dir}/msp_execution_time_sections.cmd $mspdebug_execution_time_sections_log_file
 
 		if [ -f $mspdebug_execution_time_log_file ] ; then
 			e_execution_time=$(compute_execution_time $mspdebug_execution_time_sections_log_file 1)

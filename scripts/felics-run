@@ -70,7 +70,7 @@ def _parse_arguments():
 
 def _run_felics(ciphers, architectures, compiler_options, output):
     command = (
-        path.join(_SCRIPTS_DIR, 'collect_ciphers_metrics.sh'),
+        path.join(_SCRIPTS_DIR, 'plumbing', 'collect_ciphers_metrics.sh'),
         '-c='+' '.join(ciphers),
         '-a='+architectures,
         '-co='+compiler_options,

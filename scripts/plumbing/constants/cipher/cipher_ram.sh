@@ -36,24 +36,6 @@ MEMORY_PATTERN=(0x11 0x22 0x33 0x44 0x55 0x66 0x77 0x88 0x99 0xAA)
 MEMORY_FILE=memory.mem
 MEMORY_SIZE=2000
 
-PC_GDB_STACK_COMMANDS_FILE=./../../../../scripts/cipher/stack/pc_stack.gdb
-PC_GDB_STACK_SECTIONS_COMMANDS_FILE=./../../../../scripts/cipher/stack/pc_stack_sections.gdb
-
-AVR_GDB_STACK_COMMANDS_FILE=./../../../../scripts/cipher/stack/avr_stack.gdb
-AVR_GDB_STACK_SECTIONS_COMMANDS_FILE=./../../../../scripts/cipher/stack/avr_stack_sections.gdb
-
-MSP_GDB_STACK_COMMANDS_FILE=./../../../../scripts/cipher/stack/msp_stack.gdb
-MSP_GDB_STACK_SECTIONS_COMMANDS_FILE=./../../../../scripts/cipher/stack/msp_stack_sections.gdb
-
-ARM_GDB_STACK_COMMANDS_FILE=./../../../../scripts/cipher/stack/arm_stack.gdb
-ARM_GDB_STACK_SECTIONS_COMMANDS_FILE=./../../../../scripts/cipher/stack/arm_stack_sections.gdb
-
-NRF52840_GDB_STACK_COMMANDS_FILE=./../../../../scripts/cipher/stack/nrf52840_stack.gdb
-NRF52840_GDB_STACK_SECTIONS_COMMANDS_FILE=./../../../../scripts/cipher/stack/nrf52840_stack_sections.gdb
-
-STM32L053_GDB_STACK_COMMANDS_FILE=./../../../../scripts/cipher/stack/stm32l053_stack.gdb
-STM32L053_GDB_STACK_SECTIONS_COMMANDS_FILE=./../../../../scripts/cipher/stack/stm32l053_stack_sections.gdb
-
 GDB_STACK_LOG_FILE=gdb_stack.log
 GDB_STACK_SECTIONS_LOG_FILE=gdb_stack_sections.log
 

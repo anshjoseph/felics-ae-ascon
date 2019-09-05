@@ -109,7 +109,7 @@ echo "Begin collect ciphers metrics - $current_directory"
 
 
 # Change current working directory
-cd "${current_directory}"/../source/ciphers
+cd "${current_directory}"/../../source/ciphers
 echo "Changed working directory: $(pwd)"
 echo ""
 
@@ -175,7 +175,7 @@ else
 fi
 
 
-results_dir="${current_directory}"/../results
+results_dir="${current_directory}"/../../results
 script_json_output="${results_dir}/${SCRIPT_JSON_OUTPUT}"
 
 add_json_table_header "${script_json_output}"

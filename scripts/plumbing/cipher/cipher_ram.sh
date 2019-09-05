@@ -111,7 +111,7 @@ function simulate()
 {
 	echo "SIMULATING"
 
-	local command_file=$1
+	local command_file=../../../../scripts/plumbing/cipher/stack/${SCRIPT_ARCHITECTURE,,}_$1.gdb
 	local target_file=$2
 	local gdb_output_file=$3
 	local simulator_output_file=$4
@@ -407,8 +407,8 @@ gdb_stack_sections_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$GDB_STACK_S
 case $SCRIPT_ARCHITECTURE in
 	$SCRIPT_ARCHITECTURE_PC)
 
-		simulate $PC_GDB_STACK_COMMANDS_FILE $file $gdb_stack_log_file
-		simulate $PC_GDB_STACK_SECTIONS_COMMANDS_FILE $file $gdb_stack_sections_log_file
+		simulate stack $file $gdb_stack_log_file
+		simulate stack_sections $file $gdb_stack_sections_log_file
 		;;
 
 	$SCRIPT_ARCHITECTURE_AVR)
@@ -416,8 +416,8 @@ case $SCRIPT_ARCHITECTURE in
 		simavr_stack_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$SIMAVR_STACK_LOG_FILE
 		simavr_stack_sections_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$SIMAVR_STACK_SECTIONS_LOG_FILE
 
-		simulate $AVR_GDB_STACK_COMMANDS_FILE $file $gdb_stack_log_file $simavr_stack_log_file
-		simulate $AVR_GDB_STACK_SECTIONS_COMMANDS_FILE $file $gdb_stack_sections_log_file $simavr_stack_sections_log_file
+		simulate stack $file $gdb_stack_log_file $simavr_stack_log_file
+		simulate stack_sections $file $gdb_stack_sections_log_file $simavr_stack_sections_log_file
 
 		;;
 	
@@ -426,8 +426,8 @@ case $SCRIPT_ARCHITECTURE in
 		mspdebug_stack_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$MSPDEBUG_STACK_LOG_FILE
 		mspdebug_stack_sections_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$MSPDEBUG_STACK_SECTIONS_LOG_FILE
 
-		simulate $MSP_GDB_STACK_COMMANDS_FILE $file $gdb_stack_log_file $mspdebug_stack_log_file
-		simulate $MSP_GDB_STACK_SECTIONS_COMMANDS_FILE $file $gdb_stack_sections_log_file $mspdebug_stack_sections_log_file
+		simulate stack $file $gdb_stack_log_file $mspdebug_stack_log_file
+		simulate stack_sections $file $gdb_stack_sections_log_file $mspdebug_stack_sections_log_file
 		;;
 
 	$SCRIPT_ARCHITECTURE_ARM)
@@ -436,8 +436,8 @@ case $SCRIPT_ARCHITECTURE in
 		jlink_gdb_server_stack_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$JLINK_GDB_SERVER_STACK_LOG_FILE
 		jlink_gdb_server_stack_sections_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$JLINK_GDB_SERVER_STACK_SECTIONS_LOG_FILE
 
-		simulate $ARM_GDB_STACK_COMMANDS_FILE upload-bench $gdb_stack_log_file $jlink_gdb_server_stack_log_file $make_log_file
-		simulate $ARM_GDB_STACK_SECTIONS_COMMANDS_FILE upload-bench $gdb_stack_sections_log_file $jlink_gdb_server_stack_sections_log_file $make_log_file
+		simulate stack upload-bench $gdb_stack_log_file $jlink_gdb_server_stack_log_file $make_log_file
+		simulate stack_sections upload-bench $gdb_stack_sections_log_file $jlink_gdb_server_stack_sections_log_file $make_log_file
 		;;
 
 	$SCRIPT_ARCHITECTURE_NRF52840)
@@ -446,8 +446,8 @@ case $SCRIPT_ARCHITECTURE in
 		jlink_gdb_server_stack_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$JLINK_GDB_SERVER_STACK_LOG_FILE
 		jlink_gdb_server_stack_sections_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$JLINK_GDB_SERVER_STACK_SECTIONS_LOG_FILE
 
-		simulate $NRF52840_GDB_STACK_COMMANDS_FILE upload-bench $gdb_stack_log_file $jlink_gdb_server_stack_log_file $make_log_file
-		simulate $NRF52840_GDB_STACK_SECTIONS_COMMANDS_FILE upload-bench $gdb_stack_sections_log_file $jlink_gdb_server_stack_sections_log_file $make_log_file
+		simulate stack upload-bench $gdb_stack_log_file $jlink_gdb_server_stack_log_file $make_log_file
+		simulate stack_sections upload-bench $gdb_stack_sections_log_file $jlink_gdb_server_stack_sections_log_file $make_log_file
 		;;
 
 	$SCRIPT_ARCHITECTURE_STM32L053)
@@ -456,8 +456,8 @@ case $SCRIPT_ARCHITECTURE in
 		stlink_gdb_server_stack_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$STLINK_GDB_SERVER_STACK_LOG_FILE
 		stlink_gdb_server_stack_sections_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$STLINK_GDB_SERVER_STACK_SECTIONS_LOG_FILE
 
-		simulate $STM32L053_GDB_STACK_COMMANDS_FILE upload-bench $gdb_stack_log_file $stlink_gdb_server_stack_log_file $make_log_file
-		simulate $STM32L053_GDB_STACK_SECTIONS_COMMANDS_FILE upload-bench $gdb_stack_sections_log_file $stlink_gdb_server_stack_sections_log_file $make_log_file
+		simulate stack upload-bench $gdb_stack_log_file $stlink_gdb_server_stack_log_file $make_log_file
+		simulate stack_sections upload-bench $gdb_stack_sections_log_file $stlink_gdb_server_stack_sections_log_file $make_log_file
 		;;
 esac
 

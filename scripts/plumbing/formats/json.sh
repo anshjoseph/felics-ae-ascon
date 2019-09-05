@@ -35,7 +35,7 @@ get_code_time ()
 felics-version ()
 {
     formats_dir=$(dirname ${BASH_SOURCE})
-    scripts_dir=${formats_dir}/..
+    scripts_dir=${formats_dir}/../..
 
     PYTHONPATH=${scripts_dir} python3 -m felics.version "{$1}"
 }
