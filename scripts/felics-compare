@@ -2,29 +2,28 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # SPDX-FileCopyrightText: 2019 Airbus Cybersecurity SAS
 
-from argparse import ArgumentParser
+from argparse import ArgumentParser, ArgumentTypeError
 from collections import namedtuple
 import json
 
 import git
 from git.exc import InvalidGitRepositoryError
 
+from felics import ARCHITECTURES
+
 
 Results = namedtuple('Results', ('commit', 'branch', 'data', 'filename'))
 
-
-ARCHITECTURES = {'AVR': 8, 'MSP': 16, 'ARM': 32, 'PC': 64, 'NRF52840': 32, 'STM32L053': 32}
-
 METRICS = ('code_size', 'code_ram', 'code_time')
+_ARCHS_BY_NAME = {a.codename: a for a in ARCHITECTURES}
 
 
 def _parse_architectures(argument):
     archs = set(argument.split(','))
 
-    unknown = archs-set(ARCHITECTURES)
-
+    unknown = archs-set(_ARCHS_BY_NAME)
     if unknown:
-        raise ValueError('Unknown platforms: {}'.format(', '.join(unknown)))
+        raise ArgumentTypeError('Unknown platforms: {}'.format(', '.join(unknown)))
 
     return archs
 
@@ -38,15 +37,18 @@ def _parse_arguments():
         help='hide difference when abs(new-old)/old < THRESHOLD'
     )
     parser.add_argument(
-        '--archs', default=set(ARCHITECTURES), type=_parse_architectures,
+        '--archs', default=set(_ARCHS_BY_NAME), type=_parse_architectures,
         help='only consider those architectures'
     )
     return parser.parse_args()
 
 
 def _make_key(data):
+    arch = _ARCHS_BY_NAME[data['architecture']]
+
     return (
-        ARCHITECTURES[data['architecture']],
+        arch.size,
+        arch.codename,
         data['compiler_options'],
         data['cipher_name'],
         data['version']
