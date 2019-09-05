@@ -31,9 +31,10 @@ def _group_setups(filename, options):
 def _compute_differences(data1, data2):
     differences = comparison.compute_differences(data1, data2)
 
-    return (
+    return tuple(
         comparison.format(differences[m], data1[m], data2[m])
         for m in METRICS
+        if m in differences
     )
 
 
@@ -53,25 +54,30 @@ def _format_ratios(setups, v1, v2):
     for cipher, values in sorted(setups.items()):
         diffs = _compute_differences(values[v1], values[v2])
 
+        if not diffs:
+            continue
+
         yield line.format(
             header=header.format(cipher=cipher, pad=pad),
             metrics=_format_metrics(diffs)
         )
 
 
-def _arch_table(arch, setups, v1, v2):
+def _arch_table(arch, lines):
     header = arch
-    content = '\n'.join(line for line in _format_ratios(setups, v1, v2))
-
+    content = '\n'.join(lines)
     return '\n'.join((header, content))
 
 
 def _format_setups(setups, v1, v2):
-    tables = (
-        _arch_table(arch, setups, v1, v2) for arch, setups in setups.items()
+    ratios_by_arch = (
+        (arch, tuple(_format_ratios(setups[arch], v1, v2)))
+        for arch in setups
     )
 
-    return '\n'.join(tables)
+    return '\n'.join(
+        _arch_table(arch, ratios) for arch, ratios in ratios_by_arch if ratios
+    )
 
 
 def _parse_arguments():
