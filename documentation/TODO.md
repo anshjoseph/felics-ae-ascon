@@ -67,9 +67,3 @@ E.g. add a couple of `--mlen=LIST` and `--alen=LIST` parameters to
 ## Implement profiling
 
 So that implementers can identify bottlenecks.
-
-# Miscellaneous
-
-## Update copyright statements
-
-From University of Luxembourg, 2015, to PACLIDO consortium, 2019.
