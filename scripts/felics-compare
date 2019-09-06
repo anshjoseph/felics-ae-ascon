@@ -75,7 +75,8 @@ def _load_file(filename, architectures):
 
 def _format_metrics(diffs):
     return '\n'.join(
-        '    {m}: {d}'.format(m=m, d=d) for (m, d) in zip(METRICS, diffs)
+        '    {m}: {d}'.format(m=m, d=diffs[m])
+        for m in sorted(diffs, key=METRICS.index)
     )
 
 

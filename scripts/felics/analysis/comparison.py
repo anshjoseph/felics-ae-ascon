@@ -22,20 +22,14 @@ def _format_diff(diff, value1, value2):
     return template.format_map(arguments)
 
 
-def _compute_differences(data1, data2, threshold):
+def format_differences(data1, data2, threshold=0):
     differences = (
         (m, (data2[m]-data1[m]) / data1[m])
         for m in METRICS
     )
 
-    return {m: diff for m, diff in differences if abs(diff) > threshold}
-
-
-def format_differences(data1, data2, threshold=0):
-    differences = _compute_differences(data1, data2, threshold)
-
-    return tuple(
-        _format_diff(differences[m], data1[m], data2[m])
-        for m in METRICS
-        if m in differences
-    )
+    return {
+        m: _format_diff(diff, data1[m], data2[m])
+        for m, diff in differences
+        if abs(diff) > threshold
+    }
