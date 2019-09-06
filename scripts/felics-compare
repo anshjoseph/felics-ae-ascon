@@ -106,6 +106,36 @@ against
 '''.format(old=_format_revision(old), new=_format_revision(new), t=threshold)
 
 
+def _format_ratios(setups1, setups2, threshold):
+    header = '{cipher_name} (v{version} with {compiler_options})\n'
+
+    for setup in sorted(setups1):
+        if setup not in setups2:
+            continue
+
+        diffs = comparison.format_differences(setups1[setup], setups2[setup])
+
+        if not diffs:
+            continue
+
+        yield header.format_map(setup._asdict())+_format_metrics(diffs)
+
+
+def _arch_table(arch, lines):
+    return '\n\n'.join((arch, '\n\n'.join(lines))) + '\n'
+
+
+def _format_differences(data1, data2, threshold):
+    ratios_by_arch = (
+        (arch, tuple(_format_ratios(data1[arch], data2[arch], threshold)))
+        for arch in data1
+    )
+
+    return '\n'.join(
+        _arch_table(arch, ratios) for arch, ratios in ratios_by_arch if ratios
+    )
+
+
 def _arch_key(setup):
     key = list(setup)
     arch = _ARCHS_BY_NAME[key[0]]
@@ -127,36 +157,13 @@ def _main():
     file2 = _load_file(arguments.file2, arguments.archs)
 
     print(_format_header(file1, file2, arguments.threshold))
-
-    SETUP_TEMPLATE = (
-        '{cipher_name} on {architecture} (v{version} with {compiler_options})'
-    )
-
-    for arch, results1 in file1.data.items():
-        results2 = file2.data[arch]
-
-        for setup, data1 in sorted(results1.items()):
-            if setup not in results2:
-                continue
-
-            data2 = results2[setup]
-
-            differences = comparison.format_differences(
-                data1, data2, arguments.threshold
-            )
-
-            if not differences:
-                continue
-
-            print(SETUP_TEMPLATE.format_map(setup._asdict()))
-            print(_format_metrics(differences))
-            print()
+    print(_format_differences(file1.data, file2.data, arguments.threshold))
 
     skipped = _find_absent_setups(file1.data, file2.data)
     if skipped:
         print('Setups not found in {f2}:'.format(f2=arguments.file2))
         print('\n'.join(
-            '    '+SETUP_TEMPLATE.format_map(setup._asdict())
+            '    {cipher_name} on {architecture} (v{version} with {compiler_options})'.format_map(setup._asdict())
             for setup in skipped
         ))
 
