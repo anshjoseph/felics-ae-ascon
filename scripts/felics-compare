@@ -3,7 +3,7 @@
 # SPDX-FileCopyrightText: 2019 Airbus Cybersecurity SAS
 
 from argparse import ArgumentParser, ArgumentTypeError
-from collections import OrderedDict, namedtuple
+from collections import namedtuple
 import json
 
 import git
@@ -57,16 +57,17 @@ def _load_file(filename, architectures):
     with open(filename) as f:
         results = json.load(f)
 
-    grouped = OrderedDict((a.codename, {})
-                          for a in ARCHITECTURES
-                          if a.codename in architectures)
+    grouped = {
+        a: {} for a in ARCHITECTURES if a.codename in architectures
+    }
 
     for item in results['data']:
-        arch = item['architecture']
+        arch = _ARCHS_BY_NAME[item['architecture']]
 
         if arch not in grouped:
             continue
 
+        item['architecture'] = arch
         grouped[arch][_make_key(item)] = item
 
     return Results(results['commit'], results['branch'], grouped, filename)
@@ -100,7 +101,7 @@ against
 
 
 def _arch_table(arch, lines):
-    return '\n\n'.join((arch, '\n\n'.join(lines))) + '\n'
+    return '\n\n'.join((arch.codename, '\n\n'.join(lines))) + '\n'
 
 
 def _format_differences(data1, data2, threshold):
@@ -110,7 +111,7 @@ def _format_differences(data1, data2, threshold):
             for s in sorted(data1[arch])
             if s in data2[arch]
         ))
-        for arch in data1
+        for arch in sorted(data1, key=ARCHITECTURES.index)
     )
 
     setup_fmt = '{cipher_name} (v{version} with {compiler_options})'
@@ -125,19 +126,12 @@ def _format_differences(data1, data2, threshold):
     )
 
 
-def _arch_key(setup):
-    key = list(setup)
-    arch = _ARCHS_BY_NAME[key[0]]
-    key[0] = ARCHITECTURES.index(arch)
-    return key
-
-
 def _find_absent_setups(data1, data2):
     '''Return a list of setups present in data1 and absent in data2.'''
     setups1 = {s for setups in data1.values() for s in setups}
     setups2 = {s for setups in data2.values() for s in setups}
 
-    return sorted(setups1-setups2, key=_arch_key)
+    return sorted(setups1-setups2)
 
 
 def _main():
