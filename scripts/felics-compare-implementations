@@ -6,7 +6,7 @@ from argparse import ArgumentParser
 from collections import defaultdict, OrderedDict
 import json
 
-from felics import ARCHITECTURES, METRICS
+from felics import ARCHITECTURES
 from felics.analysis import comparison
 
 

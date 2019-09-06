@@ -13,7 +13,6 @@ from felics import ARCHITECTURES
 from felics.analysis import comparison
 
 
-METRICS = ('code_size', 'code_ram', 'code_time')
 _ARCHS_BY_NAME = {a.codename: a for a in ARCHITECTURES}
 
 
