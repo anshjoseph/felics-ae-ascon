@@ -3,42 +3,43 @@
 # SPDX-FileCopyrightText: 2019 Airbus Cybersecurity SAS
 
 from argparse import ArgumentParser
-from collections import defaultdict, OrderedDict
+from collections import defaultdict
 import json
 
 from felics import ARCHITECTURES
 from felics.analysis import comparison
 
 
+_ARCHS_BY_NAME = {a.codename: a for a in ARCHITECTURES}
+
+
 def _group_setups(filename, options):
     with open(filename) as f:
         results = json.load(f)
 
-    grouped = {a.codename: defaultdict(dict) for a in ARCHITECTURES}
+    grouped = defaultdict(lambda: defaultdict(dict))
 
     for setup in results['data']:
         if options is not None and options != setup['compiler_options']:
             continue
-        grouped[setup['architecture']][setup['cipher_name']][setup['version']] = setup
 
-    return OrderedDict((
-        (a.codename, grouped[a.codename])
-        for a in ARCHITECTURES
-        if grouped[a.codename]
-    ))
+        arch = _ARCHS_BY_NAME[setup['architecture']]
+        grouped[arch][setup['cipher_name']][setup['version']] = setup
+
+    return grouped
 
 
 def _arch_table(arch, lines):
-    return '\n\n'.join((arch, '\n\n'.join(lines))) + '\n'
+    return '\n\n'.join((arch.codename, '\n\n'.join(lines))) + '\n'
 
 
 def _format_differences(setups, v1, v2):
     iterators = (
         (arch, (
             (setup[v1], setup[v2])
-            for setup in arch_setups.values()
+            for setup in setups[arch].values()
         ))
-        for arch, arch_setups in setups.items()
+        for arch in sorted(setups, key=ARCHITECTURES.index)
     )
 
     setup_fmt = '{cipher_name}'
