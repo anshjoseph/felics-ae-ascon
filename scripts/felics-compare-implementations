@@ -32,10 +32,6 @@ def _arch_table(arch, lines):
     return '\n\n'.join((arch, '\n\n'.join(lines))) + '\n'
 
 
-def _format_setup_diff(setup1, setup2, formatted_diff):
-    return setup1['cipher_name']+'\n'+formatted_diff
-
-
 def _format_differences(setups, v1, v2):
     iterators = (
         (arch, (
@@ -45,8 +41,10 @@ def _format_differences(setups, v1, v2):
         for arch, arch_setups in setups.items()
     )
 
+    setup_fmt = '{cipher_name}'
+
     results = (
-        (arch, comparison.format_differences(pairs, _format_setup_diff))
+        (arch, comparison.format_differences(pairs, setup_fmt))
         for arch, pairs in iterators
     )
 

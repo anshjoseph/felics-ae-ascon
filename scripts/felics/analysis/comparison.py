@@ -42,14 +42,14 @@ def _format_lines(diffs):
     )
 
 
-def format_differences(pairs, formatter, threshold=0):
+def format_differences(pairs, setup_format, threshold=0):
     diff_gen = (
-        (setup1, setup2, _compute_diffs(setup1, setup2, threshold))
+        (setup1, _compute_diffs(setup1, setup2, threshold))
         for setup1, setup2 in pairs
     )
 
     return tuple(
-        formatter(setup1, setup2, _format_lines(diffs))
-        for setup1, setup2, diffs in diff_gen
+        setup_format.format_map(setup1)+'\n'+_format_lines(diffs)
+        for setup1, diffs in diff_gen
         if diffs
     )

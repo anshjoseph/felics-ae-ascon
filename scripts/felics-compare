@@ -104,11 +104,6 @@ def _arch_table(arch, lines):
     return '\n\n'.join((arch, '\n\n'.join(lines))) + '\n'
 
 
-def _format_setup_diff(setup1, setup2, formatted_diff):
-    header = '{cipher_name} (v{version} with {compiler_options})\n'
-    return header.format_map(setup1) + formatted_diff
-
-
 def _format_differences(data1, data2, threshold):
     iterators = (
         (arch, (
@@ -119,8 +114,10 @@ def _format_differences(data1, data2, threshold):
         for arch in data1
     )
 
+    setup_fmt = '{cipher_name} (v{version} with {compiler_options})'
+
     results = (
-        (arch, comparison.format_differences(pairs, _format_setup_diff, threshold))
+        (arch, comparison.format_differences(pairs, setup_fmt, threshold))
         for arch, pairs in iterators
     )
 
