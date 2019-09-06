@@ -13,10 +13,14 @@ from felics import ARCHITECTURES
 from felics.analysis import comparison
 
 
-Results = namedtuple('Results', ('commit', 'branch', 'data', 'filename'))
-
 METRICS = ('code_size', 'code_ram', 'code_time')
 _ARCHS_BY_NAME = {a.codename: a for a in ARCHITECTURES}
+
+
+Results = namedtuple('Results', ('commit', 'branch', 'data', 'filename'))
+ResultsKey = namedtuple(
+    'ResultsKey', ('architecture', 'compiler_options', 'cipher_name', 'version')
+)
 
 
 def _parse_architectures(argument):
@@ -45,10 +49,8 @@ def _parse_arguments():
 
 
 def _make_key(data):
-    return (
-        data['compiler_options'],
-        data['cipher_name'],
-        data['version']
+    return ResultsKey._make(
+        data[k] for k in ResultsKey._fields
     )
 
 
@@ -104,6 +106,21 @@ against
 '''.format(old=_format_revision(old), new=_format_revision(new), t=threshold)
 
 
+def _arch_key(setup):
+    key = list(setup)
+    arch = _ARCHS_BY_NAME[key[0]]
+    key[0] = ARCHITECTURES.index(arch)
+    return key
+
+
+def _find_absent_setups(data1, data2):
+    '''Return a list of setups present in data1 and absent in data2.'''
+    setups1 = {s for setups in data1.values() for s in setups}
+    setups2 = {s for setups in data2.values() for s in setups}
+
+    return sorted(setups1-setups2, key=_arch_key)
+
+
 def _main():
     arguments = _parse_arguments()
     file1 = _load_file(arguments.file1, arguments.archs)
@@ -115,16 +132,11 @@ def _main():
         '{cipher_name} on {architecture} (v{version} with {compiler_options})'
     )
 
-    skipped = []
-
     for arch, results1 in file1.data.items():
         results2 = file2.data[arch]
 
         for setup, data1 in sorted(results1.items()):
-            formatted_setup = SETUP_TEMPLATE.format_map(data1)
-
             if setup not in results2:
-                skipped.append(formatted_setup)
                 continue
 
             data2 = results2[setup]
@@ -136,13 +148,17 @@ def _main():
             if not differences:
                 continue
 
-            print(formatted_setup)
+            print(SETUP_TEMPLATE.format_map(setup._asdict()))
             print(_format_metrics(differences))
             print()
 
+    skipped = _find_absent_setups(file1.data, file2.data)
     if skipped:
         print('Setups not found in {f2}:'.format(f2=arguments.file2))
-        print('\n'.join('\t'+setup for setup in skipped))
+        print('\n'.join(
+            '    '+SETUP_TEMPLATE.format_map(setup._asdict())
+            for setup in skipped
+        ))
 
 
 if __name__ == '__main__':
