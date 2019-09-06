@@ -4,7 +4,7 @@
 from felics import METRICS
 
 
-def format(diff, value1, value2):
+def _format_diff(diff, value1, value2):
     red = '\N{ESCAPE}[01;31m'
     green = '\N{ESCAPE}[01;32m'
     reset = '\N{ESCAPE}[0m'
@@ -22,10 +22,20 @@ def format(diff, value1, value2):
     return template.format_map(arguments)
 
 
-def compute_differences(data1, data2, threshold=0):
+def _compute_differences(data1, data2, threshold):
     differences = (
         (m, (data2[m]-data1[m]) / data1[m])
         for m in METRICS
     )
 
     return {m: diff for m, diff in differences if abs(diff) > threshold}
+
+
+def format_differences(data1, data2, threshold=0):
+    differences = _compute_differences(data1, data2, threshold)
+
+    return tuple(
+        _format_diff(differences[m], data1[m], data2[m])
+        for m in METRICS
+        if m in differences
+    )

@@ -71,16 +71,6 @@ def _load_file(filename, architectures):
     return Results(results['commit'], results['branch'], grouped, filename)
 
 
-def _compute_differences(data1, data2, threshold):
-    differences = comparison.compute_differences(data1, data2, threshold)
-
-    return tuple(
-        comparison.format(differences[m], data1[m], data2[m])
-        for m in METRICS
-        if m in differences
-    )
-
-
 def _format_metrics(diffs):
     return '\n'.join(
         '    {m}: {d}'.format(m=m, d=d) for (m, d) in zip(METRICS, diffs)
@@ -141,7 +131,9 @@ def _main():
 
             data2 = results2[setup]
 
-            differences = _compute_differences(data1, data2, arguments.threshold)
+            differences = comparison.format_differences(
+                data1, data2, arguments.threshold
+            )
 
             if not differences:
                 continue

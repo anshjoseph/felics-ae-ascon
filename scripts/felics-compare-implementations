@@ -28,16 +28,6 @@ def _group_setups(filename, options):
     ))
 
 
-def _compute_differences(data1, data2):
-    differences = comparison.compute_differences(data1, data2)
-
-    return tuple(
-        comparison.format(differences[m], data1[m], data2[m])
-        for m in METRICS
-        if m in differences
-    )
-
-
 def _format_metrics(diffs):
     return '\n'.join(
         '    {m}: {d}'.format(m=m, d=d) for (m, d) in zip(METRICS, diffs)
@@ -48,7 +38,7 @@ def _format_ratios(setups, v1, v2):
     line = '{cipher}\n{metrics}'
 
     for cipher, values in sorted(setups.items()):
-        diffs = _compute_differences(values[v1], values[v2])
+        diffs = comparison.format_differences(values[v1], values[v2])
 
         if not diffs:
             continue
