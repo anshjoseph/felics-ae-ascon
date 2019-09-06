@@ -94,8 +94,8 @@ def _format_revision(setup):
     ))
 
 
-def _print_header(old, new, threshold):
-    header = '''Comparing
+def _format_header(old, new, threshold):
+    return '''Comparing
 {old}
 against
 {new}
@@ -103,15 +103,13 @@ against
 (tolerance: {t:.2%})
 '''.format(old=_format_revision(old), new=_format_revision(new), t=threshold)
 
-    print(header)
-
 
 def _main():
     arguments = _parse_arguments()
     file1 = _load_file(arguments.file1, arguments.archs)
     file2 = _load_file(arguments.file2, arguments.archs)
 
-    _print_header(file1, file2, arguments.threshold)
+    print(_format_header(file1, file2, arguments.threshold))
 
     SETUP_TEMPLATE = (
         '{cipher_name} on {architecture} (v{version} with {compiler_options})'
