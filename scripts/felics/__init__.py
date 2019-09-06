@@ -5,12 +5,12 @@ from felics.architecture import Architecture
 
 
 ARCHITECTURES = (
-    Architecture('AVR', 'AVR ATmega128', 8),
-    Architecture('MSP', 'MSP430F1611', 16),
-    Architecture('ARM', 'ARM Cortex-M3', 32),
-    Architecture('NRF52840', 'NRF52840 Cortex-M4', 32),
-    Architecture('STM32L053', 'STM32L053 Cortex-M0+', 32),
-    Architecture('PC', 'PC', 64)
+    Architecture(8, 'AVR', 'AVR ATmega128'),
+    Architecture(16, 'MSP', 'MSP430F1611'),
+    Architecture(32, 'ARM', 'ARM Cortex-M3'),
+    Architecture(32, 'NRF52840', 'NRF52840 Cortex-M4'),
+    Architecture(32, 'STM32L053', 'STM32L053 Cortex-M0+'),
+    Architecture(64, 'PC', 'PC')
 )
 
 METRICS = ('code_size', 'code_ram', 'code_time')

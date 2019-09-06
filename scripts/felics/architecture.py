@@ -7,8 +7,8 @@ from collections import namedtuple
 Architecture = namedtuple(
     'Architecture',
     (
-        'codename',
-        'name',
         'size',
+        'codename',
+        'name'
     )
 )
