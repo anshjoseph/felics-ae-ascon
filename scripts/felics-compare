@@ -73,13 +73,6 @@ def _load_file(filename, architectures):
     return Results(results['commit'], results['branch'], grouped, filename)
 
 
-def _format_metrics(diffs):
-    return '\n'.join(
-        '    {m}: {d}'.format(m=m, d=diffs[m])
-        for m in sorted(diffs, key=METRICS.index)
-    )
-
-
 def _format_revision(setup):
     try:
         repo = git.Repo(search_parent_directories=True)
@@ -107,33 +100,32 @@ against
 '''.format(old=_format_revision(old), new=_format_revision(new), t=threshold)
 
 
-def _format_ratios(setups1, setups2, threshold):
-    header = '{cipher_name} (v{version} with {compiler_options})\n'
-
-    for setup in sorted(setups1):
-        if setup not in setups2:
-            continue
-
-        diffs = comparison.format_differences(setups1[setup], setups2[setup])
-
-        if not diffs:
-            continue
-
-        yield header.format_map(setup._asdict())+_format_metrics(diffs)
-
-
 def _arch_table(arch, lines):
     return '\n\n'.join((arch, '\n\n'.join(lines))) + '\n'
 
 
+def _format_setup_diff(setup1, setup2, formatted_diff):
+    header = '{cipher_name} (v{version} with {compiler_options})\n'
+    return header.format_map(setup1) + formatted_diff
+
+
 def _format_differences(data1, data2, threshold):
-    ratios_by_arch = (
-        (arch, tuple(_format_ratios(data1[arch], data2[arch], threshold)))
+    iterators = (
+        (arch, (
+            (data1[arch][s], data2[arch][s])
+            for s in sorted(data1[arch])
+            if s in data2[arch]
+        ))
         for arch in data1
     )
 
+    results = (
+        (arch, comparison.format_differences(pairs, _format_setup_diff, threshold))
+        for arch, pairs in iterators
+    )
+
     return '\n'.join(
-        _arch_table(arch, ratios) for arch, ratios in ratios_by_arch if ratios
+        _arch_table(arch, ratios) for arch, ratios in results if ratios
     )
 
 

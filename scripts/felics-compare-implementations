@@ -28,39 +28,30 @@ def _group_setups(filename, options):
     ))
 
 
-def _format_metrics(diffs):
-    return '\n'.join(
-        '    {m}: {d}'.format(m=m, d=diffs[m])
-        for m in sorted(diffs, key=METRICS.index)
-    )
-
-
-def _format_ratios(setups, v1, v2):
-    line = '{cipher}\n{metrics}'
-
-    for cipher, values in sorted(setups.items()):
-        diffs = comparison.format_differences(values[v1], values[v2])
-
-        if not diffs:
-            continue
-
-        yield line.format(
-            cipher=cipher, metrics=_format_metrics(diffs)
-        )
-
-
 def _arch_table(arch, lines):
     return '\n\n'.join((arch, '\n\n'.join(lines))) + '\n'
 
 
+def _format_setup_diff(setup1, setup2, formatted_diff):
+    return setup1['cipher_name']+'\n'+formatted_diff
+
+
 def _format_differences(setups, v1, v2):
-    ratios_by_arch = (
-        (arch, tuple(_format_ratios(setups[arch], v1, v2)))
-        for arch in setups
+    iterators = (
+        (arch, (
+            (setup[v1], setup[v2])
+            for setup in arch_setups.values()
+        ))
+        for arch, arch_setups in setups.items()
+    )
+
+    results = (
+        (arch, comparison.format_differences(pairs, _format_setup_diff))
+        for arch, pairs in iterators
     )
 
     return '\n'.join(
-        _arch_table(arch, ratios) for arch, ratios in ratios_by_arch if ratios
+        _arch_table(arch, ratios) for arch, ratios in results if ratios
     )
 
 

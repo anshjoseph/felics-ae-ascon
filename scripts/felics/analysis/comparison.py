@@ -22,7 +22,7 @@ def _format_diff(diff, value1, value2):
     return template.format_map(arguments)
 
 
-def format_differences(data1, data2, threshold=0):
+def _compute_diffs(data1, data2, threshold=0):
     differences = (
         (m, (data2[m]-data1[m]) / data1[m])
         for m in METRICS
@@ -33,3 +33,23 @@ def format_differences(data1, data2, threshold=0):
         for m, diff in differences
         if abs(diff) > threshold
     }
+
+
+def _format_lines(diffs):
+    return '\n'.join(
+        '    {m}: {d}'.format(m=m, d=diffs[m])
+        for m in sorted(diffs, key=METRICS.index)
+    )
+
+
+def format_differences(pairs, formatter, threshold=0):
+    diff_gen = (
+        (setup1, setup2, _compute_diffs(setup1, setup2, threshold))
+        for setup1, setup2 in pairs
+    )
+
+    return tuple(
+        formatter(setup1, setup2, _format_lines(diffs))
+        for setup1, setup2, diffs in diff_gen
+        if diffs
+    )
