@@ -71,14 +71,20 @@ def _load_file(filename, architectures):
     return Results(results['commit'], results['branch'], grouped, filename)
 
 
-def _show_differences(differences, data1, data2):
-    for metric in METRICS:      # Show them in the "canonical" order.
-        if metric not in differences:
-            continue
+def _compute_differences(data1, data2, threshold):
+    differences = comparison.compute_differences(data1, data2, threshold)
 
-        diff = comparison.format(differences[metric], data1[metric], data2[metric])
+    return tuple(
+        comparison.format(differences[m], data1[m], data2[m])
+        for m in METRICS
+        if m in differences
+    )
 
-        print('\t{metric}: {diff}'.format(metric=metric, diff=diff))
+
+def _format_metrics(diffs):
+    return '\n'.join(
+        '    {m}: {d}'.format(m=m, d=d) for (m, d) in zip(METRICS, diffs)
+    )
 
 
 def _format_revision(setup):
@@ -117,8 +123,9 @@ def _main():
 
     _print_header(file1, file2, arguments.threshold)
 
-    SETUP_TEMPLATE = ('{cipher_name} on {architecture} '
-                      '(v{version} with {compiler_options})')
+    SETUP_TEMPLATE = (
+        '{cipher_name} on {architecture} (v{version} with {compiler_options})'
+    )
 
     skipped = []
 
@@ -134,15 +141,13 @@ def _main():
 
             data2 = results2[setup]
 
-            differences = comparison.compute_differences(data1, data2, arguments.threshold)
+            differences = _compute_differences(data1, data2, arguments.threshold)
 
             if not differences:
                 continue
 
             print(formatted_setup)
-
-            _show_differences(differences, data1, data2)
-
+            print(_format_metrics(differences))
             print()
 
     if skipped:
