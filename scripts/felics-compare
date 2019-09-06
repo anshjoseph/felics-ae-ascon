@@ -3,7 +3,7 @@
 # SPDX-FileCopyrightText: 2019 Airbus Cybersecurity SAS
 
 from argparse import ArgumentParser, ArgumentTypeError
-from collections import namedtuple
+from collections import OrderedDict, namedtuple
 import json
 
 import git
@@ -45,11 +45,7 @@ def _parse_arguments():
 
 
 def _make_key(data):
-    arch = _ARCHS_BY_NAME[data['architecture']]
-
     return (
-        arch.size,
-        arch.codename,
         data['compiler_options'],
         data['cipher_name'],
         data['version']
@@ -60,13 +56,19 @@ def _load_file(filename, architectures):
     with open(filename) as f:
         results = json.load(f)
 
-    data = {
-        _make_key(item): item
-        for item in results['data']
-        if item['architecture'] in architectures
-    }
+    grouped = OrderedDict((a.codename, {})
+                          for a in ARCHITECTURES
+                          if a.codename in architectures)
 
-    return Results(results['commit'], results['branch'], data, filename)
+    for item in results['data']:
+        arch = item['architecture']
+
+        if arch not in grouped:
+            continue
+
+        grouped[arch][_make_key(item)] = item
+
+    return Results(results['commit'], results['branch'], grouped, filename)
 
 
 def _show_differences(differences, data1, data2):
@@ -120,26 +122,28 @@ def _main():
 
     skipped = []
 
-    for setup, data1 in sorted(file1.data.items()):
+    for arch, results1 in file1.data.items():
+        results2 = file2.data[arch]
 
-        formatted_setup = SETUP_TEMPLATE.format_map(data1)
+        for setup, data1 in sorted(results1.items()):
+            formatted_setup = SETUP_TEMPLATE.format_map(data1)
 
-        if setup not in file2.data:
-            skipped.append(formatted_setup)
-            continue
+            if setup not in results2:
+                skipped.append(formatted_setup)
+                continue
 
-        data2 = file2.data[setup]
+            data2 = results2[setup]
 
-        differences = comparison.compute_differences(data1, data2, arguments.threshold)
+            differences = comparison.compute_differences(data1, data2, arguments.threshold)
 
-        if not differences:
-            continue
+            if not differences:
+                continue
 
-        print(formatted_setup)
+            print(formatted_setup)
 
-        _show_differences(differences, data1, data2)
+            _show_differences(differences, data1, data2)
 
-        print()
+            print()
 
     if skipped:
         print('Setups not found in {f2}:'.format(f2=arguments.file2))
