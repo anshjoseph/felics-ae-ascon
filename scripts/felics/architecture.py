@@ -4,15 +4,7 @@
 from collections import namedtuple
 
 
-_Architecture = namedtuple(
-    'Architecture',
-    (
-        'size',
-        'codename',
-        'name'
-    )
-)
-
-class Architecture(_Architecture):
+class Architecture(namedtuple('Architecture',
+                              ('size', 'codename', 'name'))):
     def __str__(self):
         return self.codename
