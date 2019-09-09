@@ -29,29 +29,30 @@ def _group_setups(filename, options):
     return grouped
 
 
-def _arch_table(arch, lines):
-    return '\n\n'.join((arch.codename, '\n\n'.join(lines))) + '\n'
+def _generate_pairs(arch_setups, v1, v2):
+    return (
+        (setup[v1], setup[v2])
+        for setup in arch_setups.values()
+    )
 
 
 def _format_differences(setups, v1, v2):
-    iterators = (
-        (arch, (
-            (setup[v1], setup[v2])
-            for setup in setups[arch].values()
-        ))
-        for arch in sorted(setups, key=ARCHITECTURES.index)
+    setup_pairs = {
+        arch: _generate_pairs(setups[arch], v1, v2)
+        for arch in setups
+    }
+
+    diffs = {
+        arch: comparison.format_differences(pairs, '{cipher_name}')
+        for arch, pairs in setup_pairs.items()
+    }
+
+    tables = (
+        '\n\n'.join((arch.codename, '\n\n'.join(diffs[arch]))) + '\n'
+        for arch in sorted(diffs, key=ARCHITECTURES.index)
     )
 
-    setup_fmt = '{cipher_name}'
-
-    results = (
-        (arch, comparison.format_differences(pairs, setup_fmt))
-        for arch, pairs in iterators
-    )
-
-    return '\n'.join(
-        _arch_table(arch, ratios) for arch, ratios in results if ratios
-    )
+    return '\n'.join(tables)
 
 
 def _parse_arguments():

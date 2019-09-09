@@ -3,7 +3,7 @@
 # SPDX-FileCopyrightText: 2019 Airbus Cybersecurity SAS
 
 from argparse import ArgumentParser, ArgumentTypeError
-from collections import namedtuple
+from collections import defaultdict, namedtuple
 import json
 
 import git
@@ -23,9 +23,9 @@ ResultsKey = namedtuple(
 
 
 def _parse_architectures(argument):
-    archs = set(argument.split(','))
+    archs = {_ARCHS_BY_NAME[a] for a in argument.split(',')}
 
-    unknown = archs-set(_ARCHS_BY_NAME)
+    unknown = archs-set(ARCHITECTURES)
     if unknown:
         raise ArgumentTypeError('Unknown platforms: {}'.format(', '.join(unknown)))
 
@@ -41,7 +41,7 @@ def _parse_arguments():
         help='hide difference when abs(new-old)/old < THRESHOLD'
     )
     parser.add_argument(
-        '--archs', default=set(_ARCHS_BY_NAME), type=_parse_architectures,
+        '--archs', default=ARCHITECTURES, type=_parse_architectures,
         help='only consider those architectures'
     )
     return parser.parse_args()
@@ -57,17 +57,14 @@ def _load_file(filename, architectures):
     with open(filename) as f:
         results = json.load(f)
 
-    grouped = {
-        a: {} for a in ARCHITECTURES if a.codename in architectures
-    }
+    grouped = defaultdict(lambda: defaultdict(dict))
 
     for item in results['data']:
         arch = _ARCHS_BY_NAME[item['architecture']]
 
-        if arch not in grouped:
+        if arch not in architectures:
             continue
 
-        item['architecture'] = arch
         grouped[arch][_make_key(item)] = item
 
     return Results(results['commit'], results['branch'], grouped, filename)
@@ -100,30 +97,33 @@ against
 '''.format(old=_format_revision(old), new=_format_revision(new), t=threshold)
 
 
-def _arch_table(arch, lines):
-    return '\n\n'.join((arch.codename, '\n\n'.join(lines))) + '\n'
+def _generate_pairs(setups1, setups2):
+    return (
+        (setups1[setup], setups2[setup])
+        for setup in sorted(setups1)
+        if setup in setups2
+    )
 
 
 def _format_differences(data1, data2, threshold):
-    iterators = (
-        (arch, (
-            (data1[arch][s], data2[arch][s])
-            for s in sorted(data1[arch])
-            if s in data2[arch]
-        ))
-        for arch in sorted(data1, key=ARCHITECTURES.index)
-    )
+    setup_pairs = {
+        arch: _generate_pairs(data1[arch], data2[arch])
+        for arch in data1
+    }
 
     setup_fmt = '{cipher_name} (v{version} with {compiler_options})'
 
-    results = (
-        (arch, comparison.format_differences(pairs, setup_fmt, threshold))
-        for arch, pairs in iterators
+    diffs = {
+        arch: comparison.format_differences(pairs, setup_fmt, threshold)
+        for arch, pairs in setup_pairs.items()
+    }
+
+    tables = (
+        '\n\n'.join((arch.codename, '\n\n'.join(diffs[arch]))) + '\n'
+        for arch in sorted(diffs, key=ARCHITECTURES.index)
     )
 
-    return '\n'.join(
-        _arch_table(arch, ratios) for arch, ratios in results if ratios
-    )
+    return '\n'.join(tables)
 
 
 def _find_absent_setups(data1, data2):
