@@ -35,7 +35,7 @@ def _compute_diffs(data1, data2, threshold=0):
     }
 
 
-def _format_lines(diffs):
+def _format_diffs(diffs):
     return '\n'.join(
         '    {m}: {d}'.format(m=m, d=diffs[m])
         for m in sorted(diffs, key=METRICS.index)
@@ -49,7 +49,7 @@ def format_differences(pairs, setup_format, threshold=0):
     )
 
     return tuple(
-        setup_format.format_map(setup1)+'\n'+_format_lines(diffs)
+        setup_format.format_map(setup1)+'\n'+_format_diffs(diffs)
         for setup1, diffs in diff_gen
         if diffs
     )
