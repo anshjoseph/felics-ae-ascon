@@ -9,18 +9,15 @@ import json
 import git
 from git.exc import InvalidGitRepositoryError
 
-from felics import ARCHITECTURES
+from felics import ARCHITECTURES, ARCHITECTURES_BY_NAME
 from felics.analysis import comparison
-
-
-_ARCHS_BY_NAME = {a.codename: a for a in ARCHITECTURES}
 
 
 Results = namedtuple('Results', ('commit', 'branch', 'data', 'filename'))
 
 
 def _parse_architectures(argument):
-    archs = {_ARCHS_BY_NAME[a] for a in argument.split(',')}
+    archs = {ARCHITECTURES_BY_NAME[a] for a in argument.split(',')}
 
     unknown = archs-set(ARCHITECTURES)
     if unknown:
@@ -53,7 +50,7 @@ def _load_file(filename, architectures):
     setups = {
         comparison.setup_key(setup, setup_keys): setup
         for setup in results['data']
-        if _ARCHS_BY_NAME[setup['architecture']] in architectures
+        if ARCHITECTURES_BY_NAME[setup['architecture']] in architectures
     }
 
     return Results(results['commit'], results['branch'], setups, filename)

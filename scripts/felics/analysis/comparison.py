@@ -3,15 +3,12 @@
 
 from collections import defaultdict, namedtuple
 
-from felics import ARCHITECTURES, METRICS
-
-
-_ARCHS_BY_NAME = {a.codename: a for a in ARCHITECTURES}
+from felics import ARCHITECTURES_BY_NAME, METRICS
 
 
 def setup_key(setup, keys):
     fields = setup.copy()
-    fields['architecture'] = _ARCHS_BY_NAME[setup['architecture']]
+    fields['architecture'] = ARCHITECTURES_BY_NAME[setup['architecture']]
     kwargs = {k: fields[k] for k in keys}
     return namedtuple('SetupKey', keys)(**kwargs)
 
@@ -73,7 +70,7 @@ def format_differences(pairs, setup_format, threshold=0):
             diffs=_format_diffs(diffs)
         )
 
-        differences[_ARCHS_BY_NAME[setup1['architecture']]].append(text)
+        differences[ARCHITECTURES_BY_NAME[setup1['architecture']]].append(text)
 
     tables = (
         _format_table(arch, differences[arch])

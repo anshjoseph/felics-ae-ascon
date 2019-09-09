@@ -8,14 +8,13 @@ from os import path
 from subprocess import run
 from sys import argv
 
-from felics import ARCHITECTURES, version
+from felics import ARCHITECTURES_BY_NAME, version
 
 
 _SCRIPTS_DIR = path.dirname(path.realpath(argv[0]))
 _ROOT_DIR = path.join(_SCRIPTS_DIR, path.pardir)
 _CIPHERS_DIR = path.join(_ROOT_DIR, 'source', 'ciphers')
 _RESULTS_DIR = path.join(_ROOT_DIR, 'results')
-_ARCH_NAMES = tuple(a.codename for a in ARCHITECTURES)
 
 
 def _default_output_filename():
@@ -29,7 +28,7 @@ def _default_output_filename():
 
 
 def _validate_architectures(argument):
-    allowed = set(_ARCH_NAMES)
+    allowed = set(ARCHITECTURES_BY_NAME.keys())
     requested = set(argument.split())
 
     unknown = requested-allowed
@@ -46,7 +45,7 @@ def _parse_arguments():
         help='List of cipher folders in source/ciphers; globs are supported.'
     )
 
-    default_archs = ' '.join(_ARCH_NAMES)
+    default_archs = ' '.join(ARCHITECTURES_BY_NAME.keys())
     parser.add_argument(
         '-a', '--architectures', default=default_archs,
         type=_validate_architectures,

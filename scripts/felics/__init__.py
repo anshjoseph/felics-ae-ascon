@@ -1,6 +1,8 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # SPDX-FileCopyrightText: 2019 Airbus Cybersecurity SAS
 
+from collections import OrderedDict
+
 from felics.architecture import Architecture
 
 
@@ -12,5 +14,7 @@ ARCHITECTURES = (
     Architecture(32, 'STM32L053', 'STM32L053 Cortex-M0+'),
     Architecture(64, 'PC', 'PC')
 )
+
+ARCHITECTURES_BY_NAME = OrderedDict((a.codename, a) for a in ARCHITECTURES)
 
 METRICS = ('code_size', 'code_ram', 'code_time')
