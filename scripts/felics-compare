@@ -3,7 +3,7 @@
 # SPDX-FileCopyrightText: 2019 Airbus Cybersecurity SAS
 
 from argparse import ArgumentParser, ArgumentTypeError
-from collections import defaultdict, namedtuple
+from collections import namedtuple
 import json
 
 import git
@@ -17,9 +17,6 @@ _ARCHS_BY_NAME = {a.codename: a for a in ARCHITECTURES}
 
 
 Results = namedtuple('Results', ('commit', 'branch', 'data', 'filename'))
-ResultsKey = namedtuple(
-    'ResultsKey', ('architecture', 'compiler_options', 'cipher_name', 'version')
-)
 
 
 def _parse_architectures(argument):
@@ -47,27 +44,19 @@ def _parse_arguments():
     return parser.parse_args()
 
 
-def _make_key(data):
-    return ResultsKey._make(
-        data[k] for k in ResultsKey._fields
-    )
-
-
 def _load_file(filename, architectures):
     with open(filename) as f:
         results = json.load(f)
 
-    grouped = defaultdict(lambda: defaultdict(dict))
+    setup_keys = ('architecture', 'compiler_options', 'cipher_name', 'version')
 
-    for item in results['data']:
-        arch = _ARCHS_BY_NAME[item['architecture']]
+    setups = {
+        comparison.setup_key(setup, setup_keys): setup
+        for setup in results['data']
+        if _ARCHS_BY_NAME[setup['architecture']] in architectures
+    }
 
-        if arch not in architectures:
-            continue
-
-        grouped[arch][_make_key(item)] = item
-
-    return Results(results['commit'], results['branch'], grouped, filename)
+    return Results(results['commit'], results['branch'], setups, filename)
 
 
 def _format_revision(setup):
@@ -97,41 +86,23 @@ against
 '''.format(old=_format_revision(old), new=_format_revision(new), t=threshold)
 
 
-def _generate_pairs(setups1, setups2):
-    return (
-        (setups1[setup], setups2[setup])
-        for setup in sorted(setups1)
-        if setup in setups2
+def _format_differences(setups1, setups2, threshold):
+    pairs = (
+        (setups1[s], setups2[s])
+        for s in sorted(setups1)
+        if s in setups2
     )
-
-
-def _format_differences(data1, data2, threshold):
-    setup_pairs = {
-        arch: _generate_pairs(data1[arch], data2[arch])
-        for arch in data1
-    }
-
     setup_fmt = '{cipher_name} (v{version} with {compiler_options})'
+    return comparison.format_differences(pairs, setup_fmt, threshold)
 
-    diffs = {
-        arch: comparison.format_differences(pairs, setup_fmt, threshold)
-        for arch, pairs in setup_pairs.items()
-    }
 
-    tables = (
-        '\n\n'.join((arch.codename, '\n\n'.join(diffs[arch]))) + '\n'
-        for arch in sorted(diffs, key=ARCHITECTURES.index)
+def _check_skipped_setups(data1, data2):
+    setup_fmt = '{cipher_name} on {architecture} (v{version} with {compiler_options})'
+
+    return tuple(
+        setup_fmt.format_map(setup._asdict())
+        for setup in sorted(set(data1)-set(data2))
     )
-
-    return '\n'.join(tables)
-
-
-def _find_absent_setups(data1, data2):
-    '''Return a list of setups present in data1 and absent in data2.'''
-    setups1 = {s for setups in data1.values() for s in setups}
-    setups2 = {s for setups in data2.values() for s in setups}
-
-    return sorted(setups1-setups2)
 
 
 def _main():
@@ -142,13 +113,10 @@ def _main():
     print(_format_header(file1, file2, arguments.threshold))
     print(_format_differences(file1.data, file2.data, arguments.threshold))
 
-    skipped = _find_absent_setups(file1.data, file2.data)
+    skipped = _check_skipped_setups(file1.data, file2.data)
     if skipped:
         print('Setups not found in {f2}:'.format(f2=arguments.file2))
-        print('\n'.join(
-            '    {cipher_name} on {architecture} (v{version} with {compiler_options})'.format_map(setup._asdict())
-            for setup in skipped
-        ))
+        print('\n'.join(skipped))
 
 
 if __name__ == '__main__':

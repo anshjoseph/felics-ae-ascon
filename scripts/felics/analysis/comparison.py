@@ -1,7 +1,19 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # SPDX-FileCopyrightText: 2019 Airbus Cybersecurity SAS
 
-from felics import METRICS
+from collections import defaultdict, namedtuple
+
+from felics import ARCHITECTURES, METRICS
+
+
+_ARCHS_BY_NAME = {a.codename: a for a in ARCHITECTURES}
+
+
+def setup_key(setup, keys):
+    fields = setup.copy()
+    fields['architecture'] = _ARCHS_BY_NAME[setup['architecture']]
+    kwargs = {k: fields[k] for k in keys}
+    return namedtuple('SetupKey', keys)(**kwargs)
 
 
 def _format_diff(diff, value1, value2):
@@ -42,14 +54,30 @@ def _format_diffs(diffs):
     )
 
 
+def _format_table(arch, diffs):
+    return '\n\n'.join((arch.codename, '\n\n'.join(diffs))) + '\n'
+
+
 def format_differences(pairs, setup_format, threshold=0):
-    diff_gen = (
-        (setup1, _compute_diffs(setup1, setup2, threshold))
-        for setup1, setup2 in pairs
+    # Sort differences by architecture.
+    differences = defaultdict(list)
+
+    for setup1, setup2 in pairs:
+        diffs = _compute_diffs(setup1, setup2, threshold)
+
+        if not diffs:
+            continue
+
+        text = '{setup}\n{diffs}'.format(
+            setup=setup_format.format_map(setup1),
+            diffs=_format_diffs(diffs)
+        )
+
+        differences[_ARCHS_BY_NAME[setup1['architecture']]].append(text)
+
+    tables = (
+        _format_table(arch, differences[arch])
+        for arch in sorted(differences)
     )
 
-    return tuple(
-        setup_format.format_map(setup1)+'\n'+_format_diffs(diffs)
-        for setup1, diffs in diff_gen
-        if diffs
-    )
+    return '\n'.join(tables)

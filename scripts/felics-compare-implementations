@@ -6,53 +6,32 @@ from argparse import ArgumentParser
 from collections import defaultdict
 import json
 
-from felics import ARCHITECTURES
 from felics.analysis import comparison
 
 
-_ARCHS_BY_NAME = {a.codename: a for a in ARCHITECTURES}
-
-
-def _group_setups(filename, options):
+def _load_file(filename, options):
     with open(filename) as f:
         results = json.load(f)
 
-    grouped = defaultdict(lambda: defaultdict(dict))
+    grouped = defaultdict(defaultdict)
 
     for setup in results['data']:
-        if options is not None and options != setup['compiler_options']:
+        if options is not None and setup['compiler_options'] != options:
             continue
 
-        arch = _ARCHS_BY_NAME[setup['architecture']]
-        grouped[arch][setup['cipher_name']][setup['version']] = setup
+        key = comparison.setup_key(setup, ('architecture', 'cipher_name'))
+        grouped[key][setup['version']] = setup
 
     return grouped
 
 
-def _generate_pairs(arch_setups, v1, v2):
-    return (
-        (setup[v1], setup[v2])
-        for setup in arch_setups.values()
-    )
-
-
 def _format_differences(setups, v1, v2):
-    setup_pairs = {
-        arch: _generate_pairs(setups[arch], v1, v2)
-        for arch in setups
-    }
-
-    diffs = {
-        arch: comparison.format_differences(pairs, '{cipher_name}')
-        for arch, pairs in setup_pairs.items()
-    }
-
-    tables = (
-        '\n\n'.join((arch.codename, '\n\n'.join(diffs[arch]))) + '\n'
-        for arch in sorted(diffs, key=ARCHITECTURES.index)
+    pairs = (
+        (setups[s][v1], setups[s][v2])
+        for s in sorted(setups)
     )
 
-    return '\n'.join(tables)
+    return comparison.format_differences(pairs, '{cipher_name}')
 
 
 def _parse_arguments():
@@ -67,7 +46,7 @@ def _parse_arguments():
 
 def _main():
     arguments = _parse_arguments()
-    setups = _group_setups(arguments.results, arguments.options)
+    setups = _load_file(arguments.results, arguments.options)
     print('{v2} / {v1}'.format(v2=arguments.version2, v1=arguments.version1))
     print(_format_differences(setups, arguments.version1, arguments.version2))
 
