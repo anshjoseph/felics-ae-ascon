@@ -8,7 +8,7 @@ from os import path
 from subprocess import run
 from sys import argv
 
-from felics import ARCHITECTURES_BY_NAME, version
+from felics import ARCHITECTURES, ARCHITECTURES_BY_NAME, version
 
 
 _SCRIPTS_DIR = path.dirname(path.realpath(argv[0]))
@@ -28,14 +28,13 @@ def _default_output_filename():
 
 
 def _validate_architectures(argument):
-    allowed = set(ARCHITECTURES_BY_NAME.keys())
-    requested = set(argument.split())
+    requested = tuple(ARCHITECTURES_BY_NAME[a] for a in argument.split())
 
-    unknown = requested-allowed
+    unknown = set(requested)-set(ARCHITECTURES)
     if unknown:
-        raise ArgumentTypeError('Unknown architectures: '+', '.join(unknown))
+        raise ArgumentTypeError('Unknown architectures: '+', '.join(sorted(unknown)))
 
-    return argument
+    return requested
 
 
 def _parse_arguments():
@@ -45,11 +44,12 @@ def _parse_arguments():
         help='List of cipher folders in source/ciphers; globs are supported.'
     )
 
-    default_archs = ' '.join(ARCHITECTURES_BY_NAME.keys())
     parser.add_argument(
-        '-a', '--architectures', default=default_archs,
+        '-a', '--architectures', default=ARCHITECTURES,
         type=_validate_architectures,
-        help='Space-separated list of platforms; default: "{a}"'.format(a=default_archs)
+        help='Space-separated list of platforms; default: "{a}"'.format(
+            a=' '.join(ARCHITECTURES_BY_NAME.keys())
+        )
     )
 
     parser.add_argument(
@@ -73,7 +73,7 @@ def _run_felics(ciphers, architectures, compiler_options, output):
     command = (
         path.join(_SCRIPTS_DIR, 'plumbing', 'collect_ciphers_metrics.sh'),
         '-c='+' '.join(ciphers),
-        '-a='+architectures,
+        '-a='+' '.join(a.codename for a in architectures),
         '-co='+compiler_options,
         '-j='+output
     )
