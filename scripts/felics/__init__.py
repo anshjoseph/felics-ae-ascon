@@ -3,18 +3,17 @@
 
 from collections import OrderedDict
 
-from felics.architecture import Architecture
+from felics.architecture import avr, msp, arm, nrf52840, stm32l053, pc
 
 
-ARCHITECTURES = (
-    Architecture(8, 'AVR', 'AVR ATmega128'),
-    Architecture(16, 'MSP', 'MSP430F1611'),
-    Architecture(32, 'ARM', 'ARM Cortex-M3'),
-    Architecture(32, 'NRF52840', 'NRF52840 Cortex-M4'),
-    Architecture(32, 'STM32L053', 'STM32L053 Cortex-M0+'),
-    Architecture(64, 'PC', 'PC')
-)
+AVR = avr.Avr()
+MSP = msp.Msp()
+ARM = arm.Arm()
+NRF52840 = nrf52840.Nrf52840()
+STM32L053 = stm32l053.Stm32l053()
+PC = pc.Pc()
 
+ARCHITECTURES = (AVR, MSP, ARM, NRF52840, STM32L053, PC)
 ARCHITECTURES_BY_NAME = OrderedDict((a.codename, a) for a in ARCHITECTURES)
 
 METRICS = ('code_size', 'code_ram', 'code_time')
