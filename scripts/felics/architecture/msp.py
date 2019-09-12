@@ -18,4 +18,4 @@ class Msp(Architecture):
     def size(self):
         return 16
 
-    def check_setup(): pass
+    def check_setup(self): pass

@@ -18,4 +18,4 @@ class Avr(Architecture):
     def size(self):
         return 8
 
-    def check_setup(): pass
+    def check_setup(self): pass
