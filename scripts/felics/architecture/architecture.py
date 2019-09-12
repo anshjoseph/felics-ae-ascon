@@ -32,3 +32,6 @@ class Architecture(ABC):
     @property
     @abstractmethod
     def size(self): pass
+
+    @abstractmethod
+    def check_setup(self): pass

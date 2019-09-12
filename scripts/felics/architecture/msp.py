@@ -17,3 +17,5 @@ class Msp(Architecture):
     @property
     def size(self):
         return 16
+
+    def check_setup(): pass

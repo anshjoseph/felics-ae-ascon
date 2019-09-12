@@ -17,3 +17,5 @@ class Pc(Architecture):
     @property
     def size(self):
         return 64
+
+    def check_setup(self): pass

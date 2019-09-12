@@ -70,6 +70,10 @@ distribution's package manager:
 - gdb-multiarch
 - python3-serial
 
+Make sure your user account belongs to the `dialout` group:
+
+    $ sudo adduser ${USER} dialout
+
 ### J-Link Software
 
 We use the J-Link software collection provided by SEGGER:

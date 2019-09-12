@@ -88,8 +88,15 @@ def _show_results(output):
     run(command, check=True)
 
 
-if __name__ == '__main__':
+def _main():
     args = _parse_arguments()
+
+    for arch in args.architectures:
+        arch.check_setup()
 
     _run_felics(args.ciphers, args.architectures, args.options, args.output)
     _show_results(args.output)
+
+
+if __name__ == '__main__':
+    _main()

@@ -17,3 +17,5 @@ class Stm32l053(Architecture):
     @property
     def size(self):
         return 32
+
+    def check_setup(self): pass

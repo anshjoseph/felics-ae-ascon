@@ -17,3 +17,5 @@ class Nrf52840(Architecture):
     @property
     def size(self):
         return 32
+
+    def check_setup(self): pass

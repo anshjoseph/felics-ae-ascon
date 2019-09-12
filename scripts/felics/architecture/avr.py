@@ -17,3 +17,5 @@ class Avr(Architecture):
     @property
     def size(self):
         return 8
+
+    def check_setup(): pass

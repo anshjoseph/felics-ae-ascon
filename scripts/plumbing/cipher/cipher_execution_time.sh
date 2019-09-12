@@ -163,8 +163,11 @@ set-cpu-governor ()
 
     if ! try-cpufreq-set ${governor} && [ ${governor} = performance ]
     then
-        echo 'Cannot set CPU governor to "performance".'
-        echo 'Execution time measurements may suffer from increased jitter.'
+        cat <<EOF
+Cannot set CPU governor to "performance".
+Execution time measurements may suffer from increased jitter.
+See documentation/setup.md for instructions on setting up cpufrequtils.
+EOF
     fi
 }
 
