@@ -3,6 +3,7 @@
 # SPDX-FileCopyrightText: 2019 Airbus Cybersecurity SAS
 
 set -eu
+shopt -s extglob
 
 for arg
 do
@@ -22,7 +23,7 @@ mkdir -p ${templates_dir}/Lilliput_v${new}/{i,ii}
 
 (
     cd ${templates_dir}/Lilliput_v${new}
-    ln -s ../Lilliput_v${ref}/*.[chS] .
+    ln -s ../Lilliput_v${ref}/!(api).[chS] .
     for mode in i ii
     do
         (
@@ -39,15 +40,19 @@ for mode in i ii
 do
     for keylen in 128 192 256
     do
-        new_dir=Lilliput-${mode^^}-${keylen}_v${new}
-        ref_dir=Lilliput-${mode^^}-${keylen}_v${ref}
+        variant=Lilliput-${mode^^}-${keylen}
+        new_dir=${variant}_v${new}
+        ref_dir=${variant}_v${ref}
 
         cp ${ciphers_dir}/${ref_dir}/build/.gitignore \
            ${ciphers_dir}/${new_dir}/build
         (
             cd ${ciphers_dir}/${new_dir}/source
-            ln -s ../../${ref_dir}/source/{test_vectors.c,_parameters.h} .
-            ln -s ../../.templates/Lilliput_v${new}/*.[chS] .
+            # Implementation-indepdendent files.
+            ln -s ../../.templates/Lilliput_vfelicsref/api.h .
+            ln -s ../../${variant}_vfelicsref/source/{test_vectors.c,parameters.h} .
+            # Other files.
+            ln -s ../../.templates/Lilliput_v${new}/!(api).[chS] .
             ln -s ../../.templates/Lilliput_v${new}/${mode}/* .
         )
     done
