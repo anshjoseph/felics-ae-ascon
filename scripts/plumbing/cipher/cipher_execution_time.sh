@@ -154,7 +154,7 @@ try-cpufreq-set ()
         return 1
     fi
 
-    sudo cpufreq-set -c ${PC_EXECUTION_TIME_CPU} -g ${governor}
+    sudo -n cpufreq-set -c ${PC_EXECUTION_TIME_CPU} -g ${governor}
 }
 
 set-cpu-governor ()
