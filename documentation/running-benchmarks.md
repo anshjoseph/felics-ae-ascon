@@ -11,7 +11,13 @@ with `--help`.
 ------------
 
 This script runs ROM, RAM and cycle count measurements for every
-requested cipher, on every requested architecture.
+requested cipher, on every requested architecture. For example, to
+compare the reference version of all variants of cipher Foobar on AVR
+and MSP, with options -O3 and -Os:
+
+``` sh
+./felics-run -a "AVR MSP" --options "-O3;-Os" "Foobar-*_vref"
+```
 
 The results are stored as JSON files in the `results` folder. These
 files contain:

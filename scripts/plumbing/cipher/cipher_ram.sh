@@ -100,14 +100,13 @@ echo -e "\t SCRIPT_OUTPUT \t\t\t = $SCRIPT_OUTPUT"
 # 	$5 - the make log file
 function simulate()
 {
-	echo "SIMULATING"
-
 	local command_file=../../../../scripts/plumbing/cipher/stack/${SCRIPT_ARCHITECTURE,,}_$1.gdb
 	local target_file=$2
 	local gdb_output_file=$3
 	local simulator_output_file=$4
 	local make_log_file=$5
 
+	echo "Run GDB script $(basename ${command_file})"
 
 	case $SCRIPT_ARCHITECTURE in
 		$SCRIPT_ARCHITECTURE_PC)
@@ -117,7 +116,6 @@ function simulate()
 			$SIMAVR_SIMULATOR -g -m atmega128 $target_file &> $simulator_output_file &
 			$AVR_GDB -x $command_file &> $gdb_output_file
 
-			jobs -l %'$SIMAVR_SIMULATOR'
 			kill -PIPE %'$SIMAVR_SIMULATOR'
 			;;
 		$SCRIPT_ARCHITECTURE_MSP)
