@@ -147,8 +147,13 @@ newly-installed dependencies.
 `config.sh`
 -----------
 
-`scripts/config/config.sh` records the path for programs used during
-measurements, such as code size analyzers, debuggers and simulators.
+Measurement scripts use `scripts/plumbingconfig.sh` to find the path
+of various utilities, such as code size analyzers, debuggers and
+simulators.
+
+The file does not exist on a fresh copy of the repository; it can be
+created by copying `scripts/plumbing/config.sh.template`, and amending
+it to fit your setup.
 
 Platform-specific makefiles
 ---------------------------

@@ -5,8 +5,9 @@
 from argparse import ArgumentParser, ArgumentTypeError
 from datetime import datetime
 from os import path
+import shutil
 from subprocess import run
-from sys import argv
+from sys import argv, exit
 
 from felics import ARCHITECTURES, ARCHITECTURES_BY_NAME, version
 
@@ -69,6 +70,30 @@ def _parse_arguments():
     return parser.parse_args()
 
 
+def _check_config():
+    config_sh = path.join(_SCRIPTS_DIR, 'plumbing', 'config.sh')
+
+    while not path.exists(config_sh):
+        template = config_sh+'.template'
+
+        action = input(
+            '{cfg} is missing.\n[C]reate it from {tpl} and continue\n[A]bort\n? '
+            .format(cfg=path.relpath(config_sh, _ROOT_DIR),
+                    tpl=path.relpath(template, _ROOT_DIR))
+        ).lower()
+
+        if action == 'c':
+            shutil.copy(template, config_sh)
+
+        elif action == 'a':
+            exit('Please create {cfg} from {tpl} and try again.'
+                 .format(cfg=path.relpath(config_sh, _ROOT_DIR),
+                         tpl=path.relpath(template, _ROOT_DIR)))
+
+        else:
+            print('Please answer "c" or "a".')
+
+
 def _run_felics(ciphers, architectures, compiler_options, output):
     command = (
         path.join(_SCRIPTS_DIR, 'plumbing', 'collect_ciphers_metrics.sh'),
@@ -94,6 +119,7 @@ def _main():
     for arch in args.architectures:
         arch.check_setup()
 
+    _check_config()
     _run_felics(args.ciphers, args.architectures, args.options, args.output)
     _show_results(args.output)
 

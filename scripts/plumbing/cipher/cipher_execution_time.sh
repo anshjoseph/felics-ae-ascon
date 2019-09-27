@@ -53,7 +53,7 @@ set -e
 script_path=$(dirname $0)
 
 # Include configuration file
-source $script_path/../config/config.sh
+source $script_path/../config.sh
 
 # Include constants files
 source $script_path/../constants/constants.sh
