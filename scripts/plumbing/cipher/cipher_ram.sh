@@ -127,7 +127,7 @@ function simulate()
 			make -f ./../../../common/cipher.mk ARCHITECTURE=$SCRIPT_ARCHITECTURE $target_file &> $make_log_file
 
 			$JLINK_GDB_SERVER -USB -device cortex-m3 &> $simulator_output_file &
-			$NRF52840_GDB -x $command_file &> $gdb_output_file
+			$ARM_GDB -x $command_file &> $gdb_output_file
 
 			jlink_gdb_server_pid=$(ps aux | grep "JLinkGDBServer" | grep -v "grep" | tr -s ' ' | cut -d ' ' -f 2)
 			for pid in $jlink_gdb_server_pid
