@@ -8,8 +8,8 @@ An adaptation of the [FELICS framework] for Authenticated Encryption.
 Copyright
 ---------
 
-FELICS is distributed under the GNU General Public License, version 3
-or later.
+FELICS-AE is distributed under the GNU General Public License, version
+3 or later.
 
 Project Structure
 -----------------
