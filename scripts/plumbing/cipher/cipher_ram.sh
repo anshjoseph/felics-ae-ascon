@@ -129,11 +129,7 @@ function simulate()
 			$JLINK_GDB_SERVER -USB -device cortex-m3 &> $simulator_output_file &
 			$ARM_GDB -x $command_file &> $gdb_output_file
 
-			jlink_gdb_server_pid=$(ps aux | grep "JLinkGDBServer" | grep -v "grep" | tr -s ' ' | cut -d ' ' -f 2)
-			for pid in $jlink_gdb_server_pid
-			do
-				kill -PIPE $pid
-			done
+                        kill -PIPE %'$JLINK_GDB_SERVER'
 			;;
 		$SCRIPT_ARCHITECTURE_NRF52840)
 			# Upload the program to the board
@@ -142,11 +138,7 @@ function simulate()
 			$JLINK_GDB_SERVER -device NRF52840_XXAA -if SWD -speed 4000 &> $simulator_output_file &
 			$NRF52840_GDB -x $command_file &> $gdb_output_file
 
-			jlink_gdb_server_pid=$(ps aux | grep "JLinkGDBServer" | grep -v "grep" | tr -s ' ' | cut -d ' ' -f 2)
-			for pid in $jlink_gdb_server_pid
-			do
-				kill -PIPE $pid
-			done
+                        kill -PIPE %'$JLINK_GDB_SERVER'
 			;;
 		$SCRIPT_ARCHITECTURE_STM32L053)
 			# Upload the program to the board
@@ -155,11 +147,7 @@ function simulate()
 			$STLINK_GDB_SERVER &> $simulator_output_file &
 			$STM32L053_GDB -x $command_file &> $gdb_output_file
 
-			stlink_gdb_server_pid=$(ps aux | grep "st-util" | grep -v "grep" | tr -s ' ' | cut -d ' ' -f 2)
-			for pid in $stlink_gdb_server_pid
-			do
-				kill -PIPE $pid
-			done
+                        kill -PIPE %'$STLINK_GDB_SERVER'
 			;;
 	esac
 
