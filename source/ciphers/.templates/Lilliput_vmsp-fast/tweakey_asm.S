@@ -192,20 +192,20 @@ tweakey_state_update:
         mov.b r4, -6(r12)
         ;; NB: we are not done with r9 = x5<<2
 
-        ;; Clobber x5 with x15 = x5<<3 ^ x4
+        ;; Clobber x5 with a5 = x5<<3 ^ x4
         rla.b r9
         xor.b r8, r9
-        ;; y6 = x15
+        ;; y6 = a5
         mov.b r9, -2(r12)
 
-        ;; Clobber x4 with x14 = x4>>3 ^ x3
+        ;; Clobber x4 with a4 = x4>>3 ^ x3
         rrl3.b r8
         xor.b r7, r8
-        ;; y5 = x15<<3 ^ x14
+        ;; y5 = a5<<3 ^ a4
         rll3.b r9
         xor.b r8, r9
         mov.b r9, -3(r12)
-        ;; y4 = x14>>3 ^ x2
+        ;; y4 = a4>>3 ^ x2
         rrl3.b r8
         xor.b r6, r8
         mov.b r8, -4(r12)
@@ -224,48 +224,48 @@ tweakey_state_update:
         mov.b r10, -7(r12)      ; x6 -> y1
         mov.b r9, -8(r12)       ; x5 -> y0
 
-        ;; x5 is only needed for y3 (<<2) and x15 (<<3).
+        ;; x5 is only needed for y3 (<<2) and a5 (<<3).
         ;; y3 = x5<<2 ^ x0
         rll2.b r9
         xor.b r9, r4
         mov.b r4, -5(r12)
 
-        ;; Clobber x5 with x15 = x5<<3 ^ x4
+        ;; Clobber x5 with a5 = x5<<3 ^ x4
         rla.b r9
         xor.b r8, r9
-        ;; y7 = x15
+        ;; y7 = a5
         mov.b r9, -1(r12)
 
-        ;; x15 is only needed for y2 (<<2) and x25 (<<3).
-        ;; y2 = x15<<2 ^ x7
+        ;; a5 is only needed for y2 (<<2) and b5 (<<3).
+        ;; y2 = a5<<2 ^ x7
         rll2.b r9
         xor.b r9, r11
         mov.b r11, -6(r12)
 
-        ;; x15 is now only used for x25 = x15<<3 ^ x14.
+        ;; a5 is now only used for b5 = a5<<3 ^ a4.
 
-        ;; First, compute x14 = x4>>3 ^ x3. Since none of x3 and x4
-        ;; are used anywhere else, clobber x4 with x14.
+        ;; First, compute a4 = x4>>3 ^ x3. Since none of x3 and x4
+        ;; are used anywhere else, clobber x4 with a4.
         rrl3.b r8
         xor.b r7, r8
 
-        ;; Clobber x15 with x25 = x15<<3 ^ x14
+        ;; Clobber a5 with b5 = a5<<3 ^ a4
         rla.b r9
         xor.b r8, r9
 
-        ;; y6 = x25
+        ;; y6 = b5
         mov.b r9, -2(r12)
 
-        ;; Clobber x14 with x24 = x14>>3 ^ x2
+        ;; Clobber a4 with b4 = a4>>3 ^ x2
         rrl3.b r8
         xor.b r6, r8
 
-        ;; y5 = x25<<3 ^ x24
+        ;; y5 = b5<<3 ^ b4
         rll3.b r9
         xor.b r8, r9
         mov.b r9, -3(r12)
 
-        ;; y4 = x24>>3 ^ x6<<2 ^ x1
+        ;; y4 = b4>>3 ^ x6<<2 ^ x1
         rrl3.b r8
         rll2.b r10
         xor.b r10, r8
@@ -393,13 +393,13 @@ tweakey_state_update:
         mov.b r6, -8(r12)       ; x2 -> y0
         mov r4, -2(r12)         ; x0,x1 -> y6,y7
 
-        ;; Clobber x0 with x14 = x5 ^ x6<<3
+        ;; Clobber x0 with a4 = x5 ^ x6<<3
         mov.b r10, r4
         rll3.b r4
         xor.b r9, r4
-        ;; y3 = x14
+        ;; y3 = a4
         mov.b r4, -5(r12)
-        ;; y2 = x4 ^ x14>>3
+        ;; y2 = x4 ^ a4>>3
         rrl3.b r4
         xor.b r8, r4
         mov.b r4, -6(r12)
@@ -444,22 +444,22 @@ tweakey_state_update:
         xor.b r7, r5
         mov.b r5, -8(r12)
 
-        ;; Clobber x1 with x6<<3, then x5 with x14 = x5 ^ x6<<3
+        ;; Clobber x1 with x6<<3, then x5 with a4 = x5 ^ x6<<3
         mov.b r10, r5
         rll3.b r5
         xor.b r5, r9
 
-        ;; Clobber x1 with x7<<3, then x3 with x24 = x3<<2 ^ x6 ^ x7<<3
+        ;; Clobber x1 with x7<<3, then x3 with b4 = x3<<2 ^ x6 ^ x7<<3
         mov.b r11, r5
         rll3.b r5
         rll2.b r7
         xor.b r5, r7
         xor.b r10, r7
 
-        ;; y3 = x24
+        ;; y3 = b4
         mov.b r7, -5(r12)
 
-        ;; Clobber x24 with y2 = x14 ^ x24>>3
+        ;; Clobber b4 with y2 = a4 ^ b4>>3
         rrl3.b r7
         xor.b r9, r7
         mov.b r7, -6(r12)
@@ -474,14 +474,14 @@ tweakey_state_update:
         xor.b r7, r11
         mov.b r11, -4(r12)
 
-        ;; Clobber x1 with x14<<2
+        ;; Clobber x1 with a4<<2
         mov.b r9, r5
         rll2.b r5
-        ;; y5 = x14<<2 ^ x0
+        ;; y5 = a4<<2 ^ x0
         xor.b r5, r4
         mov.b r4, -3(r12)
 
-        ;; y1 = x4 ^ x14>>3
+        ;; y1 = x4 ^ a4>>3
         rrl3.b r9
         xor.b r9, r8
         mov.b r8, -7(r12)
