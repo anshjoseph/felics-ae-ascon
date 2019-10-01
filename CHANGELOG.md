@@ -7,7 +7,7 @@
 ### Added
 
 - This changelog, following conventions from
-  <https://keepachangelog.org>.
+  <https://keepachangelog.com>.
 
-[Unreleased]: https://gitlab.inria.fr/paclido/sp4/compare/felics-ae-v0.1.0...master
-[0.1.0]: https://gitlab.inria.fr/paclido/sp4/tags/felics-ae-v0.1.0
+[Unreleased]: https://gitlab.inria.fr/minier/felics-ae/compare/felics-ae-v0.1.0...master
+[0.1.0]: https://gitlab.inria.fr/minier/felics-ae/tags/felics-ae-v0.1.0
