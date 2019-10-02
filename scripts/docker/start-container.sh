@@ -16,6 +16,7 @@ options=(
     --device=/dev/ttyACM0
     "${usb_devices[@]}"
     --name felics-ae
+    --cap-add=SYS_PTRACE
     -it
 )
 
