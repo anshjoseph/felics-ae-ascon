@@ -67,3 +67,11 @@ E.g. add a couple of `--mlen=LIST` and `--alen=LIST` parameters to
 ## Implement profiling
 
 So that implementers can identify bottlenecks.
+
+## Improve handling of ARM devices
+
+- Stop duplicating `/dev/ttyACM0` everywhere (e.g. have one constant
+  in a Python module).
+- Use `udevadm info -q property` to find relevant devices.
+- Stop attaching every USB device on the system to the Docker
+  container.
