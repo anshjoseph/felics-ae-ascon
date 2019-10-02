@@ -9,24 +9,31 @@ import json
 from os import path
 import re
 
-from felics import ARCHITECTURES
+from felics import ARCHITECTURES, METRICS
 
 
-_CONTEXT = OrderedDict((
-    ('cipher_name', ''),
-    ('version', 'Version'),
-    ('compiler_options', 'CFLAGS')
-))
+_CONTEXT = ('cipher_name', 'version', 'compiler_options')
 
-_METRICS = OrderedDict((
-    ('code_size', 'Code size (B)'),
-    ('code_ram', 'RAM (B)'),
-    ('code_time', 'Execution time (cycles)')
-))
+_COLUMNS = _CONTEXT + METRICS
 
-_COLUMNS = OrderedDict(
-    (k, v) for d in (_CONTEXT, _METRICS) for k, v in d.items()
-)
+_COLUMN_NAMES = {
+    'en': {
+        'cipher_name': '',
+        'version': 'Version',
+        'compiler_options': 'CFLAGS',
+        'code_size': 'Code size (B)',
+        'code_ram': 'RAM (B)',
+        'code_time': 'Execution time (cycles)'
+    },
+    'fr': {
+        'cipher_name': '',
+        'version': 'Version',
+        'compiler_options': 'CFLAGS',
+        'code_size': 'ROM (octets)',
+        'code_ram': 'RAM (octets)',
+        'code_time': "Temps d'exécution (cycles)"
+    }
+}
 
 
 def _parse_info(argument):
@@ -35,12 +42,9 @@ def _parse_info(argument):
         blacklist = set(argument[1:].split(','))
         requested = available-blacklist
     else:
-        requested = set(arguments.split(','))
+        requested = set(argument.split(','))
 
-    # Re-order.
-    return OrderedDict((
-        (k, v) for k, v in _COLUMNS.items() if k in requested
-    ))
+    return sorted(requested, key=_COLUMNS.index)
 
 
 def _parse_sort_order(argument):
@@ -87,6 +91,10 @@ def _parse_arguments():
 
     parser.add_argument(
         '-c', '--table-caption', default='Performance results on {arch}.'
+    )
+
+    parser.add_argument(
+        '--language', default='en', choices=tuple(_COLUMN_NAMES.keys())
     )
 
     parser.add_argument('results', metavar='JSON-RESULTS')
@@ -210,7 +218,7 @@ class TexWriter:
         }
 
     def _alignment(self, column):
-        if column in _METRICS:
+        if column in METRICS:
             return '>'
         return '<'
 
@@ -248,7 +256,7 @@ class TexWriter:
     def _make_tablespec(self):
         columns = set(self._columns)
         context_nb = len(columns & set(_CONTEXT))
-        metrics_nb = len(columns & set(_METRICS))
+        metrics_nb = len(columns & set(METRICS))
 
         return '{context}||{metrics}'.format(
             context='|'.join('l'*context_nb),
@@ -389,14 +397,14 @@ class ConsoleWriter:
             return self._ROW_HEADER_TEMPLATE.format_map(setup)
 
         def values(setup):
-            return {m: str(setup[m]) for m in _METRICS}
+            return {m: str(setup[m]) for m in METRICS}
 
         results = OrderedDict((header(setup), values(setup))
                               for setup in data)
 
         metrics_widths = {
             m + '_width': self._max_value_width(m, results.values())
-            for m in _METRICS
+            for m in METRICS
         }
 
         return (
@@ -416,6 +424,12 @@ class ConsoleWriter:
             print()
 
 
+def _pick_column_captions(columns, language):
+    return OrderedDict((
+        (c, _COLUMN_NAMES[language][c]) for c in columns
+    ))
+
+
 def _make_writer(output_filename, caption, label, info):
     if output_filename is None:
         return ConsoleWriter()
@@ -432,16 +446,20 @@ def _make_writer(output_filename, caption, label, info):
     raise ValueError('{f}: unsupported extension'.format(f=output_filename))
 
 
-if __name__ == '__main__':
-    arguments = _parse_arguments()
-
+def _main(arguments):
     with open(arguments.results) as results_file:
         raw_results = json.load(results_file)['data']
 
     results_by_arch = _group_setups(raw_results, arguments.sort_by,
                                     arguments.filter)
 
+    columns = _pick_column_captions(arguments.info, arguments.language)
+
     writer = _make_writer(arguments.output, arguments.table_caption,
-                          arguments.table_label, arguments.info)
+                          arguments.table_label, columns)
 
     writer.dump(results_by_arch)
+
+
+if __name__ == '__main__':
+    _main(_parse_arguments())
