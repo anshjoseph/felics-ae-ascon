@@ -151,6 +151,9 @@ function simulate()
 			;;
 	esac
 
+	# TODO: replace this sleep with "wait -n %?'$command_file'".
+	#       Right now this fails because gdb exits with an error.
+
 	# Wait for the debug session to finish
 	sleep 1
 }
