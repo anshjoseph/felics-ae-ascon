@@ -21,6 +21,9 @@ class Architecture(ABC):
     def __str__(self):
         return self.codename
 
+    def __repr__(self):
+        return self.codename
+
     @property
     @abstractmethod
     def codename(self): pass

@@ -29,6 +29,7 @@ def _format_differences(setups, v1, v2):
     pairs = (
         (setups[s][v1], setups[s][v2])
         for s in sorted(setups)
+        if v1 in setups[s] and v2 in setups[s]
     )
 
     return comparison.format_differences(pairs, '{cipher_name}')
