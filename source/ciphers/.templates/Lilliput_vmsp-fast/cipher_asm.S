@@ -171,8 +171,8 @@ permutation_enc:
         mov.b @r12+,r9   ; save X[6]
         mov.b @r12+,r10  ; save X[7]
 
-        mov   @r12+, -5(r12)    ; X[8] -> X[4-5]
-        mov.b @r12+, -8(r12)    ; X[9-10] -> X[3]
+        mov   @r12+, -5(r12)    ; X[8-9] -> X[4-5]
+        mov.b @r12+, -8(r12)    ; X[10] -> X[3]
         mov.b @r12+, -11(r12)   ; X[11] -> X[1]
         mov.b @r12+, -11(r12)   ; X[12] -> X[2]
         mov.b @r12+, -8(r12)    ; X[13] -> X[6]
