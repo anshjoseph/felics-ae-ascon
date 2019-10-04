@@ -59,7 +59,8 @@ of the selection process carried out in~\cite{NIST:LWC}.  In this
 paper, we present FELICS-AE, an adaptation of the FELICS
 framework~\cite{FELICS:paper} dedicated to AEAD schemes, which we use
 to assess the performance of our candidate
-\textsc{Lilliput-AE}~\cite{NIST:Lilliput-AE}.
+\textsc{Lilliput-AE}~\cite{NIST:Lilliput-AE}.  We have released this
+framework on a public Git repository\cite{INRIA:FELICS-AE}.
 
 First, in section~\ref{sec:felics}, we will present the original
 FELICS framework.  We will then present FELICS-AE in
@@ -311,7 +312,8 @@ ergonomic.
 In order to make it easier to setup FELICS-AE, we wrote scripts to
 fetch and install the framework's dependencies.  Building on those
 scripts, we produced a ready-to-use Docker image bundling FELICS-AE
-with its dependencies.
+with its dependencies; the generation of this image is itself fully
+scripted.
 
 \subsubsection{Miscellaneous}
 \label{sec:felics-ae/misc}
