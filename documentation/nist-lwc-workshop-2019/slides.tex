@@ -2,9 +2,11 @@
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath,amssymb,amsfonts,amsthm}
 \usepackage{graphicx}
+\usepackage{fancyvrb}
 \usepackage{float}
 \usepackage{colortbl}
 \usepackage{array}
+\usepackage{lmodern}
 \usepackage{multirow}
 \usepackage{hhline}
 \usepackage{picture}
@@ -18,6 +20,7 @@
 \usepackage{rotating}
 
 \setlength{\unitlength}{1cm}
+\setlength{\parskip}{0.5\baselineskip}
 
 %% ---------------------------------------------------------------------
 %% COLOR DEFINITIONS
@@ -184,9 +187,65 @@
 
 \section[FELICS-AE]{FELICS-AE additions}
 
+\subsection{Support for \texttt{crypto\_aead}-compliant algorithms}
+
 \begin{frame}
-  \frametitle{New in FELICS-AE}
-  TODO
+  \frametitle{Support for \texttt{crypto\_aead}-compliant algorithms}
+
+  Attempt to minimize the amount of work to add algorithms that comply with the API
+
+  % For example, FELICS forbids some filenames to prevent clashes with framework plumbing (e.g. cipher.c, constants.h); we circumvented this by moving all FELICS headers into a dedicated felics folder (to "namespace" them) and renaming support files, so that integrators do not need to rename algorithm files.
+
+  Not quite ``drop-in'' yet: still many idiosyncrasies from original FELICS
+
+  \begin{itemize}
+  \item \texttt{ROM\_...}/\texttt{RAM\_...} macros to specify alignment \& storage
+  \item split files for encryption/decryption/common code
+  \end{itemize}
+
+\end{frame}
+
+\subsection{New scripts to run benchmarks \& analyze results}
+
+\begin{frame}
+  \frametitle{\texttt{felics-run}}
+
+  Orchestrates previous entry points (scripts \& makefiles)
+
+  Single output format (JSON), used by other scripts
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{\texttt{felics-run} example}
+
+\begin{Verbatim}[
+  commandchars=\\\{\},
+  codes={\catcode`\$=3},
+  fontsize=\small
+]
+\$ ./scripts/felics-run -a PC Lilliput-II-128_vfelicsref
+[...]
+On PC
+Lilliput-II-128 (felicsref, -O3): 6904 528 16792
+\$ cat results/\$date-\$time-master.json
+\{
+    "commit": "ef3c770",
+    "branch": "master",
+    "data": [
+        \{
+            "cipher_name": "Lilliput-II-128",
+            "architecture": "PC",
+            "version": "felicsref",
+            "compiler_options": "-O3",
+            "code_size": 6904,
+            "code_ram": 528,
+            "code_time": 16792
+        \}
+    ]
+\}
+\end{Verbatim}
+
 \end{frame}
 
 \section[Results]{Results with \textsc{Lilliput-AE}, \textsc{Ascon} and ACORN}
