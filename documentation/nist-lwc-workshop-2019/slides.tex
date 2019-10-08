@@ -136,7 +136,7 @@
 {
   \begin{frame}<beamer>
     \frametitle{FELICS-AE}
-    \tableofcontents[currentsection,subsectionstyle=show]
+    \tableofcontents[currentsection,subsectionstyle=show/show/shaded]
   \end{frame}
 }
 
@@ -190,7 +190,7 @@
 \subsection{Support for \texttt{crypto\_aead}-compliant algorithms}
 
 \begin{frame}
-  \frametitle{Support for \texttt{crypto\_aead}-compliant algorithms}
+  \frametitle{\texttt{crypto\_aead}-compliant algorithms}
 
   Attempt to minimize the amount of work to add algorithms that comply with the API
 
@@ -210,7 +210,7 @@
 \begin{frame}
   \frametitle{\texttt{felics-run}}
 
-  Orchestrates previous entry points (scripts \& makefiles)
+  Orchestrates orignal FELICS entry points (scripts \& makefiles)
 
   Single output format (JSON), used by other scripts
 
@@ -248,6 +248,23 @@ Lilliput-II-128 (felicsref, -O3): 6904 528 16792
 
 \end{frame}
 
+\begin{frame}
+  \frametitle{\texttt{felics-compare}}
+  TODO
+\end{frame}
+
+\begin{frame}
+  \frametitle{\texttt{felics-publich}}
+  TODO:tex
+  TODO:spreadsheet
+\end{frame}
+
+\subsection{Create a Docker image}
+
+\begin{frame}
+  \frametitle{Docker support}
+\end{frame}
+
 \section[Results]{Results with \textsc{Lilliput-AE}, \textsc{Ascon} and ACORN}
 
 \begin{frame}
@@ -259,7 +276,16 @@ Lilliput-II-128 (felicsref, -O3): 6904 528 16792
 
 \begin{frame}
   \frametitle{Future work}
-  TODO
+
+  \begin{itemize}
+  \item Integrate more LWC candidates
+  \item Support more than on test vector per algorithm
+    % To make sure all branches are covered, e.g. with and without padding.
+  \item Support more scenarios
+    % The original FELICS scenarios have been removed (only 16B plaintext + 16B AD is supported right now); felics-run could learn to set input sizes before compiling.
+  \item \texttt{documentation/TODO.md}
+  \end{itemize}
+
 \end{frame}
 
 \end{document}
