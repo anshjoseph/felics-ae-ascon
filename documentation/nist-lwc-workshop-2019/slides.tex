@@ -1,0 +1,175 @@
+\documentclass[english]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{hhline}
+\usepackage{picture}
+\usepackage{subcaption}
+
+\usepackage{pgfplots}
+
+\pgfplotsset{compat=newest} % Allows to place the legend below plot
+\usepgfplotslibrary{units} % Allows to enter the units nicely
+
+\usepackage{rotating}
+
+\setlength{\unitlength}{1cm}
+
+%% ---------------------------------------------------------------------
+%% COLOR DEFINITIONS
+
+\definecolor{grisclair}{rgb}{0.9,0.9,0.9}
+\definecolor{bluetitle}{rgb}{0.1,0.1,0.6}
+\definecolor{tab}{rgb}{0.53,0.81,0.99}
+\definecolor{red2}{rgb}{0.93,0,0}
+\definecolor{red3}{rgb}{0.80,0,0}
+\definecolor{bluev}{rgb}{0.2116,0.0104,0.7716} % BlueViolet
+\definecolor{grey}{rgb}{  0.7505, 0.7826, 0.7793} % Gris
+\definecolor{seagreen}{rgb}{0.2,0.5,0.5}
+\definecolor{seagreen2}{rgb}{0.0000, 0.5676, 0.6179}
+\definecolor{bluec}{rgb}{ 0.1999, 0.6294, 0.9597}
+\definecolor{title2}{rgb}{0.2116, 0.0104, 0.7716}
+
+%% foreground color shortcut commands
+\newcommand{\black}[1]{\textcolor{black}{#1}}
+\newcommand{\white}[1]{\textcolor{white}{#1}}
+\newcommand{\yellow}[1]{\textcolor{yellow}{#1}}
+\newcommand{\red}[1]{\textcolor{red3}{#1}}
+\newcommand{\magenta}[1]{\textcolor{magenta}{#1}}
+\newcommand{\bluet}[1]{\textcolor{bluetitle}{#1}}
+\newcommand{\bluec}[1]{\textcolor{bluec}{#1}}
+\newcommand{\bluev}[1]{\textcolor{bluev}{#1}}
+\newcommand{\grey}[1]{\textcolor{grey}{#1}}
+\newcommand{\cyan}[1]{\textcolor{cyan}{#1}}
+\newcommand{\green}[1]{\textcolor{green}{#1}}
+\newcommand{\sea}[1]{\textcolor{seagreen2}{#1}}
+\newcommand{\seamii}[1]{\textcolor{seagreen}{#1}}
+
+%% background color shortcut commands
+\newcommand{\bgblack}[1]{\colorbox{black}{#1}}
+\newcommand{\bgwhite}[1]{\colorbox{white}{#1}}
+\newcommand{\bgyellow}[1]{\colorbox{yellow}{#1}}
+\newcommand{\bgred}[1]{\colorbox{red}{#1}}
+\newcommand{\bgmagenta}[1]{\colorbox{magenta}{#1}}
+\newcommand{\bgblue}[1]{\colorbox{blue}{#1}}
+\newcommand{\bgbluec}[1]{\colorbox{bluec}{#1}}
+\newcommand{\bgbluev}[1]{\colorbox{bluev}{#1}}
+\newcommand{\bggrey}[1]{\colorbox{grey}{#1}}
+\newcommand{\bgcyan}[1]{\colorbox{cyan}{#1}}
+\newcommand{\bggreen}[1]{\colorbox{green}{#1}}
+\newcommand{\bggrisclair}[1]{\colorbox{grisclair}{#1}}
+
+%% Beamer
+\newcommand{\itemspace}{\vskip 5mm}
+\newcommand{\itemtitle}[1]{darkblue{\textbf{#1}}}
+\newcommand{\hl}[1]{\seamii{\textbf{#1}}}
+
+\usepackage{sansmathaccent}
+\pdfmapfile{+sansmathaccent.map}
+
+\usecolortheme[named=bluetitle]{structure}
+\beamertemplatenavigationsymbolsempty
+\beamertemplatelargetitlepage
+
+\useinnertheme[shadow]{rounded}
+
+\setbeamercolor{section in head/foot}{fg=white!100}
+\setbeamercolor{section in head/foot}{bg=bluetitle!80}
+\setbeamercolor{section in head/foot shaded}{fg=white!100}
+\setbeamercolor{section in head/foot shaded}{bg=bluetitle!80}
+
+\setbeamertemplate{headline}
+{
+  \begin{beamercolorbox}{section in head/foot}
+    \vskip1pt\insertsectionnavigationhorizontal{\paperwidth}{}{}\vskip1pt
+  \end{beamercolorbox}%
+}
+
+\setbeamerfont{section in toc}{size=\large}
+\setbeamerfont{section in toc}{series=\bfseries}
+\setbeamercolor{section in toc}{fg=bluetitle}
+\setbeamercolor{subsection in toc}{fg=bluetitle}
+\setbeamertemplate{section in toc}[ball unnumbered]
+\setbeamertemplate{subsection in toc}[ball unnumbered]
+
+\setbeamertemplate{itemize item}[triangle]
+\setbeamertemplate{itemize subitem}[ball]
+\setbeamercolor{item}{fg=bluetitle!80}
+\setbeamercolor{subitem}{fg=bluetitle!40}
+\setbeamertemplate{mini frames}[box]
+
+\useframetitletemplate{
+  \centerline{\sea{\Large \textbf{\insertframetitle}}}
+  \vskip -5mm
+  \textcolor{black}{\hrule}
+}
+
+\usefoottemplate{%
+  \vbox{
+    \tinycolouredline{bluetitle!80}{\color{white}
+      \hfill \insertframenumber~/~\inserttotalframenumber
+    }
+  }
+}
+
+\beamersetleftmargin{4mm}
+\beamersetrightmargin{4mm}
+
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+\title{
+  FELICS-AE: a framework to benchmark lightweight authenticated block ciphers
+}
+\date{2019\\ November}
+\author{P. Huynh$^{(1)}$, K. Le Gouguec$^{(2)}$}
+\institute{$^{(1)}$LORIA CNRS, $^{(2)}$Airbus CyberSecurity}
+
+
+\AtBeginSection[]
+{
+  \begin{frame}<beamer>
+    \frametitle{FELICS-AE}
+    \tableofcontents[currentsection,subsectionstyle=show]
+  \end{frame}
+}
+
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\section[FELICS]{Reminder: the FELICS framework}
+
+\begin{frame}
+  \frametitle{The original FELICS framework}
+  TODO
+\end{frame}
+
+\section[FELICS-AE]{FELICS-AE additions}
+
+\begin{frame}
+  \frametitle{New in FELICS-AE}
+  TODO
+\end{frame}
+
+\section[Results]{Results with \textsc{Lilliput-AE}, \textsc{Ascon} and ACORN}
+
+\begin{frame}
+  \frametitle{Results}
+  TODO
+\end{frame}
+
+\section[Future work]{Future work}
+
+\begin{frame}
+  \frametitle{Future work}
+  TODO
+\end{frame}
+
+\end{document}

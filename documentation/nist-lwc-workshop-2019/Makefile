@@ -1,4 +1,12 @@
-all: felics-ae.pdf
+all: paper slides
 
-%.pdf: %.tex references.bib
-	latexmk -pdf -interaction=nonstopmode $<
+paper slides: %: results/%.pdf
+
+results/%.pdf: %.tex references.bib | results
+	latexmk -pdf -interaction=nonstopmode -outdir=results -auxdir=results $<
+
+results:
+	mkdir results
+
+clean:
+	-rm -r results

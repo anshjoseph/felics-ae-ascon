@@ -1,0 +1,19 @@
+* FELICS reminder
+** platforms
+** metrics
+
+* FELICS-AE additions
+** crypto_aead API
+** new scripts
+common input/output format (JSON)
+*** felics-compare
+*** felics-publish
+** Docker image
+
+* Results with Lilliput-AE, Ascon, ACORN
+
+* Future work
+** more LWC candidates
+** more test vectors
+** more scenarios
+** profiling?
