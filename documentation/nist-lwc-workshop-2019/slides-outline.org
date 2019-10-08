@@ -6,6 +6,8 @@
 ** crypto_aead API
 ** new scripts
 common input/output format (JSON)
+*** felics-run
+replaces multiple previous entry points (shell scripts, makefiles)
 *** felics-compare
 *** felics-publish
 ** Docker image
