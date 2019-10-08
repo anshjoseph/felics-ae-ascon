@@ -1,7 +1,8 @@
 FELICS-AE
 =========
 
-An adaptation of the [FELICS framework] for Authenticated Encryption.
+An adaptation of the [FELICS framework] for Authenticated Encryption
+with Associated Data.
 
 [FELICS framework]: https://www.cryptolux.org/index.php/FELICS "Fair Evaluation of Lightweight Cryptographic Systems"
 
