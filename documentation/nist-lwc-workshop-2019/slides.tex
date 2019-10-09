@@ -190,7 +190,7 @@
 \begin{frame}
   \frametitle{FELICS-AE}
 
-  Started off FELICS v1.1.0 to compare \textsc{Lilliput-AE} to CAESAR's final ``lightweight'' portfolio
+  Started off FELICS v1.1.0 to compare \textsc{Lilliput-AE} to CAESAR's final lightweight portfolio (use-case 1)
 
   {\url{https://gitlab.inria.fr/minier/felics-ae}}
 \end{frame}
@@ -200,14 +200,14 @@
 \begin{frame}
   \frametitle{\texttt{crypto\_aead}-compliant algorithms}
 
-  Attempt to minimize the amount of work to add algorithms that comply with the API
+  Minimize work needed to add algorithms that comply with the API
 
   % For example, FELICS forbids some filenames to prevent clashes with framework plumbing (e.g. cipher.c, constants.h); we circumvented this by moving all FELICS headers into a dedicated felics folder (to "namespace" them) and renaming support files, so that integrators do not need to rename algorithm files.
 
-  Not quite ``drop-in'' yet: still many idiosyncrasies from original FELICS
+  Not quite ``drop-in'' yet: still some idiosyncrasies from original FELICS
 
   \begin{itemize}
-  \item \texttt{ROM\_...}/\texttt{RAM\_...} macros to specify alignment \& storage
+  \item \texttt{ROM\_DATA\_...}/\texttt{RAM\_DATA\_...} macros to specify alignment \& storage
   \item split files for encryption/decryption/common code
   \end{itemize}
 
@@ -281,11 +281,6 @@ Lilliput-I-192 on AVR (vfelicsref with -Os)
 	code_size: \textcolor{green}{-10.47%} (3268 $\searrow$ 2926)
 	code_ram: \textcolor{green}{-50.71%} (562 $\searrow$ 277)
 	code_time: \textcolor{red}{+36.73%} (230309 $\nearrow$ 314893)
-
-Lilliput-I-256 on AVR (vfelicsref with -Os)
-	code_size: \textcolor{green}{-8.25%} (3392 $\searrow$ 3112)
-	code_ram: \textcolor{green}{-53.19%} (626 $\searrow$ 293)
-	code_time: \textcolor{red}{+40.83%} (290363 $\nearrow$ 408907)
 \end{Verbatim}
 
 \end{frame}
@@ -295,7 +290,15 @@ Lilliput-I-256 on AVR (vfelicsref with -Os)
 
   \texttt{\$ ./scripts/felics-publish foo.json -o foo.\$format}
 
-  % TODO: describe options
+  Options:
+
+  \begin{description}
+  \item[\texttt{-{}-sort-by}:] how setups are ordered
+  \item[\texttt{-{}-filter}:] which setups are included
+  \item[\texttt{-{}-info}:] which metadata and metrics are displayed
+  \item[\texttt{-{}-table-label}:] anchor for documents supporting cross-references
+  \item[\texttt{-{}-table-caption}:] additional text to describe the data set
+  \end{description}
 
 \end{frame}
 
@@ -318,9 +321,13 @@ Lilliput-I-256 on AVR (vfelicsref with -Os)
     \label{table:bench-soft-128-avr}
   \end{table}
 
+  % One table per architecture.
+
   To spreadsheet:
 
   \includegraphics[width=\textwidth]{figures/felics-publish-ods.png}
+
+  % One sheet (tab) per architecture.
 
 \end{frame}
 
