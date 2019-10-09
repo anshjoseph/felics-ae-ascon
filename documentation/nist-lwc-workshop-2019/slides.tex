@@ -334,7 +334,54 @@ Lilliput-I-192 on AVR (vfelicsref with -Os)
 \subsection{Create a Docker image}
 
 \begin{frame}
-  \frametitle{Docker support}
+  \frametitle{FELICS dependencies}
+
+  Lots of dependencies to manage:
+
+  \begin{table}[H]
+    \centering
+    \begin{tabular}{l|l|l}
+      \textbf{Platform} & \textbf{Software} & \textbf{Origin}               \\
+      \hline
+      \multirow{2}{*}{AVR}
+                        & simavr            & GitHub                        \\
+                        & Avrora            & SourceForge + CryptoLUX patch \\
+      \hline
+      \multirow{2}{*}{MSP}
+                        & MSP430-GCC        & Texas Instruments             \\
+                        & MSPDebug          & GitHub                        \\
+      \hline
+      \multirow{1}{*}{ARM}
+                        & J-Link Software   & SEGGER                        \\
+      \hline
+    \end{tabular}
+    \caption{Extra-distro dependencies.}
+    \label{table:dependencies}
+  \end{table}
+
+  How to distribute such a framework?
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Distribution \& setup}
+
+  Original FELICS solutions:
+
+  \begin{itemize}
+  \item Document\footnote{\url{https://www.cryptolux.org/index.php/FELICS_Prerequisites}}
+  \item Virtual machine
+  \end{itemize}
+
+  \pause
+
+  FELICS-AE additions:
+
+  \begin{itemize}
+  \item Script to fetch \& install all dependencies
+  \item Scripts to generate \& run Docker image
+  \end{itemize}
+
 \end{frame}
 
 \section[Results]{Results with \textsc{Lilliput-AE}, \textsc{Ascon} and ACORN}
