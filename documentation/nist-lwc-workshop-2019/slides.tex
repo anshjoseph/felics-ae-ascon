@@ -230,7 +230,7 @@
 \begin{Verbatim}[
   commandchars=\\\{\},
   codes={\catcode`\$=3},
-  fontsize=\small
+  fontsize=\footnotesize
 ]
 \$ ./scripts/felics-run -a PC Lilliput-II-128_vfelicsref
 [...]
@@ -256,15 +256,72 @@ Lilliput-II-128 (felicsref, -O3): 6904 528 16792
 
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile]
   \frametitle{\texttt{felics-compare}}
-  TODO
+
+\begin{Verbatim}[
+  commandchars=\\\{\},
+  codes={\catcode`\$=3},
+  fontsize=\footnotesize
+]
+\$ ./scripts/felics-compare old.json new.json
+Comparing
+	old.json
+	(master) 1234567 Old commit summary
+against
+	new.json
+	(master) 89abcde New commit summary
+
+Lilliput-I-128 on AVR (vfelicsref with -Os)
+	code_size: \textcolor{green}{-12.19%} (3166 $\searrow$ 2780)
+	code_ram: \textcolor{green}{-49.22%} (514 $\searrow$ 261)
+	code_time: \textcolor{red}{+32.05%} (189818 $\nearrow$ 250657)
+
+Lilliput-I-192 on AVR (vfelicsref with -Os)
+	code_size: \textcolor{green}{-10.47%} (3268 $\searrow$ 2926)
+	code_ram: \textcolor{green}{-50.71%} (562 $\searrow$ 277)
+	code_time: \textcolor{red}{+36.73%} (230309 $\nearrow$ 314893)
+
+Lilliput-I-256 on AVR (vfelicsref with -Os)
+	code_size: \textcolor{green}{-8.25%} (3392 $\searrow$ 3112)
+	code_ram: \textcolor{green}{-53.19%} (626 $\searrow$ 293)
+	code_time: \textcolor{red}{+40.83%} (290363 $\nearrow$ 408907)
+\end{Verbatim}
+
 \end{frame}
 
 \begin{frame}
   \frametitle{\texttt{felics-publish}}
-  TODO:tex
-  TODO:spreadsheet
+
+  \texttt{\$ ./scripts/felics-publish foo.json -o foo.\$format}
+
+  % TODO: describe options
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{\texttt{felics-publish} examples}
+
+  To \LaTeX:
+
+  \begin{table}[H]
+    \centering
+    \tiny
+    \begin{tabular}{l|l|l||r|r|r}
+      \textbf{}                & \textbf{Version}   & \textbf{\texttt{CFLAGS}} & \textbf{Code size (B)} & \textbf{RAM (B)} & \textbf{Execution time (cycles)} \\ \hline
+      \textsc{Lilliput-I-128}  & \texttt{felicsref} & \texttt{-O3}             &                   6100 &              266 &                           129093 \\ \hline
+      \textsc{Lilliput-II-128} & \texttt{felicsref} & \texttt{-O3}             &                   6062 &              243 &                           132650 \\ \hline
+      \textsc{Lilliput-I-128}  & \texttt{felicsref} & \texttt{-Os}             &                   2780 &              261 &                           250657 \\ \hline
+      \textsc{Lilliput-II-128} & \texttt{felicsref} & \texttt{-Os}             &                   2768 &              229 &                           297992 \\ \hline
+    \end{tabular}
+    \caption{Performance results for 128-bit key algorithms on AVR ATmega128.}
+    \label{table:bench-soft-128-avr}
+  \end{table}
+
+  To spreadsheet:
+
+  \includegraphics[scale=0.5]{figures/felics-publish-ods.png}
+
 \end{frame}
 
 \subsection{Create a Docker image}
