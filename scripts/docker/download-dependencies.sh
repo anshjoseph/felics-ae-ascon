@@ -32,8 +32,8 @@ get-simavr ()
 
 get-msp430-gcc ()
 {
-    wget "http://software-dl.ti.com/msp430/msp430_public_sw/mcu/msp430/MSPGCC/latest/exports/msp430-gcc-8.2.0.52_linux64.tar.bz2"
-    wget "http://software-dl.ti.com/msp430/msp430_public_sw/mcu/msp430/MSPGCC/latest/exports/msp430-gcc-support-files-1.207.zip"
+    wget "http://software-dl.ti.com/msp430/msp430_public_sw/mcu/msp430/MSPGCC/8_2_0_0/exports/msp430-gcc-8.2.0.52_linux64.tar.bz2"
+    wget "http://software-dl.ti.com/msp430/msp430_public_sw/mcu/msp430/MSPGCC/8_2_0_0/exports/msp430-gcc-support-files-1.207.zip"
     tar xf msp430-gcc-8.2.0.52_linux64.tar.bz2
     unzip msp430-gcc-support-files-1.207.zip
     cp -r msp430-gcc-support-files msp430-gcc-8.2.0.52_linux64/support-files
