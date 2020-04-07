@@ -31,6 +31,8 @@ dependencies=(
     # PC
     gcc
     gdb
+    cpufrequtils
+    sudo
 )
 
 apt-get update

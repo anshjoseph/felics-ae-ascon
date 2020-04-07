@@ -138,6 +138,9 @@ e.g. /etc/sudoers.d/cpu-governor:
 
 Replace `USERNAME` with your actual identifier.
 
+If you run FELICS-AE in a Docker container, you will also need to pass
+`--privileged` to `docker-create(1)` or `docker-run(1)`.
+
 2 - Configuring FELICS-AE
 =========================
 

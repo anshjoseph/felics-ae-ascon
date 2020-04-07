@@ -15,3 +15,5 @@ RUN /home/felics/install-dependencies.sh /home/felics/dependencies
 ADD .resources/FELICS-AE.tar.gz /home/felics/
 RUN cp /home/felics/FELICS-AE/scripts/plumbing/config.sh.template /home/felics/FELICS-AE/scripts/plumbing/config.sh
 RUN chown -R felics:felics /home/felics/FELICS-AE
+
+ADD allow-cpu-governor /etc/sudoers.d
