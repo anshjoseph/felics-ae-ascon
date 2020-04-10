@@ -380,14 +380,12 @@ if [ 0 -eq $files_number ] ; then
 fi
 
 
-gdb_stack_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$GDB_STACK_LOG_FILE
 gdb_stack_sections_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$GDB_STACK_SECTIONS_LOG_FILE
 
 # Debug the executable
 case $SCRIPT_ARCHITECTURE in
 	$SCRIPT_ARCHITECTURE_PC)
 
-		simulate stack $file $gdb_stack_log_file
 		simulate stack_sections $file $gdb_stack_sections_log_file
 		;;
 
@@ -396,7 +394,6 @@ case $SCRIPT_ARCHITECTURE in
 		simavr_stack_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$SIMAVR_STACK_LOG_FILE
 		simavr_stack_sections_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$SIMAVR_STACK_SECTIONS_LOG_FILE
 
-		simulate stack $file $gdb_stack_log_file $simavr_stack_log_file
 		simulate stack_sections $file $gdb_stack_sections_log_file $simavr_stack_sections_log_file
 
 		;;
@@ -406,7 +403,6 @@ case $SCRIPT_ARCHITECTURE in
 		mspdebug_stack_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$MSPDEBUG_STACK_LOG_FILE
 		mspdebug_stack_sections_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$MSPDEBUG_STACK_SECTIONS_LOG_FILE
 
-		simulate stack $file $gdb_stack_log_file $mspdebug_stack_log_file
 		simulate stack_sections $file $gdb_stack_sections_log_file $mspdebug_stack_sections_log_file
 		;;
 
@@ -416,7 +412,6 @@ case $SCRIPT_ARCHITECTURE in
 		jlink_gdb_server_stack_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$JLINK_GDB_SERVER_STACK_LOG_FILE
 		jlink_gdb_server_stack_sections_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$JLINK_GDB_SERVER_STACK_SECTIONS_LOG_FILE
 
-		simulate stack upload-bench $gdb_stack_log_file $jlink_gdb_server_stack_log_file $make_log_file
 		simulate stack_sections upload-bench $gdb_stack_sections_log_file $jlink_gdb_server_stack_sections_log_file $make_log_file
 		;;
 
@@ -426,7 +421,6 @@ case $SCRIPT_ARCHITECTURE in
 		jlink_gdb_server_stack_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$JLINK_GDB_SERVER_STACK_LOG_FILE
 		jlink_gdb_server_stack_sections_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$JLINK_GDB_SERVER_STACK_SECTIONS_LOG_FILE
 
-		simulate stack upload-bench $gdb_stack_log_file $jlink_gdb_server_stack_log_file $make_log_file
 		simulate stack_sections upload-bench $gdb_stack_sections_log_file $jlink_gdb_server_stack_sections_log_file $make_log_file
 		;;
 
@@ -436,7 +430,6 @@ case $SCRIPT_ARCHITECTURE in
 		stlink_gdb_server_stack_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$STLINK_GDB_SERVER_STACK_LOG_FILE
 		stlink_gdb_server_stack_sections_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$STLINK_GDB_SERVER_STACK_SECTIONS_LOG_FILE
 
-		simulate stack upload-bench $gdb_stack_log_file $stlink_gdb_server_stack_log_file $make_log_file
 		simulate stack_sections upload-bench $gdb_stack_sections_log_file $stlink_gdb_server_stack_sections_log_file $make_log_file
 		;;
 esac
@@ -444,12 +437,6 @@ esac
 
 e_stack=0
 d_stack=0
-total_stack=0
-
-if [ -f $gdb_stack_log_file ] ; then
-	total_stack=$(compute_stack_usage $gdb_stack_log_file 1)
-fi
-
 if [ -f $gdb_stack_sections_log_file ] ; then
 	e_stack=$(compute_stack_usage $gdb_stack_sections_log_file 1)
 	d_stack=$(compute_stack_usage $gdb_stack_sections_log_file 2)
