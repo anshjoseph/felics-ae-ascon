@@ -165,9 +165,9 @@ cipher_total=0
 
 # Read and process code implementation information
 declare -a shared_parts
-for code_section in ${CODE_SECTIONS[@]}
+for code_section in EncryptCode DecryptCode
 do
-    shared_files=$(cat $IMPLEMENTATION_INFO_FILE | grep $code_section$SECTION_SEPARATOR | tr -d '\r' | cut -d ':' -f 2 | tr ',' ' ')
+    shared_files=$(cat ../source/implementation.info | grep "$code_section:" | cut -d ':' -f 2 | tr ',' ' ')
 
     for shared_file in $shared_files
     do
@@ -199,10 +199,10 @@ do
 	
 	
 	case $code_section in
-	    $CODE_SECTION_E)
+	    EncryptCode)
 		cipher_e=$(($cipher_e + $shared_value))
 		;;
-	    $CODE_SECTION_D)
+	    DecryptCode)
 		cipher_d=$(($cipher_d + $shared_value))
 		;;
 	esac

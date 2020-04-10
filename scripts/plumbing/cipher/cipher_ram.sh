@@ -213,7 +213,7 @@ EOF
 get-implem-info ()
 {
     local key=$1
-    grep "^${key}: " ${IMPLEMENTATION_INFO_FILE} | cut -d' ' -f2
+    grep "^${key}: " ../source/implementation.info | cut -d' ' -f2
 }
 
 block_size=$(get-implem-info BlockSize)
@@ -290,9 +290,9 @@ shared_constants_total=0
 
 # Read and process constants implementation information
 declare -a shared_parts
-for constants_section in ${CONSTANTS_SECTIONS[@]}
+for constants_section in # FIXME: restore
 do
-	shared_files=$(cat $IMPLEMENTATION_INFO_FILE | grep $constants_section$SECTION_SEPARATOR | tr -d '\r' | cut -d ':' -f 2 | tr ',' ' ')
+	shared_files=$(get-implem-info ${constants_section} | tr ',' ' ')
 
 	for shared_file in $shared_files
 	do
