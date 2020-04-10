@@ -35,11 +35,3 @@ MEMORY_PATTERN=(0x11 0x22 0x33 0x44 0x55 0x66 0x77 0x88 0x99 0xAA)
 
 MEMORY_FILE=memory.mem
 MEMORY_SIZE=2000
-
-SIMAVR_STACK_SECTIONS_LOG_FILE=simavr_stack_sections.log
-
-MSPDEBUG_STACK_SECTIONS_LOG_FILE=mspdebug_stack_sections.log
-
-JLINK_GDB_SERVER_STACK_SECTIONS_LOG_FILE=jlink_gdb_server_stack_sections.log
-
-STLINK_GDB_SERVER_STACK_SECTIONS_LOG_FILE=stlink_gdb_server_stack_sections.log

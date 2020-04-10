@@ -381,44 +381,27 @@ fi
 # Debug the executable
 case $SCRIPT_ARCHITECTURE in
 	$SCRIPT_ARCHITECTURE_PC)
-
 		simulate $file
 		;;
 
 	$SCRIPT_ARCHITECTURE_AVR)
-
-		simavr_stack_sections_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$SIMAVR_STACK_SECTIONS_LOG_FILE
-
-		simulate $file $simavr_stack_sections_log_file
-
+		simulate $file ${SCRIPT_ARCHITECTURE}_simavr_stack_sections.log
 		;;
 	
 	$SCRIPT_ARCHITECTURE_MSP)
-
-		mspdebug_stack_sections_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$MSPDEBUG_STACK_SECTIONS_LOG_FILE
-
-		simulate $file $mspdebug_stack_sections_log_file
+		simulate $file ${SCRIPT_ARCHITECTURE}_mspdebug_stack_sections.log
 		;;
 
 	$SCRIPT_ARCHITECTURE_ARM)
-
-		jlink_gdb_server_stack_sections_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$JLINK_GDB_SERVER_STACK_SECTIONS_LOG_FILE
-
-		simulate upload-bench $jlink_gdb_server_stack_sections_log_file
+		simulate upload-bench ${SCRIPT_ARCHITECTURE}_jlinkgdbserver_stack_sections.log
 		;;
 
 	$SCRIPT_ARCHITECTURE_NRF52840)
-
-		jlink_gdb_server_stack_sections_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$JLINK_GDB_SERVER_STACK_SECTIONS_LOG_FILE
-
-		simulate upload-bench $jlink_gdb_server_stack_sections_log_file
+		simulate upload-bench ${SCRIPT_ARCHITECTURE}_jlinkgdbserver_stack_sections.log
 		;;
 
 	$SCRIPT_ARCHITECTURE_STM32L053)
-
-		stlink_gdb_server_stack_sections_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$STLINK_GDB_SERVER_STACK_SECTIONS_LOG_FILE
-
-		simulate upload-bench $stlink_gdb_server_stack_sections_log_file
+		simulate upload-bench ${SCRIPT_ARCHITECTURE}_stlinkgdbserver_stack_sections.log
 		;;
 esac
 
