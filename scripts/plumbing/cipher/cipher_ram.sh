@@ -91,43 +91,41 @@ echo -e "\t SCRIPT_ARCHITECTURE \t\t = $SCRIPT_ARCHITECTURE"
 echo -e "\t SCRIPT_OUTPUT \t\t\t = $SCRIPT_OUTPUT"
 
 
+GDB_OUTPUT_FILE=${SCRIPT_ARCHITECTURE}_gdb_stack_sections.log
+
 # Simulate the given binary file execution
 # Parameters:
-# 	$1 - the gdb command file
-# 	$2 - the gdb target binary file
-# 	$3 - the gdb output file
-# 	$4 - the simulator output file
-# 	$5 - the make log file
+# 	$1 - the gdb target binary file
+# 	$2 - the simulator output file
 function simulate()
 {
-	local command_file=../../../../scripts/plumbing/cipher/stack/${SCRIPT_ARCHITECTURE,,}_$1.gdb
-	local target_file=$2
-	local gdb_output_file=$3
-	local simulator_output_file=$4
-	local make_log_file=$5
+	local target_file=$1
+	local simulator_output_file=$2
+	local command_file=../../../../scripts/plumbing/cipher/stack/${SCRIPT_ARCHITECTURE,,}_stack_sections.gdb
+	local make_log_file=${SCRIPT_ARCHITECTURE}_cipher_ram_make.log
 
 	echo "Run GDB script $(basename ${command_file})"
 
 	case $SCRIPT_ARCHITECTURE in
 		$SCRIPT_ARCHITECTURE_PC)
-			$PC_GDB -x $command_file $target_file &> $gdb_output_file &
+			$PC_GDB -x $command_file $target_file &> $GDB_OUTPUT_FILE &
 			;;
 		$SCRIPT_ARCHITECTURE_AVR)
 			$SIMAVR_SIMULATOR -g -m atmega128 $target_file &> $simulator_output_file &
-			$AVR_GDB -x $command_file &> $gdb_output_file
+			$AVR_GDB -x $command_file &> $GDB_OUTPUT_FILE
 
 			kill -PIPE %'$SIMAVR_SIMULATOR'
 			;;
 		$SCRIPT_ARCHITECTURE_MSP)
 			$MSPDEBUG_SIMULATOR -n sim "prog $target_file" gdb &> $simulator_output_file &
-			$MSP_GDB -x $command_file &> $gdb_output_file
+			$MSP_GDB -x $command_file &> $GDB_OUTPUT_FILE
 			;;
 		$SCRIPT_ARCHITECTURE_ARM)
 			# Upload the program to the board
 			make -f ./../../../common/cipher.mk ARCHITECTURE=$SCRIPT_ARCHITECTURE $target_file &> $make_log_file
 
 			$JLINK_GDB_SERVER -USB -device cortex-m3 &> $simulator_output_file &
-			$ARM_GDB -x $command_file &> $gdb_output_file
+			$ARM_GDB -x $command_file &> $GDB_OUTPUT_FILE
 
                         kill -PIPE %'$JLINK_GDB_SERVER'
 			;;
@@ -136,7 +134,7 @@ function simulate()
 			make -f ./../../../common/cipher.mk ARCHITECTURE=$SCRIPT_ARCHITECTURE $target_file &> $make_log_file
 
 			$JLINK_GDB_SERVER -device NRF52840_XXAA -if SWD -speed 4000 &> $simulator_output_file &
-			$NRF52840_GDB -x $command_file &> $gdb_output_file
+			$NRF52840_GDB -x $command_file &> $GDB_OUTPUT_FILE
 
                         kill -PIPE %'$JLINK_GDB_SERVER'
 			;;
@@ -145,7 +143,7 @@ function simulate()
 			make -f ./../../../common/cipher.mk ARCHITECTURE=$SCRIPT_ARCHITECTURE $target_file &> $make_log_file
 
 			$STLINK_GDB_SERVER &> $simulator_output_file &
-			$STM32L053_GDB -x $command_file &> $gdb_output_file
+			$STM32L053_GDB -x $command_file &> $GDB_OUTPUT_FILE
 
                         kill -PIPE %'$STLINK_GDB_SERVER'
 			;;
@@ -380,57 +378,47 @@ if [ 0 -eq $files_number ] ; then
 fi
 
 
-gdb_stack_sections_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$GDB_STACK_SECTIONS_LOG_FILE
-
 # Debug the executable
 case $SCRIPT_ARCHITECTURE in
 	$SCRIPT_ARCHITECTURE_PC)
 
-		simulate stack_sections $file $gdb_stack_sections_log_file
+		simulate $file
 		;;
 
 	$SCRIPT_ARCHITECTURE_AVR)
 
-		simavr_stack_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$SIMAVR_STACK_LOG_FILE
 		simavr_stack_sections_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$SIMAVR_STACK_SECTIONS_LOG_FILE
 
-		simulate stack_sections $file $gdb_stack_sections_log_file $simavr_stack_sections_log_file
+		simulate $file $simavr_stack_sections_log_file
 
 		;;
 	
 	$SCRIPT_ARCHITECTURE_MSP)
 
-		mspdebug_stack_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$MSPDEBUG_STACK_LOG_FILE
 		mspdebug_stack_sections_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$MSPDEBUG_STACK_SECTIONS_LOG_FILE
 
-		simulate stack_sections $file $gdb_stack_sections_log_file $mspdebug_stack_sections_log_file
+		simulate $file $mspdebug_stack_sections_log_file
 		;;
 
 	$SCRIPT_ARCHITECTURE_ARM)
 
-		make_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$MAKE_LOG_FILE
-		jlink_gdb_server_stack_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$JLINK_GDB_SERVER_STACK_LOG_FILE
 		jlink_gdb_server_stack_sections_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$JLINK_GDB_SERVER_STACK_SECTIONS_LOG_FILE
 
-		simulate stack_sections upload-bench $gdb_stack_sections_log_file $jlink_gdb_server_stack_sections_log_file $make_log_file
+		simulate upload-bench $jlink_gdb_server_stack_sections_log_file
 		;;
 
 	$SCRIPT_ARCHITECTURE_NRF52840)
 
-		make_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$MAKE_LOG_FILE
-		jlink_gdb_server_stack_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$JLINK_GDB_SERVER_STACK_LOG_FILE
 		jlink_gdb_server_stack_sections_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$JLINK_GDB_SERVER_STACK_SECTIONS_LOG_FILE
 
-		simulate stack_sections upload-bench $gdb_stack_sections_log_file $jlink_gdb_server_stack_sections_log_file $make_log_file
+		simulate upload-bench $jlink_gdb_server_stack_sections_log_file
 		;;
 
 	$SCRIPT_ARCHITECTURE_STM32L053)
 
-		make_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$MAKE_LOG_FILE
-		stlink_gdb_server_stack_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$STLINK_GDB_SERVER_STACK_LOG_FILE
 		stlink_gdb_server_stack_sections_log_file=$SCRIPT_ARCHITECTURE$FILE_NAME_SEPARATOR$STLINK_GDB_SERVER_STACK_SECTIONS_LOG_FILE
 
-		simulate stack_sections upload-bench $gdb_stack_sections_log_file $stlink_gdb_server_stack_sections_log_file $make_log_file
+		simulate upload-bench $stlink_gdb_server_stack_sections_log_file
 		;;
 esac
 
@@ -438,8 +426,8 @@ esac
 e_stack=0
 d_stack=0
 if [ -f $gdb_stack_sections_log_file ] ; then
-	e_stack=$(compute_stack_usage $gdb_stack_sections_log_file 1)
-	d_stack=$(compute_stack_usage $gdb_stack_sections_log_file 2)
+	e_stack=$(compute_stack_usage $GDB_OUTPUT_FILE 1)
+	d_stack=$(compute_stack_usage $GDB_OUTPUT_FILE 2)
 fi
 
 
