@@ -57,7 +57,10 @@ source $script_path/../config.sh
 
 # Include constants files
 source $script_path/../constants/constants.sh
-source $script_path/../constants/cipher/cipher_ram.sh
+
+MEMORY_PATTERN=(0x11 0x22 0x33 0x44 0x55 0x66 0x77 0x88 0x99 0xAA)
+MEMORY_FILE=memory.mem
+MEMORY_SIZE=2000
 
 
 # Default values
