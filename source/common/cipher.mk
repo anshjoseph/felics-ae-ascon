@@ -146,6 +146,10 @@ else
 endif
 
 
+$(BUILDDIR):
+	mkdir $(BUILDDIR)
+
+
 .PHONY : target
 target : \
 		felics_check.elf \
@@ -171,37 +175,38 @@ felics_bench.elf : \
 %.bin: $(BUILDDIR)/%.elf
 	$(OBJCOPY) -O binary $< $@
 
-%.hex: $(BUILDDIR)/%.elf
+%.hex: $(BUILDDIR)/%.elf | $(BUILDDIR)
 	$(OBJCOPY) -O ihex $< $@
 
-%.o : \
-		%.c \
-		$(COMMONSOURCEDIR)/felics/cipher.h \
-		$(COMMONSOURCEDIR)/felics/common.h \
-		$(SOURCEDIR)/api.h
+%.o: %.c                                        \
+     $(COMMONSOURCEDIR)/felics/cipher.h         \
+     $(COMMONSOURCEDIR)/felics/common.h         \
+     $(SOURCEDIR)/api.h                         \
+     | $(BUILDDIR)
 	$(CC) -c $(CFLAGS) $< $(INCLUDES) -o $(BUILDDIR)/$@
 
-%.o : \
-		%.S \
-		$(COMMONSOURCEDIR)/felics/cipher.h \
-		$(COMMONSOURCEDIR)/felics/common.h \
-		$(SOURCEDIR)/api.h
+%.o: %.S                                        \
+     $(COMMONSOURCEDIR)/felics/cipher.h         \
+     $(COMMONSOURCEDIR)/felics/common.h         \
+     $(SOURCEDIR)/api.h                         \
+     | $(BUILDDIR)
 	$(CC) -c $(CFLAGS) $< $(INCLUDES) -o $(BUILDDIR)/$@
 
-felics_%.o: $(COMMONSOURCEDIR)/felics/%.c \
-            $(COMMONSOURCEDIR)/felics/cipher.h \
-            $(COMMONSOURCEDIR)/felics/common.h \
-            $(SOURCEDIR)/api.h
+felics_%.o: $(COMMONSOURCEDIR)/felics/%.c       \
+            $(COMMONSOURCEDIR)/felics/cipher.h  \
+            $(COMMONSOURCEDIR)/felics/common.h  \
+            $(SOURCEDIR)/api.h                  \
+            | $(BUILDDIR)
 	$(CC) -c $(CFLAGS) $< $(INCLUDES) -o $(BUILDDIR)/$@
 
-felics_check.lst felics_bench.lst: %.lst: %.elf
+felics_check.lst felics_bench.lst: %.lst: %.elf | $(BUILDDIR)
 	$(OBJDUMP) $(OBJDUMPFLAGS) $(BUILDDIR)/$< > $(BUILDDIR)/$@
 
-%.lst : %.o
+%.lst: %.o | $(BUILDDIR)
 	$(OBJDUMP) $(OBJDUMPFLAGS) $(BUILDDIR)/$< > $(BUILDDIR)/$@
 
 
-clean :
+clean:
 	@echo $(DELIMITER) Begin cleaning: $(CIPHERNAME) $(DELIMITER)
 	rm -f $(filter-out %.log,$(wildcard $(BUILDDIR)/*))
 	@echo $(DELIMITER) End cleaning: $(CIPHERNAME) $(DELIMITER)
@@ -209,8 +214,7 @@ clean :
 
 help:
 	@echo ""
-	@echo -n "Call this makefile from a cipher source directory or build "
-	@echo 		"directory to build the given cipher:"
+	@echo -n "Call this makefile from a cipher source directory to build the given cipher:"
 	@echo -n "	make -f ./../../../common/cipher.mk "
 	@echo -n		"[ARCHITECTURE=[AVR|MSP|ARM|PC|NRF52840|STM32L053]] [DEBUG=[0|1|3|7]] "
 	@echo -n		"[MEASURE_CYCLE_COUNT=[0|1]] [SCENARIO=[0|1]] "

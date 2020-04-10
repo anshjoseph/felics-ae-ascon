@@ -258,8 +258,8 @@ run-benchmark ()
     timeout 120 ${script_path}/cipher/cipher_execution_time.sh \
             "-a=$architecture" -o=$code_time_output
 
-    add_json_table_row "${script_json_output}" ${architecture} ${cipher_name}                                               \
-                       ${version} "${options}"                                                                              \
+    add_json_table_row "${script_json_output}" ${architecture} ${cipher_name}           \
+                       ${version} "${options}"                                          \
                        "${code_size_output}" "${code_ram_output}" "${code_time_output}"
 
 }
@@ -277,34 +277,33 @@ do
 				continue
 			fi
 
-			cd $directory/build
-
-			echo -e "\t\t\t\t\t ---> Cipher: $directory"
-
-			# Get the cipher name
-			cipher_directory_name=$(basename -- "$(dirname -- "$(pwd)")")
-
-			cipher_name=$(echo $cipher_directory_name | cut -d $DIRECTORY_NAME_SEPARATOR -f 1)
-			cipher_implementation_version=$(echo $cipher_directory_name | cut -d $DIRECTORY_NAME_SEPARATOR -f 2)
+			cipher_name=$(echo $directory | cut -d $DIRECTORY_NAME_SEPARATOR -f 1)
+			cipher_implementation_version=$(echo $directory | cut -d $DIRECTORY_NAME_SEPARATOR -f 2)
 			cipher_implementation_version=${cipher_implementation_version:1:${#cipher_implementation_version}-1}
 
-			if [ $EXAMPLE_CIPHER_NAME == $cipher_name ] ; then
-				cd ./../../
+			if [ $cipher_name == CipherName ] ; then
 				continue
 			fi
 
-			for compiler_option in "${compiler_options[@]}"
-			do
-				if skip-setup ../source/implementation.info Options "${compiler_option}"
-				then
-					echo "${directory}: skipping for ${compiler_option}..."
-					continue
-				fi
+			# All scripts more or less start with make clean &> ../build.
+			# Honor this precondition until further refactoring.
+			mkdir -p ${directory}/build
+			(
+				cd ${directory}/build
 
-				run-benchmark "${cipher_name}" "${cipher_implementation_version}" "${architecture}" "${compiler_option}"
-			done
+				echo -e "\t\t\t\t\t ---> Cipher: $directory"
 
-			cd ./../../
+				for compiler_option in "${compiler_options[@]}"
+				do
+					if skip-setup ../source/implementation.info Options "${compiler_option}"
+					then
+						echo "${directory}: skipping for ${compiler_option}..."
+						continue
+					fi
+
+					run-benchmark "${cipher_name}" "${cipher_implementation_version}" "${architecture}" "${compiler_option}"
+				done
+			)
 		done
 
 done
