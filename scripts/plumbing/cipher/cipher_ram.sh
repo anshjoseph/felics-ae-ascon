@@ -213,7 +213,7 @@ EOF
 get-implem-info ()
 {
     local key=$1
-    grep "^${key}: " ../source/implementation.info | cut -d' ' -f2
+    grep "^${key}: " ../source/implementation.info | cut -d' ' -f2-
 }
 
 block_size=$(get-implem-info BlockSize)
@@ -290,9 +290,9 @@ shared_constants_total=0
 
 # Read and process constants implementation information
 declare -a shared_parts
-for constants_section in # FIXME: restore
+for section in EncryptCode DecryptCode
 do
-	shared_files=$(get-implem-info ${constants_section} | tr ',' ' ')
+	shared_files=$(get-implem-info ${section} | tr ',' ' ')
 
 	for shared_file in $shared_files
 	do
@@ -323,10 +323,10 @@ do
 	
 	
 		case $constants_section in
-			$CONSTANTS_SECTION_E)
+			EncryptCode)
 				shared_constants_e=$(($shared_constants_e + $shared_value))
 				;;
-			$CONSTANTS_SECTION_D)
+			DecryptCode)
 				shared_constants_d=$(($shared_constants_d + $shared_value))
 				;;
 		esac

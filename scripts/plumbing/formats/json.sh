@@ -18,9 +18,10 @@ get_code_ram ()
     # STACK     DATA
     # E D       E D COMMON TOTAL
     local stack=$(cut -d' ' -f1 ${results})
-    local data=$(cut -d' ' -f6 ${results})
+    local e_data=$(cut -d' ' -f3 ${results})
+    local c_data=$(cut -d' ' -f5 ${results})
 
-    echo $((stack+data))
+    echo $((stack+e_data+c_data))
 }
 
 get_code_time ()
