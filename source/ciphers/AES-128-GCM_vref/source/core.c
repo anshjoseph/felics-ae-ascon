@@ -1,9 +1,14 @@
-static unsigned char multiply(unsigned int c,unsigned int d)
+#include <stddef.h>
+#include <stdint.h>
+
+#include "common.h"
+
+static uint8_t multiply(unsigned int c,unsigned int d)
 {
-  unsigned char f[8];
-  unsigned char g[8];
-  unsigned char h[15];
-  unsigned char result;
+  uint8_t f[8];
+  uint8_t g[8];
+  uint8_t h[15];
+  uint8_t result;
   int i;
   int j;
 
@@ -26,26 +31,26 @@ static unsigned char multiply(unsigned int c,unsigned int d)
   return result;
 }
 
-static unsigned char square(unsigned char c)
+static uint8_t square(uint8_t c)
 {
   return multiply(c,c);
 }
 
-static unsigned char xtime(unsigned char c)
+static uint8_t xtime(uint8_t c)
 {
   return multiply(c,2);
 }
 
-static unsigned char bytesub(unsigned char c)
+static uint8_t bytesub(uint8_t c)
 {
-  unsigned char c3 = multiply(square(c),c);
-  unsigned char c7 = multiply(square(c3),c);
-  unsigned char c63 = multiply(square(square(square(c7))),c7);
-  unsigned char c127 = multiply(square(c63),c);
-  unsigned char c254 = square(c127);
-  unsigned char f[8];
-  unsigned char h[8];
-  unsigned char result;
+  uint8_t c3 = multiply(square(c),c);
+  uint8_t c7 = multiply(square(c3),c);
+  uint8_t c63 = multiply(square(square(square(c7))),c7);
+  uint8_t c127 = multiply(square(c63),c);
+  uint8_t c254 = square(c127);
+  uint8_t f[8];
+  uint8_t h[8];
+  uint8_t result;
   int i;
 
   for (i = 0;i < 8;++i) f[i] = 1 & (c254 >> i);
@@ -63,16 +68,16 @@ static unsigned char bytesub(unsigned char c)
 }
 
 int crypto_core_aes128encrypt(
-        unsigned char *out,
-  const unsigned char *in,
-  const unsigned char *k,
-  const unsigned char *c
+        uint8_t *out,
+  const uint8_t *in,
+  const uint8_t *k,
+  const uint8_t *c
 )
 {
-  unsigned char expanded[4][44];
-  unsigned char state[4][4];
-  unsigned char newstate[4][4];
-  unsigned char roundconstant;
+  uint8_t expanded[4][44];
+  uint8_t state[4][4];
+  uint8_t newstate[4][4];
+  uint8_t roundconstant;
   int i;
   int j;
   int r;
@@ -83,7 +88,7 @@ int crypto_core_aes128encrypt(
 
   roundconstant = 1;
   for (j = 4;j < 44;++j) {
-    unsigned char temp[4];
+    uint8_t temp[4];
     if (j % 4)
       for (i = 0;i < 4;++i) temp[i] = expanded[i][j - 1];
     else {
@@ -108,10 +113,10 @@ int crypto_core_aes128encrypt(
         state[i][j] = newstate[i][(j + i) % 4];
     if (r < 9)
       for (j = 0;j < 4;++j) {
-        unsigned char a0 = state[0][j];
-        unsigned char a1 = state[1][j];
-        unsigned char a2 = state[2][j];
-        unsigned char a3 = state[3][j];
+        uint8_t a0 = state[0][j];
+        uint8_t a1 = state[1][j];
+        uint8_t a2 = state[2][j];
+        uint8_t a3 = state[3][j];
 	state[0][j] = xtime(a0 ^ a1) ^ a1 ^ a2 ^ a3;
 	state[1][j] = xtime(a1 ^ a2) ^ a2 ^ a3 ^ a0;
 	state[2][j] = xtime(a2 ^ a3) ^ a3 ^ a0 ^ a1;

@@ -1,6 +1,9 @@
+#include <stddef.h>
+#include <stdint.h>
+
 #include "common.h"
 
-static int crypto_verify_16(const unsigned char *x,const unsigned char *y)
+static int crypto_verify_16(const uint8_t *x,const uint8_t *y)
 {
   unsigned int differentbits = 0;
 #define F(i) differentbits |= x[i] ^ y[i];
@@ -24,26 +27,25 @@ static int crypto_verify_16(const unsigned char *x,const unsigned char *y)
 }
 
 int crypto_aead_decrypt(
-  unsigned char *m,unsigned long long *outputmlen,
-  unsigned char *nsec,
-  const unsigned char *c,unsigned long long clen,
-  const unsigned char *ad,unsigned long long adlen,
-  const unsigned char *npub,
-  const unsigned char *k
+  uint8_t *m,size_t *outputmlen,
+  const uint8_t *c,size_t clen,
+  const uint8_t *ad,size_t adlen,
+  const uint8_t *npub,
+  const uint8_t *k
 )
 {
-  unsigned char kcopy[16];
-  unsigned char H[16];
-  unsigned char J[16];
-  unsigned char T[16];
-  unsigned char accum[16];
-  unsigned char stream[16];
-  unsigned char finalblock[16];
-  unsigned long long mlen;
-  unsigned long long origmlen;
-  unsigned long long index;
-  unsigned long long i;
-  const unsigned char *origc;
+  uint8_t kcopy[16];
+  uint8_t H[16];
+  uint8_t J[16];
+  uint8_t T[16];
+  uint8_t accum[16];
+  uint8_t stream[16];
+  uint8_t finalblock[16];
+  size_t mlen;
+  size_t origmlen;
+  size_t index;
+  size_t i;
+  const uint8_t *origc;
 
   for (i = 0;i < 16;++i) kcopy[i] = k[i];
 
@@ -63,7 +65,7 @@ int crypto_aead_decrypt(
   for (i = 0;i < 16;++i) accum[i] = 0;
 
   while (adlen > 0) {
-    unsigned long long blocklen = 16;
+    size_t blocklen = 16;
     if (adlen < blocklen) blocklen = adlen;
     addmul(accum,ad,blocklen,H);
     ad += blocklen;
@@ -73,7 +75,7 @@ int crypto_aead_decrypt(
   origc = c;
   origmlen = mlen;
   while (mlen > 0) {
-    unsigned long long blocklen = 16;
+    size_t blocklen = 16;
     if (mlen < blocklen) blocklen = mlen;
     addmul(accum,c,blocklen,H);
     c += blocklen;
@@ -89,7 +91,7 @@ int crypto_aead_decrypt(
   *outputmlen = mlen;
 
   while (mlen > 0) {
-    unsigned long long blocklen = 16;
+    size_t blocklen = 16;
     if (mlen < blocklen) blocklen = mlen;
     ++index;
     store32(J + 12,index);

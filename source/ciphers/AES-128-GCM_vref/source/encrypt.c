@@ -1,23 +1,25 @@
+#include <stddef.h>
+#include <stdint.h>
+
 #include "common.h"
 
 int crypto_aead_encrypt(
-  unsigned char *c,unsigned long long *clen,
-  const unsigned char *m,unsigned long long mlen,
-  const unsigned char *ad,unsigned long long adlen,
-  const unsigned char *nsec,
-  const unsigned char *npub,
-  const unsigned char *k
+  uint8_t *c,size_t *clen,
+  const uint8_t *m,size_t mlen,
+  const uint8_t *ad,size_t adlen,
+  const uint8_t *npub,
+  const uint8_t *k
 )
 {
-  unsigned char kcopy[16];
-  unsigned char H[16];
-  unsigned char J[16];
-  unsigned char T[16];
-  unsigned char accum[16];
-  unsigned char stream[16];
-  unsigned char finalblock[16];
-  unsigned long long i;
-  unsigned long long index;
+  uint8_t kcopy[16];
+  uint8_t H[16];
+  uint8_t J[16];
+  uint8_t T[16];
+  uint8_t accum[16];
+  uint8_t stream[16];
+  uint8_t finalblock[16];
+  size_t i;
+  size_t index;
 
   for (i = 0;i < 16;++i) kcopy[i] = k[i];
 
@@ -35,7 +37,7 @@ int crypto_aead_encrypt(
   for (i = 0;i < 16;++i) accum[i] = 0;
 
   while (adlen > 0) {
-    unsigned long long blocklen = 16;
+    size_t blocklen = 16;
     if (adlen < blocklen) blocklen = adlen;
     addmul(accum,ad,blocklen,H);
     ad += blocklen;
@@ -43,7 +45,7 @@ int crypto_aead_encrypt(
   }
 
   while (mlen > 0) {
-    unsigned long long blocklen = 16;
+    size_t blocklen = 16;
     if (mlen < blocklen) blocklen = mlen;
     ++index;
     store32(J + 12,index);
