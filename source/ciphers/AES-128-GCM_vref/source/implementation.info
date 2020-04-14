@@ -1,0 +1,7 @@
+ImplementationDescription: AES-128-GCM reference
+ImplementationAuthors: Daniel J. Bernstein (ported from SUPERCOP by Kévin Le Gouguec)
+
+EncryptCode: encrypt, common, core
+DecryptCode: decrypt, common, core, verify
+
+BlockSize: 16
