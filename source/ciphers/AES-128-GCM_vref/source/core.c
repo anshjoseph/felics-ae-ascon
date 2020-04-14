@@ -1,5 +1,3 @@
-#include "crypto_core.h"
-
 static unsigned char multiply(unsigned int c,unsigned int d)
 {
   unsigned char f[8];
@@ -64,7 +62,7 @@ static unsigned char bytesub(unsigned char c)
   return result;
 }
 
-int crypto_core(
+int crypto_core_aes128encrypt(
         unsigned char *out,
   const unsigned char *in,
   const unsigned char *k,
