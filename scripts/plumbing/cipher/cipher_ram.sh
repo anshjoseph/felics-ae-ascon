@@ -127,7 +127,7 @@ function simulate()
 			# Upload the program to the board
 			make -f ./../../../common/cipher.mk ARCHITECTURE=$SCRIPT_ARCHITECTURE $target_file &> $make_log_file
 
-			$JLINK_GDB_SERVER -USB -device cortex-m3 &> $simulator_output_file &
+			$JLINK_GDB_SERVER -device cortex-m3 &> $simulator_output_file &
 			$ARM_GDB -x $command_file &> $GDB_OUTPUT_FILE
 
                         kill -PIPE %'$JLINK_GDB_SERVER'
