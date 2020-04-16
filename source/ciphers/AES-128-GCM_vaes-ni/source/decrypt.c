@@ -1,10 +1,3 @@
-/*
-  aesenc-int.c version $Date$
-  AES-GCM.
-  Romain Dolbeau
-  Public Domain
-*/
-
 #include <stdint.h>
 #include <string.h>
 
@@ -12,10 +5,14 @@
 
 #include "common.h"
 
-/* full AES-GCM encryption function */
-int crypto_aead_encrypt(
-  uint8_t *c,size_t *clen,
-  const uint8_t *m,size_t mlen,
+/* full AES-GCM decryption function
+   basically the same as encrypt, but the checksuming
+   is done _before_ the decryption. And checksum is
+   checked at the end.
+ */
+int crypto_aead_decrypt(
+  uint8_t *m,size_t *mlen,
+  const uint8_t *c,size_t clen,
   const uint8_t *ad,size_t adlen_,
   const uint8_t *npub,
   const uint8_t *k
@@ -34,18 +31,17 @@ int crypto_aead_encrypt(
   for (i = 12; i < 16;i++) n2[i] = 0;
   memset(accum, 0, 16);
 
-  *clen = mlen + 16;
+  *mlen = clen - 16;
 
   aesni_encrypt1(H, accum /* only because it's zero */, rkeys);
   n2[15]++;
   aesni_encrypt1(T, n2, rkeys);
   
   (*(unsigned long long*)&fb[0]) = _bswap64((unsigned long long)(8*adlen));
-  (*(unsigned long long*)&fb[8]) = _bswap64((unsigned long long)(8*mlen));
+  (*(unsigned long long*)&fb[8]) = _bswap64((unsigned long long)(8*(*mlen)));
   
   const __m128i rev = _mm_set_epi8(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15);
 
-  /* we store H (and it's power) byte-reverted once and for all */
   __m128i Hv = _mm_shuffle_epi8(_mm_load_si128((const __m128i*)H), rev);
   _mm_store_si128((__m128i*)H,Hv);
   __m128i H2v = mulv(Hv, Hv);
@@ -57,7 +53,6 @@ int crypto_aead_encrypt(
   __m128i H7v = mulv(H6v, Hv);
   __m128i H8v = mulv(H7v, Hv);
 #endif
-
   __m128i accv = _mm_loadu_si128((const __m128i*)accum);
 
 #ifdef ACCBY8
@@ -85,7 +80,6 @@ int crypto_aead_encrypt(
     addmul(accum,ad+i,blocklen,H);
   }
 #else
-  /* unrolled by 4 GCM (by 8 doesn't improve using reduce4) */
   unsigned long long adlen_rnd64 = adlen & ~63ull;
   for (i = 0 ; i < adlen_rnd64 ; i+= 64) {
     __m128i X4 = _mm_loadu_si128((const __m128i*)(ad+i+ 0));
@@ -96,7 +90,6 @@ int crypto_aead_encrypt(
   }
   _mm_storeu_si128((__m128i*)accum, accv);
 
-  /* GCM remainder loop */
   for (i = adlen_rnd64 ; i < adlen ; i+= 16) {
     unsigned long long blocklen = 16;
     if (i+blocklen>adlen)
@@ -105,76 +98,77 @@ int crypto_aead_encrypt(
   }
 #endif
 
-  unsigned long long mlen_rnd128  = mlen & ~127ull;
+  unsigned long long mlen_rnd128  = *mlen & ~127ull;
 
-  /* this only does 8 full blocks, so no fancy bounds
-     checking is necessary*/
 #ifdef ACCBY8
-#define LOOPRND128                                                      \
+#define LOOPDRND128                                                     \
   {const int iter = 8;                                                  \
     const int lb = iter * 16;                                           \
     for (i = 0 ; i < mlen_rnd128 ; i+= lb) {                            \
-      aesni_encrypt8full(c+i, (unsigned int*)n2, rkeys, m+i, accum, Hv, H2v, H3v, H4v, H5v, H6v, H7v, H8v); \
+      aesni_decrypt8full(m+i, (unsigned int*)n2, rkeys, c+i, accum, Hv, H2v, H3v, H4v, H5v, H6v, H7v, H8v); \
     }}
 #else
-#define LOOPRND128                                                      \
+#define LOOPDRND128                                                     \
   {const int iter = 8;                                                  \
     const int lb = iter * 16;                                           \
     for (i = 0 ; i < mlen_rnd128 ; i+= lb) {                            \
-      aesni_encrypt8full(c+i, (unsigned int*)n2, rkeys, m+i, accum, Hv, H2v, H3v, H4v); \
+      aesni_decrypt8full(m+i, (unsigned int*)n2, rkeys, c+i, accum, Hv, H2v, H3v, H4v); \
     }}
 #endif
   
-  /* remainder loop, with the slower GCM update to accomodate
-     partial blocks */
-#define LOOPRMD128                                       \
-  {const int iter = 8;                                   \
-    const int lb = iter * 16;                            \
-  for (i = mlen_rnd128 ; i < mlen ; i+= lb) {            \
-    ALIGN16 unsigned char outni[lb];                     \
-    aesni_encrypt8(outni, (unsigned int*)n2, rkeys);                    \
-    unsigned long long mj = lb;                          \
-    if ((i+mj)>=mlen)                                    \
-      mj = mlen-i;                                       \
-    for (j = 0 ; j < mj ; j++)                           \
-      c[i+j] = m[i+j] ^ outni[j];                        \
-    for (j = 0 ; j < mj ; j+=16) {                       \
-      unsigned long long bl = 16;                        \
-      if (j+bl>=mj) {                                    \
-        bl = mj-j;                                       \
-      }                                                  \
-      addmul(accum,c+i+j,bl,H);                          \
-    }                                                    \
+#define LOOPDRMD128                                       \
+  {const int iter = 8;                                    \
+    const int lb = iter * 16;                             \
+    for (i = mlen_rnd128 ; i < *mlen ; i+= lb) {          \
+    ALIGN16 unsigned char outni[lb];                      \
+    unsigned long long mj = lb;                           \
+    if ((i+mj)>=*mlen)                                    \
+      mj = *mlen-i;                                       \
+    for (j = 0 ; j < mj ; j+=16) {                        \
+      unsigned long long bl = 16;                         \
+      if (j+bl>=mj) {                                     \
+        bl = mj-j;                                        \
+      }                                                   \
+      addmul(accum,c+i+j,bl,H);                           \
+    }                                                     \
+    aesni_encrypt8(outni, (unsigned int*)n2, rkeys);      \
+    for (j = 0 ; j < mj ; j++)                            \
+      m[i+j] = c[i+j] ^ outni[j];                         \
   }}
   
-#define LOOP(iter)                                       \
-  const int lb = iter * 16;                              \
-  for (i = 0 ; i < mlen ; i+= lb) {                      \
-    ALIGN16 unsigned char outni[lb];       \
-    aesni_encrypt##iter(outni, (unsigned int*)n2, rkeys);               \
-    unsigned long long mj = lb;                          \
-    if ((i+mj)>=mlen)                                    \
-      mj = mlen-i;                                       \
-    for (j = 0 ; j < mj ; j++)                           \
-      c[i+j] = m[i+j] ^ outni[j];                        \
-    for (j = 0 ; j < mj ; j+=16) {                       \
-      unsigned long long bl = 16;                        \
-      if (j+bl>=mj) {                                    \
-        bl = mj-j;                                       \
-      }                                                  \
-      addmul(accum,c+i+j,bl,H);                          \
-    }                                                    \
+#define LOOPD(iter)                                       \
+  const int lb = iter * 16;                               \
+  for (i = 0 ; i < *mlen ; i+= lb) {                      \
+    ALIGN16 unsigned char outni[lb];                      \
+    unsigned long long mj = lb;                           \
+    if ((i+mj)>=*mlen)                                    \
+      mj = *mlen-i;                                       \
+    for (j = 0 ; j < mj ; j+=16) {                        \
+      unsigned long long bl = 16;                         \
+      if (j+bl>=mj) {                                     \
+        bl = mj-j;                                        \
+      }                                                   \
+      addmul(accum,c+i+j,bl,H);                           \
+    }                                                     \
+    aesni_encrypt##iter(outni, (unsigned int*)n2, rkeys);                \
+    for (j = 0 ; j < mj ; j++)                            \
+      m[i+j] = c[i+j] ^ outni[j];                         \
   }
   
   n2[15]=0;
   incle(n2);
   incle(n2);
-  LOOPRND128;
-  LOOPRMD128;
+  LOOPDRND128;
+  LOOPDRMD128;
+/*   LOOPD(8); */
 
   addmul(accum,fb,16,H);
 
-  for (i = 0;i < 16;++i) c[i+mlen] = T[i] ^ accum[15-i];
+  unsigned char F = 0;
 
-  return 0;
+  for (i = 0;i < 16;++i) F |= (c[i+(*mlen)] != (T[i] ^ accum[15-i]));
+  if (F)
+    return -111;
+
+  return 0; 
 }
