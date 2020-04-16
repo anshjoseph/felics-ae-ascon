@@ -1,6 +1,8 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+#pragma GCC target("aes", "pclmul", "sse4.1")
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <immintrin.h>
