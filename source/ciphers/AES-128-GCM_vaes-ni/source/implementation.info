@@ -1,0 +1,8 @@
+ImplementationDescription: AES-128-GCM using the AES-NI extension to the x86 ISA
+ImplementationAuthors: Romain Dolbeau (ported from SUPERCOP by Kévin Le Gouguec)
+
+EncryptCode: encrypt
+DecryptCode: decrypt
+
+BlockSize: 16
+Platforms: PC
