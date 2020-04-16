@@ -31,6 +31,9 @@ prog felics_check.elf
 # Add a console device to the IO's simulator's bus		
 simio add console consoleDevice
 
+# Simulate the hardware multiplier.
+simio add hwmult hwmult
+
 # Configure console device
 simio config consoleDevice base 0x7f
 

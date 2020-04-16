@@ -120,7 +120,12 @@ function simulate()
 			kill -PIPE %'$SIMAVR_SIMULATOR'
 			;;
 		$SCRIPT_ARCHITECTURE_MSP)
-			$MSPDEBUG_SIMULATOR -n sim "prog $target_file" gdb &> $simulator_output_file &
+			local commands=(
+				"prog ${target_file}"
+				"simio add hwmult hwmult"
+				gdb
+			)
+			$MSPDEBUG_SIMULATOR -n sim "${commands[@]}" &> $simulator_output_file &
 			$MSP_GDB -x $command_file &> $GDB_OUTPUT_FILE
 			;;
 		$SCRIPT_ARCHITECTURE_ARM)

@@ -41,6 +41,9 @@ setbreak EndDecryption
 # Add the benchmark execution time debug device to the IO's simulator's bus
 simio add tracer debugDevice
 
+# Simulate the hardware multiplier.
+simio add hwmult hwmult
+
 
 # Run the program
 run
