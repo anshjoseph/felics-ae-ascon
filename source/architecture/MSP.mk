@@ -41,6 +41,7 @@ CC := $(MSPGCC_BIN_DIR)/msp430-elf-gcc -I$(MSPGCC_SUPPORT_DIR)
 CFLAGS := \
 	-std=c99 \
 	-mmcu=msp430f1611 \
+	-mhwmult=none \
 	-g \
 	-fdata-sections \
 	-ffunction-sections \
