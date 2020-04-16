@@ -70,7 +70,7 @@ static inline void aesni_encrypt1(unsigned char *out, unsigned char *n, __m128i 
   __m128i nv = _mm_load_si128((const __m128i *)n);
   int i;
   __m128i temp = _mm_xor_si128(nv, rkeys[0]);
-#pragma unroll(9)
+#pragma GCC unroll 9
   for (i = 1 ; i < 10 ; i++) {
     temp = _mm_aesenc_si128(temp, rkeys[i]);
   }
@@ -555,7 +555,7 @@ static inline void aesni_encrypt8full(const unsigned char *out, unsigned int *n,
   MAKE8(NVx);
   int i;
   MAKE8(TEMPx);
-#pragma unroll(9)
+#pragma GCC unroll 9
   for (i = 1 ; i < 10 ; i++) {
     MAKE8(AESENCx);
   }
@@ -585,7 +585,7 @@ static inline void aesni_decrypt8full(const unsigned char *out, unsigned int *n,
   int i;
   MAKE8(NVx);
   MAKE8(TEMPx);
-#pragma unroll(9)
+#pragma GCC unroll 9
   for (i = 1 ; i < 10 ; i++) {
     MAKE8(AESENCx);
   }
