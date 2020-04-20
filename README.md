@@ -33,7 +33,7 @@ subfolder).
 
 ### `scripts`
 
-This folder provides the scripts which compile and run the evaluted
+This folder provides the scripts which compile and run the evaluated
 ciphers, measure their performance, and display the measured data.
 
 ### `results`
