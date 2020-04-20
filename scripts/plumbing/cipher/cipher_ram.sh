@@ -96,12 +96,10 @@ echo -e "\t SCRIPT_OUTPUT \t\t\t = $SCRIPT_OUTPUT"
 
 GDB_OUTPUT_FILE=${SCRIPT_ARCHITECTURE}_gdb_stack_sections.log
 
-# Simulate the given binary file execution
-# Parameters:
-# 	$1 - the gdb target binary file
-function simulate()
+# Run or simulate the binary under a debugger.
+run-debugger ()
 {
-	local target_file=$1
+	local binary=felics_bench.elf
 	local command_file=../../../../scripts/plumbing/cipher/stack/${SCRIPT_ARCHITECTURE,,}_stack_sections.gdb
 	local make_log_file=${SCRIPT_ARCHITECTURE}_cipher_ram_make.log
 
@@ -119,17 +117,17 @@ function simulate()
 
 	case $SCRIPT_ARCHITECTURE in
 		$SCRIPT_ARCHITECTURE_PC)
-			$PC_GDB -x $command_file $target_file &> $GDB_OUTPUT_FILE &
+			$PC_GDB -x $command_file ${binary} &> $GDB_OUTPUT_FILE &
 			;;
 		$SCRIPT_ARCHITECTURE_AVR)
-			$SIMAVR_SIMULATOR -g -m atmega128 $target_file &> ${server_log} &
+			$SIMAVR_SIMULATOR -g -m atmega128 ${binary} &> ${server_log} &
 			$AVR_GDB -x $command_file &> $GDB_OUTPUT_FILE
 
 			kill -PIPE %'$SIMAVR_SIMULATOR'
 			;;
 		$SCRIPT_ARCHITECTURE_MSP)
 			local commands=(
-				"prog ${target_file}"
+				"prog ${binary}"
 				"simio add hwmult hwmult"
 				gdb
 			)
@@ -138,7 +136,7 @@ function simulate()
 			;;
 		$SCRIPT_ARCHITECTURE_ARM)
 			# Upload the program to the board
-			make -f ./../../../common/cipher.mk ARCHITECTURE=$SCRIPT_ARCHITECTURE $target_file &> $make_log_file
+			make -f ./../../../common/cipher.mk ARCHITECTURE=$SCRIPT_ARCHITECTURE upload-bench &> $make_log_file
 
 			$JLINK_GDB_SERVER -device cortex-m3 &> ${server_log} &
 			$ARM_GDB -x $command_file &> $GDB_OUTPUT_FILE
@@ -147,7 +145,7 @@ function simulate()
 			;;
 		$SCRIPT_ARCHITECTURE_NRF52840)
 			# Upload the program to the board
-			make -f ./../../../common/cipher.mk ARCHITECTURE=$SCRIPT_ARCHITECTURE $target_file &> $make_log_file
+			make -f ./../../../common/cipher.mk ARCHITECTURE=$SCRIPT_ARCHITECTURE upload-bench &> $make_log_file
 
 			$JLINK_GDB_SERVER -device NRF52840_XXAA -if SWD -speed 4000 &> ${server_log} &
 			$NRF52840_GDB -x $command_file &> $GDB_OUTPUT_FILE
@@ -156,7 +154,7 @@ function simulate()
 			;;
 		$SCRIPT_ARCHITECTURE_STM32L053)
 			# Upload the program to the board
-			make -f ./../../../common/cipher.mk ARCHITECTURE=$SCRIPT_ARCHITECTURE $target_file &> $make_log_file
+			make -f ./../../../common/cipher.mk ARCHITECTURE=$SCRIPT_ARCHITECTURE upload-bench &> $make_log_file
 
 			$STLINK_GDB_SERVER &> ${server_log} &
 			$STM32L053_GDB -x $command_file &> $GDB_OUTPUT_FILE
@@ -375,33 +373,7 @@ do
 done
 
 
-# Debug the executable
-case $SCRIPT_ARCHITECTURE in
-	$SCRIPT_ARCHITECTURE_PC)
-		simulate felics_bench.elf
-		;;
-
-	$SCRIPT_ARCHITECTURE_AVR)
-		simulate felics_bench.elf
-		;;
-	
-	$SCRIPT_ARCHITECTURE_MSP)
-		simulate felics_bench.elf
-		;;
-
-	$SCRIPT_ARCHITECTURE_ARM)
-		simulate upload-bench
-		;;
-
-	$SCRIPT_ARCHITECTURE_NRF52840)
-		simulate upload-bench
-		;;
-
-	$SCRIPT_ARCHITECTURE_STM32L053)
-		simulate upload-bench
-		;;
-esac
-
+run-debugger
 
 e_stack=$(compute_stack_usage $GDB_OUTPUT_FILE 1)
 d_stack=$(compute_stack_usage $GDB_OUTPUT_FILE 2)
