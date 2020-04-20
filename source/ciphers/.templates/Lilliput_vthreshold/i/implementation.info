@@ -3,4 +3,3 @@ ImplementationAuthors: Alexandre Adomnicai, Kévin Le Gouguec, Léo Reynaud
 
 EncryptCode: encrypt, cipher, tweakey
 DecryptCode: decrypt, cipher, tweakey
-BlockSize: 16

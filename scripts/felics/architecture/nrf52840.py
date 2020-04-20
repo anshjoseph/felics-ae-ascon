@@ -12,7 +12,7 @@ class Nrf52840(Architecture):
 
     @property
     def name(self):
-        return 'NRF52840 Cortex-M4'
+        return 'nRF52840 Cortex-M4'
 
     @property
     def size(self):

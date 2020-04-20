@@ -5,4 +5,3 @@ EncryptCode: encrypt, cipher, cipher_asm, tweakey, tweakey_asm
 DecryptCode: decrypt, cipher, cipher_asm, tweakey, tweakey_asm
 
 Platforms: MSP
-BlockSize: 16

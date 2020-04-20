@@ -4,4 +4,3 @@ ImplementationAuthors: Daniel J. Bernstein (ported from SUPERCOP by Kévin Le Go
 EncryptCode: encrypt, common, core
 DecryptCode: decrypt, common, core
 
-BlockSize: 16

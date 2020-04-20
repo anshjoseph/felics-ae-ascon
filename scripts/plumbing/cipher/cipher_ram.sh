@@ -193,8 +193,6 @@ function compute_stack_usage()
 echo "Begin cipher RAM - $(pwd)"
 
 
-# Get the key and block sizes.
-
 get-api-constant ()
 (
     # We can't just grep "#define $1", as this definition might refer
@@ -222,7 +220,6 @@ get-implem-info ()
     grep "^${key}: " ../source/implementation.info | cut -d' ' -f2-
 }
 
-block_size=$(get-implem-info BlockSize)
 key_size=$(get-api-constant CRYPTO_KEYBYTES)
 
 # Set the searched files pattern

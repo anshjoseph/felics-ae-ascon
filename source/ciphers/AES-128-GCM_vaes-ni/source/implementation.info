@@ -4,5 +4,4 @@ ImplementationAuthors: Romain Dolbeau (ported from SUPERCOP by Kévin Le Gouguec
 EncryptCode: encrypt
 DecryptCode: decrypt
 
-BlockSize: 16
 Platforms: PC

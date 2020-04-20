@@ -5,4 +5,3 @@ EncryptCode: encrypt, cipher, tweakey
 DecryptCode: decrypt, cipher, tweakey
 
 Platforms: NRF52840
-BlockSize: 16

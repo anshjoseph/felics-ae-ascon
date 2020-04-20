@@ -99,10 +99,6 @@ decryption
 					EncryptCode: f, g, h
 					DecryptCode: f
 
-		h. Specify the algorithm's block size in bytes:
-			Example:
-				BlockSize: 16
-
 	4. Fill the cipher implementation authors in "implementation.info"
 		Example:
 			ImplementationAuthors: John Doe
