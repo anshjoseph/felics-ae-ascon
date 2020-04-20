@@ -47,7 +47,7 @@
 #  		./../../../../scripts/cipher/cipher_ram.sh -o=results.txt
 #
 
-set -e
+set -eu
 
 # Get current script path
 script_path=$(dirname $0)
@@ -99,13 +99,21 @@ GDB_OUTPUT_FILE=${SCRIPT_ARCHITECTURE}_gdb_stack_sections.log
 # Simulate the given binary file execution
 # Parameters:
 # 	$1 - the gdb target binary file
-# 	$2 - the simulator output file
 function simulate()
 {
 	local target_file=$1
-	local simulator_output_file=$2
 	local command_file=../../../../scripts/plumbing/cipher/stack/${SCRIPT_ARCHITECTURE,,}_stack_sections.gdb
 	local make_log_file=${SCRIPT_ARCHITECTURE}_cipher_ram_make.log
+
+	local -A servers=(
+		[AVR]=simavr
+		[MSP]=mspdebug
+		[ARM]=JLinkGDBServer
+		[NRF52840]=JLinkGDBServer
+		[STM32L053]=st-util
+		[PC]=N/A
+	)
+	local server_log=${SCRIPT_ARCHITECTURE}_${servers[${SCRIPT_ARCHITECTURE}]}_stack_sections.log
 
 	echo "Run GDB script $(basename ${command_file})"
 
@@ -114,7 +122,7 @@ function simulate()
 			$PC_GDB -x $command_file $target_file &> $GDB_OUTPUT_FILE &
 			;;
 		$SCRIPT_ARCHITECTURE_AVR)
-			$SIMAVR_SIMULATOR -g -m atmega128 $target_file &> $simulator_output_file &
+			$SIMAVR_SIMULATOR -g -m atmega128 $target_file &> ${server_log} &
 			$AVR_GDB -x $command_file &> $GDB_OUTPUT_FILE
 
 			kill -PIPE %'$SIMAVR_SIMULATOR'
@@ -125,35 +133,35 @@ function simulate()
 				"simio add hwmult hwmult"
 				gdb
 			)
-			$MSPDEBUG_SIMULATOR -n sim "${commands[@]}" &> $simulator_output_file &
+			$MSPDEBUG_SIMULATOR -n sim "${commands[@]}" &> ${server_log} &
 			$MSP_GDB -x $command_file &> $GDB_OUTPUT_FILE
 			;;
 		$SCRIPT_ARCHITECTURE_ARM)
 			# Upload the program to the board
 			make -f ./../../../common/cipher.mk ARCHITECTURE=$SCRIPT_ARCHITECTURE $target_file &> $make_log_file
 
-			$JLINK_GDB_SERVER -device cortex-m3 &> $simulator_output_file &
+			$JLINK_GDB_SERVER -device cortex-m3 &> ${server_log} &
 			$ARM_GDB -x $command_file &> $GDB_OUTPUT_FILE
 
-                        kill -PIPE %'$JLINK_GDB_SERVER'
+			kill -PIPE %'$JLINK_GDB_SERVER'
 			;;
 		$SCRIPT_ARCHITECTURE_NRF52840)
 			# Upload the program to the board
 			make -f ./../../../common/cipher.mk ARCHITECTURE=$SCRIPT_ARCHITECTURE $target_file &> $make_log_file
 
-			$JLINK_GDB_SERVER -device NRF52840_XXAA -if SWD -speed 4000 &> $simulator_output_file &
+			$JLINK_GDB_SERVER -device NRF52840_XXAA -if SWD -speed 4000 &> ${server_log} &
 			$NRF52840_GDB -x $command_file &> $GDB_OUTPUT_FILE
 
-                        kill -PIPE %'$JLINK_GDB_SERVER'
+			kill -PIPE %'$JLINK_GDB_SERVER'
 			;;
 		$SCRIPT_ARCHITECTURE_STM32L053)
 			# Upload the program to the board
 			make -f ./../../../common/cipher.mk ARCHITECTURE=$SCRIPT_ARCHITECTURE $target_file &> $make_log_file
 
-			$STLINK_GDB_SERVER &> $simulator_output_file &
+			$STLINK_GDB_SERVER &> ${server_log} &
 			$STM32L053_GDB -x $command_file &> $GDB_OUTPUT_FILE
 
-                        kill -PIPE %'$STLINK_GDB_SERVER'
+			kill -PIPE %'$STLINK_GDB_SERVER'
 			;;
 	esac
 
@@ -173,7 +181,6 @@ function compute_stack_usage()
 {
 	local output_file=$1
 	local variable_name=$2
-
 
 	# Get the stack content array
 	local stack_content=( $(cat $output_file | nawk '/\$'$variable_name' = {/,/}/' | tr -d '\r' | cut -d '{' -f 2 | cut -d '}' -f 1 | tr -d ',') ) 
@@ -325,7 +332,7 @@ do
 		fi
 	
 	
-		case $constants_section in
+		case $section in
 			EncryptCode)
 				shared_constants_e=$(($shared_constants_e + $shared_value))
 				;;
@@ -368,56 +375,36 @@ do
 done
 
 
-# Get the cipher name
-cipher_name=$(basename -- "$(dirname -- "$(pwd)")")
-
-
-# Set the searched file pattern
-file=felics_bench.elf
-# Get the number of files matching the pattern
-files_number=$(find . -maxdepth 1 -type f -name "$file" | wc -l)
-
-if [ 0 -eq $files_number ] ; then
-	echo "There is no file matching the pattern: '$file' for cipher '$cipher_name'!"
-	exit 1
-fi
-
-
 # Debug the executable
 case $SCRIPT_ARCHITECTURE in
 	$SCRIPT_ARCHITECTURE_PC)
-		simulate $file
+		simulate felics_bench.elf
 		;;
 
 	$SCRIPT_ARCHITECTURE_AVR)
-		simulate $file ${SCRIPT_ARCHITECTURE}_simavr_stack_sections.log
+		simulate felics_bench.elf
 		;;
 	
 	$SCRIPT_ARCHITECTURE_MSP)
-		simulate $file ${SCRIPT_ARCHITECTURE}_mspdebug_stack_sections.log
+		simulate felics_bench.elf
 		;;
 
 	$SCRIPT_ARCHITECTURE_ARM)
-		simulate upload-bench ${SCRIPT_ARCHITECTURE}_jlinkgdbserver_stack_sections.log
+		simulate upload-bench
 		;;
 
 	$SCRIPT_ARCHITECTURE_NRF52840)
-		simulate upload-bench ${SCRIPT_ARCHITECTURE}_jlinkgdbserver_stack_sections.log
+		simulate upload-bench
 		;;
 
 	$SCRIPT_ARCHITECTURE_STM32L053)
-		simulate upload-bench ${SCRIPT_ARCHITECTURE}_stlinkgdbserver_stack_sections.log
+		simulate upload-bench
 		;;
 esac
 
 
-e_stack=0
-d_stack=0
-if [ -f $gdb_stack_sections_log_file ] ; then
-	e_stack=$(compute_stack_usage $GDB_OUTPUT_FILE 1)
-	d_stack=$(compute_stack_usage $GDB_OUTPUT_FILE 2)
-fi
-
+e_stack=$(compute_stack_usage $GDB_OUTPUT_FILE 1)
+d_stack=$(compute_stack_usage $GDB_OUTPUT_FILE 2)
 
 # Display results
 printf "%s %s %s %s %s %s" $e_stack $d_stack $data_ram_e $data_ram_d $data_ram_common $data_ram_total > $SCRIPT_OUTPUT
