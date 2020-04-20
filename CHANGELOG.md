@@ -69,12 +69,12 @@
   still generated during the benchmark process, but it is no longer
   necessary to add them when adding implementations.
 
-## [0.1.0]
+## [0.0.1] – 2019-07-03
 
 ### Added
 
 - This changelog, following conventions from
   <https://keepachangelog.com>.
 
-[Unreleased]: https://gitlab.inria.fr/minier/felics-ae/compare/0.1.0...master
-[0.1.0]: https://gitlab.inria.fr/minier/felics-ae/tags/0.1.0
+[Unreleased]: https://gitlab.inria.fr/minier/felics-ae/compare/0.0.1...master
+[0.0.1]: https://gitlab.inria.fr/minier/felics-ae/tags/0.0.1
