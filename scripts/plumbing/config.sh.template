@@ -33,14 +33,6 @@
 
 DEPENDENCIES_DIR=/opt/felics
 
-PC_SIZE=size
-AVR_SIZE=avr-size
-MSP_SIZE=${DEPENDENCIES_DIR}/msp430-gcc/bin/msp430-elf-size
-ARM_SIZE=arm-none-eabi-size
-NRF52840_SIZE=arm-none-eabi-size
-STM32L053_SIZE=arm-none-eabi-size
-
-
 PC_GDB=gdb
 AVR_GDB=avr-gdb
 MSP_GDB=${DEPENDENCIES_DIR}/msp430-gcc/bin/msp430-elf-gdb

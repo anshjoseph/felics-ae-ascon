@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: 2019 Airbus Cybersecurity SAS
 
 from collections import defaultdict, namedtuple
+from math import nan
 
 from felics import ARCHITECTURES_BY_NAME, METRICS
 
@@ -31,9 +32,15 @@ def _format_diff(diff, value1, value2):
     return template.format_map(arguments)
 
 
+def _relative_change(old, new):
+    if old == 0:
+        return nan
+    return (new-old)/old
+
+
 def _compute_diffs(data1, data2, threshold=0):
     differences = (
-        (m, (data2[m]-data1[m]) / data1[m])
+        (m, _relative_change(data1[m], data2[m]))
         for m in METRICS
     )
 

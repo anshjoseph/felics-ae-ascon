@@ -47,13 +47,10 @@
 #  		./../../../../scripts/cipher/cipher_code_size.sh -o=results.txt
 #
 
-set -e
+set -eu
 
 # Get current script path
 script_path=$(dirname $0)
-
-# Include configuration file
-source $script_path/../config.sh
 
 # Include constants files
 source $script_path/../constants/constants.sh
@@ -108,41 +105,9 @@ if [ 0 -eq $files_number ] ; then
 	exit 1
 fi
 
-# Get the files matching the pattern
-files=$(ls $pattern)
-
-
-# Set the size command depending on the architecture
-case $SCRIPT_ARCHITECTURE in
-	$SCRIPT_ARCHITECTURE_PC)
-		script_size=$PC_SIZE	
-		;;
-
-	$SCRIPT_ARCHITECTURE_AVR)
-		script_size=$AVR_SIZE
-		;;
-
-	$SCRIPT_ARCHITECTURE_MSP)
-		script_size=$MSP_SIZE
-		;;
-
-	$SCRIPT_ARCHITECTURE_ARM)
-		script_size=$ARM_SIZE
-		;;
-
-	$SCRIPT_ARCHITECTURE_NRF52840)
-		script_size=$NRF52840_SIZE
-		;;
-
-	$SCRIPT_ARCHITECTURE_STM32L053)
-		script_size=$STM32L053_SIZE
-		;;
-esac
-
-
-for file in $files
+for file in ${pattern}
 do
-	size=$($script_size $file | grep $file)
+	size=$(size $file | grep $file)
 
 	# Get the section sizes
 	text=$(echo $size | cut -d ' ' -f 1)
