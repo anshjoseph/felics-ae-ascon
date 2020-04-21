@@ -16,6 +16,7 @@
 ;; This file provides a threshold implementation of Lilliput-TBC's tweakey
 ;; schedule.
 
+#include "felics/helpers.S"
 #include "constants.h"
 
 #define LANE_BITS  64
@@ -42,12 +43,7 @@
         .endm
 
 
-        .section .text
-
-
-        .global tweakey_X_state_extract
-        .type tweakey_X_state_extract, @function
-tweakey_X_state_extract:
+function tweakey_X_state_extract
         ;; r12: TK^r
         ;; r13: C^r = r
         ;; r14: RTK^r
@@ -123,9 +119,7 @@ tweakey_X_state_extract:
         pop r4
         ret
 
-        .global tweakey_Y_state_extract
-        .type tweakey_Y_state_extract, @function
-tweakey_Y_state_extract:
+function tweakey_Y_state_extract
         ;; r12: TK^r
         ;; r13: C^r = r
         ;; r14: RTK^r
@@ -178,9 +172,7 @@ tweakey_Y_state_extract:
         pop r4
         ret
 
-        .global tweakey_state_update
-        .type tweakey_state_update, @function
-tweakey_state_update:
+function tweakey_state_update
         ;; r12: TK_X
         ;; r13: TK_Y
         push r4

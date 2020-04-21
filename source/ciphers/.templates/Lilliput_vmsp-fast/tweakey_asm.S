@@ -16,6 +16,7 @@
 
 ;; This file provides the implementation of Lilliput-TBC's tweakey schedule.
 
+#include "felics/helpers.S"
 #include "constants.h"
 
 #define LANE_BITS  64
@@ -41,12 +42,7 @@
         .endm
 
 
-        .section .text
-
-
-        .global tweakey_state_extract
-        .type tweakey_state_extract, @function
-tweakey_state_extract:
+function tweakey_state_extract
         ;; r12: TK^r
         ;; r13: C^r = r
         ;; r14: RTK^r
@@ -122,9 +118,7 @@ tweakey_state_extract:
         ret
 
 
-        .global tweakey_state_update
-        .type tweakey_state_update, @function
-tweakey_state_update:
+function tweakey_state_update
         ;; r12: TK
        push r4
         push r5

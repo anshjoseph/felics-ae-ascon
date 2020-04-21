@@ -16,8 +16,10 @@
 
 ;; This file provides the implementation for Lilliput-TBC.
 
-        .section .rodata
-S:
+#include "felics/helpers.S"
+
+
+rodata S
         .byte \
         0x20, 0x00, 0xB2, 0x85, 0x3B, 0x35, 0xA6, 0xA4, 0x30, 0xE4, 0x6A, 0x2C, 0xFF, 0x59, 0xE2, 0x0E, \
         0xF8, 0x1E, 0x7A, 0x80, 0x15, 0xBD, 0x3E, 0xB1, 0xE8, 0xF3, 0xA2, 0xC2, 0xDA, 0x51, 0x2A, 0x10, \
@@ -37,11 +39,7 @@ S:
         0x9A, 0xD4, 0x18, 0x47, 0xAA, 0xAF, 0xBC, 0x5B, 0xD5, 0x11, 0xD0, 0xB0, 0x70, 0xBB, 0x0D, 0xBA
 
 
-        .section .text
-
-        .global nonlinear_and_linear
-        .type nonlinear_and_linear, @function
-nonlinear_and_linear:
+function nonlinear_and_linear
         ;; r12: X
         ;; r13: RTK
 
@@ -151,9 +149,7 @@ nonlinear_and_linear:
 ;;
 ;; When possible, move words instead of bytes.
 
-        .global permutation_enc
-        .type permutation_enc, @function
-permutation_enc:
+function permutation_enc
         ;; r12: X
         push r4
         push r5
@@ -197,9 +193,7 @@ permutation_enc:
 
         ret
 
-        .global permutation_dec
-        .type permutation_dec, @function
-permutation_dec:
+function permutation_dec
         ;; r12: X
         push r4
         push r5

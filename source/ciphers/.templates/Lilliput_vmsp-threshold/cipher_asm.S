@@ -16,6 +16,7 @@
 
 ;; This file provides the implementation for Lilliput-TBC.
 
+#include "felics/helpers.S"
  
 ;; Permutations:
 ;;
@@ -27,9 +28,7 @@
 ;;
 ;; When possible, move words instead of bytes.
 
-        .global permutation_enc
-        .type permutation_enc, @function
-permutation_enc:
+function permutation_enc
         ;; r12: X
         push r4
         push r5
@@ -73,9 +72,7 @@ permutation_enc:
 
         ret
 
-        .global permutation_dec
-        .type permutation_dec, @function
-permutation_dec:
+function permutation_dec
         ;; r12: X
         push r4
         push r5
