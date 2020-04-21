@@ -241,8 +241,7 @@ run-benchmark ()
                ARCHITECTURE=${architecture}     \
                COMPILER_OPTIONS="${options}"
 
-    timeout 120 ${script_path}/cipher/cipher_code_size.sh \
-            "-a=$architecture" -o=$code_size_output
+    timeout 120 ${script_path}/cipher/code_size.py -o=$code_size_output
 
     timeout 120 ${script_path}/cipher/cipher_ram.sh \
             "-a=$architecture" -o=$code_ram_output
