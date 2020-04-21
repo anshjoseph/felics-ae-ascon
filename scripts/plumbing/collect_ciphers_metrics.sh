@@ -56,6 +56,8 @@ script_path=$(dirname $0)
 # Include constants files
 source $script_path/constants/constants.sh
 
+export PYTHONPATH=${script_path}/..
+
 
 # Parse script arguments
 for i in "$@"

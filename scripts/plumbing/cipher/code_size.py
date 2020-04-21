@@ -6,6 +6,8 @@ import re
 from subprocess import run, PIPE
 from sys import argv
 
+from felics.errors import FelicsError
+
 
 def parse_arguments():
     parser = ArgumentParser()
@@ -37,11 +39,11 @@ class ImplementationInfo:
         return self._split('DecryptCode', ',')
 
 
-_sysv_text_sections_re = '|'.join((
+SYSV_TEXT_SECTIONS = (
     'text', 'data', 'rodata', 'progmem.data', 'eh_frame'
-))
+)
 
-_sysv_size_re = (
+SYSV_SIZE_RE = (
     '^'
     r'(?P<section>\.(?:{section_re}))'
     r'(?:\.(?P<symbol>[\w.]+))?'
@@ -50,30 +52,70 @@ _sysv_size_re = (
     ' +'
     '(?P<addr>\d+)'
     '$'
-).format(section_re=_sysv_text_sections_re)
+).format(section_re='|'.join(SYSV_TEXT_SECTIONS))
 
-SYSV_SIZE_PATTERN = re.compile(_sysv_size_re, flags=re.MULTILINE)
+SYSV_SIZE_PATTERN = re.compile(SYSV_SIZE_RE, flags=re.MULTILINE)
+
+
+class InvalidCodeSize(FelicsError):
+
+    def __init__(self, file, actual, expected):
+        self._file = file
+        self._actual = actual
+        self._expected = expected
+
+    def __str__(self):
+        return '''
+Adding the text and data sections from {s._file} yields {s._expected}
+bytes, but only {s._actual} bytes were found by iterating over these
+subsections:
+- {sections}
+It is likely that this list of subsections must be appended.'''.format(
+            s=self,
+            sections = '\n- '.join(SYSV_TEXT_SECTIONS)
+        )
+
+
+def size(*args):
+    return run(
+        ('size',)+args, stdout=PIPE, universal_newlines=True, check=True
+    ).stdout
+
+
+def expected_size(elf_file):
+    header_line, values_line = size(elf_file).splitlines()
+    header = header_line.split()
+    values = values_line.split()
+    return sum(
+        int(values[i]) for i, name in enumerate(header)
+        if name in {'text', 'data'}
+    )
+
 
 def section_name(match):
+    # Assume there are no symbol collisions across sections, e.g. no
+    # file contains both .text.foo and .rodata.foo.
     if match['symbol'] is not None:
         return match['symbol']
     return match['section']
 
-def parse_sizes(elf_file):
-    size_output = run(
-        ('size', '-A', elf_file),
-        stdout=PIPE, universal_newlines=True, check=True
-    ).stdout
 
+def parse_sizes(elf_file):
     matches = (
-        m.groupdict() for m in SYSV_SIZE_PATTERN.finditer(size_output)
+        m.groupdict() for m in SYSV_SIZE_PATTERN.finditer(size('-A', elf_file))
     )
 
-    # Assume that no .text and .rodata symbols share the same name.
-    return {
-        section_name(m): int(m['size'])
-        for m in matches
+    section_sizes = {
+        section_name(m): int(m['size']) for m in matches
     }
+
+    # Sanity check: our list of subsections might not be exhaustive.
+    expected = expected_size(elf_file)
+    actual = sum(section_sizes.values())
+    if actual != expected:
+        raise InvalidCodeSize(elf_file, actual, expected)
+
+    return section_sizes
 
 
 def sum_files(sizes, files):
