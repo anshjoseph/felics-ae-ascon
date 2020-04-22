@@ -35,6 +35,12 @@ generation to switch from 2 shares to 3 shares and vice versa.
 #include "random.h"
 #include "tweakey.h"
 
+/* Only ΘCB3 mode needs decryption functions: define a symbol to
+ * selectively hide them. */
+#if TWEAK_LENGTH_BITS == 192
+#define LILLIPUT_I
+#endif
+
 static ROM_DATA_BYTE F[16][16] = {
     {0x0, 0x2, 0x0, 0x2, 0x2, 0x0, 0x2, 0x0, 0x0, 0x2, 0x0, 0x2, 0x2, 0x0, 0x2, 0x0},
     {0x0, 0x2, 0x9, 0xb, 0x3, 0x1, 0xa, 0x8, 0xd, 0xf, 0x4, 0x6, 0xe, 0xc, 0x7, 0x5},
@@ -243,7 +249,9 @@ static void _nonlinear_linear_layer(
 /* Assembly routines. */
 
 void permutation_enc(uint8_t X[BLOCK_BYTES]);
+#ifdef LILLIPUT_I
 void permutation_dec(uint8_t X[BLOCK_BYTES]);
+#endif
 
 void lilliput_tbc_encrypt(
     const uint8_t key[KEY_BYTES],
@@ -286,6 +294,8 @@ void lilliput_tbc_encrypt(
     }
 }
 
+#ifdef LILLIPUT_I
+
 void lilliput_tbc_decrypt(
     const uint8_t key[KEY_BYTES],
     const uint8_t tweak[TWEAK_BYTES],
@@ -317,3 +327,5 @@ void lilliput_tbc_decrypt(
         message[i] = X[i] ^ Y[i] ^ Z[i];
     }
 }
+
+#endif

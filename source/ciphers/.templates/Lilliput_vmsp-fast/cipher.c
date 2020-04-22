@@ -28,9 +28,11 @@ This file provides the implementation for Lilliput-TBC.
 #include "constants.h"
 #include "tweakey.h"
 
-
-#define SBOX_BYTE ROM_DATA_BYTE
-extern SBOX_BYTE S[256];
+/* Only ΘCB3 mode needs decryption functions: define a symbol to
+ * selectively hide them. */
+#if TWEAK_LENGTH_BITS == 192
+#define LILLIPUT_I
+#endif
 
 
 static void _state_init(uint8_t X[BLOCK_BYTES], const uint8_t message[BLOCK_BYTES])
@@ -60,7 +62,9 @@ static void _compute_round_tweakeys(
 /* Assembly routines. */
 void nonlinear_and_linear(uint8_t X[BLOCK_BYTES], const uint8_t RTK[ROUND_TWEAKEY_BYTES]);
 void permutation_enc(uint8_t X[BLOCK_BYTES]);
+#ifdef LILLIPUT_I
 void permutation_dec(uint8_t X[BLOCK_BYTES]);
+#endif
 
 
 void lilliput_tbc_encrypt(
@@ -88,6 +92,8 @@ void lilliput_tbc_encrypt(
     nonlinear_and_linear(ciphertext, RTK);
 }
 
+#ifdef LILLIPUT_I
+
 void lilliput_tbc_decrypt(
     const uint8_t key[KEY_BYTES],
     const uint8_t tweak[TWEAK_BYTES],
@@ -108,3 +114,5 @@ void lilliput_tbc_decrypt(
 
     nonlinear_and_linear(message, RTK[0]);
 }
+
+#endif

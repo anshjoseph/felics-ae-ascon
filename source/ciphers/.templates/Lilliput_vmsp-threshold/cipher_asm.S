@@ -17,6 +17,13 @@
 ;; This file provides the implementation for Lilliput-TBC.
 
 #include "felics/helpers.S"
+
+#include "parameters.h"
+/* Only ΘCB3 mode needs decryption functions: define a symbol to
+ * selectively hide them. */
+#if TWEAK_LENGTH_BITS == 192
+#define LILLIPUT_I
+#endif
  
 ;; Permutations:
 ;;
@@ -72,6 +79,8 @@ function permutation_enc
 
         ret
 
+#ifdef LILLIPUT_I
+
 function permutation_dec
         ;; r12: X
         push r4
@@ -115,3 +124,5 @@ function permutation_dec
         pop r4
 
         ret
+
+#endif

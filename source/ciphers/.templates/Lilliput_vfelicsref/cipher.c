@@ -26,10 +26,11 @@ This file provides the implementation for Lilliput-TBC.
 #include "constants.h"
 #include "tweakey.h"
 
-
-#define SBOX_BYTE ROM_DATA_BYTE
-#define READ_SBOX_BYTE READ_ROM_DATA_BYTE
-
+/* Only ΘCB3 mode needs decryption functions: define a symbol to
+ * selectively hide them. */
+#if TWEAK_LENGTH_BITS == 192
+#define LILLIPUT_I
+#endif
 
 enum permutation
 {
@@ -40,12 +41,14 @@ enum permutation
 
 typedef enum permutation permutation;
 
-static ROM_DATA_BYTE PERMUTATIONS[2][BLOCK_BYTES] = {
+static ROM_DATA_BYTE PERMUTATIONS[][BLOCK_BYTES] = {
     [PERMUTATION_ENCRYPTION] = { 13,  9, 14,  8, 10, 11, 12, 15,  4,  5,  3,  1,  2,  6,  0,  7 },
+#ifdef LILLIPUT_I
     [PERMUTATION_DECRYPTION] = { 14, 11, 12, 10,  8,  9, 13, 15,  3,  1,  4,  5,  6,  0,  2,  7 }
+#endif
 };
 
-static SBOX_BYTE S[256] = {
+static ROM_DATA_BYTE S[256] = {
     0x20, 0x00, 0xB2, 0x85, 0x3B, 0x35, 0xA6, 0xA4, 0x30, 0xE4, 0x6A, 0x2C, 0xFF, 0x59, 0xE2, 0x0E,
     0xF8, 0x1E, 0x7A, 0x80, 0x15, 0xBD, 0x3E, 0xB1, 0xE8, 0xF3, 0xA2, 0xC2, 0xDA, 0x51, 0x2A, 0x10,
     0x21, 0x01, 0x23, 0x78, 0x5C, 0x24, 0x27, 0xB5, 0x37, 0xC7, 0x2B, 0x1F, 0xAE, 0x0A, 0x77, 0x5F,
@@ -165,6 +168,8 @@ void lilliput_tbc_encrypt(
     _one_round_egfn(ciphertext, RTK, PERMUTATION_NONE);
 }
 
+#ifdef LILLIPUT_I
+
 void lilliput_tbc_decrypt(
     const uint8_t key[KEY_BYTES],
     const uint8_t tweak[TWEAK_BYTES],
@@ -184,3 +189,5 @@ void lilliput_tbc_decrypt(
 
     _one_round_egfn(message, RTK[0], PERMUTATION_NONE);
 }
+
+#endif

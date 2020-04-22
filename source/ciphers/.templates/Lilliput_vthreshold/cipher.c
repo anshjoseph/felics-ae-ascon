@@ -35,6 +35,11 @@ generation to switch from 2 shares to 3 shares and vice versa.
 #include "random.h"
 #include "tweakey.h"
 
+/* Only ΘCB3 mode needs decryption functions: define a symbol to
+ * selectively hide them. */
+#if TWEAK_LENGTH_BITS == 192
+#define LILLIPUT_I
+#endif
 
 enum permutation
 {
@@ -45,9 +50,11 @@ enum permutation
 
 typedef enum permutation permutation;
 
-static ROM_DATA_BYTE PERMUTATIONS[2][BLOCK_BYTES] = {
+static ROM_DATA_BYTE PERMUTATIONS[][BLOCK_BYTES] = {
     [PERMUTATION_ENCRYPTION] = { 13,  9, 14,  8, 10, 11, 12, 15,  4,  5,  3,  1,  2,  6,  0,  7 },
+#ifdef LILLIPUT_I
     [PERMUTATION_DECRYPTION] = { 14, 11, 12, 10,  8,  9, 13, 15,  3,  1,  4,  5,  6,  0,  2,  7 }
+#endif
 };
 
 static ROM_DATA_BYTE F[16][16] = {
@@ -289,6 +296,8 @@ void lilliput_tbc_encrypt(
     }
 }
 
+#ifdef LILLIPUT_I
+
 void lilliput_tbc_decrypt(
     const uint8_t key[KEY_BYTES],
     const uint8_t tweak[TWEAK_BYTES],
@@ -317,3 +326,5 @@ void lilliput_tbc_decrypt(
         message[i] = X[i] ^ Y[i] ^ Z[i];
     }
 }
+
+#endif

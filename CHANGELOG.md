@@ -31,6 +31,9 @@
 - Implementations of Lilliput-AE now match version 1.1 of the
   specification.
 
+- Implementations of Lilliput-Ⅱ have been rid of Lilliput-TBC's
+  decryption code.
+
 - Implementations of AES-128-GCM have been ported from SUPERCOP:
     - `ref`: cross-platform software implementation,
     - `aes-ni`: x86-exclusive implementation relying on the AES-NI

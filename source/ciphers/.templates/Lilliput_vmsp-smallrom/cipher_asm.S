@@ -18,6 +18,13 @@
 
 #include "felics/helpers.S"
 
+#include "parameters.h"
+/* Only ΘCB3 mode needs decryption functions: define a symbol to
+ * selectively hide them. */
+#if TWEAK_LENGTH_BITS == 192
+#define LILLIPUT_I
+#endif
+
 rodata S
         .byte \
         0x20, 0x00, 0xB2, 0x85, 0x3B, 0x35, 0xA6, 0xA4, 0x30, 0xE4, 0x6A, 0x2C, 0xFF, 0x59, 0xE2, 0x0E, \
@@ -166,6 +173,8 @@ function permutation_enc
 
         ret
 
+#ifdef LILLIPUT_I
+
 function permutation_dec
         ;; r12: X
         push r4
@@ -209,3 +218,5 @@ function permutation_dec
         pop r4
 
         ret
+
+#endif
