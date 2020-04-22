@@ -39,10 +39,12 @@ def _update(old, new):
 
     old_setups = OrderedDict((_make_key(s), s) for s in old['data'])
     new_setups = {_make_key(s): s for s in new['data']}
+    new_only = set(new_setups)-set(old_setups)
 
     merged['data'] = [
         new_setups.get(k, old_value) for k, old_value in old_setups.items()
     ]
+    merged['data'].extend(new_setups[k] for k in new_only)
 
     return merged
 

@@ -21,6 +21,9 @@
 - `felics-publish` can now translate column headers in other
   languages; so far only English and French are supported.
 
+- `felics-update OLD-RESULTS NEW-RESULTS` no longer ignores setups
+  exclusively found in `NEW-RESULTS`.
+
 [NIST LWC workshop 2019]: https://csrc.nist.gov/Events/2019/Lightweight-Cryptography-Workshop-2019
 
 #### Algorithms
