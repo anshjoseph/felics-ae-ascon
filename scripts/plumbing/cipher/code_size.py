@@ -4,7 +4,6 @@ from argparse import ArgumentParser
 from pathlib import Path
 import re
 from subprocess import run, PIPE
-from sys import argv
 
 from felics.errors import FelicsError
 
@@ -17,10 +16,10 @@ def parse_arguments():
 
 class ImplementationInfo:
     def __init__(self, path):
-        content = Path(path).read_text()
+        lines = Path(path).read_text().splitlines()
         kv_pairs = (
             l.split(':', maxsplit=1)
-            for l in content.splitlines()
+            for l in lines
             if l and not l.isspace()
         )
         self._fields = {
@@ -48,9 +47,9 @@ SYSV_SIZE_RE = (
     r'(?P<section>\.(?:{section_re}))'
     r'(?:\.(?P<symbol>[\w.]+))?'
     ' +'
-    '(?P<size>\d+)'
+    r'(?P<size>\d+)'
     ' +'
-    '(?P<addr>\d+)'
+    r'(?P<addr>\d+)'
     '$'
 ).format(section_re='|'.join(SYSV_TEXT_SECTIONS))
 
@@ -60,19 +59,21 @@ SYSV_SIZE_PATTERN = re.compile(SYSV_SIZE_RE, flags=re.MULTILINE)
 class InvalidCodeSize(FelicsError):
 
     def __init__(self, file, actual, expected):
+        super().__init__()
         self._file = file
         self._actual = actual
         self._expected = expected
 
     def __str__(self):
-        return '''
+        template = '''
 Adding the text and data sections from {s._file} yields {s._expected}
 bytes, but only {s._actual} bytes were found by iterating over these
 subsections:
 - {sections}
-It is likely that this list of subsections must be appended.'''.format(
+It is likely that this list of subsections must be appended.'''
+        return template.format(
             s=self,
-            sections = '\n- '.join(SYSV_TEXT_SECTIONS)
+            sections='\n- '.join(SYSV_TEXT_SECTIONS)
         )
 
 
