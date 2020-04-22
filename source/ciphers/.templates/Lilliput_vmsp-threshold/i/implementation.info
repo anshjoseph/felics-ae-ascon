@@ -1,7 +1,7 @@
 ImplementationDescription: Threshold implementation for Lilliput-I
 ImplementationAuthors: Alexandre Adomnicai, Kévin Le Gouguec, Léo Reynaud, Gaëtan Leplus
 
-EncryptCode: encrypt, cipher, cipher_asm, tweakey, tweakey_asm
+EncryptCode: encrypt, cipher!lilliput_tbc_decrypt, cipher_asm!permutation_dec, tweakey, tweakey_asm
 DecryptCode: decrypt, cipher, cipher_asm, tweakey, tweakey_asm
 
 Platforms: MSP

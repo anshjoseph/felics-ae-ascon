@@ -1,5 +1,5 @@
 ImplementationDescription: Threshold implementation for Lilliput-I
 ImplementationAuthors: Alexandre Adomnicai, Kévin Le Gouguec, Léo Reynaud
 
-EncryptCode: encrypt, cipher, tweakey
+EncryptCode: encrypt, cipher!lilliput_tbc_decrypt, tweakey
 DecryptCode: decrypt, cipher, tweakey
