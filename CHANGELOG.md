@@ -24,6 +24,22 @@
 - `felics-update OLD-RESULTS NEW-RESULTS` no longer ignores setups
   exclusively found in `NEW-RESULTS`.
 
+- Fields in the `EncryptCode` and `DecryptCode` sections of
+  `implementation.info` can now be completed with one or more
+  `!symbol` suffixes: each `symbol` will be subtracted from the ELF
+  file's code size for this specific operation.  This can be used to
+  discount e.g. decryption-specific code in a source file used for
+  both encryption and decryption.
+
+  This mechanism is meant to make it easier to integrate
+  implementations: instead of requiring that encryption, decryption
+  and common code be isolated in dedicated files, algorithm sources
+  can now be integrated as-is; functions and variables irrelevant to
+  encryption (resp. decryption) can now simply be blacklisted in
+  `implementation.info`'s `EncryptCode` field (resp. `DecryptCode`).
+
+  See `documentation/adding-ciphers.md` for more information.
+
 [NIST LWC workshop 2019]: https://csrc.nist.gov/Events/2019/Lightweight-Cryptography-Workshop-2019
 
 #### Algorithms

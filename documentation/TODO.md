@@ -3,21 +3,11 @@
 ## Limit differences with reference implementations
 
 The more FELICS-AE requires manual tweaks to integrate an algorithm's
-implementation (reference or optimized), the more work it represents
-for an integrator. It also complicates the job of an auditor checking
-for differences between the original code and the FELICS version.
+implementation, the more work it represents for an integrator. It also
+complicates the job of an auditor checking for differences between the
+original code and the FELICS version.
 
-### Add support for finer-grained code-size measurement
-
-As things stand, if some files in reference implementations happen to
-contain both encryption and decryption code, they must be split.
-
-`size`, `nm` and `readelf` can all display the code size for specific
-functions, so it should be possible to keep encryption and decryption
-functions together in a single file, and specify which to include (or
-remove) from the code-size tally in the implementation metadata file.
-
-## Add support for multiple revisions of an algorithm
+## Support multiple revisions of an algorithm
 
 Possible solutions:
 

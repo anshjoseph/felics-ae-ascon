@@ -26,16 +26,23 @@ class ImplementationInfo:
             k.strip(): v.strip() for k, v in kv_pairs
         }
 
-    def _split(self, field, sep):
-        return tuple(i.strip() for i in self._fields[field].split(sep))
+    def _code_size_specs(self, field):
+        # The section has the form: FILESPEC[, FILESPEC…].
+        files = (f.strip() for f in self._fields[field].split(','))
+
+        # Each file spec has the form: NAME[!EXCEPTION[!EXCEPTION…]].
+        # Split each spec into [NAME, EXCEPTION, EXCEPTION…].
+        specs = (f.split('!') for f in files)
+
+        return {f: exceptions for f, *exceptions in specs}
 
     @property
     def encryption_files(self):
-        return self._split('EncryptCode', ',')
+        return self._code_size_specs('EncryptCode')
 
     @property
     def decryption_files(self):
-        return self._split('DecryptCode', ',')
+        return self._code_size_specs('DecryptCode')
 
 
 SYSV_TEXT_SECTIONS = (
@@ -116,11 +123,32 @@ def parse_sizes(elf_file):
     if actual != expected:
         raise InvalidCodeSize(elf_file, actual, expected)
 
+    # Some compiler optimizations (e.g. constant propagation, SRA)
+    # generate specialized clones of some sections (e.g. for a section
+    # .text.foo: .text.foo.constprop.0, .text.foo.isra.42).  Remove
+    # the clones and add their sizes to the original section.
+
+    for name in section_sizes.copy():
+        dot = name.find('.')
+        if dot == -1:
+            continue
+
+        original_name = name[:dot]
+        original_size = section_sizes.get(original_name, 0)
+
+        subsection_size = section_sizes.pop(name)
+        section_sizes[original_name] = original_size + subsection_size
+
     return section_sizes
 
 
 def sum_files(sizes, files):
-    return sum(value for f in files for value in sizes[f].values())
+    return sum(
+        value
+        for f, exceptions in files.items()
+        for section, value in sizes[f].items()
+        if section not in exceptions
+    )
 
 
 def main(arguments):
@@ -129,16 +157,20 @@ def main(arguments):
 
     encryption_files = implem_info.encryption_files
     decryption_files = implem_info.decryption_files
-    all_files = set(encryption_files+decryption_files)
+    all_files = set(encryption_files) | set(decryption_files)
 
     file_sizes = {
         f: parse_sizes('{f}.o'.format(f=f)) for f in all_files
     }
 
+    encryption_sum = sum_files(file_sizes, encryption_files)
+    decryption_sum = sum_files(file_sizes, decryption_files)
+    total_sum = sum_files(file_sizes, dict.fromkeys(all_files, ()))
+
     serialized_sums = '{encryption} {decryption} {total}'.format(
-        encryption=sum_files(file_sizes, encryption_files),
-        decryption=sum_files(file_sizes, decryption_files),
-        total=sum_files(file_sizes, all_files)
+        encryption=encryption_sum,
+        decryption=decryption_sum,
+        total=total_sum,
     )
 
     arguments.output.write_text(serialized_sums)
