@@ -40,6 +40,8 @@
 
   See `documentation/adding-ciphers.md` for more information.
 
+- `felics-compare` can now filter compilation options.
+
 [NIST LWC workshop 2019]: https://csrc.nist.gov/Events/2019/Lightweight-Cryptography-Workshop-2019
 
 #### Algorithms

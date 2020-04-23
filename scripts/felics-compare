@@ -26,6 +26,14 @@ def _parse_architectures(argument):
     return archs
 
 
+def _option_filter(argument):
+    if argument is None:
+        return lambda _: True
+
+    options = set(argument.split(';'))
+    return lambda opt: opt in options
+
+
 def _parse_arguments():
     parser = ArgumentParser()
     parser.add_argument('file1')
@@ -38,10 +46,14 @@ def _parse_arguments():
         '--archs', default=ARCHITECTURES, type=_parse_architectures,
         help='only consider those architectures'
     )
+    parser.add_argument(
+        '--options', default=_option_filter(None), type=_option_filter,
+        help='only consider those compiler options (semicolon-separated)'
+    )
     return parser.parse_args()
 
 
-def _load_file(filename, architectures):
+def _load_file(filename, architectures, option_filter):
     with open(filename) as f:
         results = json.load(f)
 
@@ -50,7 +62,8 @@ def _load_file(filename, architectures):
     setups = {
         comparison.setup_key(setup, setup_keys): setup
         for setup in results['data']
-        if ARCHITECTURES_BY_NAME[setup['architecture']] in architectures
+        if (ARCHITECTURES_BY_NAME[setup['architecture']] in architectures
+            and option_filter(setup['compiler_options']))
     }
 
     return Results(results['commit'], results['branch'], setups, filename)
@@ -104,8 +117,8 @@ def _check_skipped_setups(data1, data2):
 
 def _main():
     arguments = _parse_arguments()
-    file1 = _load_file(arguments.file1, arguments.archs)
-    file2 = _load_file(arguments.file2, arguments.archs)
+    file1 = _load_file(arguments.file1, arguments.archs, arguments.options)
+    file2 = _load_file(arguments.file2, arguments.archs, arguments.options)
 
     print(_format_header(file1, file2, arguments.threshold))
     print(_format_differences(file1.data, file2.data, arguments.threshold))
