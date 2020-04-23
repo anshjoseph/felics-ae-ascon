@@ -4,23 +4,6 @@
 
 ### Added
 
-- The nRF52840 (ARM Cortex-M4) and STM32L053 (ARM Cortex-M0+) 32-bit
-  microcontrollers are now supported. As with the ARM Cortex-M3,
-  physical devices plugged in `/dev/ttyACM0` are required.
-
-- Documents recounting the adaptation process from FELICS to FELICS-AE
-  have been added to `documentation/nist-lwc-workshop-2019`, and
-  presented at the [NIST LWC workshop 2019].
-
-- In `scripts/docker`, a turnkey Docker image can now be generated
-  with `create-image.sh`, and deployed with `scripts/docker/`.
-  Alternately, you may prefer using the lower-level
-  `*-dependencies.sh` scripts to fetch and install FELICS-AE's
-  numerous software dependencies.
-
-- `felics-publish` can now translate column headers in other
-  languages; so far only English and French are supported.
-
 - `felics-update OLD-RESULTS NEW-RESULTS` no longer ignores setups
   exclusively found in `NEW-RESULTS`.
 
@@ -42,12 +25,7 @@
 
 - `felics-compare` can now filter compilation options.
 
-[NIST LWC workshop 2019]: https://csrc.nist.gov/Events/2019/Lightweight-Cryptography-Workshop-2019
-
 #### Algorithms
-
-- Implementations of Lilliput-AE now match version 1.1 of the
-  specification.
 
 - Implementations of Lilliput-Ⅱ have been rid of Lilliput-TBC's
   decryption code.
@@ -59,20 +37,62 @@
 
 ### Changed
 
-- AEAD implementations no longer need to define additional `Encrypt`
-  and `Decrypt` functions; FELICS-AE will call their `crypto_aead_…`
-  functions directly.
+- The data section of the object files named in implementation.info's
+  EncryptCode and DecryptCode fields now contribute to the RAM
+  footprint.
 
-  In order to make the API more precise and improve performance on
-  low-end platforms,
-    - the signature of the `crypto_aead_…` functions has been adapted
-      to use `uint8_t` (resp. `size_t`) instead of `unsigned char`
-      (resp. `unsigned long long`),
-    - the unused `nsec` parameter has been removed.
+### Removed
 
-- The list of source file basenames reserved by FELICS-AE has shrunk
-  down to "`test_vectors`" and "`felics_*`". AEAD implementations can
-  now have files named e.g. `cipher.[ch]` or `common.[ch]`.
+- `build` folders have been removed from the repository. They are
+  still generated during the benchmark process, but it is no longer
+  necessary to add them when adding implementations.
+
+## [0.1.0] – 2019-10-03
+
+### Added
+
+- The nRF52840 (ARM Cortex-M4) and STM32L053 (ARM Cortex-M0+) 32-bit
+  microcontrollers are now supported. As with the ARM Cortex-M3,
+  physical devices plugged in `/dev/ttyACM0` are required.
+
+- Documents recounting the adaptation process from FELICS to FELICS-AE
+  have been added in `documentation/nist-lwc-workshop-2019`, and
+  presented at the [NIST LWC workshop 2019].
+
+- In `scripts/docker`, a turnkey Docker image can now be generated
+  with `create-image.sh`, and deployed with `scripts/docker/`.
+  Alternately, you may prefer using the lower-level
+  `*-dependencies.sh` scripts to fetch and install FELICS-AE's
+  numerous software dependencies.
+
+- `felics-publish` can now translate column headers in other
+  languages; so far only English and French are supported.
+
+[NIST LWC workshop 2019]: https://csrc.nist.gov/Events/2019/Lightweight-Cryptography-Workshop-2019
+
+#### Algorithms
+
+- Implementations of Lilliput-AE now match version 1.1 of the
+  specification.
+
+### Changed
+
+- AEAD implementations are now expected to follow the SUPERCOP
+  conventions (also used for the CAESAR competition and the NIST LWC
+  standardization process).  The top-level `Encrypt` and `Decrypt`
+  functions are no longer required; instead FELICS-AE will look for:
+
+    - the `crypto_aead_encrypt` and `crypto_aead_decrypt` functions;
+      in order to make the API more precise and improve performance on
+      low-end platforms, their signature has been adapted as follows:
+        - `unsigned char*` parameters are now `uint8_t*`;
+          `unsigned long long` parameters are now `size_t`;
+        - the unused `nsec` parameter has been removed;
+
+    - a file named `api.h` where the following constants are defined:
+        - `CRYPTO_KEYBYTES`,
+        - `CRYPTO_ABYTES`,
+        - `CRYPTO_NPUBBYTES`.
 
 - Implementations no longer need to include files named `encrypt.c`
   and `decrypt.c`.
@@ -80,18 +100,16 @@
 - Implementations must now define their own nonce in `test_vectors.c`;
   FELICS-AE no longer hardcodes it to $0^{|N|}$.
 
-- The data section of the object files named in implementation.info's
-  EncryptCode field now contribute to the RAM footprint.
+- The list of source file basenames reserved by FELICS-AE has shrunk
+  down to "`test_vectors`" and "`felics_*`". AEAD implementations can
+  now have files named e.g. `cipher.[ch]`, `common.[ch]` or
+  `constants.h`.
 
 ### Removed
 
 - Algorithms COLM, MORUS, AES-OCB and Deoxys have been removed, in
   order to lighten the maintenance burden and increase the focus on
   lightweight algorithms.
-
-- `build` folders have been removed from the repository. They are
-  still generated during the benchmark process, but it is no longer
-  necessary to add them when adding implementations.
 
 ## [0.0.1] – 2019-07-03
 
@@ -100,5 +118,6 @@
 - This changelog, following conventions from
   <https://keepachangelog.com>.
 
-[Unreleased]: https://gitlab.inria.fr/minier/felics-ae/compare/0.0.1...master
+[Unreleased]: https://gitlab.inria.fr/minier/felics-ae/compare/0.1.0...master
+[0.1.0]: https://gitlab.inria.fr/minier/felics-ae/compare/0.0.1...0.1.0
 [0.0.1]: https://gitlab.inria.fr/minier/felics-ae/tags/0.0.1
