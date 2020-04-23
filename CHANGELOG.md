@@ -47,6 +47,16 @@
   still generated during the benchmark process, but it is no longer
   necessary to add them when adding implementations.
 
+- It is no longer necessary to define `BlockSize` in
+  `implementation.info`.
+
+  This "block size" information was used by the original FELICS
+  framework as part of the RAM footprint measurement process; it is
+  not obvious that this information is meaningful in the case of AEAD
+  ciphers which process inputs of arbitrary lengths.  Furthermore,
+  FELICS's memory-spraying mechanism should be enough to measure the
+  stack consumption accurately.
+
 ## [0.1.0] – 2019-10-03
 
 ### Added
@@ -104,6 +114,10 @@
   down to "`test_vectors`" and "`felics_*`". AEAD implementations can
   now have files named e.g. `cipher.[ch]`, `common.[ch]` or
   `constants.h`.
+
+- Implementations no longer have to define `KEY_SIZE` and `BLOCK_SIZE`
+  in `constants.h`; it is still required to define `BlockSize` in
+  `implementation.info`
 
 ### Removed
 
