@@ -269,7 +269,7 @@ do
 
 	for shared_file in $shared_files
 	do
-		shared_name=$shared_file"_data"
+		shared_name=${shared_file%%\!*}"_data"
 
 		shared_value=${!shared_name}
 		if [ "" == "$shared_value" ] ; then
