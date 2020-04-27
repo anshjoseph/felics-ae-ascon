@@ -35,6 +35,13 @@
     - `aes-ni`: x86-exclusive implementation relying on the AES-NI
       processor instructions.
 
+### Fixed
+
+- RAM measurement could sometimes fail on PC, especially with a cold
+  cache, because we used to spawn an asynchronous GDB script, wait one
+  second, and assume that GDB was done. The script is now run
+  synchronously.
+
 ### Changed
 
 - The data section of the object files named in implementation.info's

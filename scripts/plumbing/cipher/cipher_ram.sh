@@ -117,7 +117,7 @@ run-debugger ()
 
 	case $SCRIPT_ARCHITECTURE in
 		$SCRIPT_ARCHITECTURE_PC)
-			$PC_GDB -x $command_file ${binary} &> $GDB_OUTPUT_FILE &
+			$PC_GDB -x $command_file -tty /dev/null ${binary} &> $GDB_OUTPUT_FILE
 			;;
 		$SCRIPT_ARCHITECTURE_AVR)
 			$SIMAVR_SIMULATOR -g -m atmega128 ${binary} &> ${server_log} &
