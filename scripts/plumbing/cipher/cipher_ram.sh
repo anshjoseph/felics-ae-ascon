@@ -123,7 +123,8 @@ run-debugger ()
 			$SIMAVR_SIMULATOR -g -m atmega128 ${binary} &> ${server_log} &
 			$AVR_GDB -x $command_file &> $GDB_OUTPUT_FILE
 
-			kill -PIPE %'$SIMAVR_SIMULATOR'
+			kill -INT %'$SIMAVR_SIMULATOR'
+			wait %'$SIMAVR_SIMULATOR'
 			;;
 		$SCRIPT_ARCHITECTURE_MSP)
 			local commands=(
@@ -133,6 +134,9 @@ run-debugger ()
 			)
 			$MSPDEBUG_SIMULATOR -n sim "${commands[@]}" &> ${server_log} &
 			$MSP_GDB -x $command_file &> $GDB_OUTPUT_FILE
+
+			kill -INT %'$MSPDEBUG_SIMULATOR'
+			wait %'$MSPDEBUG_SIMULATOR'
 			;;
 		$SCRIPT_ARCHITECTURE_ARM)
 			# Upload the program to the board
@@ -141,7 +145,8 @@ run-debugger ()
 			$JLINK_GDB_SERVER -device cortex-m3 &> ${server_log} &
 			$ARM_GDB -x $command_file &> $GDB_OUTPUT_FILE
 
-			kill -PIPE %'$JLINK_GDB_SERVER'
+			kill -INT %'$JLINK_GDB_SERVER'
+			wait %'$JLINK_GDB_SERVER'
 			;;
 		$SCRIPT_ARCHITECTURE_NRF52840)
 			# Upload the program to the board
@@ -150,7 +155,8 @@ run-debugger ()
 			$JLINK_GDB_SERVER -device NRF52840_XXAA -if SWD -speed 4000 &> ${server_log} &
 			$NRF52840_GDB -x $command_file &> $GDB_OUTPUT_FILE
 
-			kill -PIPE %'$JLINK_GDB_SERVER'
+			kill -INT %'$JLINK_GDB_SERVER'
+			wait %'$JLINK_GDB_SERVER'
 			;;
 		$SCRIPT_ARCHITECTURE_STM32L053)
 			# Upload the program to the board
@@ -159,15 +165,10 @@ run-debugger ()
 			$STLINK_GDB_SERVER &> ${server_log} &
 			$STM32L053_GDB -x $command_file &> $GDB_OUTPUT_FILE
 
-			kill -PIPE %'$STLINK_GDB_SERVER'
+			kill -INT %'$STLINK_GDB_SERVER'
+			wait %'$STLINK_GDB_SERVER'
 			;;
 	esac
-
-	# TODO: replace this sleep with "wait -n %?'$command_file'".
-	#       Right now this fails because gdb exits with an error.
-
-	# Wait for the debug session to finish
-	sleep 1
 }
 
 
