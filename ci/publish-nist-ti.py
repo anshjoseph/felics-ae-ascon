@@ -13,6 +13,8 @@ _ARCHITECTURES = ('AVR', 'MSP', 'ARM', 'PC')
 
 _VERSION1 = 'felicsref'
 _VERSION2 = 'threshold'
+_CIPHER = 'Lilliput'
+_CFLAGS = '-O3'
 
 
 _TABLE_TEMPLATE = r'''
@@ -35,8 +37,22 @@ def _group_setups(filename):
 
     grouped = {a: defaultdict(dict) for a in _ARCHITECTURES}
 
+    versions = {_VERSION1, _VERSION2}
+
     for setup in results['data']:
-        grouped[setup['architecture']][setup['cipher_name']][setup['version']] = setup
+        name = setup['cipher_name']
+        version = setup['version']
+        cflags = setup['compiler_options']
+        arch = setup['architecture']
+
+        if (
+            not name.startswith(_CIPHER)
+            or version not in versions
+            or cflags != _CFLAGS
+        ):
+            continue
+
+        grouped[arch][name][version] = setup
 
     return OrderedDict((
         (a, grouped[a])
