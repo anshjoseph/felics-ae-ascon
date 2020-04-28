@@ -20,7 +20,7 @@ class ImplementationInfo:
         kv_pairs = (
             l.split(':', maxsplit=1)
             for l in lines
-            if l and not l.isspace()
+            if l and not l.isspace() and not l.startswith('#')
         )
         self._fields = {
             k.strip(): v.strip() for k, v in kv_pairs

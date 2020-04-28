@@ -30,10 +30,12 @@ Advantages over Bash:
 - better error-reporting (immediate, loud and precise failures)
 - automatic script usage documentation
 
-## Convert `implementation.info` to JSON
+## Convert `implementation.info` to JSON or YAML
 
-So that hypothetical Python scripts can simply `json.load()` them into
-native types instead of parsing them manually.
+So that we can leverage libraries to translate these files to native
+data structures such as sequences and mappings.  JSON is included in
+Python's standard library; YAML needs a third-party package but it
+allows comments.
 
 ## Move some constants away from constants.sh
 
