@@ -2,14 +2,22 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # SPDX-FileCopyrightText: 2019 Airbus Cybersecurity SAS
 
+from argparse import ArgumentParser
 from collections import defaultdict, OrderedDict
 import json
-from sys import argv
 
 
-_METRICS = ('code_size', 'code_ram', 'code_time')
+_METRICS = OrderedDict((
+    ('code_size', 'ROM'),
+    ('code_ram', 'RAM'),
+    ('code_time', 'cycles')
+))
 _ARCHITECTURES = ('AVR', 'MSP', 'ARM', 'PC')
 
+_CAPTIONS = {
+    'en': 'Performance impact of the thresholding scheme.',
+    'fr': 'Impact du schéma de masquage sur les performances.'
+}
 
 _VERSION1 = 'felicsref'
 _VERSION2 = 'threshold'
@@ -25,10 +33,18 @@ _TABLE_TEMPLATE = r'''
     \hline
 {body}
   \end{{tabular}}
-  \caption{{Performance impact of the thresholding scheme.}}
+  \caption{{{caption}}}
   \label{{table:bench-soft-ti}}
 \end{{table}}
 '''[1:]                         # Remove first newline.
+
+
+def _parse_arguments():
+    parser = ArgumentParser()
+    parser.add_argument('results')
+    parser.add_argument('output')
+    parser.add_argument('--language', default='en', choices=_CAPTIONS)
+    return parser.parse_args()
 
 
 def _group_setups(filename):
@@ -98,7 +114,7 @@ def _format_header(v1, v2):
         r'\textbf{Member}'
     ) + tuple(
         r'$\frac{{{m}_{{{v2}}}}}{{{m}_{{{v1}}}}}$'.format(m=m, v1=v1, v2=v2)
-        for m in ('ROM', 'RAM', 'cycles')
+        for m in _METRICS.values()
     )
 
     return _indent(' & '.join(fields), 4)
@@ -120,17 +136,18 @@ def _format_body(setups, v1, v2):
     return _indent('\n'.join(tables), 4)
 
 
-def _main(results_filename, output_filename):
-    setups = _group_setups(results_filename)
+def _main(arguments):
+    setups = _group_setups(arguments.results)
 
     table = _TABLE_TEMPLATE.format(
         header=_format_header(_VERSION1, _VERSION2),
         body=_format_body(setups, _VERSION1, _VERSION2),
+        caption=_CAPTIONS[arguments.language]
     )
 
-    with open(output_filename, 'w') as out:
+    with open(arguments.output, 'w') as out:
         out.write(table)
 
 
 if __name__ == '__main__':
-    _main(argv[1], argv[2])
+    _main(_parse_arguments())
