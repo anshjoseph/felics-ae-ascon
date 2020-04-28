@@ -1,5 +1,5 @@
 ImplementationDescription: AEAD ASCON128-a, opt64
-ImplementationAuthors: Jean-Baptiste Serrou Soares (adapted from supercop)
+ImplementationAuthors: Christoph Dobraunig, Martin Schläffer (ported from SUPERCOP by Jean-Baptiste Serrou Soares)
 
 EncryptCode: encrypt, utils
 DecryptCode: decrypt, utils

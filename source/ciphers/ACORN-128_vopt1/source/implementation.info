@@ -1,5 +1,5 @@
 ImplementationDescription: AEAD ACORN128 (adapted from supercop's opt1 version)
-ImplementationAuthors: Kévin Le Gouguec
+ImplementationAuthors: Hongjun Wu (ported from SUPERCOP by Kévin Le Gouguec)
 
 EncryptCode: encrypt, utils
 DecryptCode: decrypt, utils
