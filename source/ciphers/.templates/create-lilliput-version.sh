@@ -34,7 +34,7 @@ mkdir -p ${templates_dir}/Lilliput_v${new}/{i,ii}
     done
 )
 
-mkdir -p ${ciphers_dir}/Lilliput-{I,II}-{128,192,256}_v${new}/{source,build}
+mkdir -p ${ciphers_dir}/Lilliput-{I,II}-{128,192,256}_v${new}/source
 
 for mode in i ii
 do
@@ -44,8 +44,6 @@ do
         new_dir=${variant}_v${new}
         ref_dir=${variant}_v${ref}
 
-        cp ${ciphers_dir}/${ref_dir}/build/.gitignore \
-           ${ciphers_dir}/${new_dir}/build
         (
             cd ${ciphers_dir}/${new_dir}/source
             # Implementation-indepdendent files.
