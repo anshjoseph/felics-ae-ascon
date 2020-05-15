@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.2.0] – 2020-05-15
+
 ### Added
 
 - `felics-update OLD-RESULTS NEW-RESULTS` no longer ignores setups
@@ -139,6 +141,7 @@
 - This changelog, following conventions from
   <https://keepachangelog.com>.
 
-[Unreleased]: https://gitlab.inria.fr/minier/felics-ae/compare/0.1.0...master
+[Unreleased]: https://gitlab.inria.fr/minier/felics-ae/compare/0.2.0...master
+[0.2.0]: https://gitlab.inria.fr/minier/felics-ae/compare/0.1.0...0.2.0
 [0.1.0]: https://gitlab.inria.fr/minier/felics-ae/compare/0.0.1...0.1.0
 [0.0.1]: https://gitlab.inria.fr/minier/felics-ae/tags/0.0.1
