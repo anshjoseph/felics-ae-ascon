@@ -27,18 +27,17 @@ publish-platform ()
     local platform=$1
 
     ${FELICS_PUBLISH}                                                   \
-        ${FELICS_RESULTS}/lilliput-vs-caesar-usecase-1.json             \
+        ${FELICS_RESULTS}/all.json                                      \
         -f "cipher_name=.+128.?,architecture=${platform}"               \
         -c 'Performance results for 128-bit key algorithms on {arch}.'  \
         -l 'table:bench-soft-128-{arch}'                                \
         -o ${OUTPUT}-128-${platform}.html
 
     ${FELICS_PUBLISH}                                           \
-        ${FELICS_RESULTS}/lilliput-vs-caesar-usecase-1.json     \
+        ${FELICS_RESULTS}/all.json                              \
         -f "cipher_name=Lilliput.+,architecture=${platform}"    \
         -c 'Performance of Lilliput-AE on {arch}.'              \
         -l 'table:bench-soft-lilliput-{arch}'                   \
-        -i='-version'                                           \
         -o ${OUTPUT}-lilliput-${platform}.html
 
     echo "### Performance results on ${PLATFORM_NAMES[${platform}]}" >> ${OUTPUT}
