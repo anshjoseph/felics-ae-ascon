@@ -166,3 +166,34 @@ makefile modules: `AVR.mk`, `MSP.mk`, `ARM.mk`, `PC.mk`, etc.
 
 These files define several variables pointing to compilers, header
 files…
+
+3 - Hardware setup
+==================
+
+For 32-bit platforms, FELICS-AE has no simulators to measure the RAM
+footprint and the execution time, and thus relies on the actual
+hardware.
+
+ARM
+---
+
+FELICS-AE needs the following devices:
+
+- [Arduino Due](https://store.arduino.cc/arduino-due),
+- [J-Link Debug Probe](https://www.segger.com/products/debug-probes/j-link/).
+
+An [Olimex ARM-JTAG-20-10 adapter] is also required.
+
+Connections are as follows (cf. this [pinout diagram for the Arduino
+Due]):
+
+- plug the 10-pin end of the Olimex adapter to the Arduino's JTAG
+  pins,
+- plug the 20-pin end of the Olimex adapter to the J-Link Probe's
+  *Target* port,
+- plug J-Link Probe's USB port to your computer,
+- connect the Arduino's *programming* serial port (*USB PROG*) to your
+  computer.
+
+[Olimex ARM-JTAG-20-10 adapter]: https://www.olimex.com/Products/ARM/JTAG/ARM-JTAG-20-10/
+[pinout diagram for the Arduino Due]: https://forum.arduino.cc/index.php?topic=132130.0
