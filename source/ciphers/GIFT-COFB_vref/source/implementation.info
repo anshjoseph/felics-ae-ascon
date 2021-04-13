@@ -1,0 +1,6 @@
+ImplementationDescription: Reference implementation for GIFT-COFB integrated by Lama Sleem
+ImplementationAuthors: Siang Meng Sim
+
+# TODO: restructure, get closer to NIST version
+EncryptCode: encrypt
+DecryptCode: encrypt
