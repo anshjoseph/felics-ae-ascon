@@ -1,0 +1,6 @@
+ImplementationDescription: Reference implementation of ForkAE-128-288 (paefforkskinnyb128t288n104v1) integrated by Lama Sleem
+ImplementationAuthors: Antoon Purnal
+
+# TODO: restructure, get closer to NIST version
+EncryptCode: forkskinny
+DecryptCode: forkskinny
