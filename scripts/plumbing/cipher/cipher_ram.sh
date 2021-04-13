@@ -251,9 +251,10 @@ do
 	# Get the section data size
 	data=$(echo $size | cut -d ' ' -f 2)
 	
-	# Get the component name (file name without the extension)
+	# Get the component name: remove filename extension, replace
+	# characters unfit for variable names.
 	component=${file%.*}
-
+	component=${component//-/__}
 	declare $component"_data"=$data
 done
 
@@ -270,7 +271,9 @@ do
 
 	for shared_file in $shared_files
 	do
-		shared_name=${shared_file%%\!*}"_data"
+		component=${shared_file%%\!*}
+		component=${component//-/__}
+		shared_name=${component}"_data"
 
 		shared_value=${!shared_name}
 		if [ "" == "$shared_value" ] ; then
