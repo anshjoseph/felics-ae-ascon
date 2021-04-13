@@ -46,7 +46,7 @@ class ImplementationInfo:
 
 
 SYSV_TEXT_SECTIONS = (
-    'text', 'data', 'rodata', 'progmem.data', 'eh_frame'
+    'text', 'data', 'rodata', 'progmem.data', 'eh_frame', 'note'
 )
 
 SYSV_SIZE_RE = (
