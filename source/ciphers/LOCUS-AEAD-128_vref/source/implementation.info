@@ -1,0 +1,5 @@
+ImplementationDescription: Reference implementation of LOCUS-AEAD integrated by Kévin Le Gouguec
+ImplementationAuthors: LOCUS implementers
+
+EncryptCode: encrypt!crypto_aead_decrypt, twegift-64
+DecryptCode: encrypt!crypto_aead_encrypt, twegift-64
