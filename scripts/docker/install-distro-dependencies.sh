@@ -24,6 +24,7 @@ dependencies=(
     gcc-arm-none-eabi
     gdb-multiarch
     python3-serial
+    udev
     # nRF
     cmake
     libusb-1.0
