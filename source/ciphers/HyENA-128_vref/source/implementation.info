@@ -1,0 +1,5 @@
+ImplementationDescription: Reference implementation of HyENA-128 integrated by Kévin Le Gouguec
+ImplementationAuthors: HyENA implementers
+
+EncryptCode: encrypt!crypto_aead_decrypt, gift-128
+DecryptCode: encrypt!crypto_aead_encrypt, gift-128
