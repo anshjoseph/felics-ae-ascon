@@ -86,7 +86,7 @@ processAD absorbs additional data into the sponge.
 */
 INLINE void  processAD(uint32_t *state, const u8 *ad,  u64 adlen){
     if(adlen != 0){
-        int constA = (adlen % BYTE(RATE) != 0) ? PADADCONST : NOPADADCONST;
+        int_least32_t constA = (adlen % BYTE(RATE) != 0) ? PADADCONST : NOPADADCONST;
         //absorption loop
         while (adlen > BYTE(RATE)){
             rho1(state, (uint32_t *)ad);
@@ -112,10 +112,10 @@ ciphertext blocks. At the end of the encryption operation, an authentication tag
 is generated and appended to the end of the cyphertext. It is expected that the
 memory allocated for the ciphertext is CRYPTO_ABYTES larger than the message buffer
 */
-INLINE void  encryptPT(uint32_t *state, u8 *c, u64 *clen, const u8 *m, u64 mlen, const unsigned char *k){
+INLINE void  encryptPT(uint32_t *state, u8 *c, size_t *clen, const u8 *m, u64 mlen, const unsigned char *k){
     *clen = mlen + CRYPTO_ABYTES;
     if (mlen != 0){
-        int constM = (mlen % BYTE(RATE) != 0) ? PADPTCONST : NOPADPTCONST;
+        int_least32_t constM = (mlen % BYTE(RATE) != 0) ? PADPTCONST : NOPADPTCONST;
 
         /*main encryption loop*/
         while (mlen > BYTE(RATE)){
@@ -172,7 +172,7 @@ the respective plaintext. It also verifies the authentication tag on the last
 CRYPTO_ABYTES bytes of the buffer *c. If the tag is valid, the function returns 0.
 If it fails, the function zeros the message buffer and returns -1.
 */
-INLINE  int  decryptCT(uint32_t *state, u8 *m, u64 *mlen, const u8 *c, u64 clen,  const unsigned char *k){
+INLINE  int  decryptCT(uint32_t *state, u8 *m, size_t *mlen, const u8 *c, u64 clen,  const unsigned char *k){
     clen -= CRYPTO_ABYTES;
     *mlen = clen;
     if (clen != 0){

@@ -66,7 +66,7 @@ static const uint8_t RC[62] = {
 		0x26, 0x0c, 0x19, 0x32, 0x25, 0x0a, 0x15, 0x2a, 0x14, 0x28,
 		0x10, 0x20};
 
-#ifdef DEBUG
+#ifdef SKINNYDEBUG
 static FILE* fic;
 
 static void display_matrix(uint8_t state[4][4], int ver) {
@@ -348,7 +348,7 @@ void dec(const uint8_t* input, const uint8_t* tweakey, uint8_t* output, const in
 	uint8_t keyCells[3][4][4];
 	int i;
 
-#ifdef DEBUG
+#ifdef SKINNYDEBUG
     fic = fopen("SKINNY_TBC_detailed_TV.txt", "a");
 #endif
 
@@ -384,37 +384,37 @@ void dec(const uint8_t* input, const uint8_t* tweakey, uint8_t* output, const in
         AddKey(dummy, keyCells, ver);
     }
 
-    #ifdef DEBUG
+    #ifdef SKINNYDEBUG
         fprintf(fic,"DEC - initial state:                     ");display_cipher_state(state,keyCells,ver);fprintf(fic,"\n");
     #endif
 
 	for(i = versions[ver][2]-1; i >=0 ; i--) {
         MixColumn_inv(state);
-            #ifdef DEBUG
+            #ifdef SKINNYDEBUG
             fprintf(fic,"DEC - round %.2i - after MixColumn_inv:    ",i);display_cipher_state(state,keyCells,ver);fprintf(fic,"\n");
             #endif
         ShiftRows_inv(state);
-            #ifdef DEBUG
+            #ifdef SKINNYDEBUG
             fprintf(fic,"DEC - round %.2i - after ShiftRows_inv:    ",i);display_cipher_state(state,keyCells,ver);fprintf(fic,"\n");
             #endif
         AddKey_inv(state, keyCells, ver);
-            #ifdef DEBUG
+            #ifdef SKINNYDEBUG
             fprintf(fic,"DEC - round %.2i - after AddKey_inv:       ",i);display_cipher_state(state,keyCells,ver);fprintf(fic,"\n");
             #endif
         AddConstants(state, i);
-            #ifdef DEBUG
+            #ifdef SKINNYDEBUG
             fprintf(fic,"DEC - round %.2i - after AddConstants_inv: ",i);display_cipher_state(state,keyCells,ver);fprintf(fic,"\n");
             #endif
         if (versions[ver][0]==64)
             SubCell4_inv(state);
         else
             SubCell8_inv(state);
-            #ifdef DEBUG
+            #ifdef SKINNYDEBUG
             fprintf(fic,"DEC - round %.2i - after SubCell_inv:      ",i);display_cipher_state(state,keyCells,ver);fprintf(fic,"\n");
             #endif
 	}
 
-	#ifdef DEBUG
+	#ifdef SKINNYDEBUG
         fprintf(fic,"DEC - final state:                       ");display_cipher_state(state,keyCells,ver);fprintf(fic,"\n");
     #endif
 
@@ -427,7 +427,7 @@ void dec(const uint8_t* input, const uint8_t* tweakey, uint8_t* output, const in
             output[i] = state[i>>2][i&0x3] & 0xFF;
         }
     }
-#ifdef DEBUG
+#ifdef SKINNYDEBUG
     fclose(fic);
 #endif
 }
@@ -440,7 +440,7 @@ void enc(const uint8_t* input, const uint8_t* tweakey, uint8_t* output, const in
 	uint8_t keyCells[3][4][4];
 	int i;
 
-#ifdef DEBUG
+#ifdef SKINNYDEBUG
     fic = fopen("SKINNY_TBC_detailed_TV.txt", "a");
 #endif
 
@@ -470,7 +470,7 @@ void enc(const uint8_t* input, const uint8_t* tweakey, uint8_t* output, const in
         }
     }
 
-    #ifdef DEBUG
+    #ifdef SKINNYDEBUG
         fprintf(fic,"ENC - initial state:                 ");display_cipher_state(state,keyCells,ver);fprintf(fic,"\n");
     #endif
 
@@ -479,28 +479,28 @@ void enc(const uint8_t* input, const uint8_t* tweakey, uint8_t* output, const in
             SubCell4(state);
         else
             SubCell8(state);
-            #ifdef DEBUG
+            #ifdef SKINNYDEBUG
             fprintf(fic,"ENC - round %.2i - after SubCell:      ",i);display_cipher_state(state,keyCells,ver);fprintf(fic,"\n");
             #endif
         AddConstants(state, i);
-            #ifdef DEBUG
+            #ifdef SKINNYDEBUG
             fprintf(fic,"ENC - round %.2i - after AddConstants: ",i);display_cipher_state(state,keyCells,ver);fprintf(fic,"\n");
             #endif
         AddKey(state, keyCells, ver);
-            #ifdef DEBUG
+            #ifdef SKINNYDEBUG
             fprintf(fic,"ENC - round %.2i - after AddKey:       ",i);display_cipher_state(state,keyCells,ver);fprintf(fic,"\n");
             #endif
         ShiftRows(state);
-            #ifdef DEBUG
+            #ifdef SKINNYDEBUG
             fprintf(fic,"ENC - round %.2i - after ShiftRows:    ",i);display_cipher_state(state,keyCells,ver);fprintf(fic,"\n");
             #endif
         MixColumn(state);
-            #ifdef DEBUG
+            #ifdef SKINNYDEBUG
             fprintf(fic,"ENC - round %.2i - after MixColumn:    ",i);display_cipher_state(state,keyCells,ver);fprintf(fic,"\n");
             #endif
 	}  //The last subtweakey should not be added
 
-	#ifdef DEBUG
+	#ifdef SKINNYDEBUG
         fprintf(fic,"ENC - final state:                   ");display_cipher_state(state,keyCells,ver);fprintf(fic,"\n");
     #endif
 
@@ -515,7 +515,7 @@ void enc(const uint8_t* input, const uint8_t* tweakey, uint8_t* output, const in
         }
     }
 
-#ifdef DEBUG
+#ifdef SKINNYDEBUG
     fclose(fic);
 #endif
 }

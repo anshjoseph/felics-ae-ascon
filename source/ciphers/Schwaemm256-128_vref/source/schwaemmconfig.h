@@ -22,8 +22,8 @@
 
     #define   PADADCONST (0 ^ (1 << 2)) /* 4 */
     #define NOPADADCONST (1 ^ (1 << 2)) /* 5 */
-    #define   PADPTCONST (2 ^ (1 << 2)) /* 6 */
-    #define NOPADPTCONST (3 ^ (1 << 2)) /* 7 */
+    #define   PADPTCONST (int_least32_t)(2 ^ (1 << 2)) /* 6 */
+    #define NOPADPTCONST (int_least32_t)(3 ^ (1 << 2)) /* 7 */
 
 #elif defined SCHWAEMM192_192
 
