@@ -58,7 +58,7 @@ const uint8_t expectedAssociated[MAXTEST_BYTES_AD] = {
     $(dump-field ${adata})
 };
 
-const uint8_t expectedCiphertext[MAXTEST_BYTES_M+MAXTEST_BYTES_AD] = {
+const uint8_t expectedCiphertext[MAXTEST_BYTES_M+CRYPTO_ABYTES] = {
     $(dump-field ${ciphertext})
 };
 EOF
