@@ -1,0 +1,5 @@
+ImplementationDescription: Reference implementation of SUNDAE-GIFT-96 integrated by Kévin Le Gouguec
+ImplementationAuthors: TODO
+
+EncryptCode: encrypt!crypto_aead_decrypt, sundae!sundae_dec, gift128
+DecryptCode: encrypt!crypto_aead_encrypt, sundae!sundae_enc, gift128
