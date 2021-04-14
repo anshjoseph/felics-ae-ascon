@@ -46,9 +46,7 @@ def version():
     if _REPO is None:
         return _VERSION
 
-    prefix = 'felics-ae-v'
-    version = _REPO.git.describe(match=prefix+'*', always=True)
-    return version.replace(prefix, '')
+    return _REPO.git.describe(always=True)
 
 
 def branch():

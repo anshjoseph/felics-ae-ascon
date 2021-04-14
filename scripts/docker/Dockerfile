@@ -17,3 +17,6 @@ RUN cp /home/felics/FELICS-AE/scripts/plumbing/config.sh.template /home/felics/F
 RUN chown -R felics:felics /home/felics/FELICS-AE
 
 ADD allow-cpu-governor /etc/sudoers.d
+
+ENV LANG C.UTF-8
+ENV LC_ALL C.UTF-8
