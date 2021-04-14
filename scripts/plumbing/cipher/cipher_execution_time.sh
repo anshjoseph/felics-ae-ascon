@@ -171,6 +171,11 @@ EOF
     fi
 }
 
+get-cpu-governor ()
+{
+    cat /sys/devices/system/cpu/cpufreq/policy${PC_EXECUTION_TIME_CPU}/scaling_governor
+}
+
 
 # Simulate the given binary file execution
 # Parameters:
@@ -191,6 +196,7 @@ function simulate()
             local samples=$output_file.samples
             > $samples
 
+            local oldgovernor=$(get-cpu-governor)
             set-cpu-governor performance
 
             for i in {1..1000}
@@ -198,7 +204,7 @@ function simulate()
                 taskset -c $PC_EXECUTION_TIME_CPU $target_file >> $samples
             done
 
-            set-cpu-governor powersave
+            set-cpu-governor ${oldgovernor}
 
             compute-file-median $samples $output_file
 			;;

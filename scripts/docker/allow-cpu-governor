@@ -1,2 +1,3 @@
 felics ALL = NOPASSWD: /usr/bin/cpufreq-set -c [0-9] -g powersave,\
+                       /usr/bin/cpufreq-set -c [0-9] -g schedutil,\
                        /usr/bin/cpufreq-set -c [0-9] -g performance
