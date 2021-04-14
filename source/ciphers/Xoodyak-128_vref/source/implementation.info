@@ -1,0 +1,5 @@
+ImplementationDescription: Reference implementation of Xoodyak integrated by Kévin Le Gouguec
+ImplementationAuthors: Ronny Van Keer
+
+EncryptCode: encrypt!crypto_aead_decrypt, Xoodoo-reference, Xoodyak
+DecryptCode: encrypt!crypto_aead_encrypt, Xoodoo-reference, Xoodyak
