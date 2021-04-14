@@ -1,0 +1,5 @@
+ImplementationDescription: Reference implementation of Pyjamask integrated by Kévin Le Gouguec
+ImplementationAuthors: Ted Krovetz, Siang Meng Sim
+
+EncryptCode: encrypt!crypto_aead_decrypt, pyjamask
+DecryptCode: encrypt!crypto_aead_encrypt, pyjamask
