@@ -1,0 +1,5 @@
+ImplementationDescription: Reference implementation of Saturnin-CTR-Cascade integrated by Kévin Le Gouguec
+ImplementationAuthors: Saturnin implementers
+
+EncryptCode: encrypt!crypto_aead_decrypt, saturnin
+DecryptCode: encrypt!crypto_aead_encrypt, saturnin
