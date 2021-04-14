@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.3.0] – 2021-04-14
+
 ### Algorithms
 
 - Implementations of the following NIST round 2 candidates have been
@@ -164,7 +166,8 @@
 - This changelog, following conventions from
   <https://keepachangelog.com>.
 
-[Unreleased]: https://gitlab.inria.fr/minier/felics-ae/compare/0.2.0...master
+[Unreleased]: https://gitlab.inria.fr/minier/felics-ae/compare/0.3.0...master
+[0.3.0]: https://gitlab.inria.fr/minier/felics-ae/compare/0.2.0...0.3.0
 [0.2.0]: https://gitlab.inria.fr/minier/felics-ae/compare/0.1.0...0.2.0
 [0.1.0]: https://gitlab.inria.fr/minier/felics-ae/compare/0.0.1...0.1.0
 [0.0.1]: https://gitlab.inria.fr/minier/felics-ae/tags/0.0.1
