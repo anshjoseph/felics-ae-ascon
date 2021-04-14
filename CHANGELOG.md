@@ -2,6 +2,29 @@
 
 ## [Unreleased]
 
+### Algorithms
+
+- Implementations of the following NIST round 2 candidates have been
+  added:
+    - ForkAE
+    - GIFT-COFB
+    - Grain
+    - LOCUS
+    - LOTUS
+    - Pyjamask
+    - Romulus
+    - SKINNY-AEAD
+    - SUNDAE-GIFT
+    - Saturnin
+    - SPARKLE
+    - Subterranean
+    - Xoodyak
+
+### Fixed
+
+- Source filenames with hyphens are no longer a problem.
+- Restore the correct CPU governor; do not assume "powersave".
+
 ## [0.2.0] – 2020-05-15
 
 ### Added
