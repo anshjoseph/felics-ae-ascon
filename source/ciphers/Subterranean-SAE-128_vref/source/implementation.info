@@ -1,0 +1,5 @@
+ImplementationDescription: Reference implementation of Subterranean-SAE integrated by Kévin Le Gouguec
+ImplementationAuthors: Subterranean implementers
+
+EncryptCode: crypto_aead!crypto_aead_decrypt, subterranean_ref!subterranean_SAE_direct_decrypt
+DecryptCode: crypto_aead!crypto_aead_encrypt, subterranean_ref!subterranean_SAE_direct_encrypt
