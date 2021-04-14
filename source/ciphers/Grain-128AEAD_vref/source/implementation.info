@@ -1,0 +1,7 @@
+ImplementationDescription: Reference implementation of Grain-128AEAD integrated by Kévin Le Gouguec
+ImplementationAuthors: Jonathan Sönnerup
+
+EncryptCode: grain128aead!crypto_aead_decrypt
+DecryptCode: grain128aead!crypto_aead_encrypt
+
+Platforms: MSP ARM PC

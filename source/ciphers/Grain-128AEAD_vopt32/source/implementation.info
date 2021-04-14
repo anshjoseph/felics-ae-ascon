@@ -3,3 +3,5 @@ ImplementationAuthors: Jonathan Sönnerup
 
 EncryptCode: grain128aead_32p!crypto_aead_decrypt
 DecryptCode: grain128aead_32p!crypto_aead_encrypt
+
+Platforms: MSP ARM PC
