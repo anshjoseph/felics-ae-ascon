@@ -1,0 +1,5 @@
+ImplementationDescription: Reference implementation of SKINNY-AEAD M1 (skinnyaeadtk3128128v1) integrated by Kévin Le Gouguec
+ImplementationAuthors: Jeremy Jean, Thomas Peyrin
+
+EncryptCode: encrypt!crypto_aead_decrypt, skinny_aead!skinny_aead_decrypt, skinny_reference!dec
+DecryptCode: encrypt!crypto_aead_encrypt, skinny_aead!skinny_aead_encrypt, skinny_reference
