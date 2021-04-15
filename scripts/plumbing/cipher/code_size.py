@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: GPL-3.0-or-later
+# SPDX-FileCopyrightText: 2021 Kévin Le Gouguec
 
 from argparse import ArgumentParser
 from pathlib import Path

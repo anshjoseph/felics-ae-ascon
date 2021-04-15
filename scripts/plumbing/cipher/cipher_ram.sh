@@ -201,23 +201,7 @@ echo "Begin cipher RAM - $(pwd)"
 
 get-api-constant ()
 (
-    # We can't just grep "#define $1", as this definition might refer
-    # to another macro.  Instead, let the preprocessor and the
-    # compiler compute the value for us.
-
-    local prog=$(mktemp)
-    gcc -I../source -x c -o $prog - <<EOF
-#include <stdio.h>
-#include "api.h"
-
-int main(void)
-{
-    printf("%d", $1);
-    return 0;
-}
-EOF
-    $prog
-    rm $prog
+    "${script_path}"/cipher_constant.sh .. $1
 )
 
 get-implem-info ()
