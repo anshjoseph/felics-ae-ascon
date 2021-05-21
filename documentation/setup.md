@@ -197,3 +197,18 @@ Due]):
 
 [Olimex ARM-JTAG-20-10 adapter]: https://www.olimex.com/Products/ARM/JTAG/ARM-JTAG-20-10/
 [pinout diagram for the Arduino Due]: https://forum.arduino.cc/index.php?topic=132130.0
+
+### Container setup
+
+In order to allow the USB devices to work in an unprivileged Docker
+container:
+
+- Make sure the udev rules distributed by SEGGER are present in the
+  *host*'s udev configuration, by copying the file
+  `/etc/udev/rules.d/99-jlink.rules` from the guest to the host.
+
+- Make sure the guest GID for the `dialout` group matches the host
+  GID. If that is not the case, run `groupmod -g ${host_gid} dialout`
+  inside the guest container; the script
+  `scripts/docker/fixup-dialout.sh ${CONTAINER_NAME}` handles this
+  automatically.
