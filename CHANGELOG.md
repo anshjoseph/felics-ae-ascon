@@ -2,6 +2,16 @@
 
 ## [Unreleased]
 
+### Added
+
+- The new `scripts/dump-parameters.py` script generates a LaTeX table
+  enumerating the bit sizes of every parameter of every algorithm
+  tested in a result file.
+- Provide instructions and utility script to setup J-Link and dialout group
+  for ARM benchmarks in Docker containers.
+- Provide instructions and utility script to setup sudoers and
+  cpupower for PC benchmarks in Docker containers.
+
 ## [0.3.0] – 2021-04-14
 
 ### Algorithms

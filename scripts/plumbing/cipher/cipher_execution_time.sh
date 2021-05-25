@@ -145,35 +145,14 @@ compute-file-median ()
     done
 }
 
-try-cpufreq-set ()
-{
-    local governor=$1
-
-    if ! command -v cpufreq-set > /dev/null
-    then
-        return 1
-    fi
-
-    sudo -n cpufreq-set -c ${PC_EXECUTION_TIME_CPU} -g ${governor}
-}
-
 set-cpu-governor ()
 {
-    local governor=$1
-
-    if ! try-cpufreq-set ${governor} && [ ${governor} = performance ]
-    then
-        cat <<EOF
-Cannot set CPU governor to "performance".
-Execution time measurements may suffer from increased jitter.
-See documentation/setup.md for instructions on setting up cpufrequtils.
-EOF
-    fi
+    sudo -n -- cpupower -c ${PC_CPU} frequency-set -g $1
 }
 
 get-cpu-governor ()
 {
-    cat /sys/devices/system/cpu/cpufreq/policy${PC_EXECUTION_TIME_CPU}/scaling_governor
+    cat /sys/devices/system/cpu/cpu${PC_CPU}/cpufreq/scaling_governor
 }
 
 
@@ -197,14 +176,21 @@ function simulate()
             > $samples
 
             local oldgovernor=$(get-cpu-governor)
-            set-cpu-governor performance
+            if ! set-cpu-governor performance
+            then
+                cat <<EOF
+Cannot set CPU governor to "performance".
+Execution time measurements may suffer from increased jitter.
+See documentation/setup.md for more instructions.
+EOF
+            fi
 
             for i in {1..1000}
             do
-                taskset -c $PC_EXECUTION_TIME_CPU $target_file >> $samples
+                taskset -c $PC_CPU $target_file >> $samples
             done
 
-            set-cpu-governor ${oldgovernor}
+            set-cpu-governor ${oldgovernor} || true
 
             compute-file-median $samples $output_file
 			;;

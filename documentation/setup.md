@@ -120,26 +120,33 @@ The distribution's GCC and GDB packages should be enough to run
 benchmarks on 64-bit PCs.
 
 CPU frequency scaling can cause jitter when measuring execution
-cycles. To counter that, FELICS-AE attempts to set the cpu-freq
+cycles. To counter that, FELICS-AE attempts to set the CPUFreq
 governor to "performance" when running benchmarks on PC, so that the
 frequency remains constant (and maximum) during measurements.
 
-To do so, FELICS-AE attempts to run the command cpufreq-set, which can
-be found in the cpufrequtils package. FELICS-AE will not fail and will
-merely warn if the command is not found.
+To do so, FELICS-AE tries to run the `cpupower frequency-set` command,
+which requires root privileges. Suitable entries must be added to the
+`sudoers` policy; e.g. in `/etc/sudoers.d/allow-cpu-governor`:
 
-Setting the CPU governor requires root privileges, therefore FELICS-AE
-runs cpufreq-set with sudo. To allow the command to succeed without
-entering a password, create a new sudoers file,
-e.g. /etc/sudoers.d/cpu-governor:
-
-    USERNAME  ALL = NOPASSWD: /usr/bin/cpufreq-set -c [0-9] -g powersave,\
-                              /usr/bin/cpufreq-set -c [0-9] -g performance
+    USERNAME  ALL = NOPASSWD: \
+        /usr/bin/cpupower -c [0-9] frequency-set -g powersave,\
+        /usr/bin/cpupower -c [0-9] frequency-set -g schedutil,\
+        /usr/bin/cpupower -c [0-9] frequency-set -g performance
 
 Replace `USERNAME` with your actual identifier.
 
+FELICS-AE will not abort and will merely warn if the command is not
+found or fails.
+
+### Container setup
+
 If you run FELICS-AE in a Docker container, you will also need to pass
 `--privileged` to `docker-create(1)` or `docker-run(1)`.
+
+Note that `cpupower` must have been compiled for the *host* kernel,
+which might not be included in the guest distribution. The script
+`scripts/docker/fixup-cpupower.sh` downloads, compiles and installs
+the correct version of `cpupower` inside the container.
 
 2 - Configuring FELICS-AE
 =========================
