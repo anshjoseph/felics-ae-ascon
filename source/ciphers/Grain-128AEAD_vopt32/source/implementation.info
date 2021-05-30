@@ -1,7 +1,0 @@
-ImplementationDescription: opt32 implementation of Grain-128AEAD integrated by Kévin Le Gouguec
-ImplementationAuthors: Jonathan Sönnerup
-
-EncryptCode: grain128aead_32p!crypto_aead_decrypt
-DecryptCode: grain128aead_32p!crypto_aead_encrypt
-
-Platforms: MSP ARM PC
