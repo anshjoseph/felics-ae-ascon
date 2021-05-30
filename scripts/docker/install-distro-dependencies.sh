@@ -32,7 +32,6 @@ dependencies=(
     # PC
     gcc
     gdb
-    cpufrequtils
     sudo
 )
 
