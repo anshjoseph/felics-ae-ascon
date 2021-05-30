@@ -181,14 +181,12 @@ void crypto_aead_impl(
 
 // Remark: c must be at least mlen + CRYPTO_ABYTES long
 int crypto_aead_encrypt(
-  unsigned char *c, unsigned long long *clen,
-  const unsigned char *m, unsigned long long mlen,
-  const unsigned char *ad, unsigned long long adlen,
-  const unsigned char *nsec,
-  const unsigned char *npub,
-  const unsigned char *k)
+  BYTE *c, SIZE *clen,
+  const BYTE *m, SIZE mlen,
+  const BYTE *ad, SIZE adlen,
+  const BYTE *npub,
+  const BYTE *k)
 { 
-    (void)nsec;
     *clen = mlen + CRYPTO_ABYTES;
     BYTE tag[CRYPTO_ABYTES];
     crypto_aead_impl(c, tag, m, mlen, ad, adlen, npub, k, 1);
@@ -197,14 +195,12 @@ int crypto_aead_encrypt(
 }
 
 int crypto_aead_decrypt(
-  unsigned char *m, unsigned long long *mlen,
-  unsigned char *nsec,
-  const unsigned char *c, unsigned long long clen,
-  const unsigned char *ad, unsigned long long adlen,
-  const unsigned char *npub,
-  const unsigned char *k)
+  BYTE *m, SIZE *mlen,
+  const BYTE *c, SIZE clen,
+  const BYTE *ad, SIZE adlen,
+  const BYTE *npub,
+  const BYTE *k)
 {
-    (void)nsec;
     if(clen < CRYPTO_ABYTES)
         return -1;
     *mlen = clen - CRYPTO_ABYTES;

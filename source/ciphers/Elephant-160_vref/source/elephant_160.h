@@ -4,8 +4,10 @@
 #define SPONGENT160
 #define BLOCK_SIZE 20
 
+#include <stddef.h>
+
 typedef unsigned char BYTE;
-typedef unsigned long long SIZE;
+typedef size_t SIZE;
 
 void permutation(BYTE* state);
 
