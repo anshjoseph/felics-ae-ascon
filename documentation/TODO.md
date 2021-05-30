@@ -21,6 +21,17 @@ Possible solutions:
 
 With a single vector we have as many blind spots as code branches.
 
+## Add implementations
+
+### Grain-128AEAD
+
+Alexander Maximov and Martin Hell have explained [how to adapt the
+existing algorithms for "embedded platforms"][eprint2020/659] (AVR and
+MSP); unfortunately, afaict sources are strewn inside the publication,
+which makes extracting the code a bit tedious.
+
+[eprint2020/659]: https://eprint.iacr.org/2020/659
+
 # Scripts & tooling
 
 ## Port more scripts to Python
