@@ -25,6 +25,17 @@ With a single vector we have as many blind spots as code branches.
 
 ### Grain-128AEAD
 
+#### x64
+
+Alexander Maximov's x64 implementation requires some gruntwork:
+
+- adding C++ support: this requires minor adjustments to `cipher.mk`
+  and `$ARCH.mk`,
+- going over all `long long`s and deciding whether they should be
+  converted to `size_t`s or `u64`s.
+
+#### AVR and MSP
+
 Alexander Maximov and Martin Hell have explained [how to adapt the
 existing algorithms for "embedded platforms"][eprint2020/659] (AVR and
 MSP); unfortunately, afaict sources are strewn inside the publication,
