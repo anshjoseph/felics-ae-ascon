@@ -1,0 +1,5 @@
+ImplementationDescription: Reference implementation of Elephant-160 (aka Dumbo) integrated by Kévin Le Gouguec
+ImplementationAuthors: Tim Beyne
+
+EncryptCode: encrypt!crypto_aead_decrypt
+DecryptCode: encrypt!crypto_aead_encrypt
