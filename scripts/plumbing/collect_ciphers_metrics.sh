@@ -278,9 +278,9 @@ do
 				continue
 			fi
 
-			cipher_name=$(echo $directory | cut -d $DIRECTORY_NAME_SEPARATOR -f 1)
-			cipher_implementation_version=$(echo $directory | cut -d $DIRECTORY_NAME_SEPARATOR -f 2)
-			cipher_implementation_version=${cipher_implementation_version:1:${#cipher_implementation_version}-1}
+			[[ $directory =~ ([^_]+)_v(.+) ]]
+			cipher_name=${BASH_REMATCH[1]}
+			cipher_version=${BASH_REMATCH[2]}
 
 			if [ $cipher_name == CipherName ] ; then
 				continue
@@ -302,7 +302,7 @@ do
 						continue
 					fi
 
-					run-benchmark "${cipher_name}" "${cipher_implementation_version}" "${architecture}" "${compiler_option}"
+					run-benchmark "${cipher_name}" "${cipher_version}" "${architecture}" "${compiler_option}"
 				done
 			)
 		done
