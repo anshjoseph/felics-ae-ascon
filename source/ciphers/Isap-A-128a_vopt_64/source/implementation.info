@@ -1,0 +1,7 @@
+ImplementationDescription: Implementation of ISAP-A-128a optimized for 64-bit integrated by Kévin Le Gouguec
+ImplementationAuthors: Robert Primas
+
+EncryptCode: crypto_aead!crypto_aead_decrypt, isap
+DecryptCode: crypto_aead!crypto_aead_encrypt, isap
+
+Platforms: PC
