@@ -3,15 +3,12 @@
 #include "crypto_aead.h"
 
 int crypto_aead_encrypt(
-	unsigned char *c, unsigned long long *clen,
-	const unsigned char *m, unsigned long long mlen,
-	const unsigned char *ad, unsigned long long adlen,
-	const unsigned char *nsec,
-	const unsigned char *npub,
-	const unsigned char *k
+	uint8_t *c, size_t *clen,
+	const uint8_t *m, size_t mlen,
+	const uint8_t *ad, size_t adlen,
+	const uint8_t *npub,
+	const uint8_t *k
 ){
-    (void)nsec;  
-    
 	// Ciphertext length is mlen + tag length
 	*clen = mlen+ISAP_TAG_SZ;
 
@@ -27,15 +24,12 @@ int crypto_aead_encrypt(
 }
 
 int crypto_aead_decrypt(
-	unsigned char *m, unsigned long long *mlen,
-	unsigned char *nsec,
-	const unsigned char *c, unsigned long long clen,
-	const unsigned char *ad, unsigned long long adlen,
-	const unsigned char *npub,
-	const unsigned char *k
+	uint8_t *m, size_t *mlen,
+	const uint8_t *c, size_t clen,
+	const uint8_t *ad, size_t adlen,
+	const uint8_t *npub,
+	const uint8_t *k
 ){
-    (void)nsec;
-
 	// Plaintext length is clen - tag length
 	*mlen = clen-ISAP_TAG_SZ;
 

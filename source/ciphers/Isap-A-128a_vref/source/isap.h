@@ -1,6 +1,9 @@
 #ifndef ISAP_H
 #define ISAP_H
 
+#include <stddef.h>
+#include <stdint.h>
+
 // Rate in bits
 #define ISAP_rH 64
 #define ISAP_rB 1
@@ -27,27 +30,27 @@
 #define ISAP_K 128
 
 void isap_mac(
-	const unsigned char *k,
-	const unsigned char *npub,
-	const unsigned char *ad, const unsigned long long adlen,
-	const unsigned char *c, const unsigned long long clen,
-	unsigned char *tag
+	const uint8_t *k,
+	const uint8_t *npub,
+	const uint8_t *ad, const size_t adlen,
+	const uint8_t *c, const size_t clen,
+	uint8_t *tag
 );
 
 void isap_rk(
-	const unsigned char *k,
-	const unsigned char *iv,
-	const unsigned char *in,
-	const unsigned long long inlen,
-	unsigned char *out,
-	const unsigned long long outlen
+	const uint8_t *k,
+	const uint8_t *iv,
+	const uint8_t *in,
+	const size_t inlen,
+	uint8_t *out,
+	const size_t outlen
 );
 
 void isap_enc(
-	const unsigned char *k,
-	const unsigned char *npub,
-	const unsigned char *m, const unsigned long long mlen,
-	unsigned char *c
+	const uint8_t *k,
+	const uint8_t *npub,
+	const uint8_t *m, const size_t mlen,
+	uint8_t *c
 );
 
 #endif
