@@ -1,7 +1,7 @@
 ImplementationDescription: Implementation of PHOTON-Beetle-AEAD128 optimized for speed on AVR integrated by Kévin Le Gouguec
 ImplementationAuthors: PHOTON-Beetle Team
 
-EncryptCode: encrypt!crypto_aead_decrypt
-DecryptCode: encrypt!crypto_aead_encrypt
+EncryptCode: encrypt!crypto_aead_decrypt, encrypt, encrypt_core
+DecryptCode: encrypt!crypto_aead_encrypt, encrypt, encrypt_core
 
 Platforms: AVR

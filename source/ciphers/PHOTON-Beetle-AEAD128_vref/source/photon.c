@@ -7,7 +7,6 @@
 #define S				4
 const byte ReductionPoly = 0x3;
 const byte WORDFILTER = ((byte) 1<<S)-1;
-int DEBUG = 0;
 
 /* to be completed for one time pass mode */
 unsigned long long MessBitLen = 0;
@@ -49,30 +48,6 @@ byte FieldMult(byte a, byte b)
 		else x <<= 1;
 	}
 	return ret&WORDFILTER;
-}
-
-void PrintState(byte state[D][D])
-{
-	if(!DEBUG) return;
-	int i, j;
-	for(i = 0; i < D; i++){
-		for(j = 0; j < D; j++)
-			printf("%2X ", state[i][j]);
-		printf("\n");
-	}
-	printf("\n");
-}
-
-void PrintState_Column(CWord state[D])
-{
-	if(!DEBUG) return;
-	int i, j;
-	for(i = 0; i < D; i++){
-		for(j = 0; j < D; j++)
-			printf("%2X ", (state[j]>>(i*S)) & WORDFILTER);
-		printf("\n");
-	}
-	printf("\n");
 }
 
 void AddKey(byte state[D][D], int round)
@@ -135,19 +110,6 @@ void BuildTableSCShRMCS()
 			Table[c][v] = tv;
 		}
 	}
-	if(DEBUG){
-		printf("tword Table[D][1<<S] = {\n");
-		for(c = 0; c < D; c++){ 
-			printf("\t{");
-			for(v = 0; v < (1<<S); v++) {
-				printf("0x%.8XU, ", Table[c][v]);
-			}
-			printf("}");
-			if(v != (1<<S)-1) printf(",");
-			printf("\n");
-		}
-		printf("};\n");
-	}
 }
 
 void SCShRMCS(byte state[D][D])
@@ -174,16 +136,14 @@ void Permutation(byte state[D][D], int R)
 {
 	int i;
 	for(i = 0; i < R; i++) {
-		if(DEBUG) printf("--- Round %d ---\n", i);
-		AddKey(state, i); PrintState(state);
+		AddKey(state, i);
 #ifndef _TABLE_
-		SubCell(state); PrintState(state);
-		ShiftRow(state); PrintState(state);
+		SubCell(state);
+		ShiftRow(state);
 		MixColumn(state); 
 #else
 		SCShRMCS(state);
 #endif
-		PrintState(state);
 	}
 }
 

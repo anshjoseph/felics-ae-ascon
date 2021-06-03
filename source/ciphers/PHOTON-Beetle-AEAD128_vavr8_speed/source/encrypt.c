@@ -25,12 +25,11 @@ extern char crypto_aead_decrypt_asm(
      );
 
 int crypto_aead_encrypt(
-    unsigned char *c, unsigned long long *clen,
-    const unsigned char *m, unsigned long long mlen,
-    const unsigned char *ad, unsigned long long adlen,
-    const unsigned char *nsec,
-    const unsigned char *npub,
-    const unsigned char *k
+    uint8_t *c, size_t *clen,
+    const uint8_t *m, size_t mlen,
+    const uint8_t *ad, size_t adlen,
+    const uint8_t *npub,
+    const uint8_t *k
     )
 {
     /*
@@ -46,7 +45,6 @@ int crypto_aead_encrypt(
     ... return 0;
     */
 
-    (void)nsec;
 
     crypto_aead_encrypt_asm(c, m, mlen, ad, adlen, npub, k);
 
@@ -57,12 +55,11 @@ int crypto_aead_encrypt(
 
 
 int crypto_aead_decrypt(
-    unsigned char *m, unsigned long long *mlen,
-    unsigned char *nsec,
-    const unsigned char *c, unsigned long long clen,
-    const unsigned char *ad, unsigned long long adlen,
-    const unsigned char *npub,
-    const unsigned char *k
+    uint8_t *m, size_t *mlen,
+    const uint8_t *c, size_t clen,
+    const uint8_t *ad, size_t adlen,
+    const uint8_t *npub,
+    const uint8_t *k
     )
 {
     /*
@@ -77,10 +74,9 @@ int crypto_aead_decrypt(
     ...
     ... return 0;
     */
-    unsigned long long    mlen_;
+    size_t    mlen_;
     char tag_is_match;
 
-    (void)nsec;
     if (clen < CRYPTO_ABYTES) {
         return -1;
     }

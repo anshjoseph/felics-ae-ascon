@@ -1,5 +1,5 @@
 ImplementationDescription: Reference implementation of PHOTON-Beetle-AEAD128 integrated by Kévin Le Gouguec
 ImplementationAuthors: PHOTON-Beetle Team
 
-EncryptCode: encrypt!crypto_aead_decrypt
-DecryptCode: encrypt!crypto_aead_encrypt
+EncryptCode: encrypt!crypto_aead_decrypt, photon
+DecryptCode: encrypt!crypto_aead_encrypt, photon
