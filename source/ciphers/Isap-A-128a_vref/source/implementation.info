@@ -1,0 +1,5 @@
+ImplementationDescription: Reference implementation of ISAP-A-128a integrated by Kévin Le Gouguec
+ImplementationAuthors: Robert Primas
+
+EncryptCode: crypto_aead!crypto_aead_decrypt, Ascon-reference, isap
+DecryptCode: crypto_aead!crypto_aead_encrypt, Ascon-reference, isap
