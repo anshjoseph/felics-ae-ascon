@@ -133,7 +133,7 @@ void Encrypt(unsigned char *block, unsigned char *roundKeys, unsigned char *pSBO
     // r3-r6 : cipher state
     // r7-r12: temp use
     // r14   : temp use
-    asm volatile(
+    __asm__ volatile(
         "stmdb    sp!,       {r4-r12,r14}      \n\t"
         "stmdb.w  sp!,       {r0}              \n\t" // push store pointer
 

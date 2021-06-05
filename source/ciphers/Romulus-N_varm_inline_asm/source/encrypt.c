@@ -231,18 +231,18 @@ void nonce_encryption (const unsigned char* N,
 }
 
 void generate_tag (unsigned char** c, unsigned char* s,
-		   int n, unsigned long long* clen) {
+		   int n, size_t* clen) {
   g8A_for_Tag_Generation(s, *c);
   *c = *c + n;
   *c = *c - *clen;
 }
 
-unsigned long long msg_encryption_eqov16 (const unsigned char** M, unsigned char** c,
+size_t msg_encryption_eqov16 (const unsigned char** M, unsigned char** c,
 				   const unsigned char* N,
 				   unsigned char* CNT,
 				   unsigned char*s, const unsigned char* k,
 				   unsigned char D,
-				   unsigned long long mlen,
+				   size_t mlen,
 				   skinny_ctrl* p_skinny_ctrl) {
   rho_eqov16(*M, *c, s);
   *c = *c + 16;
@@ -252,12 +252,12 @@ unsigned long long msg_encryption_eqov16 (const unsigned char** M, unsigned char
   return mlen - 16;
 }
 
-unsigned long long msg_encryption_ud16 (const unsigned char** M, unsigned char** c,
+size_t msg_encryption_ud16 (const unsigned char** M, unsigned char** c,
 				   const unsigned char* N,
 				   unsigned char* CNT,
 				   unsigned char*s, const unsigned char* k,
 				   unsigned char D,
-				   unsigned long long mlen,
+				   size_t mlen,
 				   skinny_ctrl* p_skinny_ctrl) {
   rho_ud16(*M, *c, s, mlen, 16);
   *c = *c + mlen;
@@ -267,12 +267,12 @@ unsigned long long msg_encryption_ud16 (const unsigned char** M, unsigned char**
   return 0;
 }
 
-unsigned long long msg_decryption (unsigned char** M, const unsigned char** c,
+size_t msg_decryption (unsigned char** M, const unsigned char** c,
 				   const unsigned char* N,
 				   unsigned char* CNT,
 				   unsigned char*s, const unsigned char* k,
 				   unsigned char D,
-				   unsigned long long clen,
+				   size_t clen,
 				   skinny_ctrl* p_skinny_ctrl) {
   int len8;
 
@@ -292,8 +292,8 @@ unsigned long long msg_decryption (unsigned char** M, const unsigned char** c,
   return clen;
 }
 
-unsigned long long ad_encryption_eqov32 (const unsigned char** A, unsigned char* s,
-				  const unsigned char* k, unsigned long long adlen,
+size_t ad_encryption_eqov32 (const unsigned char** A, unsigned char* s,
+				  const unsigned char* k, size_t adlen,
 				  unsigned char* CNT,
 				  unsigned char D,
 				   skinny_ctrl* p_skinny_ctrl) {
@@ -317,8 +317,8 @@ unsigned long long ad_encryption_eqov32 (const unsigned char** A, unsigned char*
   return adlen - 32;
 }
 
-unsigned long long ad_encryption_ov16 (const unsigned char** A, unsigned char* s,
-				  const unsigned char* k, unsigned long long adlen,
+size_t ad_encryption_ov16 (const unsigned char** A, unsigned char* s,
+				  const unsigned char* k, size_t adlen,
 				  unsigned char* CNT,
 				  unsigned char D,
 				   skinny_ctrl* p_skinny_ctrl) {
@@ -339,7 +339,7 @@ unsigned long long ad_encryption_ov16 (const unsigned char** A, unsigned char* s
   return 0;
 }
 
-unsigned long long ad_encryption_eq16 (const unsigned char** A, unsigned char* s,
+size_t ad_encryption_eq16 (const unsigned char** A, unsigned char* s,
 				  unsigned char* CNT) {
 
   rho_ad_eqov16(*A, s);
@@ -349,8 +349,8 @@ unsigned long long ad_encryption_eq16 (const unsigned char** A, unsigned char* s
   return 0;
 }
 
-unsigned long long ad_encryption_ud16 (const unsigned char** A, unsigned char* s,
-				  unsigned long long adlen,
+size_t ad_encryption_ud16 (const unsigned char** A, unsigned char* s,
+				  size_t adlen,
 				  unsigned char* CNT) {
 
   rho_ad_ud16(*A, s, adlen);
@@ -361,10 +361,9 @@ unsigned long long ad_encryption_ud16 (const unsigned char** A, unsigned char* s
 }
 
 int crypto_aead_encrypt (
-			 unsigned char* c, unsigned long long* clen,
-			 const unsigned char* m, unsigned long long mlen,
-			 const unsigned char* ad, unsigned long long adlen,
-			 const unsigned char* nsec,
+			 unsigned char* c, size_t* clen,
+			 const unsigned char* m, size_t mlen,
+			 const unsigned char* ad, size_t adlen,
 			 const unsigned char* npub,
 			 const unsigned char* k
 			 )
@@ -378,7 +377,6 @@ int crypto_aead_encrypt (
 
   skinny_ctrl l_skinny_ctrl;
 
-  (void) nsec;
   A = ad;
   M = m;
   N = npub;
@@ -447,10 +445,9 @@ int crypto_aead_encrypt (
 }
 
 int crypto_aead_decrypt(
-unsigned char *m,unsigned long long *mlen,
-unsigned char *nsec,
-const unsigned char *c,unsigned long long clen,
-const unsigned char *ad,unsigned long long adlen,
+unsigned char *m,size_t *mlen,
+const unsigned char *c,size_t clen,
+const unsigned char *ad,size_t adlen,
 const unsigned char *npub,
 const unsigned char *k
 )
@@ -467,7 +464,6 @@ const unsigned char *k
 
   skinny_ctrl l_skinny_ctrl;
 
-  (void) nsec;
   A = ad;
   M = m;
   N = npub;

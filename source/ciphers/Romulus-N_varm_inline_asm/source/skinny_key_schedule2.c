@@ -25,7 +25,7 @@ void RunEncryptionKeyScheduleTK2(unsigned char *roundKeys)
     // r8    : constant(0x01010101)
     // r9    : temp use
     // r10   : temp use
-    asm volatile(
+    __asm__ volatile(
         "stmdb      sp!,      {r4-r10}        \n\t"
         "ldr.w      r1,       [r0,#16]        \n\t" // load master key
         "ldr.w      r2,       [r0,#20]        \n\t" // load master key

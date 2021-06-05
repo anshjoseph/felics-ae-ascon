@@ -23,7 +23,7 @@ void RunEncryptionKeyScheduleTK3(unsigned char *roundKeys, unsigned char *pRC)
     // r6-r7 : temp use
     // r8    : constant(0x7f7f7f7f)
     // r9    : constant(0x80808080)
-    asm volatile(
+    __asm__ volatile(
         "stmdb      sp!,      {r4-r9}         \n\t"
         "ldr.w      r2,       [r0,#32]        \n\t" // load master key
         "ldr.w      r3,       [r0,#36]        \n\t" // load master key
