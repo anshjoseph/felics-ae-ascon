@@ -39,7 +39,7 @@ EncryptCode: encrypt!crypto_aead_decrypt
 DecryptCode: encrypt!crypto_aead_encrypt
 EOF
 
-    if test "$d" = ref
+    if test "${version}" = ref
     then
         kat=$(dirname "$d")/LWC_AEAD_KAT_128_128.txt
         vector_file="${dst}"/source/test_vectors.c
