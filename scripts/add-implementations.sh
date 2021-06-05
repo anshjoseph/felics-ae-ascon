@@ -4,6 +4,18 @@
 
 set -eux
 
+if (($# < 2))
+then
+    cat <<EOF
+Usage: $0 NAME crypto_aead/CIPHER/IMPLEM...
+
+Add a new cipher to FELICS-AE.
+
+Each implementation will be added to source/ciphers/\$NAME_v\$IMPLEM.
+EOF
+    exit 1
+fi
+
 name=$1
 shift
 
