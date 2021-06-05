@@ -1,0 +1,7 @@
+ImplementationDescription: Implementation of Romulus-N optimized for ARM integrated by Kévin Le Gouguec
+ImplementationAuthors: Mustafa Khairallah
+
+EncryptCode: encrypt!crypto_aead_decrypt skinny_key_schedule2, skinny_key_schedule3, skinny_main
+DecryptCode: encrypt!crypto_aead_encrypt skinny_key_schedule2, skinny_key_schedule3, skinny_main
+
+Platforms: ARM

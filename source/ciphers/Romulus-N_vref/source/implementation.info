@@ -1,0 +1,5 @@
+ImplementationDescription: Reference implementation of Romulus-N integrated by Kévin Le Gouguec
+ImplementationAuthors: Mustafa Khairallah
+
+EncryptCode: encrypt, romulus_n_reference!romulus_n_decrypt, skinny_reference
+DecryptCode: decrypt, romulus_n_reference!romulus_n_encrypt, skinny_reference

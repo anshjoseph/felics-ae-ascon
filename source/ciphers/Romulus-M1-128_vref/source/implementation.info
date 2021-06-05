@@ -1,5 +1,0 @@
-ImplementationDescription: Reference implementation of Romulus-M1 integrated by Kévin Le Gouguec
-ImplementationAuthors: Thomas Peyrin, Mustafa Khairallah
-
-EncryptCode: encrypt!crypto_aead_decrypt, skinny_reference
-DecryptCode: encrypt!crypto_aead_encrypt, skinny_reference
