@@ -15,14 +15,13 @@
 
 
 int crypto_aead_encrypt (
-			 unsigned char* c, unsigned long long* clen,
-			 const unsigned char* m, unsigned long long mlen,
-			 const unsigned char* ad, unsigned long long adlen,
-			 const unsigned char* nsec,
+			 unsigned char* c, size_t* clen,
+			 const unsigned char* m, size_t mlen,
+			 const unsigned char* ad, size_t adlen,
 			 const unsigned char* npub,
 			 const unsigned char* k
 			 )
 {
-  return romulus_n_encrypt(c,clen,m,mlen,ad,adlen,nsec,npub,k);
+  return romulus_n_encrypt(c,clen,m,mlen,ad,adlen,npub,k);
 }
 

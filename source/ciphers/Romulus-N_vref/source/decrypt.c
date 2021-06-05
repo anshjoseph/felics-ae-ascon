@@ -14,15 +14,14 @@
 #include "romulus_n.h"
 
 int crypto_aead_decrypt(
-unsigned char *m,unsigned long long *mlen,
-unsigned char *nsec,
-const unsigned char *c,unsigned long long clen,
-const unsigned char *ad,unsigned long long adlen,
+unsigned char *m,size_t *mlen,
+const unsigned char *c,size_t clen,
+const unsigned char *ad,size_t adlen,
 const unsigned char *npub,
 const unsigned char *k
 )
 {
 
-  return romulus_n_decrypt(m,mlen,nsec,c,clen,ad,adlen,npub,k);
+  return romulus_n_decrypt(m,mlen,c,clen,ad,adlen,npub,k);
   
 }

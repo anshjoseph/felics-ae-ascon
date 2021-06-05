@@ -7,6 +7,8 @@
  * by Mustafa Khairallah, Thomas Peyrin and Kazuhiko Minematsu
  */
 
+#include <stddef.h>
+
 #include "api.h"
 #include "variant.h"
 #include "skinny.h"
@@ -195,7 +197,7 @@ void nonce_encryption (const unsigned char* N,
 
 // Generates the tag T from the final state S by applying T=G(S).
 void generate_tag (unsigned char** c, unsigned char* s,
-		   int n, unsigned long long* clen) {
+		   int n, size_t* clen) {
   
   g8A(s, *c);
   *c = *c + n;
@@ -204,12 +206,12 @@ void generate_tag (unsigned char** c, unsigned char* s,
 }
 
 // Absorbs and encrypts the message blocks.
-unsigned long long msg_encryption (const unsigned char** M, unsigned char** c,
+size_t msg_encryption (const unsigned char** M, unsigned char** c,
 				   const unsigned char* N,
 				   unsigned char* CNT,
 				   unsigned char*s, const unsigned char* k,
 				   unsigned int n, unsigned int t, unsigned char D,
-				   unsigned long long mlen, char d) {
+				   size_t mlen, char d) {
   int len8;
 
   
@@ -235,8 +237,8 @@ unsigned long long msg_encryption (const unsigned char** M, unsigned char** c,
 }
 
 // Absorbs the AD blocks.
-unsigned long long ad_encryption (const unsigned char** A, unsigned char* s,
-				  const unsigned char* k, unsigned long long adlen,
+size_t ad_encryption (const unsigned char** A, unsigned char* s,
+				  const unsigned char* k, size_t adlen,
 				  unsigned char* CNT,
 				  unsigned char D,				  
 				  unsigned int n, unsigned int t) {
@@ -275,10 +277,9 @@ unsigned long long ad_encryption (const unsigned char** A, unsigned char* s,
 }
 
 int romulus_n (
-	       unsigned char* c, unsigned long long* clen,
-	       const unsigned char* m, unsigned long long mlen,
-	       const unsigned char* ad, unsigned long long adlen,
-	       const unsigned char* nsec,
+	       unsigned char* c, size_t* clen,
+	       const unsigned char* m, size_t mlen,
+	       const unsigned char* ad, size_t adlen,
 	       const unsigned char* npub,
 	       const unsigned char* k,
 	       char d
@@ -292,7 +293,6 @@ int romulus_n (
   const unsigned char* N;
   unsigned int n, t, i;
 
-  (void) nsec;
   A = ad;
   I = m;
   N = npub;
@@ -377,26 +377,24 @@ int romulus_n (
 }
 
 int romulus_n_encrypt (
-			 unsigned char* c, unsigned long long* clen,
-			 const unsigned char* m, unsigned long long mlen,
-			 const unsigned char* ad, unsigned long long adlen,
-			 const unsigned char* nsec,
+			 unsigned char* c, size_t* clen,
+			 const unsigned char* m, size_t mlen,
+			 const unsigned char* ad, size_t adlen,
 			 const unsigned char* npub,
 			 const unsigned char* k
 			 )
 {
-  return romulus_n(c,clen,m,mlen,ad,adlen,nsec,npub,k,0);
+  return romulus_n(c,clen,m,mlen,ad,adlen,npub,k,0);
 }
 
 int romulus_n_decrypt(
-unsigned char *m,unsigned long long *mlen,
-unsigned char *nsec,
-const unsigned char *c,unsigned long long clen,
-const unsigned char *ad,unsigned long long adlen,
+unsigned char *m,size_t *mlen,
+const unsigned char *c,size_t clen,
+const unsigned char *ad,size_t adlen,
 const unsigned char *npub,
 const unsigned char *k
 )
 {
-  return romulus_n(m,mlen,c,clen,ad,adlen,nsec,npub,k,1);
+  return romulus_n(m,mlen,c,clen,ad,adlen,npub,k,1);
 }
 
