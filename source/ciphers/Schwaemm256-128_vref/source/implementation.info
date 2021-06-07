@@ -1,5 +1,5 @@
 ImplementationDescription: Reference implementation of Schwaemm256-128 integrated by Kévin Le Gouguec
 ImplementationAuthors: The SPARKLE Group
 
-EncryptCode: encrypt!crypto_aead_decrypt, sparkle_ref, util
-DecryptCode: encrypt!crypto_aead_encrypt, sparkle_ref, util
+EncryptCode: encrypt!crypto_aead_decrypt!decryptCT!verifyTag, sparkle_ref, util
+DecryptCode: encrypt!crypto_aead_encrypt!encryptPT!, sparkle_ref, util
