@@ -1,0 +1,5 @@
+ImplementationDescription: Optimized implementation of Schwaemm256-128 integrated by Kévin Le Gouguec
+ImplementationAuthors: The SPARKLE Group
+
+EncryptCode: encrypt!crypto_aead_decrypt!ProcessCipherText!rho_whi_dec!rho_whi_dec_last!VerifyTag, sparkle_opt
+DecryptCode: encrypt!crypto_aead_encrypt!ProcessPlainText!rho_whi_enc!rho_whi_enc_last!GenerateTag, sparkle_opt

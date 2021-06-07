@@ -1,0 +1,7 @@
+ImplementationDescription: Implementation of Schwaemm256-128 optimized for size on ARMv7 integrated by Kévin Le Gouguec
+ImplementationAuthors: The SPARKLE Group
+
+EncryptCode: encrypt!crypto_aead_decrypt!ProcessCipherText!VerifyTag!rho_whi_dec!rho_whi_dec_last, sparkle_opt, sparkle384s_v7m
+DecryptCode: encrypt!crypto_aead_encrypt!ProcessPlainText!GenerateTag!rho_whi_enc!rho_whi_enc_last, sparkle_opt, sparkle384s_v7m
+
+Platforms: ARM
