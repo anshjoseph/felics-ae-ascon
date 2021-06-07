@@ -38,7 +38,4 @@ typedef struct {
 void sparkle_ref(state_t *state, int nb, int ns);
 void sparkle_inv_ref(state_t *state, int nb, int ns);
 
-void print_state_ref(const state_t *state, int nb);
-void test_sparkle_ref(int nb, int ns);
-
 #endif  // _SPARKLE_REF_H

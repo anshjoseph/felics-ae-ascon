@@ -31,10 +31,5 @@ typedef unsigned __int32 uint32_t;
 #define MAX_BRANCHES 8
 
 void sparkle_opt(uint32_t *state, int brans, int steps);
-void sparkle_inv_opt(uint32_t *state, int brans, int steps);
-
-void clear_state_opt(uint32_t *state, int brans);
-void print_state_opt(const uint32_t *state, int brans);
-void test_sparkle_opt(int brans, int steps);
 
 #endif  // SPARKLE_OPT_H
