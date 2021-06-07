@@ -504,8 +504,8 @@ void ProcessCipherText(uint32_t *state, uint8_t *out, const uint8_t *in, \
 // High-level encryption function from SUPERCOP.
 // nsec is kept for compatibility with SUPERCOP, but is not used.
 
-int crypto_aead_encrypt(UChar *c, ULLInt *clen, const UChar *m, ULLInt mlen, \
-  const UChar *ad, ULLInt adlen, const UChar *nsec, const UChar *npub,       \
+int crypto_aead_encrypt(UChar *c, size_t *clen, const UChar *m, size_t mlen, \
+  const UChar *ad, size_t adlen, const UChar *npub,       \
   const UChar *k)
 {
   uint32_t state[STATE_WORDS];
@@ -527,8 +527,8 @@ int crypto_aead_encrypt(UChar *c, ULLInt *clen, const UChar *m, ULLInt mlen, \
 // High-level decryption function from SUPERCOP.
 // nsec is kept for compatibility with SUPERCOP, but is not used.
 
-int crypto_aead_decrypt(UChar *m, ULLInt *mlen, UChar *nsec, const UChar *c, \
-  ULLInt clen, const UChar *ad, ULLInt adlen, const UChar *npub,             \
+int crypto_aead_decrypt(UChar *m, size_t *mlen, const UChar *c, \
+  size_t clen, const UChar *ad, size_t adlen, const UChar *npub,             \
   const UChar *k)
 {
   uint32_t state[STATE_WORDS];
