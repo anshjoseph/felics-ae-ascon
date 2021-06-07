@@ -120,9 +120,14 @@ def parse_sizes(elf_file):
     }
 
     # Sanity check: our list of subsections might not be exhaustive.
+    # Check that our sum is at least equal to text+data as reported by
+    # plain `size`.
+    # Allow EXPECTED < ACTUAL because plain `size` does not seem to
+    # account for every RO section listed by `size -A`.
+
     expected = expected_size(elf_file)
     actual = sum(section_sizes.values())
-    if actual != expected:
+    if actual < expected:
         raise InvalidCodeSize(elf_file, actual, expected)
 
     # Some compiler optimizations (e.g. constant propagation, SRA)
