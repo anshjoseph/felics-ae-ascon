@@ -7,6 +7,8 @@
      Implemented by: Hongjun Wu 
 */   
 
+#include <stdint.h>
+
 #include "crypto_aead.h"
 
 #define FrameBitsIV  0x10  
@@ -18,17 +20,17 @@
 #define NROUND2 128*8 
 
 /*no-optimized date update function*/    
-void state_update(unsigned int *state, const unsigned char *key, unsigned int number_of_steps) 
+void state_update(uint32_t *state, const unsigned char *key, unsigned int number_of_steps) 
 {
-        unsigned int i;  
-        unsigned int t1, t2, t3, t4, feedback; 
+        uint32_t i;  
+        uint32_t t1, t2, t3, t4, feedback; 
         for (i = 0; i < (number_of_steps >> 5); i++)
         {
                 t1 = (state[1] >> 15) | (state[2] << 17);  // 47 = 1*32+15 
                 t2 = (state[2] >> 6)  | (state[3] << 26);  // 47 + 23 = 70 = 2*32 + 6 
                 t3 = (state[2] >> 21) | (state[3] << 11);  // 47 + 23 + 15 = 85 = 2*32 + 21      
                 t4 = (state[2] >> 27) | (state[3] << 5);   // 47 + 23 + 15 + 6 = 91 = 2*32 + 27 
-                feedback = state[0] ^ t1 ^ (~(t2 & t3)) ^ t4 ^ ((unsigned int*)key)[i & 3];
+                feedback = state[0] ^ t1 ^ (~(t2 & t3)) ^ t4 ^ ((uint32_t*)key)[i & 3];
                 // shift 32 bit positions 
                 state[0] = state[1]; state[1] = state[2]; state[2] = state[3]; 
                 state[3] = feedback ;
@@ -37,7 +39,7 @@ void state_update(unsigned int *state, const unsigned char *key, unsigned int nu
 
 // The initialization  
 /* The input to initialization is the 128-bit key; 96-bit IV;*/
-void initialization(const unsigned char *key, const unsigned char *iv, unsigned int *state)
+void initialization(const unsigned char *key, const unsigned char *iv, uint32_t *state)
 {
         int i;
 
@@ -52,12 +54,12 @@ void initialization(const unsigned char *key, const unsigned char *iv, unsigned 
         {
                 state[1] ^= FrameBitsIV;   
                 state_update(state, key, NROUND1); 
-                state[3] ^= ((unsigned int*)iv)[i]; 
+                state[3] ^= ((uint32_t*)iv)[i]; 
         }   
 }
 
 //process the associated data   
-void process_ad(const unsigned char *k, const unsigned char *ad, size_t adlen, unsigned int *state)
+void process_ad(const unsigned char *k, const unsigned char *ad, size_t adlen, uint32_t *state)
 {
         size_t i; 
         unsigned int j; 
@@ -66,7 +68,7 @@ void process_ad(const unsigned char *k, const unsigned char *ad, size_t adlen, u
         {
                 state[1] ^= FrameBitsAD;
                 state_update(state, k, NROUND1);
-                state[3] ^= ((unsigned int*)ad)[i];
+                state[3] ^= ((uint32_t*)ad)[i];
         }
 
         // if adlen is not a multiple of 4, we process the remaining bytes
@@ -91,7 +93,7 @@ int crypto_aead_encrypt(
         size_t i;
 	unsigned int j; 
         unsigned char mac[8]; 
-        unsigned int state[4];   
+        uint32_t state[4];   
 
         //initialization stage
         initialization(k, npub, state);
@@ -104,8 +106,8 @@ int crypto_aead_encrypt(
         {
 		state[1] ^= FrameBitsPC;  
 		state_update(state, k, NROUND2); 
-		state[3] ^= ((unsigned int*)m)[i];  
-		((unsigned int*)c)[i] = state[2] ^ ((unsigned int*)m)[i];  
+		state[3] ^= ((uint32_t*)m)[i];  
+		((uint32_t*)c)[i] = state[2] ^ ((uint32_t*)m)[i];  
         }
         // if mlen is not a multiple of 4, we process the remaining bytes
         if ((mlen & 3) > 0)
@@ -123,11 +125,11 @@ int crypto_aead_encrypt(
         //finalization stage, we assume that the tag length is 8 bytes
         state[1] ^= FrameBitsFinalization;
         state_update(state, k, NROUND2);
-        ((unsigned int*)mac)[0] = state[2];
+        ((uint32_t*)mac)[0] = state[2];
 
         state[1] ^= FrameBitsFinalization;
         state_update(state, k, NROUND1);
-        ((unsigned int*)mac)[1] = state[2];
+        ((uint32_t*)mac)[1] = state[2];
 
         *clen = mlen + 8; 
         for (j = 0; j < 8; j++) c[mlen+j] = mac[j];  
@@ -147,7 +149,7 @@ int crypto_aead_decrypt(
         size_t i;
         unsigned int j, check = 0;
         unsigned char mac[8];
-        unsigned int state[4];
+        uint32_t state[4];
 
         *mlen = clen - 8; 
 
@@ -162,8 +164,8 @@ int crypto_aead_decrypt(
         {
                 state[1] ^= FrameBitsPC;
                 state_update(state, k, NROUND2);
-                ((unsigned int*)m)[i] = state[2] ^ ((unsigned int*)c)[i];
-                state[3] ^= ((unsigned int*)m)[i]; 
+                ((uint32_t*)m)[i] = state[2] ^ ((uint32_t*)c)[i];
+                state[3] ^= ((uint32_t*)m)[i]; 
         }
         // if mlen is not a multiple of 4, we process the remaining bytes
         if ((*mlen & 3) > 0)   
@@ -181,11 +183,11 @@ int crypto_aead_decrypt(
         //finalization stage, we assume that the tag length is 8 bytes
         state[1] ^= FrameBitsFinalization;
         state_update(state, k, NROUND2);
-        ((unsigned int*)mac)[0] = state[2];
+        ((uint32_t*)mac)[0] = state[2];
 	
         state[1] ^= FrameBitsFinalization;
         state_update(state, k, NROUND1);    
-        ((unsigned int*)mac)[1] = state[2];
+        ((uint32_t*)mac)[1] = state[2];
 
         //verification of the authentication tag   
         for (j = 0; j < 8; j++) { check |= (mac[j] ^ c[clen - 8 + j]); }
