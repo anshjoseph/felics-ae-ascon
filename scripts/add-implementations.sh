@@ -3,6 +3,7 @@
 # SPDX-FileCopyrightText: 2021 Kévin Le Gouguec
 
 set -eux
+shopt -s extglob
 
 if (($# < 2))
 then
@@ -41,7 +42,8 @@ EOF
 
     if test "${version}" = ref
     then
-        kat=$(dirname "$d")/LWC_AEAD_KAT_128_128.txt
+        # Go through `echo` to expand the glob.
+        kat=$(echo $(dirname "$d")/LWC_AEAD_KAT_128_+([0-9]).txt)
         vector_file="${dst}"/source/test_vectors.c
 
         grep -A5 "Count = 545" "${kat}" |
