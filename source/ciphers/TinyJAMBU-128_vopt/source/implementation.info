@@ -1,0 +1,5 @@
+ImplementationDescription: Reference implementation of TinyJAMBU-128 integrated by Kévin Le Gouguec
+ImplementationAuthors: Hongjun Wu
+
+EncryptCode: encrypt!crypto_aead_decrypt
+DecryptCode: encrypt!crypto_aead_encrypt
