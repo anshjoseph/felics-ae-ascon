@@ -33,8 +33,7 @@ int crypto_aead_encrypt(
     Xoodyak_Instance    instance;
 
 
-    Xoodyak_Initialize(&instance, k, CRYPTO_KEYBYTES, NULL, 0, NULL, 0);
-    Xoodyak_Absorb(&instance, npub, CRYPTO_NPUBBYTES);
+    Xoodyak_Initialize(&instance, k, CRYPTO_KEYBYTES, npub, CRYPTO_NPUBBYTES, NULL, 0);
     Xoodyak_Absorb(&instance, ad, (size_t)adlen);
     Xoodyak_Encrypt(&instance, m, c, (size_t)mlen);
     Xoodyak_Squeeze(&instance, c + mlen, TAGLEN);
@@ -69,8 +68,7 @@ int crypto_aead_decrypt(
         return -1;
     }
     mlen_ = clen - TAGLEN;
-    Xoodyak_Initialize(&instance, k, CRYPTO_KEYBYTES, NULL, 0, NULL, 0);
-    Xoodyak_Absorb(&instance, npub, CRYPTO_NPUBBYTES);
+    Xoodyak_Initialize(&instance, k, CRYPTO_KEYBYTES, npub, CRYPTO_NPUBBYTES, NULL, 0);
     Xoodyak_Absorb(&instance, ad, (size_t)adlen);
     Xoodyak_Decrypt(&instance, c, m, (size_t)mlen_);
     Xoodyak_Squeeze(&instance, tag, TAGLEN);
