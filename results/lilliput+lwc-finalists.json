@@ -1,0 +1,627 @@
+{
+    "commit": "0.4.0",
+    "branch": "release",
+    "data": [
+        {
+            "cipher_name": "Ascon-128",
+            "architecture": "AVR",
+            "version": "ref",
+            "compiler_options": "-O3",
+            "code_size": 5838,
+            "code_ram": 265,
+            "code_time": 193031
+        },
+        {
+            "cipher_name": "Elephant-160",
+            "architecture": "AVR",
+            "version": "ref",
+            "compiler_options": "-O3",
+            "code_size": 5850,
+            "code_ram": 832,
+            "code_time": 18525062
+        },
+        {
+            "cipher_name": "GIFT-COFB",
+            "architecture": "AVR",
+            "version": "ref",
+            "compiler_options": "-O3",
+            "code_size": 17066,
+            "code_ram": 222,
+            "code_time": 1000301
+        },
+        {
+            "cipher_name": "Grain-128AEAD",
+            "architecture": "AVR",
+            "version": "ref",
+            "compiler_options": "-O3",
+            "code_size": 6375,
+            "code_ram": 814,
+            "code_time": 2886593
+        },
+        {
+            "cipher_name": "Isap-A-128a",
+            "architecture": "AVR",
+            "version": "ref",
+            "compiler_options": "-O3",
+            "code_size": 6790,
+            "code_ram": 301,
+            "code_time": 2817987
+        },
+        {
+            "cipher_name": "PHOTON-Beetle-AEAD128",
+            "architecture": "AVR",
+            "version": "avr8_lowrom",
+            "compiler_options": "-O3",
+            "code_size": 1556,
+            "code_ram": 89,
+            "code_time": 99668
+        },
+        {
+            "cipher_name": "PHOTON-Beetle-AEAD128",
+            "architecture": "AVR",
+            "version": "avr8_speed",
+            "compiler_options": "-O3",
+            "code_size": 3504,
+            "code_ram": 89,
+            "code_time": 59204
+        },
+        {
+            "cipher_name": "PHOTON-Beetle-AEAD128",
+            "architecture": "AVR",
+            "version": "ref",
+            "compiler_options": "-O3",
+            "code_size": 10016,
+            "code_ram": 270,
+            "code_time": 1114077
+        },
+        {
+            "cipher_name": "Lilliput-II-128",
+            "architecture": "AVR",
+            "version": "felicsref",
+            "compiler_options": "-O3",
+            "code_size": 4484,
+            "code_ram": 231,
+            "code_time": 132532
+        },
+        {
+            "cipher_name": "PHOTON-Beetle-AEAD128",
+            "architecture": "AVR",
+            "version": "avr8_lowrom",
+            "compiler_options": "-O3",
+            "code_size": 1556,
+            "code_ram": 89,
+            "code_time": 99668
+        },
+        {
+            "cipher_name": "PHOTON-Beetle-AEAD128",
+            "architecture": "AVR",
+            "version": "avr8_speed",
+            "compiler_options": "-O3",
+            "code_size": 3504,
+            "code_ram": 89,
+            "code_time": 59204
+        },
+        {
+            "cipher_name": "PHOTON-Beetle-AEAD128",
+            "architecture": "AVR",
+            "version": "ref",
+            "compiler_options": "-O3",
+            "code_size": 10016,
+            "code_ram": 270,
+            "code_time": 1114077
+        },
+        {
+            "cipher_name": "Romulus-N",
+            "architecture": "AVR",
+            "version": "ref",
+            "compiler_options": "-O3",
+            "code_size": 26622,
+            "code_ram": 377,
+            "code_time": 127689
+        },
+        {
+            "cipher_name": "Schwaemm256-128",
+            "architecture": "AVR",
+            "version": "avr",
+            "compiler_options": "-O3",
+            "code_size": 5776,
+            "code_ram": 222,
+            "code_time": 41669
+        },
+        {
+            "cipher_name": "Schwaemm256-128",
+            "architecture": "AVR",
+            "version": "opt",
+            "compiler_options": "-O3",
+            "code_size": 5074,
+            "code_ram": 247,
+            "code_time": 139847
+        },
+        {
+            "cipher_name": "Schwaemm256-128",
+            "architecture": "AVR",
+            "version": "ref",
+            "compiler_options": "-O3",
+            "code_size": 9026,
+            "code_ram": 313,
+            "code_time": 151214
+        },
+        {
+            "cipher_name": "TinyJAMBU-128",
+            "architecture": "AVR",
+            "version": "opt",
+            "compiler_options": "-O3",
+            "code_size": 6626,
+            "code_ram": 171,
+            "code_time": 348636
+        },
+        {
+            "cipher_name": "TinyJAMBU-128",
+            "architecture": "AVR",
+            "version": "ref",
+            "compiler_options": "-O3",
+            "code_size": 5298,
+            "code_ram": 163,
+            "code_time": 366342
+        },
+        {
+            "cipher_name": "Xoodyak-128",
+            "architecture": "AVR",
+            "version": "ref",
+            "compiler_options": "-O3",
+            "code_size": 7076,
+            "code_ram": 361,
+            "code_time": 202689
+        },
+        {
+            "cipher_name": "Ascon-128",
+            "architecture": "MSP",
+            "version": "ref",
+            "compiler_options": "-O3",
+            "code_size": 7638,
+            "code_ram": 258,
+            "code_time": 475222
+        },
+        {
+            "cipher_name": "Elephant-160",
+            "architecture": "MSP",
+            "version": "ref",
+            "compiler_options": "-O3",
+            "code_size": 6524,
+            "code_ram": 806,
+            "code_time": 17073111
+        },
+        {
+            "cipher_name": "GIFT-COFB",
+            "architecture": "MSP",
+            "version": "ref",
+            "compiler_options": "-O3",
+            "code_size": 12246,
+            "code_ram": 266,
+            "code_time": 2943908
+        },
+        {
+            "cipher_name": "Grain-128AEAD",
+            "architecture": "MSP",
+            "version": "ref",
+            "compiler_options": "-O3",
+            "code_size": 7362,
+            "code_ram": 800,
+            "code_time": 4071462
+        },
+        {
+            "cipher_name": "Isap-A-128a",
+            "architecture": "MSP",
+            "version": "ref",
+            "compiler_options": "-O3",
+            "code_size": 11692,
+            "code_ram": 300,
+            "code_time": 8109430
+        },
+        {
+            "cipher_name": "PHOTON-Beetle-AEAD128",
+            "architecture": "MSP",
+            "version": "ref",
+            "compiler_options": "-O3",
+            "code_size": 7972,
+            "code_ram": 372,
+            "code_time": 1125425
+        },
+        {
+            "cipher_name": "Lilliput-II-128",
+            "architecture": "MSP",
+            "version": "felicsref",
+            "compiler_options": "-O3",
+            "code_size": 4296,
+            "code_ram": 298,
+            "code_time": 178331
+        },
+        {
+            "cipher_name": "Lilliput-II-128",
+            "architecture": "MSP",
+            "version": "msp-fast",
+            "compiler_options": "-O3",
+            "code_size": 3428,
+            "code_ram": 232,
+            "code_time": 90987
+        },
+        {
+            "cipher_name": "PHOTON-Beetle-AEAD128",
+            "architecture": "MSP",
+            "version": "ref",
+            "compiler_options": "-O3",
+            "code_size": 7972,
+            "code_ram": 372,
+            "code_time": 1125425
+        },
+        {
+            "cipher_name": "Romulus-N",
+            "architecture": "MSP",
+            "version": "ref",
+            "compiler_options": "-O3",
+            "code_size": 15040,
+            "code_ram": 526,
+            "code_time": 187504
+        },
+        {
+            "cipher_name": "Schwaemm256-128",
+            "architecture": "MSP",
+            "version": "opt",
+            "compiler_options": "-O3",
+            "code_size": 3652,
+            "code_ram": 254,
+            "code_time": 135686
+        },
+        {
+            "cipher_name": "Schwaemm256-128",
+            "architecture": "MSP",
+            "version": "ref",
+            "compiler_options": "-O3",
+            "code_size": 7045,
+            "code_ram": 292,
+            "code_time": 132770
+        },
+        {
+            "cipher_name": "TinyJAMBU-128",
+            "architecture": "MSP",
+            "version": "opt",
+            "compiler_options": "-O3",
+            "code_size": 3806,
+            "code_ram": 142,
+            "code_time": 299234
+        },
+        {
+            "cipher_name": "TinyJAMBU-128",
+            "architecture": "MSP",
+            "version": "ref",
+            "compiler_options": "-O3",
+            "code_size": 4038,
+            "code_ram": 170,
+            "code_time": 314440
+        },
+        {
+            "cipher_name": "Xoodyak-128",
+            "architecture": "MSP",
+            "version": "ref",
+            "compiler_options": "-O3",
+            "code_size": 10107,
+            "code_ram": 314,
+            "code_time": 131661
+        },
+        {
+            "cipher_name": "Ascon-128",
+            "architecture": "ARM",
+            "version": "opt32",
+            "compiler_options": "-O3",
+            "code_size": 19744,
+            "code_ram": 280,
+            "code_time": 13378
+        },
+        {
+            "cipher_name": "Ascon-128",
+            "architecture": "ARM",
+            "version": "ref",
+            "compiler_options": "-O3",
+            "code_size": 3256,
+            "code_ram": 584,
+            "code_time": 35346
+        },
+        {
+            "cipher_name": "Elephant-160",
+            "architecture": "ARM",
+            "version": "ref",
+            "compiler_options": "-O3",
+            "code_size": 4606,
+            "code_ram": 1452,
+            "code_time": 1972673
+        },
+        {
+            "cipher_name": "GIFT-COFB",
+            "architecture": "ARM",
+            "version": "ref",
+            "compiler_options": "-O3",
+            "code_size": 10032,
+            "code_ram": 372,
+            "code_time": 64143
+        },
+        {
+            "cipher_name": "Grain-128AEAD",
+            "architecture": "ARM",
+            "version": "ref",
+            "compiler_options": "-O3",
+            "code_size": 3512,
+            "code_ram": 828,
+            "code_time": 2659496
+        },
+        {
+            "cipher_name": "Isap-A-128a",
+            "architecture": "ARM",
+            "version": "opt_32_armv67m",
+            "compiler_options": "-O3",
+            "code_size": 13048,
+            "code_ram": 464,
+            "code_time": 37294
+        },
+        {
+            "cipher_name": "Isap-A-128a",
+            "architecture": "ARM",
+            "version": "ref",
+            "compiler_options": "-O3",
+            "code_size": 4222,
+            "code_ram": 656,
+            "code_time": 511376
+        },
+        {
+            "cipher_name": "PHOTON-Beetle-AEAD128",
+            "architecture": "ARM",
+            "version": "ref",
+            "compiler_options": "-O3",
+            "code_size": 9758,
+            "code_ram": 632,
+            "code_time": 1270434
+        },
+        {
+            "cipher_name": "Lilliput-II-128",
+            "architecture": "ARM",
+            "version": "felicsref",
+            "compiler_options": "-O3",
+            "code_size": 3744,
+            "code_ram": 388,
+            "code_time": 90604
+        },
+        {
+            "cipher_name": "PHOTON-Beetle-AEAD128",
+            "architecture": "ARM",
+            "version": "ref",
+            "compiler_options": "-O3",
+            "code_size": 9758,
+            "code_ram": 632,
+            "code_time": 1270434
+        },
+        {
+            "cipher_name": "Romulus-N",
+            "architecture": "ARM",
+            "version": "arm_inline_asm",
+            "compiler_options": "-O3",
+            "code_size": 20976,
+            "code_ram": 1572,
+            "code_time": 10294
+        },
+        {
+            "cipher_name": "Romulus-N",
+            "architecture": "ARM",
+            "version": "ref",
+            "compiler_options": "-O3",
+            "code_size": 19756,
+            "code_ram": 708,
+            "code_time": 100276
+        },
+        {
+            "cipher_name": "Schwaemm256-128",
+            "architecture": "ARM",
+            "version": "armv7m_fast",
+            "compiler_options": "-O3",
+            "code_size": 6296,
+            "code_ram": 248,
+            "code_time": 5355
+        },
+        {
+            "cipher_name": "Schwaemm256-128",
+            "architecture": "ARM",
+            "version": "armv7m_small",
+            "compiler_options": "-O3",
+            "code_size": 2340,
+            "code_ram": 280,
+            "code_time": 6792
+        },
+        {
+            "cipher_name": "Schwaemm256-128",
+            "architecture": "ARM",
+            "version": "opt",
+            "compiler_options": "-O3",
+            "code_size": 1860,
+            "code_ram": 248,
+            "code_time": 16035
+        },
+        {
+            "cipher_name": "Schwaemm256-128",
+            "architecture": "ARM",
+            "version": "ref",
+            "compiler_options": "-O3",
+            "code_size": 3070,
+            "code_ram": 356,
+            "code_time": 20568
+        },
+        {
+            "cipher_name": "TinyJAMBU-128",
+            "architecture": "ARM",
+            "version": "opt",
+            "compiler_options": "-O3",
+            "code_size": 988,
+            "code_ram": 148,
+            "code_time": 10342
+        },
+        {
+            "cipher_name": "TinyJAMBU-128",
+            "architecture": "ARM",
+            "version": "ref",
+            "compiler_options": "-O3",
+            "code_size": 1212,
+            "code_ram": 176,
+            "code_time": 13938
+        },
+        {
+            "cipher_name": "Xoodyak-128",
+            "architecture": "ARM",
+            "version": "ref",
+            "compiler_options": "-O3",
+            "code_size": 5590,
+            "code_ram": 424,
+            "code_time": 18546
+        },
+        {
+            "cipher_name": "Ascon-128",
+            "architecture": "PC",
+            "version": "opt64",
+            "compiler_options": "-O3",
+            "code_size": 9906,
+            "code_ram": 204,
+            "code_time": 2250
+        },
+        {
+            "cipher_name": "Ascon-128",
+            "architecture": "PC",
+            "version": "ref",
+            "compiler_options": "-O3",
+            "code_size": 2113,
+            "code_ram": 344,
+            "code_time": 2501
+        },
+        {
+            "cipher_name": "Elephant-160",
+            "architecture": "PC",
+            "version": "ref",
+            "compiler_options": "-O3",
+            "code_size": 9284,
+            "code_ram": 1768,
+            "code_time": 458421
+        },
+        {
+            "cipher_name": "GIFT-COFB",
+            "architecture": "PC",
+            "version": "ref",
+            "compiler_options": "-O3",
+            "code_size": 15456,
+            "code_ram": 428,
+            "code_time": 18271
+        },
+        {
+            "cipher_name": "Grain-128AEAD",
+            "architecture": "PC",
+            "version": "ref",
+            "compiler_options": "-O3",
+            "code_size": 13396,
+            "code_ram": 2048,
+            "code_time": 158907
+        },
+        {
+            "cipher_name": "Isap-A-128a",
+            "architecture": "PC",
+            "version": "opt_64",
+            "compiler_options": "-O3",
+            "code_size": 21967,
+            "code_ram": 336,
+            "code_time": 10578
+        },
+        {
+            "cipher_name": "Isap-A-128a",
+            "architecture": "PC",
+            "version": "ref",
+            "compiler_options": "-O3",
+            "code_size": 4280,
+            "code_ram": 520,
+            "code_time": 29535
+        },
+        {
+            "cipher_name": "PHOTON-Beetle-AEAD128",
+            "architecture": "PC",
+            "version": "ref",
+            "compiler_options": "-O3",
+            "code_size": 8917,
+            "code_ram": 536,
+            "code_time": 288870
+        },
+        {
+            "cipher_name": "Lilliput-II-128",
+            "architecture": "PC",
+            "version": "felicsref",
+            "compiler_options": "-O3",
+            "code_size": 5359,
+            "code_ram": 560,
+            "code_time": 17044
+        },
+        {
+            "cipher_name": "PHOTON-Beetle-AEAD128",
+            "architecture": "PC",
+            "version": "ref",
+            "compiler_options": "-O3",
+            "code_size": 8917,
+            "code_ram": 536,
+            "code_time": 288973
+        },
+        {
+            "cipher_name": "Romulus-N",
+            "architecture": "PC",
+            "version": "ref",
+            "compiler_options": "-O3",
+            "code_size": 33851,
+            "code_ram": 1044,
+            "code_time": 20102
+        },
+        {
+            "cipher_name": "Schwaemm256-128",
+            "architecture": "PC",
+            "version": "opt",
+            "compiler_options": "-O3",
+            "code_size": 3304,
+            "code_ram": 336,
+            "code_time": 4343
+        },
+        {
+            "cipher_name": "Schwaemm256-128",
+            "architecture": "PC",
+            "version": "ref",
+            "compiler_options": "-O3",
+            "code_size": 5340,
+            "code_ram": 456,
+            "code_time": 5889
+        },
+        {
+            "cipher_name": "TinyJAMBU-128",
+            "architecture": "PC",
+            "version": "opt",
+            "compiler_options": "-O3",
+            "code_size": 2776,
+            "code_ram": 248,
+            "code_time": 3503
+        },
+        {
+            "cipher_name": "TinyJAMBU-128",
+            "architecture": "PC",
+            "version": "ref",
+            "compiler_options": "-O3",
+            "code_size": 2234,
+            "code_ram": 248,
+            "code_time": 4366
+        },
+        {
+            "cipher_name": "Xoodyak-128",
+            "architecture": "PC",
+            "version": "ref",
+            "compiler_options": "-O3",
+            "code_size": 7215,
+            "code_ram": 568,
+            "code_time": 6413
+        }
+    ]
+}
