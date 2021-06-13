@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.4.0] – 2021-06-13
+
 ### Added
 
 - The new `scripts/dump-parameters.py` script generates a LaTeX table
@@ -11,6 +13,25 @@
   for ARM benchmarks in Docker containers.
 - Provide instructions and utility script to setup sudoers and
   cpupower for PC benchmarks in Docker containers.
+- The new `scripts/add-implementations.sh` script can be used to
+  automate some of the FELICS-AE algorithm integration process.
+
+### Algorithms
+
+- Implementations of the following NIST LWC finalists have been added
+  or updated:
+    - Elephant
+    - Grain-128AEAD
+    - Isap
+    - PHOTON-Beetle
+    - Romulus
+    - SPARKLE (Schwaemm256)
+    - TinyJAMBU
+    - Xoodyak
+
+### Fixed
+
+- Implementation names with underscores are no longer a problem.
 
 ## [0.3.0] – 2021-04-14
 
