@@ -1,0 +1,8 @@
+ImplementationDescription: AEAD ASCON128, opt64
+ImplementationAuthors: Christoph Dobraunig, Martin Schläffer (ported from SUPERCOP by Jean-Baptiste Serrou Soares)
+
+EncryptCode: encrypt, utils
+DecryptCode: decrypt, utils
+
+
+Platforms: PC
