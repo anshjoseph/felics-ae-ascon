@@ -129,7 +129,7 @@ RUN pip3 install pyserial
 ENV PATH="/opt/msp430-gcc/bin:/opt/gcc-arm-none-eabi/bin:${PATH}"
 
 # Clone FELICS-AE repository
-RUN git clone https://gitlab.inria.fr/minier/felics-ae.git /opt/felics-ae/src
+RUN git clone https://github.com/anshjoseph/felics-ae-ascon.git /opt/felics-ae/src
 
 # Create cpupower sudoers entry
 RUN echo "felics ALL = NOPASSWD: \\" > /etc/sudoers.d/allow-cpu-governor && \
