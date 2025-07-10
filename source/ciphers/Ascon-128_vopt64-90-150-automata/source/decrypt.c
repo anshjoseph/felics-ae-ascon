@@ -34,6 +34,88 @@
 #include "api.h"
 #include "utils.h"
 
+// Rule 90: XOR of left and right
+int rule90(int left, int right) {
+    return left ^ right;
+}
+
+// Rule 150: XOR of left, center, and right
+int rule150(int left, int center, int right) {
+    return left ^ center ^ right;
+}
+
+unsigned int binary_array_to_number(int *array, int size) {
+    unsigned int number = 0;
+    for (int i = 0; i < size; i++) {
+        number = (number << 1) | (array[i] & 1);
+    }
+    return number;
+}
+
+void run_hybrid_automaton(int *state, int *rules, int size, int steps) {
+    int current[100], next[100]; // buffer arrays
+
+    // Copy initial state
+    for (int i = 0; i < size; i++) {
+        current[i] = *(state + i);
+    }
+
+    // Simulate for given steps
+    for (int step = 1; step <= steps; step++) {
+        for (int i = 0; i < size; i++) {
+            int left = (i == 0) ? 0 : current[i - 1];
+            int center = current[i];
+            int right = (i == size - 1) ? 0 : current[i + 1];
+
+            int rule = *(rules + i);
+
+            if (rule == 90) {
+                next[i] = rule90(left, right);
+            } else if (rule == 150) {
+                next[i] = rule150(left, center, right);
+            } else {
+                next[i] = 0;
+            }
+        }
+
+        // Copy next to current
+        for (int i = 0; i < size; i++) {
+            current[i] = next[i];
+        }
+    }
+
+    // Optional: Update the input state pointer to final state
+    for (int i = 0; i < size; i++) {
+        *(state + i) = current[i];
+    }
+}
+
+int STATE1[5] = {0, 1, 0, 0, 1};
+int STATE2[5] = {0, 1, 0, 0, 1};
+int RULES[5] = {90, 150, 90, 150, 90};
+int SIZE = 5;
+int STEPS = 10;
+int rightRotate(int n, int d) {
+    
+    // Rotation of 32 is same as rotation of 0
+    d = d % 32;
+    
+    // Picking the leftmost d bits
+    int mask = (1 << d) - 1;
+    int shift = (n & mask);
+    
+    // Moving the remaining bits to their new location
+    n = (n >> d);
+    
+    // Adding removed bits at rightmost end
+    n += (shift << (32 - d));
+
+    // Ensuring 32-bit constraint
+    return n & ((1 << 32) - 1);
+}
+
+
+
 
 int crypto_aead_decrypt(
     uint8_t *m, size_t *mlen,
@@ -104,6 +186,16 @@ int crypto_aead_decrypt(
   P12;
   x3 ^= K0;
   x4 ^= K1;
+
+
+  run_hybrid_automaton(STATE1, RULES, SIZE, STEPS);
+  run_hybrid_automaton(STATE2, RULES, SIZE, STEPS);
+
+  unsigned int end_result1 = (1 << 5) | binary_array_to_number(STATE1, SIZE);
+  unsigned int end_result2 = binary_array_to_number(STATE2, SIZE);
+
+  x3 = rightRotate(x3, end_result1);
+  x4 = rightRotate(x4, end_result2);
 
   // return -1 if verification fails
   if (((uint64_t*)c)[0] != U64BIG(x3) ||

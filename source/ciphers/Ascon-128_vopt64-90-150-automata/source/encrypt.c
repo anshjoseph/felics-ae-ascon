@@ -91,12 +91,29 @@ void run_hybrid_automaton(int *state, int *rules, int size, int steps) {
     }
 }
 
-int STATE1[6] = {0, 1, 0, 0, 1, 0};
-int STATE2[6] = {0, 1, 0, 0, 1, 1};
-int RULES[6] = {90, 150, 90, 150, 90, 150};
-int SIZE = 6;
+int STATE1[5] = {0, 1, 0, 0, 1};
+int STATE2[5] = {0, 1, 0, 0, 1};
+int RULES[5] = {90, 150, 90, 150, 90};
+int SIZE = 5;
 int STEPS = 10;
+int rightRotate(int n, int d) {
+    
+    // Rotation of 32 is same as rotation of 0
+    d = d % 32;
+    
+    // Picking the leftmost d bits
+    int mask = (1 << d) - 1;
+    int shift = (n & mask);
+    
+    // Moving the remaining bits to their new location
+    n = (n >> d);
+    
+    // Adding removed bits at rightmost end
+    n += (shift << (32 - d));
 
+    // Ensuring 32-bit constraint
+    return n & ((1 << 32) - 1);
+}
 void crypto_aead_encrypt(
     uint8_t *c, size_t *clen,
     const uint8_t *m, size_t mlen,
@@ -166,11 +183,14 @@ void crypto_aead_encrypt(
   run_hybrid_automaton(STATE1, RULES, SIZE, STEPS);
   run_hybrid_automaton(STATE2, RULES, SIZE, STEPS);
 
-  unsigned int end_result1 = binary_array_to_number(STATE1,6);
-  unsigned int end_result2 = binary_array_to_number(STATE2,6);
+  unsigned int end_result1 = (1 << 5) | binary_array_to_number(STATE1, SIZE);
+  unsigned int end_result2 = binary_array_to_number(STATE2, SIZE);
 
+  x3 = rightRotate(x3, end_result1);
+  x4 = rightRotate(x4, end_result2);
   // return tag
   ((uint64_t*)c)[0] = U64BIG(x3);
   ((uint64_t*)c)[1] = U64BIG(x4);
+
   *clen = mlen + CRYPTO_KEYBYTES;
 }
