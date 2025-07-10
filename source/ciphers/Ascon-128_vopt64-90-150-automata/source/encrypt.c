@@ -188,6 +188,7 @@ void crypto_aead_encrypt(
 
   x3 = rightRotate(x3, end_result1);
   x4 = rightRotate(x4, end_result2);
+  
   // return tag
   ((uint64_t*)c)[0] = U64BIG(x3);
   ((uint64_t*)c)[1] = U64BIG(x4);
